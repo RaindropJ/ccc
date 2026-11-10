@@ -559,8 +559,62 @@
 
             <!-- BEGIN: Guidance Banners -->
             <div class="grid grid-cols-1 gap-3.5" data-purpose="guidance-banners">
-                <!-- 1. Self Assessment Expandable Banner -->
-                <div class="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-xs hover:border-slate-300 transition-colors">
+                <!-- 2. Practicum Roadmap Blue Banner -->
+                <div onclick="openPracticumGuideModal()" class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 text-white p-5 sm:p-6 shadow-md shadow-blue-500/10 flex items-center justify-between cursor-pointer hover:shadow-lg transition">
+                    <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+                    <div class="relative z-10 space-y-1">
+                        <span class="text-[11px] font-extrabold tracking-wider text-blue-200 uppercase">PRACTICUM ROADMAP</span>
+                        <h2 class="text-base sm:text-lg font-bold tracking-tight">현장실습 합격 가이드 STEP 1~3</h2>
+                        <p class="text-xs sm:text-sm text-blue-100/90 font-normal">프로파일 작성 팁부터 슈퍼바이저 면접 기출까지 (클릭하여 열람)</p>
+                    </div>
+                    <button aria-label="합격 가이드 열람" class="relative z-10 w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition backdrop-blur-sm shrink-0 cursor-pointer">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></path></svg>
+                    </button>
+                </div>
+            </div>
+            <!-- END: Guidance Banners -->
+
+            <!-- BEGIN: PracticumListings -->
+            <div class="pt-2 space-y-4" data-purpose="practicum-grid">
+                <!-- Results Subheader & Source Filter Pills -->
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="font-bold text-slate-900 text-sm sm:text-base">📢 2026 동계 실습생 모집공고</span>
+                        <span id="practicum-count-metric" class="text-brand-600 font-bold text-sm sm:text-base font-num">320건 표시 중</span>
+                    </div>
+
+                    <!-- 출처 필터 (전체 / 사복협 공식 / 기관 자체발굴) -->
+                    <div class="flex items-center gap-1.5 text-xs" id="practicum-source-pills">
+                        <button type="button" onclick="setPracticumSource('all')" id="prac-src-btn-all" class="px-2.5 py-1 rounded-lg font-bold bg-slate-900 text-white cursor-pointer shadow-2xs transition">전체 (<span id="prac-src-cnt-all">320</span>)</button>
+                        <button type="button" onclick="setPracticumSource('welfare')" id="prac-src-btn-welfare" class="px-2.5 py-1 rounded-lg font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 cursor-pointer transition">🏛️ 사복협 공식 (<span id="prac-src-cnt-welfare">305</span>)</button>
+                        <button type="button" onclick="setPracticumSource('direct')" id="prac-src-btn-direct" class="px-2.5 py-1 rounded-lg font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 cursor-pointer transition">🏢 기관 자체발굴 (<span id="prac-src-cnt-direct">16</span>)</button>
+                    </div>
+
+                    <!-- Sorting tabs -->
+                    <div class="flex items-center text-xs text-slate-500 font-medium">
+                        <button id="prac-sort-deadline" onclick="setPracticumSort('deadline')" class="font-bold text-brand-600 cursor-pointer">마감임박순</button>
+                        <span class="mx-2 text-slate-300">·</span>
+                        <button id="prac-sort-latest" onclick="setPracticumSort('latest')" class="hover:text-slate-800 transition cursor-pointer">최신순</button>
+                        <span class="mx-2 text-slate-300">·</span>
+                        <button id="prac-sort-fee" onclick="setPracticumSort('fee')" class="hover:text-slate-800 transition cursor-pointer">실습비낮은순</button>
+                    </div>
+                </div>
+
+                <!-- 3-Column Card Grid -->
+                <div id="practicum-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+                    <!-- Injected dynamically by renderPracticumCards() -->
+                </div>
+
+                <!-- Pagination or Load More -->
+                <div id="practicum-load-more" class="py-6 text-center">
+                    <button type="button" onclick="loadMorePracticum()" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold shadow-xs transition cursor-pointer">
+                        <span>더 많은 실습 공고 불러오기</span>
+                        <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                    </button>
+                </div>
+
+                <!-- 🧭 [하단 배너] 나에게 맞는 실습 분야 4문항 적성 자가진단 -->
+                <div class="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-xs hover:border-slate-300 transition-colors mt-2 mb-4">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer" onclick="toggleQuizContainer()">
                         <div class="flex items-start sm:items-center gap-3">
                             <div class="w-9 h-9 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center shrink-0 text-lg">
@@ -638,60 +692,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- 2. Practicum Roadmap Blue Banner -->
-                <div onclick="openPracticumGuideModal()" class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 text-white p-5 sm:p-6 shadow-md shadow-blue-500/10 flex items-center justify-between cursor-pointer hover:shadow-lg transition">
-                    <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
-                    <div class="relative z-10 space-y-1">
-                        <span class="text-[11px] font-extrabold tracking-wider text-blue-200 uppercase">PRACTICUM ROADMAP</span>
-                        <h2 class="text-base sm:text-lg font-bold tracking-tight">현장실습 합격 가이드 STEP 1~3</h2>
-                        <p class="text-xs sm:text-sm text-blue-100/90 font-normal">프로파일 작성 팁부터 슈퍼바이저 면접 기출까지 (클릭하여 열람)</p>
-                    </div>
-                    <button aria-label="합격 가이드 열람" class="relative z-10 w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition backdrop-blur-sm shrink-0 cursor-pointer">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></path></svg>
-                    </button>
-                </div>
-            </div>
-            <!-- END: Guidance Banners -->
-
-            <!-- BEGIN: PracticumListings -->
-            <div class="pt-2 space-y-4" data-purpose="practicum-grid">
-                <!-- Results Subheader & Source Filter Pills -->
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-100">
-                    <div class="flex flex-wrap items-center gap-2">
-                        <span class="font-bold text-slate-900 text-sm sm:text-base">📢 2026 동계 실습생 모집공고</span>
-                        <span id="practicum-count-metric" class="text-brand-600 font-bold text-sm sm:text-base font-num">320건 표시 중</span>
-                    </div>
-
-                    <!-- 출처 필터 (전체 / 사복협 공식 / 기관 자체발굴) -->
-                    <div class="flex items-center gap-1.5 text-xs" id="practicum-source-pills">
-                        <button type="button" onclick="setPracticumSource('all')" id="prac-src-btn-all" class="px-2.5 py-1 rounded-lg font-bold bg-slate-900 text-white cursor-pointer shadow-2xs transition">전체 (<span id="prac-src-cnt-all">320</span>)</button>
-                        <button type="button" onclick="setPracticumSource('welfare')" id="prac-src-btn-welfare" class="px-2.5 py-1 rounded-lg font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 cursor-pointer transition">🏛️ 사복협 공식 (<span id="prac-src-cnt-welfare">305</span>)</button>
-                        <button type="button" onclick="setPracticumSource('direct')" id="prac-src-btn-direct" class="px-2.5 py-1 rounded-lg font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 cursor-pointer transition">🏢 기관 자체발굴 (<span id="prac-src-cnt-direct">16</span>)</button>
-                    </div>
-
-                    <!-- Sorting tabs -->
-                    <div class="flex items-center text-xs text-slate-500 font-medium">
-                        <button id="prac-sort-deadline" onclick="setPracticumSort('deadline')" class="font-bold text-brand-600 cursor-pointer">마감임박순</button>
-                        <span class="mx-2 text-slate-300">·</span>
-                        <button id="prac-sort-latest" onclick="setPracticumSort('latest')" class="hover:text-slate-800 transition cursor-pointer">최신순</button>
-                        <span class="mx-2 text-slate-300">·</span>
-                        <button id="prac-sort-fee" onclick="setPracticumSort('fee')" class="hover:text-slate-800 transition cursor-pointer">실습비낮은순</button>
-                    </div>
-                </div>
-
-                <!-- 3-Column Card Grid -->
-                <div id="practicum-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-                    <!-- Injected dynamically by renderPracticumCards() -->
-                </div>
-
-                <!-- Pagination or Load More -->
-                <div id="practicum-load-more" class="py-6 text-center">
-                    <button type="button" onclick="loadMorePracticum()" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold shadow-xs transition cursor-pointer">
-                        <span>더 많은 실습 공고 불러오기</span>
-                        <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-                    </button>
                 </div>
 
                 <!-- 🏛️ [하단 허브] 우리 동네 법정 실습기관 공식 실습센터 둘러보기 (전국 8,434개소 연동 Table) -->
