@@ -586,16 +586,28 @@
                 <!-- Filter Rows Container -->
                 <div class="space-y-3.5 text-sm">
                     <!-- Region Filter Row (경기, 인천 분리 및 세부 시군구 지원) -->
+                    <!-- Region Filter Row (전국 17개 시·도 1차 알약 버튼) -->
                     <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4" id="prac-region-pills">
                         <span class="text-xs font-bold text-slate-500 w-12 shrink-0">지역</span>
-                        <div class="flex flex-wrap items-center gap-1.5">
-                            <button type="button" onclick="setPracticumRegion('전체')" class="prac-reg-btn px-3 py-1.5 rounded-md text-xs font-semibold bg-slate-900 text-white cursor-pointer">전국 (305)</button>
-                            <button type="button" onclick="setPracticumRegion('서울')" class="prac-reg-btn px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">서울 (105)</button>
-                            <button type="button" onclick="setPracticumRegion('경기')" class="prac-reg-btn px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">경기 (120)</button>
-                            <button type="button" onclick="setPracticumRegion('인천')" class="prac-reg-btn px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">인천 (29)</button>
-                            <button type="button" onclick="setPracticumRegion('부산·영남')" class="prac-reg-btn px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">부산·영남 (38)</button>
-                            <button type="button" onclick="setPracticumRegion('대전·충청')" class="prac-reg-btn px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">대전·충청 (7)</button>
-                            <button type="button" onclick="setPracticumRegion('호남·기타')" class="prac-reg-btn px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">호남·강원 (6)</button>
+                        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
+                            <button type="button" onclick="setPracticumRegion('전체')" class="prac-reg-btn flex-shrink-0 px-3 py-1.5 rounded-md text-xs font-semibold bg-slate-900 text-white cursor-pointer">전국 (전체)</button>
+                            <button type="button" onclick="setPracticumRegion('서울')" class="prac-reg-btn flex-shrink-0 px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">서울</button>
+                            <button type="button" onclick="setPracticumRegion('경기')" class="prac-reg-btn flex-shrink-0 px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">경기</button>
+                            <button type="button" onclick="setPracticumRegion('인천')" class="prac-reg-btn flex-shrink-0 px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">인천</button>
+                            <button type="button" onclick="setPracticumRegion('부산')" class="prac-reg-btn flex-shrink-0 px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">부산</button>
+                            <button type="button" onclick="setPracticumRegion('대구')" class="prac-reg-btn flex-shrink-0 px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">대구</button>
+                            <button type="button" onclick="setPracticumRegion('광주')" class="prac-reg-btn flex-shrink-0 px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">광주</button>
+                            <button type="button" onclick="setPracticumRegion('대전')" class="prac-reg-btn flex-shrink-0 px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">대전</button>
+                            <button type="button" onclick="setPracticumRegion('울산')" class="prac-reg-btn flex-shrink-0 px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">울산</button>
+                            <button type="button" onclick="setPracticumRegion('세종')" class="prac-reg-btn flex-shrink-0 px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">세종</button>
+                            <button type="button" onclick="setPracticumRegion('강원')" class="prac-reg-btn flex-shrink-0 px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">강원</button>
+                            <button type="button" onclick="setPracticumRegion('충북')" class="prac-reg-btn flex-shrink-0 px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">충북</button>
+                            <button type="button" onclick="setPracticumRegion('충남')" class="prac-reg-btn flex-shrink-0 px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">충남</button>
+                            <button type="button" onclick="setPracticumRegion('전북')" class="prac-reg-btn flex-shrink-0 px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">전북</button>
+                            <button type="button" onclick="setPracticumRegion('전남')" class="prac-reg-btn flex-shrink-0 px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">전남</button>
+                            <button type="button" onclick="setPracticumRegion('경북')" class="prac-reg-btn flex-shrink-0 px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">경북</button>
+                            <button type="button" onclick="setPracticumRegion('경남')" class="prac-reg-btn flex-shrink-0 px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">경남</button>
+                            <button type="button" onclick="setPracticumRegion('제주')" class="prac-reg-btn flex-shrink-0 px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">제주</button>
                         </div>
                     </div>
 
@@ -808,15 +820,26 @@
                 </div>
 
                 <!-- 3행: 권역별 필터 (경기, 인천 분리 및 세부 시군구 지원) -->
-                <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs pt-1 border-t border-slate-100" id="residency-region-pills">
+                <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="residency-region-pills">
                     <span class="text-[11px] font-bold text-slate-400 flex-shrink-0 mr-1 w-8">권역</span>
                     <button type="button" onclick="setResidencyRegion('전체')" class="res-reg-btn px-2.5 py-1 rounded-lg bg-slate-900 text-white font-bold text-xs flex-shrink-0 cursor-pointer">전국 전체 (284)</button>
                     <button type="button" onclick="setResidencyRegion('서울')" class="res-reg-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">서울</button>
                     <button type="button" onclick="setResidencyRegion('경기')" class="res-reg-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">경기</button>
                     <button type="button" onclick="setResidencyRegion('인천')" class="res-reg-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">인천</button>
-                    <button type="button" onclick="setResidencyRegion('영남권')" class="res-reg-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">영남권</button>
-                    <button type="button" onclick="setResidencyRegion('충청·강원')" class="res-reg-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">충청·강원</button>
-                    <button type="button" onclick="setResidencyRegion('호남·제주')" class="res-reg-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">호남·제주</button>
+                    <button type="button" onclick="setResidencyRegion('부산')" class="res-reg-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">부산</button>
+                    <button type="button" onclick="setResidencyRegion('대구')" class="res-reg-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">대구</button>
+                    <button type="button" onclick="setResidencyRegion('광주')" class="res-reg-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">광주</button>
+                    <button type="button" onclick="setResidencyRegion('대전')" class="res-reg-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">대전</button>
+                    <button type="button" onclick="setResidencyRegion('울산')" class="res-reg-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">울산</button>
+                    <button type="button" onclick="setResidencyRegion('세종')" class="res-reg-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">세종</button>
+                    <button type="button" onclick="setResidencyRegion('강원')" class="res-reg-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">강원</button>
+                    <button type="button" onclick="setResidencyRegion('충북')" class="res-reg-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">충북</button>
+                    <button type="button" onclick="setResidencyRegion('충남')" class="res-reg-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">충남</button>
+                    <button type="button" onclick="setResidencyRegion('전북')" class="res-reg-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">전북</button>
+                    <button type="button" onclick="setResidencyRegion('전남')" class="res-reg-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">전남</button>
+                    <button type="button" onclick="setResidencyRegion('경북')" class="res-reg-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">경북</button>
+                    <button type="button" onclick="setResidencyRegion('경남')" class="res-reg-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">경남</button>
+                    <button type="button" onclick="setResidencyRegion('제주')" class="res-reg-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">제주</button>
                 </div>
 
                 <!-- 수련처 2차 세부 시·군·구 알약 트레이 -->
@@ -1121,13 +1144,26 @@
                 </div>
 
                 <!-- 4행: 권역별 필터 (전국, 서울, 경기, 인천, 지방권) -->
-                <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs pt-1 border-t border-slate-100" id="jobs-region-pills">
+                <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="jobs-region-pills">
                     <span class="text-[11px] font-bold text-slate-400 flex-shrink-0 mr-1 w-12">권역</span>
                     <button type="button" onclick="setJobRegion('전체')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-900 text-white font-bold text-xs flex-shrink-0 cursor-pointer">전국 전체</button>
                     <button type="button" onclick="setJobRegion('서울')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">서울</button>
                     <button type="button" onclick="setJobRegion('경기')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">경기</button>
                     <button type="button" onclick="setJobRegion('인천')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">인천</button>
-                    <button type="button" onclick="setJobRegion('지방권')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">지방권</button>
+                    <button type="button" onclick="setJobRegion('부산')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">부산</button>
+                    <button type="button" onclick="setJobRegion('대구')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">대구</button>
+                    <button type="button" onclick="setJobRegion('광주')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">광주</button>
+                    <button type="button" onclick="setJobRegion('대전')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">대전</button>
+                    <button type="button" onclick="setJobRegion('울산')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">울산</button>
+                    <button type="button" onclick="setJobRegion('세종')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">세종</button>
+                    <button type="button" onclick="setJobRegion('강원')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">강원</button>
+                    <button type="button" onclick="setJobRegion('충북')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">충북</button>
+                    <button type="button" onclick="setJobRegion('충남')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">충남</button>
+                    <button type="button" onclick="setJobRegion('전북')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">전북</button>
+                    <button type="button" onclick="setJobRegion('전남')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">전남</button>
+                    <button type="button" onclick="setJobRegion('경북')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">경북</button>
+                    <button type="button" onclick="setJobRegion('경남')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">경남</button>
+                    <button type="button" onclick="setJobRegion('제주')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">제주</button>
                 </div>
 
                 <!-- 채용공고 2차 세부 시·군·구 알약 트레이 -->
@@ -8134,14 +8170,65 @@
                 '노원구', '도봉구', '동대문구', '동작구', '마포구', '서대문구', '서초구', '성동구',
                 '성북구', '송파구', '양천구', '영등포구', '용산구', '은평구', '종로구', '중구', '중랑구'
             ],
+            '부산': [
+                '해운대구', '부산진구', '사하구', '북구', '남구', '금정구', '동래구', '사상구',
+                '기장군', '강서구', '영도구', '연제구', '수영구', '동구', '서구', '중구'
+            ],
+            '대구': [
+                '달서구', '북구', '수성구', '동구', '서구', '달성군', '중구', '남구', '군위군'
+            ],
+            '인천': [
+                '남동구', '부평구', '미추홀구', '연수구', '서구', '계양구', '중구', '동구', '강화군', '옹진군'
+            ],
+            '광주': [
+                '북구', '광산구', '서구', '남구', '동구'
+            ],
+            '대전': [
+                '서구', '유성구', '중구', '동구', '대덕구'
+            ],
+            '울산': [
+                '남구', '중구', '북구', '동구', '울주군'
+            ],
+            '세종': [
+                '세종시'
+            ],
             '경기': [
                 '수원시', '고양시', '용인시', '성남시', '부천시', '화성시', '안산시', '남양주시',
                 '안양시', '평택시', '시흥시', '파주시', '의정부시', '김포시', '광명시', '광주시', '하남시',
                 '군포시', '오산시', '양주시', '이천시', '구리시', '안성시', '포천시', '의왕시',
                 '양평군', '여주시', '동두천시', '과천시', '가평군', '연천군'
             ],
-            '인천': [
-                '남동구', '부평구', '미추홀구', '연수구', '서구', '계양구', '중구', '동구', '강화군', '옹진군'
+            '강원': [
+                '원주시', '춘천시', '강릉시', '동해시', '속초시', '삼척시', '홍천군', '태백시',
+                '철원군', '횡성군', '평창군', '정선군', '영월군', '인제군', '고성군', '양양군', '화천군', '양구군'
+            ],
+            '충북': [
+                '청주시', '충주시', '제천시', '음성군', '진천군', '옥천군', '영동군', '괴산군', '증평군', '보은군', '단양군'
+            ],
+            '충남': [
+                '천안시', '아산시', '서산시', '당진시', '논산시', '공주시', '보령시', '홍성군',
+                '예산군', '부여군', '서천군', '태안군', '금산군', '청양군', '계룡시'
+            ],
+            '전북': [
+                '전주시', '익산시', '군산시', '정읍시', '완주군', '김제시', '남원시', '고창군',
+                '부안군', '순창군', '임실군', '무주군', '진안군', '장수군'
+            ],
+            '전남': [
+                '여수시', '순천시', '목포시', '광양시', '나주시', '무안군', '해남군', '고흥군',
+                '화순군', '영암군', '영광군', '완도군', '담양군', '장성군', '보성군', '신안군',
+                '장흥군', '강진군', '함평군', '진도군', '곡성군', '구례군'
+            ],
+            '경북': [
+                '포항시', '구미시', '경산시', '경주시', '안동시', '김천시', '영주시', '칠곡군',
+                '영천시', '상주시', '문경시', '의성군', '울진군', '예천군', '청도군', '성주군',
+                '영덕군', '고령군', '봉화군', '청송군', '영양군', '울릉군'
+            ],
+            '경남': [
+                '창원시', '김해시', '진주시', '양산시', '거제시', '통영시', '사천시', '밀양시',
+                '함안군', '거창군', '창녕군', '고성군', '하동군', '합천군', '남해군', '함양군', '산청군', '의령군'
+            ],
+            '제주': [
+                '제주시', '서귀포시'
             ]
         };
 
@@ -8155,14 +8242,14 @@
             if (!tray || !pillsContainer) return;
 
             const subList = SUB_REGIONS_DATA[region];
-            if (!subList) {
+            if (!subList || region === '전체' || region === '전국') {
                 tray.classList.add('hidden');
                 pillsContainer.innerHTML = '';
                 return;
             }
 
             tray.classList.remove('hidden');
-            const regionLabel = region === '서울' ? '서울 25개 자치구' : (region === '경기' ? '경기 31개 시·군' : '인천 10개 군·구');
+            const regionLabel = `${region} ${subList.length}개 시·군·구`;
             
             let html = `<span class="text-[11px] font-bold text-slate-500 mr-1.5 flex items-center gap-1 py-0.5">
                 <span>📍</span><span>${regionLabel}:</span>
@@ -8173,7 +8260,7 @@
 
             subList.forEach(sub => {
                 const isActive = (currentSub === sub);
-                html += `<button type="button" onclick="${clickFnName}('${sub}')" class="px-2.5 py-1 rounded-md text-xs transition cursor-pointer ${isActive ? 'bg-blue-600 text-white font-bold shadow-2xs' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 font-medium'}">${sub}</button>`;
+                html += `<button type="button" onclick="${clickFnName}('${sub}')" class="px-2 py-1 rounded-md text-xs transition cursor-pointer font-medium ${isActive ? 'bg-blue-600 text-white font-bold shadow-2xs' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 hover:text-slate-900'}">${sub}</button>`;
             });
 
             pillsContainer.innerHTML = html;
@@ -8192,46 +8279,60 @@
                 (item.company || '')
             ).toLowerCase();
 
-            if (region === '서울') {
-                if (!textTarget.includes('서울')) return false;
-                if (subRegion && subRegion !== '전체') {
-                    const shortGu = subRegion.replace('구', '');
-                    return textTarget.includes(subRegion.toLowerCase()) || textTarget.includes(shortGu.toLowerCase());
+            // 1) 1차 광역시·도 매칭
+            let matchRegion = false;
+            if (item.region === region || item.regionGroup === region) {
+                matchRegion = true;
+            } else {
+                const shortRegion = region.slice(0, 2).toLowerCase();
+                if (textTarget.includes(shortRegion)) {
+                    matchRegion = true;
+                } else if (region === '강원' && (textTarget.includes('강원') || textTarget.includes('원주') || textTarget.includes('춘천') || textTarget.includes('강릉'))) {
+                    matchRegion = true;
+                } else if (region === '경남' && (textTarget.includes('경남') || textTarget.includes('창원') || textTarget.includes('김해') || textTarget.includes('진주'))) {
+                    matchRegion = true;
+                } else if (region === '경북' && (textTarget.includes('경북') || textTarget.includes('포항') || textTarget.includes('구미') || textTarget.includes('경주'))) {
+                    matchRegion = true;
+                } else if (region === '전남' && (textTarget.includes('전남') || textTarget.includes('여수') || textTarget.includes('순천') || textTarget.includes('목포'))) {
+                    matchRegion = true;
+                } else if (region === '전북' && (textTarget.includes('전북') || textTarget.includes('전주') || textTarget.includes('익산') || textTarget.includes('군산'))) {
+                    matchRegion = true;
+                } else if (region === '충남' && (textTarget.includes('충남') || textTarget.includes('천안') || textTarget.includes('아산'))) {
+                    matchRegion = true;
+                } else if (region === '충북' && (textTarget.includes('충북') || textTarget.includes('청주') || textTarget.includes('충주'))) {
+                    matchRegion = true;
+                } else if (region === '제주' && textTarget.includes('제주')) {
+                    matchRegion = true;
+                } else if (region === '광주' && textTarget.includes('광주')) {
+                    matchRegion = true;
+                } else if (region === '대구' && textTarget.includes('대구')) {
+                    matchRegion = true;
+                } else if (region === '대전' && textTarget.includes('대전')) {
+                    matchRegion = true;
+                } else if (region === '울산' && textTarget.includes('울산')) {
+                    matchRegion = true;
+                } else if (region === '세종' && textTarget.includes('세종')) {
+                    matchRegion = true;
+                } else if (region === '부산' && textTarget.includes('부산')) {
+                    matchRegion = true;
                 }
-                return true;
             }
 
-            if (region === '경기') {
-                if (!textTarget.includes('경기')) return false;
-                if (subRegion && subRegion !== '전체') {
-                    const shortSi = subRegion.replace('시', '').replace('군', '');
-                    return textTarget.includes(subRegion.toLowerCase()) || textTarget.includes(shortSi.toLowerCase());
+            if (!matchRegion) return false;
+
+            // 2) 2차 세부 시·군·구 매칭
+            if (subRegion && subRegion !== '전체') {
+                const subRaw = subRegion.toLowerCase();
+                const subCore = subRaw.replace(/[시군구]$/, '');
+                
+                const itemSub = (item.subRegion || '').toLowerCase();
+                if (itemSub.includes(subRaw) || (subCore.length >= 2 && itemSub.includes(subCore))) {
+                    return true;
                 }
-                return true;
+                return textTarget.includes(subRaw) || (subCore.length >= 2 && textTarget.includes(subCore));
             }
 
-            if (region === '인천') {
-                if (!textTarget.includes('인천')) return false;
-                if (subRegion && subRegion !== '전체') {
-                    const shortGu = subRegion.replace('구', '').replace('군', '');
-                    return textTarget.includes(subRegion.toLowerCase()) || textTarget.includes(shortGu.toLowerCase());
-                }
-                return true;
-            }
-
-            if (region.includes('충청') || region.includes('대전')) {
-                return textTarget.includes('대전') || textTarget.includes('충청') || textTarget.includes('세종') || textTarget.includes('충남') || textTarget.includes('충북');
-            }
-
-            if (region.includes('영남') || region.includes('부산')) {
-                return textTarget.includes('부산') || textTarget.includes('대구') || textTarget.includes('울산') || textTarget.includes('경북') || textTarget.includes('경남') || textTarget.includes('영남');
-            }
-
-            if (region.includes('호남') || region.includes('기타') || region.includes('제주') || region.includes('지방')) {
-                return textTarget.includes('광주') || textTarget.includes('전남') || textTarget.includes('전북') || textTarget.includes('호남') || textTarget.includes('제주') || textTarget.includes('강원') || textTarget.includes('원주');
-            }
-
-            return textTarget.includes(region.toLowerCase());
+            return true;
         }
 
         
