@@ -242,18 +242,18 @@
                     <span class="text-[10px] text-slate-400">클릭 시 해당 부처 소관 시설만 즉시 필터링됩니다.</span>
                 </div>
                 <div id="fields-ministry-filters" class="flex flex-wrap gap-1.5">
-                    <button type="button" onclick="setMinistryFilter('전체')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-extrabold bg-blue-600 text-white shadow-2xs transition cursor-pointer">전체 (24개 분야)</button>
-                    <button type="button" onclick="setMinistryFilter('보건복지부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">보건복지부 (10)</button>
-                    <button type="button" onclick="setMinistryFilter('성평등가족부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">성평등가족부 (6)</button>
-                    <button type="button" onclick="setMinistryFilter('교육부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">교육부 (2)</button>
-                    <button type="button" onclick="setMinistryFilter('고용노동부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">고용노동부</button>
-                    <button type="button" onclick="setMinistryFilter('법무부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">법무부</button>
-                    <button type="button" onclick="setMinistryFilter('행정안전부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">행정안전부</button>
-                    <button type="button" onclick="setMinistryFilter('질병관리청')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">질병관리청</button>
-                    <button type="button" onclick="setMinistryFilter('통일부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">통일부</button>
-                    <button type="button" onclick="setMinistryFilter('국가보훈부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">국가보훈부</button>
-                    <button type="button" onclick="document.getElementById('section-ngo-impact').scrollIntoView({behavior:'smooth'})" class="px-3 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 transition cursor-pointer flex items-center gap-1 shadow-2xs ml-auto">
-                        <span>🤝</span><span>민간 제3섹터 (민법 제32조) ↓</span>
+                    <button type="button" data-ministry="전체" onclick="setMinistryFilter('전체')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-extrabold bg-blue-600 text-white shadow-2xs transition cursor-pointer">전체 (24개 분야)</button>
+                    <button type="button" data-ministry="보건복지부" onclick="setMinistryFilter('보건복지부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">보건복지부 (10)</button>
+                    <button type="button" data-ministry="성평등가족부" onclick="setMinistryFilter('성평등가족부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">성평등가족부 (6)</button>
+                    <button type="button" data-ministry="교육부" onclick="setMinistryFilter('교육부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">교육부 (2)</button>
+                    <button type="button" data-ministry="고용노동부" onclick="setMinistryFilter('고용노동부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">고용노동부</button>
+                    <button type="button" data-ministry="법무부" onclick="setMinistryFilter('법무부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">법무부</button>
+                    <button type="button" data-ministry="행정안전부" onclick="setMinistryFilter('행정안전부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">행정안전부</button>
+                    <button type="button" data-ministry="질병관리청" onclick="setMinistryFilter('질병관리청')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">질병관리청</button>
+                    <button type="button" data-ministry="통일부" onclick="setMinistryFilter('통일부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">통일부</button>
+                    <button type="button" data-ministry="국가보훈부" onclick="setMinistryFilter('국가보훈부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">국가보훈부</button>
+                    <button type="button" data-ministry="민간제3섹터" onclick="setMinistryFilter('민간제3섹터')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 transition cursor-pointer flex items-center gap-1 shadow-2xs ml-auto">
+                        <span>🤝</span><span>민간 제3섹터 (민법 제32조)</span>
                     </button>
                 </div>
             </div>
@@ -7801,6 +7801,24 @@
         let currentFieldsQuery = '';
 
         function applyFieldsFilter() {
+            const tableContainer = document.getElementById('fields-table-container');
+            const ngoSection = document.getElementById('section-ngo-impact');
+
+            // 1) "민간 제3섹터" 전용 필터 선택 시: 정부 테이블 숨기고 민간 제3섹터 전용 카드만 단독 노출
+            if (currentMinistryFilter === '민간제3섹터') {
+                if (tableContainer) tableContainer.classList.add('hidden');
+                if (ngoSection) {
+                    ngoSection.classList.remove('hidden');
+                    ngoSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                const countBadge = document.getElementById('fields-count-badge');
+                if (countBadge) countBadge.innerText = '민간 제3섹터 3대 영역 (민법 제32조 비영리 공익법인)';
+                return;
+            }
+
+            // 2) 일반 정부부처 필터링 시: 정부 테이블 복원
+            if (tableContainer) tableContainer.classList.remove('hidden');
+
             let filtered = STATUTORY_MATRIX;
             if (currentMinistryFilter !== '전체') {
                 filtered = filtered.filter(r => r.ministry && r.ministry.includes(currentMinistryFilter.replace(' (구 여가부)', '')));
@@ -7812,6 +7830,19 @@
                 });
             }
             renderFieldsTable(filtered);
+
+            // 3) 민간 제3섹터 섹션 노출 제어:
+            // "전체"를 보고 있을 때만 하단에 부가 안내로 노출되고, 
+            // 원클릭 필터로 특정 부처(보건복지부, 성평등가족부 등)를 선택 중일 때는 하단에 절대 나오지 않고 숨김!
+            if (ngoSection) {
+                if (currentMinistryFilter === '전체' && !currentFieldsQuery) {
+                    ngoSection.classList.remove('hidden');
+                } else if (currentFieldsQuery && (currentFieldsQuery.includes('ngo') || currentFieldsQuery.includes('재단') || currentFieldsQuery.includes('csr') || currentFieldsQuery.includes('민법'))) {
+                    ngoSection.classList.remove('hidden');
+                } else {
+                    ngoSection.classList.add('hidden');
+                }
+            }
         }
 
         function filterFieldsTable(query) {
@@ -7822,10 +7853,21 @@
         function setMinistryFilter(ministry) {
             currentMinistryFilter = ministry;
             document.querySelectorAll('.ministry-btn').forEach(btn => {
-                if (btn.innerText.includes(ministry) || (ministry === '전체' && btn.innerText === '전체')) {
-                    btn.className = 'ministry-btn px-3 py-1.5 rounded-full text-xs font-extrabold bg-blue-600 text-white shadow-2xs transition cursor-pointer';
+                const targetM = btn.getAttribute('data-ministry') || btn.innerText;
+                const isMatch = (targetM === ministry) || (ministry === '전체' && targetM.includes('전체'));
+                
+                if (isMatch) {
+                    if (ministry === '민간제3섹터') {
+                        btn.className = 'ministry-btn px-3 py-1.5 rounded-full text-xs font-extrabold bg-amber-600 text-white border border-amber-600 shadow-2xs transition cursor-pointer flex items-center gap-1 ml-auto';
+                    } else {
+                        btn.className = 'ministry-btn px-3 py-1.5 rounded-full text-xs font-extrabold bg-blue-600 text-white shadow-2xs transition cursor-pointer';
+                    }
                 } else {
-                    btn.className = 'ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer';
+                    if (targetM.includes('민간제3섹터')) {
+                        btn.className = 'ministry-btn px-3 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 transition cursor-pointer flex items-center gap-1 shadow-2xs ml-auto';
+                    } else {
+                        btn.className = 'ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer';
+                    }
                 }
             });
             applyFieldsFilter();
