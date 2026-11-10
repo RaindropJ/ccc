@@ -1,7 +1,7 @@
 window.SYNC_META = {
   "status": "success",
   "timestamp": "2026.11.11 06:00",
-  "last_sync": "2026-11-11 00:32:08",
+  "last_sync": "2026-11-11 00:52:24",
   "counts": {
     "practicum": 148,
     "residency": 284,
