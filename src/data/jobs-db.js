@@ -18756,10 +18756,16 @@
   }
 ];
 
+  const work24List = (typeof window !== 'undefined' && Array.isArray(window.WORK24_JOB_POSTINGS))
+    ? window.WORK24_JOB_POSTINGS
+    : [];
+
+  const combinedJobs = [...work24List, ...jobs];
+
   if (typeof window !== 'undefined') {
-    window.ALL_JOB_POSTINGS = jobs;
+    window.ALL_JOB_POSTINGS = combinedJobs;
   }
   if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { ALL_JOB_POSTINGS: jobs };
+    module.exports = { ALL_JOB_POSTINGS: combinedJobs };
   }
 })();

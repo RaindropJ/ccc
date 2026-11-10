@@ -13,6 +13,7 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="src/data/sync-meta.js"></script>
     <script src="src/data/residency-284-db.js"></script>
+    <script src="src/data/work24-jobs-db.js"></script>
     <script src="src/data/jobs-db.js"></script>
     <script src="src/data/practicum-postings-db.js"></script>
     <script src="src/data/practicum-direct-db.js"></script>
@@ -135,7 +136,7 @@
                     <button type="button" data-view="jobs" onclick="showView('jobs')" class="nav-tab-btn flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1.5 transition cursor-pointer">
                         <span>💼</span>
                         <span>취업공고</span>
-                        <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">78</span>
+                        <span id="nav-jobs-badge" class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">1,770</span>
                     </button>
                     <button type="button" data-view="news" onclick="showView('news')" class="nav-tab-btn flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1.5 transition cursor-pointer">
                         <span>📄</span>
@@ -167,7 +168,7 @@
             <button type="button" onclick="showView('fields')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-blue-50 text-blue-600">12대 분야와 법령</button>
             <button type="button" onclick="showView('practicum')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">실습처 탐색 (320건)</button>
             <button type="button" onclick="showView('residency')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">수련처 탐색 (284곳)</button>
-            <button type="button" onclick="showView('jobs')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">인턴·취업처 (78선)</button>
+            <button type="button" onclick="showView('jobs')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">실시간 채용공고 (1,770건)</button>
             <button type="button" onclick="showView('news')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">복지 뉴스·브리핑 (21건)</button>
         </div>
     </nav>
@@ -192,7 +193,7 @@
             <button type="button" data-view="jobs" onclick="showView('jobs')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
                 <span>💼</span>
                 <span>취업공고</span>
-                <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">78</span>
+                <span id="mobile-nav-jobs-badge" class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">1,770</span>
             </button>
             <button type="button" data-view="news" onclick="showView('news')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
                 <span>📄</span>
@@ -962,14 +963,14 @@
                 </div>
             </div>
 
-            <!-- 실시간 채용공고 570선 멀티 티어 퀵검색 카드 -->
+            <!-- 실시간 채용공고 멀티 티어 퀵검색 카드 -->
             <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs mb-6 space-y-3">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-2">
                     <div class="flex items-center gap-2">
                         <span class="text-blue-600 font-bold text-sm">🔥</span>
-                        <h3 class="text-sm font-extrabold text-slate-800">실시간 채용공고 570선 피드</h3>
+                        <h3 class="text-sm font-extrabold text-slate-800">실시간 채용공고 <span id="jobs-header-total">1,770</span>건 피드 (고용24 공식 연동)</h3>
                     </div>
-                    <span class="text-[11px] text-slate-400">정규직 · 사업전담 계약직 · 청년인턴 실시간 요강</span>
+                    <span class="text-[11px] text-slate-400">고용24 실시간 공고 · 정규직 · 사업전담 · 청년인턴</span>
                 </div>
 
                 <!-- 1행: 검색창 & 클리어 버튼 -->
@@ -992,23 +993,32 @@
                     <button onclick="setJobTag('공공인턴')" class="job-tag-btn flex-shrink-0 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 font-medium text-[11px] hover:bg-emerald-100 cursor-pointer" type="button"># 공공인턴</button>
                 </div>
 
+                <!-- 2.5행: 수집처 출처 필터 (전체 / 고용24 공식 / 복지넷·협회 / 병원·재단·인턴) -->
+                <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs pt-1 border-t border-slate-100" id="jobs-source-pills">
+                    <span class="text-[11px] font-bold text-slate-400 flex-shrink-0 mr-1 w-12">수집처</span>
+                    <button type="button" id="job-src-btn-all" onclick="setJobSource('전체')" class="job-src-btn px-2.5 py-1 rounded-lg bg-slate-900 text-white font-bold text-xs flex-shrink-0 cursor-pointer shadow-2xs">전체 (<span id="job-src-cnt-all">1,770</span>)</button>
+                    <button type="button" id="job-src-btn-work24" onclick="setJobSource('work24')" class="job-src-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏢 고용24 공식 (<span id="job-src-cnt-work24">1,200</span>)</button>
+                    <button type="button" id="job-src-btn-welfare" onclick="setJobSource('welfare')" class="job-src-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏛️ 복지넷/협회 (<span id="job-src-cnt-welfare">400</span>)</button>
+                    <button type="button" id="job-src-btn-specialized" onclick="setJobSource('specialized')" class="job-src-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏥 병원·재단·인턴 (<span id="job-src-cnt-specialized">170</span>)</button>
+                </div>
+
                 <!-- 3행: 고용형태 필터 (전체 / 정규직 / 계약직·전담 / 청년인턴) -->
                 <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs pt-1 border-t border-slate-100" id="jobs-employment-pills">
                     <span class="text-[11px] font-bold text-slate-400 flex-shrink-0 mr-1 w-12">고용형태</span>
-                    <button type="button" onclick="setJobEmploymentType('전체')" class="job-emp-btn px-2.5 py-1 rounded-lg bg-slate-900 text-white font-bold text-xs flex-shrink-0 cursor-pointer">전체 (570)</button>
-                    <button type="button" onclick="setJobEmploymentType('정규직')" class="job-emp-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">👔 정규직 (327)</button>
-                    <button type="button" onclick="setJobEmploymentType('계약직')" class="job-emp-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">📋 계약직·전담 (143)</button>
-                    <button type="button" onclick="setJobEmploymentType('청년인턴')" class="job-emp-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🌱 청년인턴 (100)</button>
+                    <button type="button" onclick="setJobEmploymentType('전체')" class="job-emp-btn px-2.5 py-1 rounded-lg bg-slate-900 text-white font-bold text-xs flex-shrink-0 cursor-pointer">전체 (<span id="job-emp-cnt-all">1,770</span>)</button>
+                    <button type="button" onclick="setJobEmploymentType('정규직')" class="job-emp-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">👔 정규직 (<span id="job-emp-cnt-regular">1,100+</span>)</button>
+                    <button type="button" onclick="setJobEmploymentType('계약직')" class="job-emp-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">📋 계약직·전담 (<span id="job-emp-cnt-contract">500+</span>)</button>
+                    <button type="button" onclick="setJobEmploymentType('청년인턴')" class="job-emp-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🌱 청년인턴 (<span id="job-emp-cnt-intern">100+</span>)</button>
                 </div>
 
                 <!-- 4행: 권역별 필터 (전국, 서울, 경기, 인천, 지방권) -->
                 <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs pt-1 border-t border-slate-100" id="jobs-region-pills">
                     <span class="text-[11px] font-bold text-slate-400 flex-shrink-0 mr-1 w-12">권역</span>
-                    <button type="button" onclick="setJobRegion('전체')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-900 text-white font-bold text-xs flex-shrink-0 cursor-pointer">전국 전체 (570)</button>
-                    <button type="button" onclick="setJobRegion('서울')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">서울 (215)</button>
-                    <button type="button" onclick="setJobRegion('경기')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">경기 (185)</button>
-                    <button type="button" onclick="setJobRegion('인천')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">인천 (65)</button>
-                    <button type="button" onclick="setJobRegion('지방권')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">지방권 (105)</button>
+                    <button type="button" onclick="setJobRegion('전체')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-900 text-white font-bold text-xs flex-shrink-0 cursor-pointer">전국 전체</button>
+                    <button type="button" onclick="setJobRegion('서울')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">서울</button>
+                    <button type="button" onclick="setJobRegion('경기')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">경기</button>
+                    <button type="button" onclick="setJobRegion('인천')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">인천</button>
+                    <button type="button" onclick="setJobRegion('지방권')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">지방권</button>
                 </div>
 
                 <!-- 채용공고 2차 세부 시·군·구 알약 트레이 -->
@@ -1020,12 +1030,12 @@
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1 border-t border-slate-100 text-xs">
                     <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar" id="jobs-category-pills">
                         <span class="text-[11px] font-bold text-slate-400 flex-shrink-0 mr-1 w-12">분야</span>
-                        <button type="button" onclick="setJobCategory('전체')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-blue-600 text-white font-bold text-xs flex-shrink-0 cursor-pointer">전체 (570)</button>
-                        <button type="button" onclick="setJobCategory('복지시설')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏛️ 복지관·시설 (400)</button>
-                        <button type="button" onclick="setJobCategory('병원직원')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏥 병원·의료 (35)</button>
-                        <button type="button" onclick="setJobCategory('청년인턴')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">💼 공공·청년인턴 (100)</button>
-                        <button type="button" onclick="setJobCategory('메이저NGO')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🌍 메이저 NGO (18)</button>
-                        <button type="button" onclick="setJobCategory('기업CSR')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏢 기업 CSR (17)</button>
+                        <button type="button" onclick="setJobCategory('전체')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-blue-600 text-white font-bold text-xs flex-shrink-0 cursor-pointer">전체</button>
+                        <button type="button" onclick="setJobCategory('복지시설')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏛️ 복지관·시설</button>
+                        <button type="button" onclick="setJobCategory('병원직원')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏥 병원·의료</button>
+                        <button type="button" onclick="setJobCategory('청년인턴')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">💼 공공·청년인턴</button>
+                        <button type="button" onclick="setJobCategory('메이저NGO')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🌍 메이저 NGO</button>
+                        <button type="button" onclick="setJobCategory('기업CSR')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏢 기업 CSR</button>
                     </div>
                     <div class="flex items-center gap-1.5 justify-end flex-shrink-0">
                         <span class="text-[11px] font-bold text-slate-400">정렬:</span>
@@ -8953,7 +8963,8 @@
             }).join('');
         }
 
-        // --- 7-2. 실시간 채용공고 570선 피드 상태 및 렌더링 ---
+        // --- 7-2. 실시간 채용공고 피드 상태 및 렌더링 (고용24 대량 연동) ---
+        let currentJobSource = '전체'; // '전체' | 'work24' | 'welfare' | 'specialized'
         let currentJobEmploymentType = '전체';
         let currentJobCategory = '전체';
         let currentJobRegion = '전체';
@@ -8962,6 +8973,28 @@
         let currentJobSort = 'dday';
         let currentJobTag = '';
         let currentJobDisplayLimit = 15;
+
+        function setJobSource(src) {
+            currentJobSource = src;
+            const buttons = [
+                { id: 'job-src-btn-all', key: '전체' },
+                { id: 'job-src-btn-work24', key: 'work24' },
+                { id: 'job-src-btn-welfare', key: 'welfare' },
+                { id: 'job-src-btn-specialized', key: 'specialized' }
+            ];
+            buttons.forEach(b => {
+                const el = document.getElementById(b.id);
+                if (el) {
+                    if (b.key === src) {
+                        el.className = 'job-src-btn px-2.5 py-1 rounded-lg bg-slate-900 text-white font-bold text-xs flex-shrink-0 cursor-pointer shadow-2xs';
+                    } else {
+                        el.className = 'job-src-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer';
+                    }
+                }
+            });
+            currentJobDisplayLimit = 15;
+            renderJobsCards();
+        }
 
         function setJobEmploymentType(empType) {
             currentJobEmploymentType = empType;
@@ -9006,12 +9039,53 @@
             const statRegular = document.getElementById('jobs-stat-regular');
             const statContract = document.getElementById('jobs-stat-contract');
 
-            if (statTotal) statTotal.innerText = jobList.length;
-            if (statIntern) statIntern.innerText = jobList.filter(j => j.employmentType === '청년인턴' || j.track === '인턴').length;
-            if (statRegular) statRegular.innerText = jobList.filter(j => j.employmentType === '정규직').length;
-            if (statContract) statContract.innerText = jobList.filter(j => j.employmentType === '계약직').length;
+            const regCount = jobList.filter(j => j.employmentType === '정규직').length;
+            const conCount = jobList.filter(j => j.employmentType === '계약직').length;
+            const intCount = jobList.filter(j => j.employmentType === '청년인턴' || j.track === '인턴').length;
+
+            if (statTotal) statTotal.innerText = jobList.length.toLocaleString();
+            if (statIntern) statIntern.innerText = intCount.toLocaleString();
+            if (statRegular) statRegular.innerText = regCount.toLocaleString();
+            if (statContract) statContract.innerText = conCount.toLocaleString();
+
+            // Update feed header total
+            const headerTotal = document.getElementById('jobs-header-total');
+            if (headerTotal) headerTotal.innerText = jobList.length.toLocaleString();
+
+            // Update source count badges
+            const w24Count = jobList.filter(j => j.source === 'work24' || (j.id && j.id.startsWith('work24-'))).length;
+            const specCount = jobList.filter(j => j.category === '병원직원' || j.category === '메이저NGO' || j.category === '기업CSR' || j.category === '청년인턴').length;
+            const welfareCount = Math.max(0, jobList.length - w24Count - specCount);
+
+            const cntAll = document.getElementById('job-src-cnt-all');
+            const cntW24 = document.getElementById('job-src-cnt-work24');
+            const cntWelfare = document.getElementById('job-src-cnt-welfare');
+            const cntSpec = document.getElementById('job-src-cnt-specialized');
+            if (cntAll) cntAll.innerText = jobList.length.toLocaleString();
+            if (cntW24) cntW24.innerText = w24Count.toLocaleString();
+            if (cntWelfare) cntWelfare.innerText = welfareCount.toLocaleString();
+            if (cntSpec) cntSpec.innerText = specCount.toLocaleString();
+
+            // Update employment type count badges
+            const empCntAll = document.getElementById('job-emp-cnt-all');
+            const empCntReg = document.getElementById('job-emp-cnt-regular');
+            const empCntCon = document.getElementById('job-emp-cnt-contract');
+            const empCntInt = document.getElementById('job-emp-cnt-intern');
+            if (empCntAll) empCntAll.innerText = jobList.length.toLocaleString();
+            if (empCntReg) empCntReg.innerText = regCount.toLocaleString();
+            if (empCntCon) empCntCon.innerText = conCount.toLocaleString();
+            if (empCntInt) empCntInt.innerText = intCount.toLocaleString();
 
             let filtered = jobList.filter(j => {
+                // 0) Source match
+                if (currentJobSource !== '전체') {
+                    const isW24 = j.source === 'work24' || (j.id && j.id.startsWith('work24-'));
+                    const isSpec = j.category === '병원직원' || j.category === '메이저NGO' || j.category === '기업CSR' || j.category === '청년인턴';
+                    if (currentJobSource === 'work24' && !isW24) return false;
+                    if (currentJobSource === 'specialized' && !isSpec) return false;
+                    if (currentJobSource === 'welfare' && (isW24 || isSpec)) return false;
+                }
+
                 // 1) Employment Type match
                 if (currentJobEmploymentType !== '전체') {
                     if (j.employmentType !== currentJobEmploymentType) return false;
@@ -9037,6 +9111,7 @@
                         (j.memo || '') + ' ' +
                         (j.requirements || '') + ' ' +
                         (j.salary || '') + ' ' +
+                        (j.career || '') + ' ' +
                         (j.employmentType || '')
                     ).toLowerCase();
                     if (!fullText.includes(currentJobSearch)) return false;
@@ -9079,13 +9154,15 @@
                     <div class="col-span-full py-12 text-center text-slate-400 bg-white rounded-2xl border border-slate-200 p-8">
                         <div class="text-3xl mb-2">🔍</div>
                         <p class="font-bold text-slate-700">해당 조건에 부합하는 채용공고가 없습니다.</p>
-                        <p class="text-xs text-slate-400 mt-1">고용형태나 권역 필터를 '전체'로 변경하거나 검색어를 재설정해보세요.</p>
+                        <p class="text-xs text-slate-400 mt-1">수집처, 고용형태나 권역 필터를 '전체'로 변경하거나 검색어를 재설정해보세요.</p>
                     </div>
                 `;
                 return;
             }
 
             grid.innerHTML = paged.map(j => {
+                const isWork24 = j.source === 'work24' || (j.id && j.id.startsWith('work24-'));
+
                 const empBadge = j.employmentType === '정규직' ?
                     '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">👔 정규직</span>' :
                     j.employmentType === '계약직' ?
@@ -9099,31 +9176,43 @@
                     'bg-slate-100 text-slate-700 border border-slate-200';
 
                 return `
-                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:border-blue-400 hover:shadow-sm transition flex flex-col justify-between">
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:border-blue-400 hover:shadow-sm transition flex flex-col justify-between" data-purpose="job-card">
                     <div>
                         <div class="flex items-center justify-between mb-3">
                             <div class="flex items-center gap-1.5 flex-wrap">
-                                <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${catBadge}">${escapeHtml(j.category || '복지시설')}</span>
+                                ${isWork24 ? `
+                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-blue-600 text-white flex items-center gap-1 shadow-2xs">
+                                        <span>🏢</span><span>고용24 공식</span>
+                                    </span>
+                                ` : `
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${catBadge}">${escapeHtml(j.category || '복지시설')}</span>
+                                `}
+                                ${isWork24 && j.category && j.category !== '복지시설' ? `
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${catBadge}">${escapeHtml(j.category)}</span>
+                                ` : ''}
                                 ${empBadge}
                                 ${j.contractPeriod && j.employmentType === '계약직' ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-50 text-slate-500 border border-slate-200">${escapeHtml(j.contractPeriod)}</span>` : ''}
                             </div>
                             <span class="px-2 py-0.5 rounded-full text-[10px] font-black ${j.dday && j.dday.includes('D-') ? 'bg-rose-50 text-rose-600 border border-rose-200' : 'bg-slate-100 text-slate-600 border border-slate-200'}">${escapeHtml(j.dday || '접수중')}</span>
                         </div>
                         <div class="text-xs text-slate-400 font-bold mb-1">${escapeHtml(j.company || '')}</div>
-                        <h3 class="text-base font-extrabold text-slate-900 mb-3 leading-snug">${escapeHtml(j.title || '')}</h3>
+                        <h3 class="text-base font-extrabold text-slate-900 mb-3 leading-snug" title="${escapeHtml(j.title || '')}">${escapeHtml(j.title || '')}</h3>
                         <div class="bg-slate-50 rounded-xl p-3 border border-slate-100 text-xs text-slate-600 space-y-1.5 mb-4">
-                            <div class="flex justify-between"><span>채용분야:</span><strong class="text-slate-900">${escapeHtml(j.fieldName || '사회복지')}</strong></div>
-                            <div class="flex justify-between"><span>원서마감:</span><strong class="text-slate-900">${escapeHtml(j.deadline || '마감전')}</strong></div>
+                            <div class="flex justify-between"><span>채용직무:</span><strong class="text-slate-900">${escapeHtml(j.role || j.fieldName || '사회복지사')}</strong></div>
+                            <div class="flex justify-between"><span>원서마감:</span><strong class="text-slate-900">${escapeHtml(j.deadline || '채용시까지')}</strong></div>
                             <div class="flex justify-between"><span>보수기준:</span><strong class="text-slate-900 truncate max-w-[200px]" title="${escapeHtml(j.salary || '')}">${escapeHtml(j.salary || '가이드라인 준수')}</strong></div>
+                            <div class="flex justify-between"><span>지원자격:</span><strong class="text-slate-700 truncate max-w-[200px]" title="${escapeHtml(j.career || j.edu || '')}">${escapeHtml(j.career || j.edu || '경력무관')}</strong></div>
                             <div class="pt-1 border-t border-slate-200/60 flex justify-between text-slate-500">
-                                <span>소재지: ${escapeHtml(j.location || '전국')}</span>
+                                <span class="truncate max-w-[180px]" title="${escapeHtml(j.location || '전국')}">소재지: ${escapeHtml(j.location || '전국')}</span>
                                 <span class="text-[11px] text-slate-400">${escapeHtml(j.sourcePlatform || '공식공고')}</span>
                             </div>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
-                        <a href="${j.url || 'https://welfare.net'}" target="_blank" class="flex-1 py-2 rounded-xl bg-blue-600 text-white font-bold text-xs hover:bg-blue-700 transition text-center shadow-2xs">공고 원문 ↗</a>
-                        <button type="button" onclick="saveToWorkspace('postings', '${j.id}', '${escapeHtml(j.company || '')}', '${escapeHtml(j.title || '')}', '${escapeHtml(j.deadline || '')}')" class="px-3 py-2 rounded-xl bg-amber-50 text-amber-900 font-bold text-xs border border-amber-200 hover:bg-amber-100 transition cursor-pointer">⭐ 찜하기</button>
+                        <a href="${j.url || 'https://m.work24.go.kr'}" target="_blank" rel="noopener noreferrer" class="flex-1 py-2 rounded-xl bg-blue-600 text-white font-bold text-xs hover:bg-blue-700 transition text-center shadow-2xs flex items-center justify-center gap-1 cursor-pointer" title="공고 상세 페이지 새 창으로 열기">
+                            <span>${isWork24 ? '고용24 공고 원문 ↗' : '공고 원문 ↗'}</span>
+                        </a>
+                        <button type="button" onclick="saveToWorkspace('postings', '${j.id}', '${escapeHtml(j.company || '')}', '${escapeHtml(j.title || '')}', '${escapeHtml(j.dday || j.deadline || '')}')" class="px-3 py-2 rounded-xl bg-amber-50 text-amber-900 font-bold text-xs border border-amber-200 hover:bg-amber-100 transition cursor-pointer">⭐ 찜하기</button>
                     </div>
                 </div>
             `;
@@ -9630,6 +9719,7 @@
         window.onPracticumHubSubRegionChange = onPracticumHubSubRegionChange;
         window.onPracticumHubSearchInput = onPracticumHubSearchInput;
         window.clearPracticumHubSearch = clearPracticumHubSearch;
+        window.setJobSource = setJobSource;
         window.setJobCategory = setJobCategory;
         window.setJobEmploymentType = setJobEmploymentType;
         window.renderJobsHubTable = renderJobsHubTable;

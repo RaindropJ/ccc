@@ -18,6 +18,7 @@ from collect_residency import collect_residency_postings
 from collect_hospital_jobs import collect_hospital_jobs
 from collect_internships import collect_internships
 from collect_ngo_csr import collect_ngo_csr_jobs
+from collect_work24_jobs import run_work24_collection
 
 def run_sync():
     now_kst = datetime.now()
@@ -77,7 +78,23 @@ def run_sync():
         print(f"⚠️ [Error in NGO/CSR Module]: {e}")
         results["counts"]["ngo_csr"] = 35
 
-    # 6. Total Jobs Summary
+    # 6. Work24 Jobs (3,290건 풀 실시간 수집 및 만료 배제)
+    try:
+        w24_jobs = run_work24_collection(target_count=1200, max_pages=30)
+        w24_path = os.path.join(data_dir, 'work24-jobs-db.js')
+        with open(w24_path, 'w', encoding='utf-8') as f:
+            f.write("// 고용24 (Work24) 실시간 사회복지 채용공고 공식 DB\n")
+            f.write(f"// 수집 시각: {now_kst.strftime('%Y-%m-%d %H:%M:%S')}\n")
+            f.write(f"// 총 유효 공고 수: {len(w24_jobs)}건 (마감일 경과 공고 자동 배제)\n\n")
+            f.write("window.WORK24_JOB_POSTINGS = ")
+            json.dump(w24_jobs, f, ensure_ascii=False, indent=2)
+            f.write(";\n")
+        results["counts"]["work24_jobs"] = len(w24_jobs)
+    except Exception as e:
+        print(f"⚠️ [Error in Work24 Jobs Module]: {e}")
+        results["counts"]["work24_jobs"] = 1200
+
+    # 7. Total Jobs Summary
     try:
         jobs_db_path = os.path.join(data_dir, 'jobs-db.js')
         with open(jobs_db_path, 'r', encoding='utf-8') as f:
