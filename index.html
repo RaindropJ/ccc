@@ -14,6 +14,7 @@
     <script src="src/data/sync-meta.js"></script>
     <script src="src/data/residency-284-db.js"></script>
     <script src="src/data/internships-db.js"></script>
+    <script src="src/data/useful-sites-db.js"></script>
     <script src="src/data/work24-jobs-db.js"></script>
     <script src="src/data/jobs-db.js"></script>
     <script src="src/data/practicum-postings-db.js"></script>
@@ -89,126 +90,145 @@
 </head>
 <body class="antialiased bg-[#F8FAFC] text-[#0F172A] min-h-screen flex flex-col font-sans selection:bg-blue-600 selection:text-white">
 
-    <!-- 글로벌 상단 고정 네비게이션 헤더 -->
-    <nav class="fixed top-0 left-0 w-full z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs py-2.5">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-14 gap-3">
-                <!-- 브랜드 로고 및 락업 (옵션 A 하이브리드 미니 락업) -->
-                <div class="min-w-0 cursor-pointer flex items-center gap-2.5" onclick="showView('fields')">
-                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-black text-lg shadow-sm shadow-blue-500/30">
-                        🧭
-                    </div>
-                    <div class="flex flex-col">
-                        <div class="flex items-center gap-2">
-                            <span class="text-base lg:text-lg font-black tracking-tight text-slate-900">
-                                현장 나침반
-                            </span>
-                            <span class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 border border-blue-500/20">
-                                INSIGHTS
-                            </span>
-                        </div>
-                        <span class="hidden sm:inline-flex items-center gap-2 text-[11px] font-medium text-slate-500 -mt-0.5">
-                            <span>대학생 사회복지 실습·취업 네비게이터</span>
-                            <span class="text-slate-300">|</span>
-                            <span class="inline-flex items-center gap-1.5 text-slate-600 font-bold" title="매일 06:00 전수 수집 및 자동 갱신">
-                                <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
-                                최근 동기화: <span id="sync-timestamp-display">2026.11.10 06:00</span>
-                            </span>
-                        </span>
-                    </div>
+    <!-- ==================== GNB: 스티치 원본 상단 헤더 & 네비게이션 ==================== -->
+    <header class="w-full bg-white border-b border-slate-200 sticky top-0 z-50 font-sans shadow-xs">
+        <!-- 1. 메인 GNB 영역 -->
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+            
+            <!-- 좌측: 나침반 심볼 로고 + 동기화 인디케이터 + 기능 탭 -->
+            <div class="flex items-center gap-4 lg:gap-6 min-w-0">
+                <!-- 순수 나침반 로고 (텍스트 없음) -->
+                <a href="#" onclick="showView('fields'); return false;" class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-sm hover:bg-blue-700 transition flex-shrink-0 cursor-pointer" title="현장 나침반 홈 (12대 분야·법령)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+                    </svg>
+                </a>
+
+                <!-- 실시간 동기화 정보 뱃지 -->
+                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100/90 text-xs text-slate-700 border border-slate-200/60 flex-shrink-0" title="매일 06:00 전수 수집 및 자동 갱신">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="text-slate-500 font-medium">동기화</span>
+                    <span class="font-semibold text-slate-800" id="sync-timestamp-display">06:00</span>
                 </div>
 
-                <!-- 데스크톱 5대 핵심 탭 메뉴 (Stitch 원본 스타일) -->
-                <div class="hidden md:flex items-center gap-1.5 lg:gap-2.5 text-xs lg:text-sm flex-shrink-0" id="desktop-nav-tabs">
-                    <button type="button" data-view="fields" onclick="showView('fields')" class="nav-tab-btn flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-blue-600 shadow-sm shadow-blue-200 flex items-center gap-1.5 transition cursor-pointer">
-                        <span>📖</span>
-                        <span>12대 분야·법령</span>
+                <!-- 구분선 -->
+                <div class="h-4 w-[1px] bg-slate-200 hidden md:block"></div>
+
+                <!-- 메인 네비게이션 탭 리스트 -->
+                <nav class="hidden md:flex items-center gap-1.5 overflow-x-auto py-1" id="desktop-nav-tabs">
+                    <!-- 활성화 탭 (블루 포인트) -->
+                    <button type="button" data-view="fields" onclick="showView('fields')" class="nav-tab-btn px-3.5 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold whitespace-nowrap shadow-sm hover:bg-blue-700 transition flex items-center gap-1.5 cursor-pointer">
+                        <span>분야·법령 가이드</span>
                     </button>
-                    <button type="button" data-view="practicum" onclick="showView('practicum')" class="nav-tab-btn flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1.5 transition cursor-pointer">
-                        <span>📅</span>
+
+                    <!-- 일반 탭 + 카운트 뱃지 -->
+                    <button type="button" data-view="practicum" onclick="showView('practicum')" class="nav-tab-btn flex items-center gap-1.5 px-3 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-sm font-medium transition whitespace-nowrap cursor-pointer">
                         <span>실습처 탐색</span>
-                        <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">320</span>
+                        <span class="nav-badge text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-semibold border border-slate-200/70">320</span>
                     </button>
-                    <button type="button" data-view="residency" onclick="showView('residency')" class="nav-tab-btn flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1.5 transition cursor-pointer">
-                        <span>🎓</span>
+
+                    <button type="button" data-view="residency" onclick="showView('residency')" class="nav-tab-btn flex items-center gap-1.5 px-3 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-sm font-medium transition whitespace-nowrap cursor-pointer">
                         <span>수련처 탐색</span>
-                        <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">284곳</span>
+                        <span class="nav-badge text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-semibold border border-slate-200/70">284</span>
                     </button>
-                    <button type="button" data-view="internship" onclick="showView('internship')" class="nav-tab-btn flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1.5 transition cursor-pointer">
-                        <span>🌱</span>
+
+                    <button type="button" data-view="internship" onclick="showView('internship')" class="nav-tab-btn flex items-center gap-1.5 px-3 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-sm font-medium transition whitespace-nowrap cursor-pointer">
                         <span>청년인턴·일경험</span>
-                        <span id="nav-internship-badge" class="nav-badge px-1.5 py-0.2 text-[10px] bg-emerald-100 text-emerald-800 rounded-full font-bold">39</span>
+                        <span id="nav-internship-badge" class="nav-badge text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-semibold border border-slate-200/70">39</span>
                     </button>
-                    <button type="button" data-view="jobs" onclick="showView('jobs')" class="nav-tab-btn flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1.5 transition cursor-pointer">
-                        <span>💼</span>
-                        <span>취업공고</span>
-                        <span id="nav-jobs-badge" class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">3,862</span>
+
+                    <button type="button" data-view="jobs" onclick="showView('jobs')" class="nav-tab-btn flex items-center gap-1.5 px-3 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-sm font-medium transition whitespace-nowrap cursor-pointer">
+                        <span>채용공고</span>
+                        <span id="nav-jobs-badge" class="nav-badge text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-semibold border border-slate-200/70">3,862</span>
                     </button>
-                    <button type="button" data-view="news" onclick="showView('news')" class="nav-tab-btn flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1.5 transition cursor-pointer">
-                        <span>📄</span>
+
+                    <button type="button" data-view="useful-sites" onclick="showView('useful-sites')" class="nav-tab-btn flex items-center gap-1.5 px-3 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-sm font-medium transition whitespace-nowrap cursor-pointer">
+                        <span>🔗 유용한 사이트</span>
+                        <span id="nav-useful-badge" class="nav-badge text-xs px-2 py-0.5 rounded-md bg-blue-100 text-blue-700 font-semibold border border-blue-200/70">35</span>
+                    </button>
+
+                    <button type="button" data-view="news" onclick="showView('news')" class="nav-tab-btn flex items-center gap-1.5 px-3 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-sm font-medium transition whitespace-nowrap cursor-pointer">
                         <span>복지 뉴스</span>
-                        <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">21</span>
+                        <span class="nav-badge text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-semibold border border-slate-200/70">21</span>
                     </button>
+                </nav>
+            </div>
 
-                    <!-- 내 준비함 서랍 열기 버튼 -->
-                    <button type="button" onclick="toggleWorkspaceDrawer()" class="ml-1 px-3 py-1.5 bg-amber-50 text-amber-900 border border-amber-200 hover:bg-amber-100 font-extrabold rounded-xl shadow-2xs transition flex items-center gap-1.5 text-xs cursor-pointer">
-                        <span>⭐ 내 준비함</span>
-                        <span id="nav-bookmark-count" class="text-[11px] bg-amber-500 text-white px-1.5 py-0.2 rounded-full font-black">6</span>
-                    </button>
-                </div>
+            <!-- 우측: 유틸리티 (검색, 알림, 내 준비함, 모바일 토글) -->
+            <div class="flex items-center gap-2 flex-shrink-0">
+                <!-- 검색 버튼 -->
+                <button type="button" onclick="focusGlobalSearch()" class="w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition cursor-pointer" title="검색창 바로가기">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
 
-                <!-- 모바일 퀵 버튼 -->
-                <div class="md:hidden flex items-center gap-2">
-                    <button type="button" onclick="toggleWorkspaceDrawer()" class="px-2.5 py-1 bg-amber-50 text-amber-900 border border-amber-200 rounded-lg text-xs font-bold flex items-center gap-1">
-                        ⭐ <span id="mobile-nav-bookmark-count">6</span>
-                    </button>
-                    <button type="button" onclick="toggleMobileMenu()" class="p-1.5 text-slate-700 text-xl">
-                        ☰
-                    </button>
-                </div>
+                <!-- 알림 버튼 -->
+                <button type="button" onclick="openNoticeModal()" class="relative w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition cursor-pointer" title="새 소식 및 업데이트 공지">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    <span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-rose-500"></span>
+                </button>
+
+                <!-- 내 준비함 퀵 버튼 -->
+                <button type="button" onclick="toggleWorkspaceDrawer()" class="flex items-center gap-2 pl-3 pr-2.5 py-1.5 rounded-full border border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 text-slate-700 text-sm font-semibold transition ml-1 shadow-sm cursor-pointer">
+                    <svg class="text-blue-600 fill-blue-600" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                    <span class="hidden sm:inline">내 준비함</span>
+                    <span id="nav-bookmark-count" class="w-5 h-5 rounded-full bg-blue-100 text-blue-700 text-xs font-bold flex items-center justify-center font-num">6</span>
+                </button>
+
+                <!-- 모바일 메뉴 버튼 -->
+                <button type="button" onclick="toggleMobileMenu()" class="md:hidden p-1.5 text-slate-700 hover:bg-slate-100 rounded-lg text-xl" title="메뉴 열기">
+                    ☰
+                </button>
             </div>
         </div>
 
         <!-- 모바일 드롭다운 메뉴 -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 p-4 space-y-2 text-sm font-bold shadow-lg">
-            <button type="button" onclick="showView('fields')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-blue-50 text-blue-600">12대 분야와 법령</button>
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-200 p-4 space-y-2 text-sm font-bold shadow-lg">
+            <button type="button" onclick="showView('fields')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-blue-50 text-blue-600">분야·법령 가이드</button>
             <button type="button" onclick="showView('practicum')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">실습처 탐색 (320건)</button>
             <button type="button" onclick="showView('residency')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">수련처 탐색 (284곳)</button>
             <button type="button" onclick="showView('internship')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-emerald-50 text-emerald-800">청년인턴·일경험 (39건)</button>
-            <button type="button" onclick="showView('jobs')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">실시간 취업공고 (3,862건)</button>
-            <button type="button" onclick="showView('news')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">복지 뉴스·브리핑 (21건)</button>
+            <button type="button" onclick="showView('jobs')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">채용공고 (3,862건)</button>
+            <button type="button" onclick="showView('useful-sites')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-blue-50 text-blue-700">🔗 유용한 공식 사이트 (35곳)</button>
+            <button type="button" onclick="showView('news')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">복지 뉴스 (21건)</button>
         </div>
-    </nav>
+    </header>
 
-    <!-- 모바일 전용 스티치 원본 가로 스크롤 탭 바 (Sticky Horizontal Tabs) -->
-    <div class="md:hidden sticky top-[60px] z-30 px-3 py-2 bg-slate-50/95 backdrop-blur-md border-b border-slate-200/80">
+    <!-- 모바일 전용 가로 스크롤 탭 바 (Sticky Horizontal Tabs) -->
+    <div class="md:hidden sticky top-[100px] z-30 px-3 py-2 bg-slate-50/95 backdrop-blur-md border-b border-slate-200/80">
         <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="mobile-sticky-tabs">
             <button type="button" data-view="fields" onclick="showView('fields')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-blue-600 shadow-sm shadow-blue-200 flex items-center gap-1 transition cursor-pointer">
-                <span>📖</span>
-                <span>12대 분야·법령</span>
+                <span>분야·법령</span>
             </button>
             <button type="button" data-view="practicum" onclick="showView('practicum')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
-                <span>📅</span>
-                <span>실습처 탐색</span>
+                <span>실습처</span>
                 <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">320</span>
             </button>
             <button type="button" data-view="residency" onclick="showView('residency')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
-                <span>🎓</span>
-                <span>수련처 탐색</span>
-                <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">284곳</span>
+                <span>수련처</span>
+                <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">284</span>
             </button>
             <button type="button" data-view="internship" onclick="showView('internship')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
-                <span>🌱</span>
-                <span>청년인턴·일경험</span>
-                <span id="mobile-nav-internship-badge" class="nav-badge px-1.5 py-0.2 text-[10px] bg-emerald-100 text-emerald-800 rounded-full font-bold">39</span>
+                <span>청년인턴</span>
+                <span id="mobile-nav-internship-badge" class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">39</span>
             </button>
             <button type="button" data-view="jobs" onclick="showView('jobs')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
-                <span>💼</span>
-                <span>취업공고</span>
+                <span>채용공고</span>
                 <span id="mobile-nav-jobs-badge" class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">3,862</span>
             </button>
+            <button type="button" data-view="useful-sites" onclick="showView('useful-sites')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
+                <span>🔗 유용한 사이트</span>
+                <span id="mobile-nav-useful-badge" class="nav-badge px-1.5 py-0.2 text-[10px] bg-blue-100 text-blue-700 rounded-full font-bold">35</span>
+            </button>
             <button type="button" data-view="news" onclick="showView('news')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
-                <span>📄</span>
                 <span>복지 뉴스</span>
                 <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">21</span>
             </button>
@@ -216,7 +236,7 @@
     </div>
 
     <!-- 메인 컨테이너 -->
-    <main class="flex-grow pt-24 pb-16">
+    <main class="flex-grow pt-8 pb-16">
         
         <!-- ==================== VIEW 1: 12대 분야와 법령 도감 ==================== -->
         <section id="view-fields" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -824,6 +844,20 @@
                 </div>
             </div>
 
+            <!-- 활성 필터 상태 요약 표시 -->
+            <div class="flex items-center justify-between text-xs text-slate-500 px-1 mb-4">
+                <div>
+                    총 <strong id="residency-total-count" class="text-blue-700 font-extrabold">284</strong>개 전문 수련기관 공고 탐색됨
+                </div>
+                <div class="text-[11px] text-slate-400">
+                    💡 정신건강·의료·학교 1년 법정 수련과정 (사회복지사 1급 필수)
+                </div>
+            </div>
+
+            <!-- 공고 카드 그리드 -->
+            <div id="residency-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Dynamically populated by renderResidencyCards() -->
+            </div>
         </section>
 
         <!-- ==================== VIEW 4: 청년인턴 & 청년 일경험 ==================== -->
@@ -1038,93 +1072,6 @@
             </div>
 
             <!-- 🏛️ [상단 허브] 우리 동네 복지관 채용게시판 둘러보기 (전국 8,434개 법정 실습·복지기관 연동 Table) -->
-            <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs mb-6 overflow-hidden">
-                <div class="p-4 sm:p-5 bg-gradient-to-r from-slate-50 via-blue-50/30 to-indigo-50/20 border-b border-slate-200/80 flex flex-col md:flex-row md:items-center justify-between gap-3">
-                    <div class="space-y-1">
-                        <div class="flex items-center gap-2">
-                            <span class="px-2 py-0.5 rounded-md bg-blue-600 text-white font-extrabold text-[10px]">전국 8,434개 연동</span>
-                            <h3 class="text-base sm:text-lg font-black text-slate-900 tracking-tight">🏢 우리 동네 복지관 공식 채용센터 둘러보기</h3>
-                        </div>
-                        <p class="text-xs text-slate-500">기관을 선택하여 각 복지관의 공식 홈페이지 채용공고 게시판과 대표전화로 바로 연결할 수 있습니다.</p>
-                    </div>
-                    <!-- 접기/펼치기 토글 버튼 -->
-                    <button type="button" onclick="toggleJobsHubTable()" id="jobs-hub-toggle-btn" class="self-start md:self-auto px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:border-blue-300 text-slate-700 font-bold text-xs shadow-2xs hover:bg-blue-50/50 transition cursor-pointer flex items-center gap-1.5">
-                        <span id="jobs-hub-toggle-icon">▼</span>
-                        <span id="jobs-hub-toggle-text">채용센터 디렉토리 닫기</span>
-                    </button>
-                </div>
-
-                <div id="jobs-hub-content" class="p-4 sm:p-5 space-y-3.5">
-                    <!-- 검색 및 지역 필터 바 -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 text-xs">
-                        <div class="sm:col-span-3">
-                            <select id="jobs-hub-region-select" onchange="onJobHubRegionChange(this.value)" class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="전체">전국 전체 (8,434개소)</option>
-                                <option value="서울" selected>서울 (1,498개소)</option>
-                                <option value="경기">경기 (1,842개소)</option>
-                                <option value="인천">인천 (412개소)</option>
-                                <option value="부산">부산 (615개소)</option>
-                                <option value="대구">대구 (420개소)</option>
-                                <option value="대전">대전 (295개소)</option>
-                                <option value="광주">광주 (310개소)</option>
-                                <option value="울산">울산 (180개소)</option>
-                                <option value="세종">세종 (75개소)</option>
-                                <option value="강원">강원 (365개소)</option>
-                                <option value="충북">충북 (320개소)</option>
-                                <option value="충남">충남 (410개소)</option>
-                                <option value="전북">전북 (390개소)</option>
-                                <option value="전남">전남 (450개소)</option>
-                                <option value="경북">경북 (485개소)</option>
-                                <option value="경남">경남 (520개소)</option>
-                                <option value="제주">제주 (147개소)</option>
-                            </select>
-                        </div>
-                        <div class="sm:col-span-3">
-                            <select id="jobs-hub-subregion-select" onchange="onJobHubSubRegionChange(this.value)" class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="전체">시·군·구 전체</option>
-                            </select>
-                        </div>
-                        <div class="sm:col-span-6 relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
-                            <input id="jobs-hub-search-input" oninput="onJobHubSearchInput(this.value)" class="w-full pl-9 pr-8 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500" placeholder="복지관·시설명 검색 (예: 마포, 신사, 분당, 상록수...)" type="text">
-                            <button type="button" onclick="clearJobHubSearch()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs font-bold cursor-pointer">✕</button>
-                        </div>
-                    </div>
-
-                    <!-- 컴팩트 Table 리스트 -->
-                    <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white">
-                        <table class="w-full text-left text-xs border-collapse">
-                            <thead>
-                                <tr class="bg-slate-50/90 text-slate-600 font-bold border-b border-slate-200">
-                                    <th class="py-2.5 px-3 text-center w-12">번호</th>
-                                    <th class="py-2.5 px-3 min-w-[140px]">기관명 (사회복지시설)</th>
-                                    <th class="py-2.5 px-3 min-w-[100px]">소재지</th>
-                                    <th class="py-2.5 px-3 min-w-[110px]">시설분야</th>
-                                    <th class="py-2.5 px-3 min-w-[80px] text-center">지도자</th>
-                                    <th class="py-2.5 px-3 text-center min-w-[130px]">공식 채용게시판</th>
-                                    <th class="py-2.5 px-3 text-center min-w-[100px]">대표전화</th>
-                                </tr>
-                            </thead>
-                            <tbody id="jobs-hub-table-body" class="divide-y divide-slate-100 text-slate-700 font-medium">
-                                <!-- Injected dynamically by renderJobsHubTable() -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- 테이블 하단 푸터 및 더보기 -->
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1 text-xs text-slate-500">
-                        <div id="jobs-hub-count-info" class="font-medium">
-                            검색 결과: <strong class="text-blue-600" id="jobs-hub-match-count">0</strong>개 기관
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button type="button" onclick="loadMoreJobHubInstitutions()" id="jobs-hub-more-btn" class="px-3 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-bold text-xs border border-slate-200 cursor-pointer transition">
-                                + 15개 더보기
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- 실시간 채용공고 멀티 티어 퀵검색 카드 -->
             <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs mb-6 space-y-3">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-2">
@@ -1224,7 +1171,104 @@
             </div>
         </section>
 
-        <!-- ==================== VIEW 5: 복지 뉴스·브리핑 ==================== -->
+        <!-- ==================== VIEW 6: 🔗 유용한 사이트 (공식 출처 & 포털 허브) ==================== -->
+        <section id="view-useful-sites" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 hidden">
+            <!-- 섹션 헤더 및 타이틀 -->
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold mb-3 shadow-2xs">
+                    🔗 공공기관 · 정부부처 · 법령포털 · 실습자격협회 · 메이저 NGO 공식 출처 통합 허브
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mb-2">유용한 공식 사이트 디렉토리 (35선)</h2>
+                <p class="text-xs sm:text-sm text-slate-500 max-w-2xl mx-auto">
+                    본 플랫폼의 법령 도감, 실습처, 수련기관, 청년일경험 및 채용 데이터의 공식 출처이자 사회복지사가 반드시 알아야 할 정부부처, 국가법령정보센터, 공인 자격협회, 공공기관 알리오, 메이저 NGO를 한곳에서 바로 연결합니다.
+                </p>
+            </div>
+
+            <!-- 4대 요약 통계 카드 -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                <div onclick="setUsefulSiteCategory('전체')" class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-2xs hover:border-blue-400 hover:shadow-xs transition cursor-pointer space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-medium text-slate-500">전체 공식 포털</span>
+                        <span class="text-blue-600 text-sm font-bold">🌐</span>
+                    </div>
+                    <div class="flex items-baseline gap-1">
+                        <span id="useful-stat-total" class="text-xl sm:text-2xl font-black text-slate-900">35</span>
+                        <span class="text-xs font-bold text-blue-600">곳</span>
+                    </div>
+                    <span class="text-[10px] text-slate-400 block">공공·공익 공식 웹사이트</span>
+                </div>
+                <div onclick="setUsefulSiteCategory('정부·법령')" class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-2xs hover:border-indigo-400 hover:shadow-xs transition cursor-pointer space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-medium text-slate-500">정부·법령·전산망</span>
+                        <span class="text-indigo-600 text-sm font-bold">🏛️</span>
+                    </div>
+                    <div class="flex items-baseline gap-1">
+                        <span id="useful-stat-gov" class="text-xl sm:text-2xl font-black text-slate-900">8</span>
+                        <span class="text-xs font-bold text-indigo-600">곳</span>
+                    </div>
+                    <span class="text-[10px] text-slate-400 block">복지부·법제처·W4C 등</span>
+                </div>
+                <div onclick="setUsefulSiteCategory('실습·자격')" class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-2xs hover:border-emerald-400 hover:shadow-xs transition cursor-pointer space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-medium text-slate-500">자격관리·실습협회</span>
+                        <span class="text-emerald-600 text-sm font-bold">📜</span>
+                    </div>
+                    <div class="flex items-baseline gap-1">
+                        <span id="useful-stat-assoc" class="text-xl sm:text-2xl font-black text-slate-900">7</span>
+                        <span class="text-xs font-bold text-emerald-600">곳</span>
+                    </div>
+                    <span class="text-[10px] text-slate-400 block">사협자격센터·인재원 등</span>
+                </div>
+                <div onclick="setUsefulSiteCategory('메이저 NGO')" class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-2xs hover:border-rose-400 hover:shadow-xs transition cursor-pointer space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-medium text-slate-500">메이저 NGO·공익재단</span>
+                        <span class="text-rose-600 text-sm font-bold">🌍</span>
+                    </div>
+                    <div class="flex items-baseline gap-1">
+                        <span id="useful-stat-ngo" class="text-xl sm:text-2xl font-black text-slate-900">7</span>
+                        <span class="text-xs font-bold text-rose-600">곳</span>
+                    </div>
+                    <span class="text-[10px] text-slate-400 block">사랑의열매·월드비전 등</span>
+                </div>
+            </div>
+
+            <!-- 퀵 검색 & 카테고리 필터 콘솔 박스 -->
+            <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-xs space-y-4">
+                <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+                    <div class="relative flex-1">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                            🔍
+                        </span>
+                        <input type="text" id="useful-search-input" oninput="handleUsefulSiteSearch(this.value)" placeholder="기관명, 포털명, 주요 기능 및 소관 법령 검색..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm placeholder-slate-400">
+                    </div>
+                    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1" id="useful-category-pills">
+                        <button type="button" onclick="setUsefulSiteCategory('전체')" class="useful-cat-btn px-3 py-1.5 rounded-xl bg-blue-600 text-white font-bold text-xs flex-shrink-0 cursor-pointer shadow-2xs">전체보기</button>
+                        <button type="button" onclick="setUsefulSiteCategory('정부·법령')" class="useful-cat-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏛️ 정부·법령</button>
+                        <button type="button" onclick="setUsefulSiteCategory('실습·자격')" class="useful-cat-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🎓 실습·자격</button>
+                        <button type="button" onclick="setUsefulSiteCategory('인턴·일경험')" class="useful-cat-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🌱 인턴·일경험</button>
+                        <button type="button" onclick="setUsefulSiteCategory('복지포털')" class="useful-cat-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🌟 복지포털</button>
+                        <button type="button" onclick="setUsefulSiteCategory('메이저 NGO')" class="useful-cat-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🌍 메이저 NGO</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 활성 필터 상태 요약 표시 -->
+            <div class="flex items-center justify-between text-xs text-slate-500 px-1">
+                <div>
+                    총 <strong id="useful-sites-count" class="text-blue-700 font-extrabold">35</strong>개의 공식 사이트가 안내 중입니다
+                </div>
+                <div class="text-[11px] text-slate-400">
+                    💡 각 사이트명을 클릭하시면 새 탭에서 공식 홈페이지로 즉시 이동합니다.
+                </div>
+            </div>
+
+            <!-- 사이트 카드 그리드 -->
+            <div id="useful-sites-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Dynamically populated by renderUsefulSitesCards() -->
+            </div>
+        </section>
+
+        <!-- ==================== VIEW 7: 복지 뉴스·브리핑 ==================== -->
         <section id="view-news" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 hidden">
             <div class="text-center mb-6">
                 <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold mb-3">
@@ -7796,25 +7840,33 @@
 
         // 3. 뷰 전환 및 서랍 인터랙션 스크립트
         function showView(viewId) {
-            const sections = ['fields', 'practicum', 'residency', 'internship', 'jobs', 'news'];
+            const sections = ['fields', 'practicum', 'residency', 'internship', 'jobs', 'useful-sites', 'news'];
             sections.forEach(id => {
                 const el = document.getElementById('view-' + id);
                 if (el) el.classList.toggle('hidden', id !== viewId);
             });
 
-            // 탭 버튼 활성 스타일 업데이트 (데스크톱 및 모바일 스티치 알약 스타일 동기화)
+            // 탭 버튼 활성 스타일 업데이트 (스티치 GNB 데스크톱 및 모바일 스티치 바 일체화)
             document.querySelectorAll('.nav-tab-btn').forEach(btn => {
                 const isCurrent = btn.getAttribute('data-view') === viewId;
                 const badge = btn.querySelector('.nav-badge');
-                if (isCurrent) {
-                    btn.className = 'nav-tab-btn flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-blue-600 shadow-sm shadow-blue-200 flex items-center gap-1.5 transition cursor-pointer';
-                    if (badge) {
-                        badge.className = 'nav-badge px-1.5 py-0.2 text-[10px] bg-white/20 text-white rounded-full font-bold';
+                const isMobile = btn.closest('#mobile-sticky-tabs') !== null;
+
+                if (isMobile) {
+                    if (isCurrent) {
+                        btn.className = 'nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-blue-600 shadow-sm shadow-blue-200 flex items-center gap-1 transition cursor-pointer';
+                        if (badge) badge.className = 'nav-badge px-1.5 py-0.2 text-[10px] bg-white/20 text-white rounded-full font-bold';
+                    } else {
+                        btn.className = 'nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer';
+                        if (badge) badge.className = 'nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold';
                     }
                 } else {
-                    btn.className = 'nav-tab-btn flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1.5 transition cursor-pointer';
-                    if (badge) {
-                        badge.className = 'nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold';
+                    if (isCurrent) {
+                        btn.className = 'nav-tab-btn px-3.5 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold whitespace-nowrap shadow-sm hover:bg-blue-700 transition flex items-center gap-1.5 cursor-pointer';
+                        if (badge) badge.className = 'nav-badge text-xs px-2 py-0.5 rounded-md bg-white/20 text-white font-semibold';
+                    } else {
+                        btn.className = 'nav-tab-btn flex items-center gap-1.5 px-3 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-sm font-medium transition whitespace-nowrap cursor-pointer';
+                        if (badge) badge.className = 'nav-badge text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-semibold border border-slate-200/70';
                     }
                 }
             });
@@ -7822,6 +7874,31 @@
             const mobileMenu = document.getElementById('mobile-menu');
             if (mobileMenu) mobileMenu.classList.add('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 스티치 헤더 유틸리티: 전역 검색 포커스
+        function focusGlobalSearch() {
+            const activeView = ['practicum', 'residency', 'internship', 'jobs', 'news', 'fields'].find(id => {
+                const el = document.getElementById('view-' + id);
+                return el && !el.classList.contains('hidden');
+            }) || 'fields';
+
+            let targetInput = null;
+            if (activeView === 'practicum') targetInput = document.getElementById('practicum-search-input');
+            else if (activeView === 'residency') targetInput = document.getElementById('residency-search-input');
+            else if (activeView === 'internship') targetInput = document.getElementById('internship-search-input');
+            else if (activeView === 'jobs') targetInput = document.getElementById('jobs-search-input');
+            else targetInput = document.getElementById('practicum-search-input');
+
+            if (targetInput) {
+                targetInput.focus();
+                targetInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // 스티치 헤더 유틸리티: 알림 안내 모달/토스트
+        function openNoticeModal() {
+            alert('🔔 [실시간 공지 안내]\n• 2026 현행 사회복지사업법 및 한국사회복지사협회 법정 실습 기준이 매일 06:00 전수 동기화됩니다.\n• 실습일지 양식 및 슈퍼바이저 면접 가이드는 상단 안내 바에서 즉시 열람하실 수 있습니다.');
         }
 
         function toggleWorkspaceDrawer() {
@@ -8238,7 +8315,7 @@
                 }
                 // 2) SubRegion match
                 if (currentPracHubSubRegion !== '전체') {
-                    if (inst.subRegion !== currentPracHubSubRegion) return false;
+                    if (!(inst.subRegion || '').includes(currentPracHubSubRegion)) return false;
                 }
                 // 3) Keyword match
                 if (currentPracHubSearch) {
@@ -10313,6 +10390,8 @@
         window.openPdfBinderModal = openPdfBinderModal;
         window.closePdfBinderModal = closePdfBinderModal;
         window.renderPdfBinderContent = renderPdfBinderContent;
+        window.focusGlobalSearch = focusGlobalSearch;
+        window.openNoticeModal = openNoticeModal;
         window.openWorkspaceDrawer = function() {
             const d = document.getElementById('workspace-drawer');
             if (d && d.classList.contains('hidden')) toggleWorkspaceDrawer();
@@ -10325,16 +10404,136 @@
             document.documentElement.classList.toggle('dark');
         };
 
+        // --- 7-3. 🔗 유용한 공식 사이트 허브 상태 및 렌더링 ---
+        let currentUsefulCategory = '전체';
+        let currentUsefulSearch = '';
+
+        function setUsefulSiteCategory(cat) {
+            currentUsefulCategory = cat;
+            document.querySelectorAll('.useful-cat-btn').forEach(btn => {
+                if (btn.innerText.includes(cat) || (cat === '전체' && btn.innerText.includes('전체'))) {
+                    btn.className = 'useful-cat-btn px-3 py-1.5 rounded-xl bg-blue-600 text-white font-bold text-xs flex-shrink-0 cursor-pointer shadow-2xs';
+                } else {
+                    btn.className = 'useful-cat-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer';
+                }
+            });
+            renderUsefulSitesCards();
+        }
+
+        function handleUsefulSiteSearch(val) {
+            currentUsefulSearch = (val || '').trim().toLowerCase();
+            renderUsefulSitesCards();
+        }
+
+        function renderUsefulSitesCards() {
+            const grid = document.getElementById('useful-sites-cards-grid');
+            if (!grid) return;
+
+            const siteList = window.USEFUL_OFFICIAL_SITES || [];
+
+            // Update top stats
+            const statTotal = document.getElementById('useful-stat-total');
+            const statGov = document.getElementById('useful-stat-gov');
+            const statAssoc = document.getElementById('useful-stat-assoc');
+            const statNgo = document.getElementById('useful-stat-ngo');
+            if (statTotal) statTotal.innerText = siteList.length.toLocaleString();
+            if (statGov) statGov.innerText = siteList.filter(s => s.category === '정부·법령').length.toLocaleString();
+            if (statAssoc) statAssoc.innerText = siteList.filter(s => s.category === '실습·자격').length.toLocaleString();
+            if (statNgo) statNgo.innerText = siteList.filter(s => s.category === '메이저 NGO').length.toLocaleString();
+
+            const filtered = siteList.filter(site => {
+                if (currentUsefulCategory !== '전체' && site.category !== currentUsefulCategory) {
+                    return false;
+                }
+                if (currentUsefulSearch) {
+                    const combined = (
+                        (site.name || '') + ' ' +
+                        (site.nameEn || '') + ' ' +
+                        (site.desc || '') + ' ' +
+                        (site.duty || '') + ' ' +
+                        (site.category || '')
+                    ).toLowerCase();
+                    if (!combined.includes(currentUsefulSearch)) return false;
+                }
+                return true;
+            });
+
+            const countEl = document.getElementById('useful-sites-count');
+            if (countEl) countEl.innerText = filtered.length.toLocaleString();
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-16 text-center bg-white rounded-2xl border border-dashed border-slate-200">
+                        <span class="text-4xl block mb-2">🔍</span>
+                        <h3 class="text-base font-bold text-slate-800 mb-1">일치하는 공식 사이트가 없습니다</h3>
+                        <p class="text-xs text-slate-400">검색어를 변경하거나 카테고리 필터를 '전체보기'로 전환해보세요.</p>
+                        <button type="button" onclick="setUsefulSiteCategory('전체'); handleUsefulSiteSearch('');" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 transition">필터 초기화</button>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(site => `
+                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:shadow-md hover:border-blue-400 transition-all duration-200 flex flex-col justify-between group">
+                    <div class="space-y-3">
+                        <div class="flex items-start justify-between gap-2">
+                            <div class="flex items-center gap-2.5">
+                                <span class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-xl flex-shrink-0 shadow-2xs group-hover:scale-105 transition">
+                                    ${site.icon || '🌐'}
+                                </span>
+                                <div class="min-w-0">
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border ${site.badgeClass || 'bg-slate-100 text-slate-700 border-slate-300'} mb-1 inline-block">
+                                        ${escapeHtml(site.badge || site.category)}
+                                    </span>
+                                    <h4 class="text-[11px] font-bold text-slate-400 truncate">
+                                        ${escapeHtml(site.nameEn || '')}
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 class="text-base font-extrabold text-slate-900 group-hover:text-blue-600 transition leading-snug">
+                            <a href="${site.url}" target="_blank" rel="noopener noreferrer" class="hover:underline">
+                                ${escapeHtml(site.name)}
+                            </a>
+                        </h3>
+
+                        <p class="text-xs text-slate-600 leading-relaxed line-clamp-2">
+                            ${escapeHtml(site.desc || '')}
+                        </p>
+
+                        <div class="bg-slate-50/80 rounded-xl p-3 text-[11px] text-slate-600 border border-slate-100 space-y-1">
+                            <div class="flex items-start gap-1.5">
+                                <span class="text-blue-600 font-bold flex-shrink-0">주요역할:</span>
+                                <span class="text-slate-700 font-medium line-clamp-2">${escapeHtml(site.duty || '')}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-[10px] text-slate-400 truncate font-mono">
+                            ${escapeHtml(site.url.replace('https://', ''))}
+                        </span>
+                        <a href="${site.url}" target="_blank" rel="noopener noreferrer"
+                           class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-600 text-blue-700 hover:text-white font-bold text-xs transition shadow-2xs hover:shadow-xs">
+                            <span>${escapeHtml(site.officialBadge || '공식 사이트 ↗')}</span>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
         // 10. 초기 구동
         document.addEventListener('DOMContentLoaded', () => {
             renderFieldsTable();
             renderPracticumCards();
+            onPracticumHubRegionChange('서울');
             renderPracticumHubTable();
             renderResidencyCards();
             initInternshipRegions();
             renderInternshipCards();
             renderJobsCards();
-            renderJobsHubTable();
+            renderUsefulSitesCards();
             renderNewsCards();
             updateWorkspaceBadge();
         });
