@@ -155,16 +155,8 @@
                 </nav>
             </div>
 
-            <!-- 우측: 유틸리티 (검색, 알림, 내 준비함, 모바일 토글) -->
+            <!-- 우측: 유틸리티 (알림, 내 준비함, 모바일 토글) -->
             <div class="flex items-center gap-2 flex-shrink-0">
-                <!-- 검색 버튼 -->
-                <button type="button" onclick="focusGlobalSearch()" class="w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition cursor-pointer" title="검색창 바로가기">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                </button>
-
                 <!-- 알림 버튼 -->
                 <button type="button" onclick="openNoticeModal()" class="relative w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition cursor-pointer" title="새 소식 및 업데이트 공지">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -187,6 +179,26 @@
                 <button type="button" onclick="toggleMobileMenu()" class="md:hidden p-1.5 text-slate-700 hover:bg-slate-100 rounded-lg text-xl" title="메뉴 열기">
                     ☰
                 </button>
+            </div>
+        </div>
+
+        <!-- 2. 하단 서브 안내 & 바로가기 바 (스티치 원본 사양) -->
+        <div class="border-t border-slate-100 bg-slate-50/80 text-xs text-slate-600">
+            <div class="max-w-[1600px] mx-auto px-4 sm:px-6 h-9 flex items-center justify-between">
+                <!-- 공지사항 인라인 -->
+                <div class="flex items-center gap-2 truncate">
+                    <span class="px-1.5 py-0.5 rounded bg-slate-200/80 text-slate-700 font-semibold text-[11px]">공지</span>
+                    <a href="#" onclick="showView('fields'); return false;" class="truncate hover:text-blue-600 transition">2026 현행 사회복지사업법 및 필수 실습 규정 안내</a>
+                </div>
+
+                <!-- 퀵 서브 링크 -->
+                <div class="hidden sm:flex items-center gap-4 text-slate-500 flex-shrink-0">
+                    <a href="#" onclick="openPracticumGuideModal(); return false;" class="hover:text-slate-900 transition cursor-pointer">실습일지 양식 모음</a>
+                    <span class="w-px h-3 bg-slate-300"></span>
+                    <a href="#" onclick="showView('residency'); return false;" class="hover:text-slate-900 transition cursor-pointer">자격기준 간편조회</a>
+                    <span class="w-px h-3 bg-slate-300"></span>
+                    <a href="#" onclick="showView('practicum'); return false;" class="hover:text-slate-900 transition cursor-pointer">실습인정기관 리스트</a>
+                </div>
             </div>
         </div>
 
@@ -1442,7 +1454,7 @@
                     <span class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-sm">🧭</span>
                     <div>
                         <h3 class="font-black text-slate-900 text-base">현장실습 합격 가이드 STEP 1~3</h3>
-                        <p class="text-[11px] text-slate-500">백석대학교 사회복지학부 천덕희 교수님 교육 프로토콜</p>
+                        <p class="text-[11px] text-slate-500">강남대학교 사회복지학부 천덕희 교수님 교육 프로토콜</p>
                     </div>
                 </div>
                 <button type="button" onclick="closePracticumGuideModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-600">✕</button>
@@ -1528,7 +1540,7 @@
             </div>
 
             <div class="pt-2 flex justify-between items-center text-xs text-slate-400">
-                <span>제작 및 감수: 정다운 | 백석대학교 사회복지학부 천덕희 교수님</span>
+                <span>제작 및 감수: 정다운 | 강남대학교 사회복지학부 천덕희 교수님</span>
                 <button type="button" onclick="closePdfBinderModal()" class="px-4 py-2 rounded-xl bg-slate-200 text-slate-700 font-bold hover:bg-slate-300 transition cursor-pointer">
                     닫기
                 </button>
@@ -1539,23 +1551,15 @@
     <!-- 푸터 및 제작자 안내 -->
     <footer class="bg-white border-t border-slate-200/80 py-8 text-xs text-slate-500">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 border-b border-slate-100">
-                <div>
-                    <strong class="text-sm font-black text-slate-800 block mb-1">사회복지 현장 나침반 에디토리얼 포털</strong>
-                    <p class="text-slate-400">대학생을 위한 12대 분야별 법령 도감 · 실습 · 수련 · 75선 취업 큐레이션</p>
-                </div>
-                <div class="flex flex-wrap gap-4 text-slate-600">
-                    <a href="#" class="hover:underline">이용약관</a>
-                    <a href="#" class="hover:underline font-bold text-slate-800">개인정보처리방침</a>
-                    <a href="#" class="hover:underline">면책조항</a>
-                    <a href="#" class="hover:underline">오류제보·제휴문의</a>
-                </div>
+            <div class="pb-6 border-b border-slate-100">
+                <strong class="text-sm font-black text-slate-800 block mb-1">사회복지 현장 나침반 에디토리얼 포털</strong>
+                <p class="text-slate-400">대학생을 위한 12대 분야별 법령 도감 · 실습 · 수련 · 75선 취업 큐레이션</p>
             </div>
             
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 pt-6 text-[11px]">
                 <div class="space-y-1">
                     <div>제작 및 운영: <strong class="text-slate-700">정다운</strong> (연락처: <a href="tel:010-5328-6117" class="underline text-blue-600">010-5328-6117</a> / 이메일: <a href="mailto:ddauny00@gmail.com" class="underline text-blue-600">ddauny00@gmail.com</a>)</div>
-                    <div>학술 및 교육 지도: 백석대학교 사회복지학부 <strong class="text-slate-700">천덕희 교수님</strong> (교수님 문의 및 자문 연계)</div>
+                    <div>학술 및 교육 지도: 강남대학교 사회복지학부 <strong class="text-slate-700">천덕희 교수님</strong> (교수님 문의 및 자문 연계)</div>
                 </div>
                 <div class="text-slate-400 text-right">
                     본 포털의 모든 법령 정보 및 시설 분류는 보건복지부, 행정안전부 법령정보센터를 기준으로 감수되었습니다.<br>
@@ -10304,7 +10308,7 @@
                 text += `  [${chk.checked ? 'V' : ' '}] ${chk.text}\n`;
             });
 
-            text += "\n—\n사회복지 현장 나침반 포털 (제작: 정다운 | 지도: 백석대학교 사회복지학부 천덕희 교수님)";
+            text += "\n—\n사회복지 현장 나침반 포털 (제작: 정다운 | 지도: 강남대학교 사회복지학부 천덕희 교수님)";
 
             navigator.clipboard.writeText(text).then(() => {
                 alert("내 준비함 보관 내용 및 점검 현황이 클립보드에 복사되었습니다!");
