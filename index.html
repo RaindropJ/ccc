@@ -8156,15 +8156,40 @@
                 return COMBINED_PRACTICUM_POSTINGS;
             }
 
-            const welfareList = (typeof PRACTICUM_POSTINGS !== 'undefined' && Array.isArray(PRACTICUM_POSTINGS))
+            // Dual-layer deadline screening: Purge postings expired before current date
+            const todayStr = new Date().toISOString().slice(0, 10);
+            const isPostingActive = (p) => {
+                const dl = p.deadlineDate || p.deadline;
+                if (!dl) return true;
+                if (dl === '9999-12-31' || dl === '상시모집' || dl === '상시') return true;
+                const match = String(dl).match(/^(\d{4})[-.](\d{2})[-.](\d{2})/);
+                if (match) {
+                    const normDate = `${match[1]}-${match[2]}-${match[3]}`;
+                    return normDate >= todayStr;
+                }
+                return true;
+            };
+
+            const rawWelfareList = (typeof PRACTICUM_POSTINGS !== 'undefined' && Array.isArray(PRACTICUM_POSTINGS))
                 ? PRACTICUM_POSTINGS.map(item => Object.assign({}, item, { source: 'welfare', hasDirectNotice: false, directUrl: null, directTitle: null }))
                 : [];
             
-            const directList = (typeof PRACTICUM_DIRECT_POSTINGS !== 'undefined' && Array.isArray(PRACTICUM_DIRECT_POSTINGS))
+            const rawDirectList = (typeof PRACTICUM_DIRECT_POSTINGS !== 'undefined' && Array.isArray(PRACTICUM_DIRECT_POSTINGS))
                 ? PRACTICUM_DIRECT_POSTINGS
                 : [];
 
-            // 1) Build welfare map by composite key: normName + '_' + region
+            // 1) Purge expired postings from direct institutions and welfare
+            const welfareList = rawWelfareList.filter(isPostingActive);
+            const directList = rawDirectList.filter(isPostingActive).map(item => {
+                // Term normalization: Ensure winter term variations standardise to '2026~2027 동계방학 실습'
+                let normTerm = item.term || '2026~2027 동계방학 실습';
+                if (/202[67].*동계/i.test(normTerm) || /동계.*202[67]/i.test(normTerm) || normTerm.includes('동계')) {
+                    normTerm = '2026~2027 동계방학 실습';
+                }
+                return Object.assign({}, item, { term: normTerm });
+            });
+
+            // 2) Build welfare map by composite key: normName + '_' + region
             const welfareMap = new Map();
             welfareList.forEach(item => {
                 const norm = normalizeOrgName(item.institution);
@@ -8175,7 +8200,7 @@
                 }
             });
 
-            // 2) Deduplicate & match direct postings
+            // 3) Deduplicate & match direct postings
             const directDistinct = [];
             directList.forEach(directItem => {
                 const norm = normalizeOrgName(directItem.institution || directItem.name);
@@ -8254,6 +8279,17 @@
             let filtered = dataPool.filter(p => {
                 const pName = p.institution || p.name || '';
                 const pField = p.fieldName || p.field || '';
+
+                // Active deadline filter guard (exclude expired postings)
+                const dl = p.deadlineDate || p.deadline;
+                if (dl && dl !== '9999-12-31' && dl !== '상시모집' && dl !== '상시') {
+                    const todayStr = new Date().toISOString().slice(0, 10);
+                    const match = String(dl).match(/^(\d{4})[-.](\d{2})[-.](\d{2})/);
+                    if (match) {
+                        const normDate = `${match[1]}-${match[2]}-${match[3]}`;
+                        if (normDate < todayStr) return false;
+                    }
+                }
 
                 // 0) Source filter (전체 | 사복협 공식 | 기관 자체발굴)
                 if (currentPracticumSource === 'welfare') {
