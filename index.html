@@ -242,22 +242,27 @@
                     <span class="text-[10px] text-slate-400">클릭 시 해당 부처 소관 시설만 즉시 필터링됩니다.</span>
                 </div>
                 <div id="fields-ministry-filters" class="flex flex-wrap gap-1.5">
-                    <button type="button" onclick="setMinistryFilter('전체')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-extrabold bg-blue-600 text-white shadow-2xs transition cursor-pointer">전체</button>
-                    <button type="button" onclick="setMinistryFilter('보건복지부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">보건복지부</button>
-                    <button type="button" onclick="setMinistryFilter('성평등가족부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">성평등가족부 (구 여가부)</button>
+                    <button type="button" onclick="setMinistryFilter('전체')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-extrabold bg-blue-600 text-white shadow-2xs transition cursor-pointer">전체 (24개 분야)</button>
+                    <button type="button" onclick="setMinistryFilter('보건복지부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">보건복지부 (10)</button>
+                    <button type="button" onclick="setMinistryFilter('성평등가족부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">성평등가족부 (6)</button>
+                    <button type="button" onclick="setMinistryFilter('교육부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">교육부 (2)</button>
                     <button type="button" onclick="setMinistryFilter('고용노동부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">고용노동부</button>
-                    <button type="button" onclick="setMinistryFilter('교육부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">교육부</button>
                     <button type="button" onclick="setMinistryFilter('법무부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">법무부</button>
                     <button type="button" onclick="setMinistryFilter('행정안전부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">행정안전부</button>
-                    <button type="button" onclick="setMinistryFilter('비영리·민간임팩트')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">비영리·민간임팩트</button>
+                    <button type="button" onclick="setMinistryFilter('질병관리청')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">질병관리청</button>
+                    <button type="button" onclick="setMinistryFilter('통일부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">통일부</button>
+                    <button type="button" onclick="setMinistryFilter('국가보훈부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">국가보훈부</button>
+                    <button type="button" onclick="document.getElementById('section-ngo-impact').scrollIntoView({behavior:'smooth'})" class="px-3 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 transition cursor-pointer flex items-center gap-1 shadow-2xs ml-auto">
+                        <span>🤝</span><span>민간 제3섹터 (민법 제32조) ↓</span>
+                    </button>
                 </div>
             </div>
 
             <!-- 검색 및 필터 바 -->
             <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div class="flex items-center gap-2">
-                    <span class="text-base font-extrabold text-slate-800">🏛️ 법정 시설 및 근거법령 분류표</span>
-                    <span id="fields-count-badge" class="text-xs text-slate-400 font-medium">총 25개 법정·확장 분류</span>
+                    <span class="text-base font-extrabold text-slate-800">🏛️ 중앙정부 소관 법정시설 분류표</span>
+                    <span id="fields-count-badge" class="text-xs text-slate-400 font-medium">총 24개 정부부처 법정분야 (+ 민간 제3섹터 별도 안내)</span>
                 </div>
                 <div class="relative w-full sm:w-72">
                     <input id="fields-search-input" oninput="filterFieldsTable(this.value)" type="text" placeholder="시설명, 법령(예: 노인복지법, 의료법)..." class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 text-xs bg-slate-50 focus:bg-white focus:outline-none focus:border-blue-500">
@@ -282,6 +287,125 @@
                             <!-- Injected dynamically by renderFieldsTable() -->
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            <!-- 🤝 [정부부처 외 별도 정보분야] 민간 제3섹터 & 공익임팩트 생태계 (민법 제32조 비영리법인·재단·기업 CSR) -->
+            <div id="section-ngo-impact" class="mt-8 bg-gradient-to-br from-amber-50/50 via-white to-orange-50/30 rounded-2xl border-2 border-amber-200/90 p-5 sm:p-7 shadow-xs space-y-6">
+                <!-- Section Header -->
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-amber-200/70 pb-4">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-0.5 rounded-md bg-amber-600 text-white font-extrabold text-[11px] flex items-center gap-1">
+                                <span>🤝</span><span>정부부처 외 별도 정보분야</span>
+                            </span>
+                            <span class="text-xs font-bold text-amber-900 bg-amber-100/90 px-2.5 py-0.5 rounded-md border border-amber-300/80">
+                                법적 근거: 「민법」 제32조 (비영리법인의 설립과 허가)
+                            </span>
+                        </div>
+                        <h3 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+                            <span>민간 제3섹터 & 사회혁신 임팩트 생태계</span>
+                            <span class="text-xs font-semibold text-slate-500 hidden sm:inline">(국제구호 NGO · 모금배분재단 · 기업 CSR/ESG)</span>
+                        </h3>
+                    </div>
+                    <div class="shrink-0">
+                        <span class="inline-flex items-center gap-1.5 text-xs font-bold text-amber-900 bg-white px-3.5 py-1.5 rounded-xl border border-amber-200 shadow-2xs">
+                            <span>🏛️</span>
+                            <span>정부 행정부처가 아닌 '민간 비영리 공익법인' 영역</span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Legal Context & Explanation Box (민법 제32조와의 관계성) -->
+                <div class="p-4 rounded-xl bg-white/90 border border-amber-200/90 text-xs text-slate-700 leading-relaxed space-y-2">
+                    <div class="font-extrabold text-amber-900 flex items-center gap-1.5 text-xs sm:text-sm">
+                        <span>📜</span>
+                        <span>왜 정부부처 테이블과 경계를 분리했나요? (민법 제32조 및 특별법 관계성)</span>
+                    </div>
+                    <p class="text-slate-600">
+                        대한민국 정부조직법상 중앙행정기관(보건복지부, 교육부 등)의 법령으로 직접 인가·관리하는 공공 사회복지시설과 달리, 
+                        <strong>국제구호 NGO, 모금·배분 공익재단, 기업 출연재단</strong>은 <strong>「민법」 제32조(비영리법인의 설립과 허가)</strong>에 근거하여 
+                        외교부·복지부·행안부 등 소관 주무관청의 허가를 받아 설립된 <strong>비영리 사단·재단법인 및 특별법인</strong>입니다.
+                        정부 행정조직은 아니지만 사회복지학 전공자의 주요 취업 및 커리어 진출 분야(국제개발 모금가, 배분사업가, 기업 CSR 매니저 등)이므로 
+                        정부부처 테이블과 명확한 법적 경계를 두고 별도 정보 섹션으로 특화 안내합니다.
+                    </p>
+                </div>
+
+                <!-- 3대 임팩트 영역 카드 그리드 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- 1. 국제구호·개발협력 NGO -->
+                    <div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-2xs flex flex-col justify-between hover:border-amber-400 transition space-y-3">
+                        <div class="space-y-2.5">
+                            <div class="flex items-center justify-between">
+                                <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-blue-50 text-blue-700 border border-blue-200">글로벌 개발협력</span>
+                                <span class="text-xs">🌍</span>
+                            </div>
+                            <h4 class="text-sm font-extrabold text-slate-900">국제구호 · 개발협력 NGO</h4>
+                            <p class="text-xs text-slate-500 leading-relaxed">
+                                전 세계 빈곤·재난 지역의 아동결연, 긴급구호, 보건·식수위생 및 자립마을 프로젝트를 수행하는 민간 단체.
+                            </p>
+                            <div class="space-y-1.5 pt-1 text-[11px]">
+                                <div class="text-slate-400 font-bold">주요 단체:</div>
+                                <div class="text-slate-700 leading-snug">월드비전, 굿네이버스, 초록우산, 세이브더칠드런, 플랜코리아, 기아대책 (KCOC 회원사)</div>
+                                <div class="text-slate-400 font-bold pt-1">주요 진로·직무:</div>
+                                <div class="text-slate-700 leading-snug">KOICA 개발협력 YP(청년인턴), 해외사업 PM, 글로벌 옹호(Advocacy), 모금마케팅</div>
+                            </div>
+                        </div>
+                        <div class="pt-3 border-t border-slate-100 flex flex-wrap gap-1">
+                            <a href="https://www.law.go.kr/LSW/lsSc.do?menuId=1&subMenuId=15&query=%EB%AF%BC%EB%B2%95" target="_blank" rel="noopener noreferrer" class="px-2 py-1 rounded bg-slate-50 hover:bg-blue-600 hover:text-white text-[10px] font-bold text-slate-700 border border-slate-200 transition">「민법 제32조」 ↗</a>
+                            <a href="https://www.law.go.kr/LSW/lsSc.do?menuId=1&subMenuId=15&query=%EA%B5%AD%EC%A0%9C%EA%B0%9C%EB%B0%9C%ED%98%91%EB%A0%A5%EA%B8%B0%EB%B3%B8%EB%B2%95" target="_blank" rel="noopener noreferrer" class="px-2 py-1 rounded bg-slate-50 hover:bg-blue-600 hover:text-white text-[10px] font-bold text-slate-700 border border-slate-200 transition">「국제개발협력법」 ↗</a>
+                            <a href="https://www.law.go.kr/LSW/lsSc.do?menuId=1&subMenuId=15&query=%EB%B9%84%EC%98%81%EB%A6%AC%EB%AF%BC%EA%B0%84%EB%8B%A8%EC%B2%B4%20%EC%A7%80%EC%9B%90%EB%B2%95" target="_blank" rel="noopener noreferrer" class="px-2 py-1 rounded bg-slate-50 hover:bg-blue-600 hover:text-white text-[10px] font-bold text-slate-700 border border-slate-200 transition">「비영리민간단체법」 ↗</a>
+                        </div>
+                    </div>
+
+                    <!-- 2. 모금·배분 공익재단 -->
+                    <div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-2xs flex flex-col justify-between hover:border-amber-400 transition space-y-3">
+                        <div class="space-y-2.5">
+                            <div class="flex items-center justify-between">
+                                <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">민간 재원 플랫폼</span>
+                                <span class="text-xs">🎁</span>
+                            </div>
+                            <h4 class="text-sm font-extrabold text-slate-900">모금 · 배분 공익재단</h4>
+                            <p class="text-xs text-slate-500 leading-relaxed">
+                                시민과 기업의 기부금을 모금하여 현장 복지시설과 취약계층 공익 프로젝트에 배분·지원하는 민간 거점.
+                            </p>
+                            <div class="space-y-1.5 pt-1 text-[11px]">
+                                <div class="text-slate-400 font-bold">주요 단체:</div>
+                                <div class="text-slate-700 leading-snug">사회복지공동모금회(사랑의열매), 바보의나눔, 아름다운재단, 아산사회복지재단, 삼성복지재단</div>
+                                <div class="text-slate-400 font-bold pt-1">주요 진로·직무:</div>
+                                <div class="text-slate-700 leading-snug">배분사업 기획·공모 심사, 펀드레이징(모금가), 기부자 관계관리(Donor Relations)</div>
+                            </div>
+                        </div>
+                        <div class="pt-3 border-t border-slate-100 flex flex-wrap gap-1">
+                            <a href="https://www.law.go.kr/LSW/lsSc.do?menuId=1&subMenuId=15&query=%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EA%B3%B5%EB%8F%99%EB%AA%A8%EA%B8%88%ED%9A%8C%EB%B2%95" target="_blank" rel="noopener noreferrer" class="px-2 py-1 rounded bg-slate-50 hover:bg-blue-600 hover:text-white text-[10px] font-bold text-slate-700 border border-slate-200 transition">「사회복지공동모금회법」 ↗</a>
+                            <a href="https://www.law.go.kr/LSW/lsSc.do?menuId=1&subMenuId=15&query=%EA%B3%B5%EC%9D%B5%EB%B2%95%EC%9D%B8%EC%9D%98%20%EC%84%A4%EB%A6%BD%C2%B7%EC%9A%B4%EC%98%81%EC%97%90%20%EA%B4%80%ED%95%9C%20%EB%B2%95%EB%A5%A0" target="_blank" rel="noopener noreferrer" class="px-2 py-1 rounded bg-slate-50 hover:bg-blue-600 hover:text-white text-[10px] font-bold text-slate-700 border border-slate-200 transition">「공익법인법」 ↗</a>
+                            <a href="https://www.law.go.kr/LSW/lsSc.do?menuId=1&subMenuId=15&query=%EA%B8%B0%EB%B6%80%EA%B8%88%ED%92%88%EC%9D%98%20%EB%AA%A8%EC%A7%91%20%EB%B0%8F%20%EC%82%AC%EC%9A%A9%EC%97%90%20%EA%B4%80%ED%95%9C%20%EB%B2%95%EB%A5%A0" target="_blank" rel="noopener noreferrer" class="px-2 py-1 rounded bg-slate-50 hover:bg-blue-600 hover:text-white text-[10px] font-bold text-slate-700 border border-slate-200 transition">「기부금품법」 ↗</a>
+                        </div>
+                    </div>
+
+                    <!-- 3. 기업 CSR/ESG & 소셜임팩트 -->
+                    <div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-2xs flex flex-col justify-between hover:border-amber-400 transition space-y-3">
+                        <div class="space-y-2.5">
+                            <div class="flex items-center justify-between">
+                                <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-purple-50 text-purple-700 border border-purple-200">사회적경제 · 기업</span>
+                                <span class="text-xs">🏢</span>
+                            </div>
+                            <h4 class="text-sm font-extrabold text-slate-900">기업 CSR/ESG · 사회적경제</h4>
+                            <p class="text-xs text-slate-500 leading-relaxed">
+                                기업의 사회적 책임(CSR)과 ESG 경영 프로젝트, 비즈니스 모델로 사회문제를 해결하는 사회적기업·소셜벤처.
+                            </p>
+                            <div class="space-y-1.5 pt-1 text-[11px]">
+                                <div class="text-slate-400 font-bold">주요 조직:</div>
+                                <div class="text-slate-700 leading-snug">현대차정몽구재단, SK행복나눔재단, 포스코1%나눔재단, 사회적기업, 소셜벤처</div>
+                                <div class="text-slate-400 font-bold pt-1">주요 진로·직무:</div>
+                                <div class="text-slate-700 leading-snug">사회공헌 프로그램 기획, 사회가치(Social Value) 측정, 소셜벤처 액셀러레이팅</div>
+                            </div>
+                        </div>
+                        <div class="pt-3 border-t border-slate-100 flex flex-wrap gap-1">
+                            <a href="https://www.law.go.kr/LSW/lsSc.do?menuId=1&subMenuId=15&query=%EC%82%AC%ED%9A%8C%EC%A0%81%EA%B8%B0%EC%97%85%20%EC%9C%A1%EC%84%B1%EB%B2%95" target="_blank" rel="noopener noreferrer" class="px-2 py-1 rounded bg-slate-50 hover:bg-blue-600 hover:text-white text-[10px] font-bold text-slate-700 border border-slate-200 transition">「사회적기업 육성법」 ↗</a>
+                            <a href="https://www.law.go.kr/LSW/lsSc.do?menuId=1&subMenuId=15&query=%ED%98%91%EB%8F%99%EC%A1%B0%ED%95%A9%20%EA%B8%B0%EB%B3%B8%EB%B2%95" target="_blank" rel="noopener noreferrer" class="px-2 py-1 rounded bg-slate-50 hover:bg-blue-600 hover:text-white text-[10px] font-bold text-slate-700 border border-slate-200 transition">「협동조합 기본법」 ↗</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1465,17 +1589,6 @@
         usingFacilities: ['읍면동 행정복지센터 (맞춤형복지팀·사회복지전담공무원)', '시·군·구 희망복지지원단', '시·도 사회서비스원 (종합재가센터·국공립시설 위탁운영)', '지역사회보장협의체'],
         laws: ['「사회보장급여법」', '「사회복지사업법」', '「사회서비스 지원 및 사회서비스원 설립·운영에 관한 법률」'],
         note: '지자체 사회복지직 공무원 배치 및 통합사례관리·공공 사회서비스 제공 거점'
-    },
-    {
-        id: 'law-ngo-csr',
-        ministry: '비영리 · 민간임팩트',
-        ministryBadge: 'bg-blue-50 text-blue-800 border-blue-200',
-        facilityCategory: '국제구호 NGO · 공익재단 · 기업 CSR',
-        fieldId: 'ngo',
-        livingFacilities: [],
-        usingFacilities: ['국제구호·개발협력 NGO (KCOC 회원단체 등)', '모금·배분 공익재단 (사회복지공동모금회 사랑의열매·기업 출연재단)', '기업 사회공헌(CSR/ESG)팀 · 사회적기업 · 소셜벤처'],
-        laws: ['「국제개발협력기본법」', '「비영리민간단체 지원법」', '「사회복지공동모금회법」', '「사회적기업 육성법」'],
-        note: '인턴십·KOICA YP·모금/임팩트 커리어 진출 분야 (관련 법정시설은 복지부 등 별도 신고)'
     }
 ];
         const PRACTICUM_POSTINGS = (window.PRACTICUM_POSTINGS && window.PRACTICUM_POSTINGS.length > 0) ? window.PRACTICUM_POSTINGS : [];
@@ -7681,7 +7794,7 @@
             tbody.innerHTML = fullHtml;
 
             const countBadge = document.getElementById('fields-count-badge');
-            if (countBadge) countBadge.innerText = `총 ${rows.length}개 법정·확장 분류 (${groups.length}개 소관부처)`;
+            if (countBadge) countBadge.innerText = `총 ${rows.length}개 정부부처 법정분야 (${groups.length}개 소관부처)`;
         }
 
         let currentMinistryFilter = '전체';
