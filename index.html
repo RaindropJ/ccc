@@ -7558,10 +7558,17 @@
             if (menu) menu.classList.toggle('hidden');
         }
 
-        // 4. View 1: 12대 분야와 법령 테이블 렌더링 & 실시간 검색
+        // 4. View 1: 12대 분야와 법령 테이블 렌더링 & 소관부처별 그룹화
         function renderFieldsTable(rows = STATUTORY_MATRIX) {
             const tbody = document.getElementById('fields-table-body');
             if (!tbody) return;
+
+            if (!rows || rows.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-12 text-center text-slate-400 font-bold">검색된 소관부처 및 법정 시설이 없습니다.</td></tr>`;
+                const countBadge = document.getElementById('fields-count-badge');
+                if (countBadge) countBadge.innerText = '0개 분야';
+                return;
+            }
 
             const badgeColorMap = {
                 'elderly': 'bg-amber-50 text-amber-800 border-amber-200',
@@ -7578,26 +7585,83 @@
                 'ngo-csr': 'bg-slate-100 text-slate-800 border-slate-200'
             };
 
-            tbody.innerHTML = rows.map(r => {
-                const bCls = badgeColorMap[r.fieldId] || 'bg-blue-50 text-blue-800 border-blue-200';
-                const livingHtml = (r.livingFacilities && r.livingFacilities.length > 0)
-                    ? r.livingFacilities.map(f => `• ${escapeHtml(f)}`).join('<br>')
-                    : '<span class="text-slate-400">해당 없음 (생활시설 미규정)</span>';
-                
-                const usingHtml = (r.usingFacilities && r.usingFacilities.length > 0)
-                    ? r.usingFacilities.map(f => `• ${escapeHtml(f)}`).join('<br>')
-                    : '<span class="text-slate-400">해당 없음</span>';
+            const ministryIconMap = {
+                '보건복지부': '🏥',
+                '질병관리청': '🔬',
+                '성평등가족부': '👨‍👩‍👧‍👦',
+                '통일부': '🕊️',
+                '교육부': '🎓',
+                '고용노동부': '💼',
+                '국가보훈부': '🎖️',
+                '법무부': '⚖️',
+                '행정안전부': '🏛️',
+                '비영리 · 민간임팩트': '🤝'
+            };
 
-                const lawsHtml = (r.laws && r.laws.length > 0)
-                    ? r.laws.map(l => {
-                        const query = encodeURIComponent(l.replace(/[「」]/g, '').trim());
-                        return `<a href="https://www.law.go.kr/LSW/lsSc.do?menuId=1&subMenuId=15&query=${query}" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-100 hover:bg-blue-600 hover:text-white font-bold transition text-[11px] border border-slate-200">${escapeHtml(l)} ↗</a>`;
-                    }).join(' ')
-                    : '<span class="text-slate-400">관계 규정 준용</span>';
+            // 소관부처별 연속 행 그룹화 (동일 부처 rowspan 통합)
+            const groups = [];
+            let currentGroup = null;
 
-                return `
-                    <tr class="hover:bg-slate-50/60 transition">
-                        <td class="p-4 text-center font-bold text-blue-700 bg-blue-50/30 border-r border-slate-200">${escapeHtml(r.ministry)}</td>
+            rows.forEach(r => {
+                const ministryName = r.ministry || '기타';
+                if (!currentGroup || currentGroup.ministry !== ministryName) {
+                    currentGroup = {
+                        ministry: ministryName,
+                        items: [r]
+                    };
+                    groups.push(currentGroup);
+                } else {
+                    currentGroup.items.push(r);
+                }
+            });
+
+            let fullHtml = '';
+
+            groups.forEach((group, gIdx) => {
+                const rowCount = group.items.length;
+                const mIcon = ministryIconMap[group.ministry] || '🏛️';
+
+                group.items.forEach((r, idx) => {
+                    const isFirstInGroup = (idx === 0);
+                    const isLastInGroup = (idx === rowCount - 1);
+                    const bCls = badgeColorMap[r.fieldId] || 'bg-blue-50 text-blue-800 border-blue-200';
+                    
+                    const livingHtml = (r.livingFacilities && r.livingFacilities.length > 0)
+                        ? r.livingFacilities.map(f => `• ${escapeHtml(f)}`).join('<br>')
+                        : '<span class="text-slate-400">해당 없음 (생활시설 미규정)</span>';
+                    
+                    const usingHtml = (r.usingFacilities && r.usingFacilities.length > 0)
+                        ? r.usingFacilities.map(f => `• ${escapeHtml(f)}`).join('<br>')
+                        : '<span class="text-slate-400">해당 없음</span>';
+
+                    const lawsHtml = (r.laws && r.laws.length > 0)
+                        ? r.laws.map(l => {
+                            const query = encodeURIComponent(l.replace(/[「」]/g, '').trim());
+                            return `<a href="https://www.law.go.kr/LSW/lsSc.do?menuId=1&subMenuId=15&query=${query}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-100 hover:bg-blue-600 hover:text-white font-bold transition text-[11px] border border-slate-200">${escapeHtml(l)} ↗</a>`;
+                        }).join(' ')
+                        : '<span class="text-slate-400">관계 규정 준용</span>';
+
+                    // 부처 간 구분 강조 테두리
+                    const rowBorderClass = isFirstInGroup && gIdx > 0 
+                        ? 'border-t-2 border-slate-300' 
+                        : (isLastInGroup ? 'border-b border-slate-200' : 'border-b border-slate-100');
+
+                    fullHtml += `<tr class="hover:bg-slate-50/70 transition ${rowBorderClass}">`;
+
+                    // 부처의 첫 번째 행에만 rowspan으로 묶인 셀 렌더링 (보건복지부 등 반복 제거)
+                    if (isFirstInGroup) {
+                        fullHtml += `
+                            <td rowspan="${rowCount}" class="p-4 text-center border-r border-slate-200 align-middle bg-slate-50/70 border-b-2 border-slate-200">
+                                <div class="flex flex-col items-center justify-center gap-1.5 py-2 sticky top-24">
+                                    <span class="w-9 h-9 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center text-base shadow-2xs">${mIcon}</span>
+                                    <span class="text-xs sm:text-sm font-black text-slate-900 tracking-tight leading-tight">${escapeHtml(group.ministry)}</span>
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-50 text-blue-700 border border-blue-200/80 shadow-2xs">${rowCount}개 법정분야</span>
+                                </div>
+                            </td>
+                        `;
+                    }
+
+                    fullHtml += `
                         <td class="p-4 font-bold text-slate-900 border-r border-slate-200">
                             <div class="text-sm font-extrabold mb-1">${escapeHtml(r.facilityCategory)}</div>
                             <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${bCls}">${escapeHtml(r.facilityCategory)}</span>
@@ -7610,12 +7674,14 @@
                                 ⭐ 찜하기
                             </button>
                         </td>
-                    </tr>
-                `;
-            }).join('');
+                    </tr>`;
+                });
+            });
+
+            tbody.innerHTML = fullHtml;
 
             const countBadge = document.getElementById('fields-count-badge');
-            if (countBadge) countBadge.innerText = `총 ${rows.length}개 법정·확장 분류`;
+            if (countBadge) countBadge.innerText = `총 ${rows.length}개 법정·확장 분류 (${groups.length}개 소관부처)`;
         }
 
         let currentMinistryFilter = '전체';
