@@ -13,6 +13,7 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="src/data/sync-meta.js"></script>
     <script src="src/data/residency-284-db.js"></script>
+    <script src="src/data/jobs-db.js"></script>
     <script src="src/data/national-practicum-db.js" defer></script>
 
     <script>
@@ -592,65 +593,162 @@
         <section id="view-jobs" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 hidden">
             <div class="text-center mb-6">
                 <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold mb-3">
-                    2026 서울시사회복지사협회 공인 실존 채용 DB
+                    2026 복지넷 · 사복협 · 공공기관 알리오 공식 채용 실시간 DB
                 </div>
-                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mb-2">인턴·취업처 & 채용공고 75선</h2>
-                <p class="text-xs sm:text-sm text-slate-500">공식 협회 공고문 100% 직행! 청년 인턴십 · 신입 및 경력 정규직 채용정보 실시간 요강</p>
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mb-2">인턴·취업처 & 채용공고 570선</h2>
+                <p class="text-xs sm:text-sm text-slate-500">전국 8,434개 복지기관 공식 채용 탐색 허브 및 실시간 신입·정규직·계약직·청년인턴 채용 요강</p>
             </div>
 
-            <!-- 모바일/데스크톱 핵심 요약 통계 4대 지표 카드 (Stitch 75/code.html 사양 - 수련 분리 및 인건비 가이드라인 고도화) -->
+            <!-- 모바일/데스크톱 핵심 요약 통계 4대 지표 카드 -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-                <div onclick="setJobFilter('track', '전체')" class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-2xs hover:border-blue-400 hover:shadow-xs transition cursor-pointer space-y-1">
+                <div onclick="setJobEmploymentType('전체')" class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-2xs hover:border-blue-400 hover:shadow-xs transition cursor-pointer space-y-1">
                     <div class="flex items-center justify-between">
                         <span class="text-[11px] font-medium text-slate-500">실시간 채용공고</span>
                         <span class="text-blue-600 text-sm font-bold">💼</span>
                     </div>
                     <div class="flex items-baseline gap-1">
-                        <span class="text-xl sm:text-2xl font-black text-slate-900">75</span>
+                        <span id="jobs-stat-total" class="text-xl sm:text-2xl font-black text-slate-900">570</span>
                         <span class="text-xs font-bold text-blue-600">건</span>
                     </div>
-                    <span class="text-[10px] text-slate-400 block">공식 실존 공고 검증</span>
+                    <span class="text-[10px] text-slate-400 block">전국 단위 활성 공고</span>
                 </div>
-                <div onclick="setJobFilter('track', '인턴')" class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-2xs hover:border-blue-400 hover:shadow-xs transition cursor-pointer space-y-1">
+                <div onclick="setJobEmploymentType('청년인턴')" class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-2xs hover:border-emerald-400 hover:shadow-xs transition cursor-pointer space-y-1">
                     <div class="flex items-center justify-between">
-                        <span class="text-[11px] font-medium text-slate-500">청년·대학생 인턴</span>
+                        <span class="text-[11px] font-medium text-slate-500">청년·공공인턴</span>
                         <span class="text-emerald-600 text-sm font-bold">🌱</span>
                     </div>
                     <div class="flex items-baseline gap-1">
-                        <span class="text-xl sm:text-2xl font-black text-slate-900">30</span>
+                        <span id="jobs-stat-intern" class="text-xl sm:text-2xl font-black text-slate-900">100</span>
                         <span class="text-xs font-bold text-emerald-600">건</span>
                     </div>
-                    <span class="text-[10px] text-slate-400 block">체험형 · 채용연계형</span>
+                    <span class="text-[10px] text-slate-400 block">건보·연금·지자체 인턴</span>
                 </div>
-                <div onclick="setJobFilter('track', '신입·정규직')" class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-2xs hover:border-blue-400 hover:shadow-xs transition cursor-pointer space-y-1">
+                <div onclick="setJobEmploymentType('정규직')" class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-2xs hover:border-indigo-400 hover:shadow-xs transition cursor-pointer space-y-1">
                     <div class="flex items-center justify-between">
-                        <span class="text-[11px] font-medium text-slate-500">신입 정규직</span>
+                        <span class="text-[11px] font-medium text-slate-500">신입·경력 정규직</span>
                         <span class="text-indigo-600 text-sm font-bold">👔</span>
                     </div>
                     <div class="flex items-baseline gap-1">
-                        <span class="text-xl sm:text-2xl font-black text-slate-900">45</span>
+                        <span id="jobs-stat-regular" class="text-xl sm:text-2xl font-black text-slate-900">327</span>
                         <span class="text-xs font-bold text-indigo-600">건</span>
                     </div>
-                    <span class="text-[10px] text-slate-400 block">1급·2급 취득자 우대</span>
+                    <span class="text-[10px] text-slate-400 block">호봉제 / 가이드라인 준수</span>
                 </div>
-                <div onclick="setJobFilter('track', '전체')" class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-2xs hover:border-blue-400 hover:shadow-xs transition cursor-pointer space-y-1">
+                <div onclick="setJobEmploymentType('계약직')" class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-2xs hover:border-amber-400 hover:shadow-xs transition cursor-pointer space-y-1">
                     <div class="flex items-center justify-between">
-                        <span class="text-[11px] font-medium text-slate-500">2026 인건비 준수</span>
-                        <span class="text-amber-600 text-sm font-bold">💰</span>
+                        <span class="text-[11px] font-medium text-slate-500">사업전담·대체 계약직</span>
+                        <span class="text-amber-600 text-sm font-bold">📋</span>
                     </div>
                     <div class="flex items-baseline gap-1">
-                        <span class="text-xs sm:text-sm font-black text-slate-900">1호봉 223만 원</span>
+                        <span id="jobs-stat-contract" class="text-xl sm:text-2xl font-black text-slate-900">143</span>
+                        <span class="text-xs font-bold text-amber-600">건</span>
                     </div>
-                    <span class="text-[10px] text-slate-400 block truncate">보건복지부 가이드라인 100%</span>
+                    <span class="text-[10px] text-slate-400 block">노인돌봄·육아대체·사업단</span>
                 </div>
             </div>
 
-            <!-- 인턴·취업처 멀티 티어 4층 퀵검색 카드 (Stitch 75/code.html 사양) -->
+            <!-- 🏛️ [상단 허브] 우리 동네 복지관 채용게시판 둘러보기 (전국 8,434개 법정 실습·복지기관 연동 Table) -->
+            <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs mb-6 overflow-hidden">
+                <div class="p-4 sm:p-5 bg-gradient-to-r from-slate-50 via-blue-50/30 to-indigo-50/20 border-b border-slate-200/80 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded-md bg-blue-600 text-white font-extrabold text-[10px]">전국 8,434개 연동</span>
+                            <h3 class="text-base sm:text-lg font-black text-slate-900 tracking-tight">🏢 우리 동네 복지관 공식 채용센터 둘러보기</h3>
+                        </div>
+                        <p class="text-xs text-slate-500">기관을 선택하여 각 복지관의 공식 홈페이지 채용공고 게시판과 대표전화로 바로 연결할 수 있습니다.</p>
+                    </div>
+                    <!-- 접기/펼치기 토글 버튼 -->
+                    <button type="button" onclick="toggleJobsHubTable()" id="jobs-hub-toggle-btn" class="self-start md:self-auto px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:border-blue-300 text-slate-700 font-bold text-xs shadow-2xs hover:bg-blue-50/50 transition cursor-pointer flex items-center gap-1.5">
+                        <span id="jobs-hub-toggle-icon">▼</span>
+                        <span id="jobs-hub-toggle-text">채용센터 디렉토리 닫기</span>
+                    </button>
+                </div>
+
+                <div id="jobs-hub-content" class="p-4 sm:p-5 space-y-3.5">
+                    <!-- 검색 및 지역 필터 바 -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 text-xs">
+                        <div class="sm:col-span-3">
+                            <select id="jobs-hub-region-select" onchange="onJobHubRegionChange(this.value)" class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="전체">전국 전체 (8,434개소)</option>
+                                <option value="서울" selected>서울 (1,498개소)</option>
+                                <option value="경기">경기 (1,842개소)</option>
+                                <option value="인천">인천 (412개소)</option>
+                                <option value="부산">부산 (615개소)</option>
+                                <option value="대구">대구 (420개소)</option>
+                                <option value="대전">대전 (295개소)</option>
+                                <option value="광주">광주 (310개소)</option>
+                                <option value="울산">울산 (180개소)</option>
+                                <option value="세종">세종 (75개소)</option>
+                                <option value="강원">강원 (365개소)</option>
+                                <option value="충북">충북 (320개소)</option>
+                                <option value="충남">충남 (410개소)</option>
+                                <option value="전북">전북 (390개소)</option>
+                                <option value="전남">전남 (450개소)</option>
+                                <option value="경북">경북 (485개소)</option>
+                                <option value="경남">경남 (520개소)</option>
+                                <option value="제주">제주 (147개소)</option>
+                            </select>
+                        </div>
+                        <div class="sm:col-span-3">
+                            <select id="jobs-hub-subregion-select" onchange="onJobHubSubRegionChange(this.value)" class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="전체">시·군·구 전체</option>
+                            </select>
+                        </div>
+                        <div class="sm:col-span-6 relative">
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
+                            <input id="jobs-hub-search-input" oninput="onJobHubSearchInput(this.value)" class="w-full pl-9 pr-8 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500" placeholder="복지관·시설명 검색 (예: 마포, 신사, 분당, 상록수...)" type="text">
+                            <button type="button" onclick="clearJobHubSearch()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs font-bold cursor-pointer">✕</button>
+                        </div>
+                    </div>
+
+                    <!-- 컴팩트 Table 리스트 -->
+                    <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50/90 text-slate-600 font-bold border-b border-slate-200">
+                                    <th class="py-2.5 px-3 text-center w-12">번호</th>
+                                    <th class="py-2.5 px-3 min-w-[140px]">기관명 (사회복지시설)</th>
+                                    <th class="py-2.5 px-3 min-w-[100px]">소재지</th>
+                                    <th class="py-2.5 px-3 min-w-[110px]">시설분야</th>
+                                    <th class="py-2.5 px-3 min-w-[80px] text-center">지도자</th>
+                                    <th class="py-2.5 px-3 text-center min-w-[130px]">공식 채용게시판</th>
+                                    <th class="py-2.5 px-3 text-center min-w-[100px]">대표전화</th>
+                                </tr>
+                            </thead>
+                            <tbody id="jobs-hub-table-body" class="divide-y divide-slate-100 text-slate-700 font-medium">
+                                <!-- Injected dynamically by renderJobsHubTable() -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 테이블 하단 푸터 및 더보기 -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1 text-xs text-slate-500">
+                        <div id="jobs-hub-count-info" class="font-medium">
+                            검색 결과: <strong class="text-blue-600" id="jobs-hub-match-count">0</strong>개 기관
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="loadMoreJobHubInstitutions()" id="jobs-hub-more-btn" class="px-3 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-bold text-xs border border-slate-200 cursor-pointer transition">
+                                + 15개 더보기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 실시간 채용공고 570선 멀티 티어 퀵검색 카드 -->
             <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs mb-6 space-y-3">
-                <!-- 1행: 검색창 & 클리어 버튼 (Stitch 원본 사양) -->
+                <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                    <div class="flex items-center gap-2">
+                        <span class="text-blue-600 font-bold text-sm">🔥</span>
+                        <h3 class="text-sm font-extrabold text-slate-800">실시간 채용공고 570선 피드</h3>
+                    </div>
+                    <span class="text-[11px] text-slate-400">정규직 · 사업전담 계약직 · 청년인턴 실시간 요강</span>
+                </div>
+
+                <!-- 1행: 검색창 & 클리어 버튼 -->
                 <div class="relative">
                     <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
-                    <input id="jobs-search-input" oninput="setJobFilter('search', this.value)" class="w-full pl-10 pr-10 py-2.5 rounded-xl bg-slate-50 text-slate-800 placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-600 border border-slate-200" placeholder="기관명, 채용직무(사례관리, 서비스제공, 기획홍보), 지역 검색..." type="text">
+                    <input id="jobs-search-input" oninput="setJobFilter('search', this.value)" class="w-full pl-10 pr-10 py-2.5 rounded-xl bg-slate-50 text-slate-800 placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-600 border border-slate-200" placeholder="기관명, 채용직무(사례관리, 서비스제공, 기획홍보, 노인맞춤돌봄), 지역 검색..." type="text">
                     <button onclick="clearJobSearch()" id="jobs-search-clear" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs font-bold cursor-pointer" type="button" title="검색어 지우기">✕</button>
                 </div>
 
@@ -660,19 +758,30 @@
                     <button onclick="setJobTag('사례관리')" class="job-tag-btn flex-shrink-0 px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 font-medium text-[11px] hover:bg-blue-100 cursor-pointer" type="button"># 사례관리</button>
                     <button onclick="setJobTag('서비스제공')" class="job-tag-btn flex-shrink-0 px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 font-medium text-[11px] hover:bg-blue-100 cursor-pointer" type="button"># 서비스제공</button>
                     <button onclick="setJobTag('기획·홍보')" class="job-tag-btn flex-shrink-0 px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 font-medium text-[11px] hover:bg-blue-100 cursor-pointer" type="button"># 기획·홍보</button>
-                    <button onclick="setJobTag('모금·후원개발')" class="job-tag-btn flex-shrink-0 px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 font-medium text-[11px] hover:bg-blue-100 cursor-pointer" type="button"># 모금·후원개발</button>
-                    <button onclick="setJobTag('아동·돌봄')" class="job-tag-btn flex-shrink-0 px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 font-medium text-[11px] hover:bg-blue-100 cursor-pointer" type="button"># 아동·돌봄</button>
+                    <button onclick="setJobTag('노인맞춤돌봄')" class="job-tag-btn flex-shrink-0 px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 font-medium text-[11px] hover:bg-blue-100 cursor-pointer" type="button"># 노인맞춤돌봄</button>
                     <button onclick="setJobTag('장애인·재활')" class="job-tag-btn flex-shrink-0 px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 font-medium text-[11px] hover:bg-blue-100 cursor-pointer" type="button"># 장애인·재활</button>
+                    <button onclick="setJobTag('아동·돌봄')" class="job-tag-btn flex-shrink-0 px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 font-medium text-[11px] hover:bg-blue-100 cursor-pointer" type="button"># 아동·돌봄</button>
+                    <button onclick="setJobTag('모금·후원개발')" class="job-tag-btn flex-shrink-0 px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 font-medium text-[11px] hover:bg-blue-100 cursor-pointer" type="button"># 모금·후원개발</button>
+                    <button onclick="setJobTag('공공인턴')" class="job-tag-btn flex-shrink-0 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 font-medium text-[11px] hover:bg-emerald-100 cursor-pointer" type="button"># 공공인턴</button>
                 </div>
 
-                <!-- 3행: 권역별 필터 (경기 31, 서울 29, 인천 10, 지방권 8) -->
+                <!-- 3행: 고용형태 필터 (전체 / 정규직 / 계약직·전담 / 청년인턴) -->
+                <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs pt-1 border-t border-slate-100" id="jobs-employment-pills">
+                    <span class="text-[11px] font-bold text-slate-400 flex-shrink-0 mr-1 w-12">고용형태</span>
+                    <button type="button" onclick="setJobEmploymentType('전체')" class="job-emp-btn px-2.5 py-1 rounded-lg bg-slate-900 text-white font-bold text-xs flex-shrink-0 cursor-pointer">전체 (570)</button>
+                    <button type="button" onclick="setJobEmploymentType('정규직')" class="job-emp-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">👔 정규직 (327)</button>
+                    <button type="button" onclick="setJobEmploymentType('계약직')" class="job-emp-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">📋 계약직·전담 (143)</button>
+                    <button type="button" onclick="setJobEmploymentType('청년인턴')" class="job-emp-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🌱 청년인턴 (100)</button>
+                </div>
+
+                <!-- 4행: 권역별 필터 (전국, 서울, 경기, 인천, 지방권) -->
                 <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs pt-1 border-t border-slate-100" id="jobs-region-pills">
-                    <span class="text-[11px] font-bold text-slate-400 flex-shrink-0 mr-1 w-8">권역</span>
-                    <button type="button" onclick="setJobRegion('전체')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-900 text-white font-bold text-xs flex-shrink-0 cursor-pointer">전국 전체 (78)</button>
-                    <button type="button" onclick="setJobRegion('경기')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">경기 (31)</button>
-                    <button type="button" onclick="setJobRegion('서울')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">서울 (29)</button>
-                    <button type="button" onclick="setJobRegion('인천')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">인천 (10)</button>
-                    <button type="button" onclick="setJobRegion('지방권')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">지방권 (8)</button>
+                    <span class="text-[11px] font-bold text-slate-400 flex-shrink-0 mr-1 w-12">권역</span>
+                    <button type="button" onclick="setJobRegion('전체')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-900 text-white font-bold text-xs flex-shrink-0 cursor-pointer">전국 전체 (570)</button>
+                    <button type="button" onclick="setJobRegion('서울')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">서울 (215)</button>
+                    <button type="button" onclick="setJobRegion('경기')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">경기 (185)</button>
+                    <button type="button" onclick="setJobRegion('인천')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">인천 (65)</button>
+                    <button type="button" onclick="setJobRegion('지방권')" class="job-region-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">지방권 (105)</button>
                 </div>
 
                 <!-- 채용공고 2차 세부 시·군·구 알약 트레이 -->
@@ -680,16 +789,16 @@
                     <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs py-0.5" id="jobs-subregion-pills"></div>
                 </div>
 
-                <!-- 4행: 5대 커리어 분야 (복지관·병원·공공인턴·NGO·CSR) 및 정렬 -->
+                <!-- 5행: 5대 커리어 분야 (복지관·병원·공공인턴·NGO·CSR) 및 정렬 -->
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1 border-t border-slate-100 text-xs">
                     <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar" id="jobs-category-pills">
-                        <span class="text-[11px] font-bold text-slate-400 flex-shrink-0 mr-1 w-8">분야</span>
-                        <button type="button" onclick="setJobCategory('전체')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-blue-600 text-white font-bold text-xs flex-shrink-0 cursor-pointer">전체 (78)</button>
-                        <button type="button" onclick="setJobCategory('복지시설')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏛️ 복지관·시설 (39)</button>
-                        <button type="button" onclick="setJobCategory('병원직원')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏥 병원·의료 (15)</button>
-                        <button type="button" onclick="setJobCategory('청년인턴')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">💼 공공·청년인턴 (6)</button>
-                        <button type="button" onclick="setJobCategory('메이저NGO')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🌍 메이저 NGO (9)</button>
-                        <button type="button" onclick="setJobCategory('기업CSR')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏢 기업 CSR (9)</button>
+                        <span class="text-[11px] font-bold text-slate-400 flex-shrink-0 mr-1 w-12">분야</span>
+                        <button type="button" onclick="setJobCategory('전체')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-blue-600 text-white font-bold text-xs flex-shrink-0 cursor-pointer">전체 (570)</button>
+                        <button type="button" onclick="setJobCategory('복지시설')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏛️ 복지관·시설 (400)</button>
+                        <button type="button" onclick="setJobCategory('병원직원')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏥 병원·의료 (35)</button>
+                        <button type="button" onclick="setJobCategory('청년인턴')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">💼 공공·청년인턴 (100)</button>
+                        <button type="button" onclick="setJobCategory('메이저NGO')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🌍 메이저 NGO (18)</button>
+                        <button type="button" onclick="setJobCategory('기업CSR')" class="job-cat-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏢 기업 CSR (17)</button>
                     </div>
                     <div class="flex items-center gap-1.5 justify-end flex-shrink-0">
                         <span class="text-[11px] font-bold text-slate-400">정렬:</span>
@@ -702,8 +811,17 @@
                 </div>
             </div>
 
-            <div id="jobs-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <!-- 실시간 채용 카드 그리드 -->
+            <div id="jobs-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
                 <!-- Injected dynamically by renderJobsCards() -->
+            </div>
+
+            <!-- 더보기 페이징 버튼 -->
+            <div id="jobs-load-more-container" class="text-center mb-12 hidden">
+                <button type="button" onclick="loadMoreJobs()" id="jobs-load-more-btn" class="px-6 py-3 rounded-2xl bg-white border border-slate-200 hover:border-blue-400 text-slate-700 hover:text-blue-600 font-bold text-sm shadow-xs transition cursor-pointer inline-flex items-center gap-2">
+                    <span>공고 더보기</span>
+                    <span id="jobs-remaining-count" class="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 text-xs"></span>
+                </button>
             </div>
         </section>
 
@@ -10937,2158 +11055,7 @@
     "url": "https://www.kassw.or.kr"
   }
 ];
-        const ALL_JOB_POSTINGS = [
-  {
-    "id": "job-hub-001",
-    "company": "신사종합사회복지관",
-    "institution": "신사종합사회복지관",
-    "title": "2026년 상반기 정규직 사회복지사 채용 (사례관리팀)",
-    "role": "사례관리 전담 사회복지사",
-    "fieldId": "community",
-    "fieldName": "지역사회복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-15",
-    "dday": "D-15",
-    "location": "서울 은평구",
-    "region": "서울",
-    "subRegion": "은평구",
-    "salary": "서울시 사회복지시설 인건비 가이드라인 1호봉~",
-    "career": "신입/경력(3년이하)",
-    "edu": "사회복지학 학사 이상, 사회복지사 1급 소지자",
-    "tags": [
-      "사례관리",
-      "서울시인건비",
-      "정규직",
-      "실습인증기관"
-    ],
-    "memo": "보건복지부 법정 실습기관. 주민밀착형 통합사례관리 및 민관협력 네트워크 사업 총괄.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-002",
-    "company": "마포노인종합복지관",
-    "institution": "마포노인종합복지관",
-    "title": "노인맞춤돌봄서비스 전담 사회복지사 선발",
-    "role": "전담사회복지사 (정규직)",
-    "fieldId": "elderly",
-    "fieldName": "노인복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-20",
-    "dday": "D-20",
-    "location": "서울 마포구",
-    "region": "서울",
-    "subRegion": "마포구",
-    "salary": "월 260만원 ~ 290만원 (경력산정)",
-    "career": "경력 1년 이상 우대",
-    "edu": "사회복지사 1급 또는 2급",
-    "tags": [
-      "노인맞춤돌봄",
-      "사례관리",
-      "마포구",
-      "정규직"
-    ],
-    "memo": "노인맞춤돌봄 권역별 전담사례관리 및 생활지원사 24명 관리 지원.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-003",
-    "company": "하상장애인복지관",
-    "institution": "하상장애인복지관",
-    "title": "직업재활팀 직업훈련교사 및 사회복지사 채용",
-    "role": "직업재활 전문인력",
-    "fieldId": "disability",
-    "fieldName": "장애인복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-18",
-    "dday": "D-18",
-    "location": "서울 강남구",
-    "region": "서울",
-    "subRegion": "강남구",
-    "salary": "서울시 인건비 기준 (호봉 인정)",
-    "career": "신입/경력무관",
-    "edu": "사회복지사 1급 또는 직업재활사 2급",
-    "tags": [
-      "직업재활",
-      "강남구",
-      "호봉제",
-      "장애인복지관"
-    ],
-    "memo": "발달장애인 맞춤형 현장중심 직업훈련 및 사업체 연계 고용지원.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-004",
-    "company": "번동3단지종합사회복지관",
-    "institution": "번동3단지종합사회복지관",
-    "title": "서비스제공팀 마을복지 코디네이터 채용",
-    "role": "서비스제공 사회복지사",
-    "fieldId": "community",
-    "fieldName": "지역사회복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-22",
-    "dday": "D-22",
-    "location": "서울 강북구",
-    "region": "서울",
-    "subRegion": "강북구",
-    "salary": "서울시 단일임금체계 준용 (선임호봉 가능)",
-    "career": "신입 환영",
-    "edu": "사회복지사 1급 소지자, 운전가능자",
-    "tags": [
-      "영구임대복지",
-      "마을공동체",
-      "강북구"
-    ],
-    "memo": "영구임대아파트 단지 밀착형 주민조직화 및 결식 취약계층 급식지원.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-005",
-    "company": "영등포장애인복지관",
-    "institution": "영등포장애인복지관",
-    "title": "발달재활서비스 평생교육 전담 인력 공채",
-    "role": "평생교육 사회복지사",
-    "fieldId": "disability",
-    "fieldName": "장애인복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-24",
-    "dday": "D-24",
-    "location": "서울 영등포구",
-    "region": "서울",
-    "subRegion": "영등포구",
-    "salary": "연봉 3,400만원 ~ 3,800만원",
-    "career": "경력 2년 이상 우대",
-    "edu": "사회복지사 1급 자격증",
-    "tags": [
-      "평생교육",
-      "발달재활",
-      "영등포구"
-    ],
-    "memo": "성인 발달장애인 아카데미 및 자립생활역량강화 프로그램 운영.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-006",
-    "company": "태화기독교사회복지관",
-    "institution": "태화기독교사회복지관",
-    "title": "지역사회조직팀 사회복지사 선발",
-    "role": "지역조직화 전문가",
-    "fieldId": "community",
-    "fieldName": "지역사회복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-28",
-    "dday": "D-28",
-    "location": "서울 서대문구",
-    "region": "서울",
-    "subRegion": "서대문구",
-    "salary": "서울시 가이드라인 기준 (가족수당 별도)",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급",
-    "tags": [
-      "100년역사",
-      "태화재단",
-      "지역조직",
-      "서대문구"
-    ],
-    "memo": "대한민국 최초의 사회복지관. ESG 복지실천 및 주민주도 소모임 육성.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-007",
-    "company": "송파실벗뜨락 노인복지관",
-    "institution": "송파실벗뜨락 노인복지관",
-    "title": "여가문화지원팀 노인문화프로그램 담당자 채용",
-    "role": "문화복지 사회복지사",
-    "fieldId": "elderly",
-    "fieldName": "노인복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-30",
-    "dday": "D-30",
-    "location": "서울 송파구",
-    "region": "서울",
-    "subRegion": "송파구",
-    "salary": "서울시 호봉 기준 준용",
-    "career": "신입 가능",
-    "edu": "사회복지사 자격증 소지자",
-    "tags": [
-      "평생교육",
-      "송파구",
-      "정규직",
-      "노인복지관"
-    ],
-    "memo": "시니어 스마트폰 교실, 웰다잉 교육 및 평생교육 강좌 기획 운영.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-008",
-    "company": "관악봉천종합사회복지관",
-    "institution": "관악봉천종합사회복지관",
-    "title": "스마트돌봄네트워크 전담 사회복지사 공채",
-    "role": "스마트돌봄 복지사",
-    "fieldId": "community",
-    "fieldName": "지역사회복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2027-01-05",
-    "dday": "D-35",
-    "location": "서울 관악구",
-    "region": "서울",
-    "subRegion": "관악구",
-    "salary": "서울시 인건비 기준 준용",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급 필수",
-    "tags": [
-      "AI스마트돌봄",
-      "관악구",
-      "1인취약가구"
-    ],
-    "memo": "고독사 위험군 AI IoT 안부확인 시스템 및 이웃살피미 서포터즈 운영.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-009",
-    "company": "수원시장애인종합복지관",
-    "institution": "수원시장애인종합복지관",
-    "title": "주간보호센터 전담 정규직 사회복지사 채용",
-    "role": "주간보호 사회복지사",
-    "fieldId": "disability",
-    "fieldName": "장애인복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-16",
-    "dday": "D-16",
-    "location": "경기 수원시",
-    "region": "경기",
-    "subRegion": "수원시",
-    "salary": "경기도 사회복지시설 인건비 기준",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급 또는 2급",
-    "tags": [
-      "주간보호",
-      "수원시",
-      "경기도호봉제"
-    ],
-    "memo": "중증 뇌병변 및 발달장애인 낮시간 일상생활 지원 및 재활프로그램 운영.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-010",
-    "company": "성남시 분당노인종합복지관",
-    "institution": "성남시 분당노인종합복지관",
-    "title": "노인일자리 및 사회활동지원사업 전담인력 채용",
-    "role": "노인일자리 코디네이터",
-    "fieldId": "elderly",
-    "fieldName": "노인복지",
-    "track": "계약직(무기전환)",
-    "category": "복지시설",
-    "deadline": "2026-12-19",
-    "dday": "D-19",
-    "location": "경기 성남시",
-    "region": "경기",
-    "subRegion": "성남시",
-    "salary": "월 240만원 + 성남시 처우개선비 15만원",
-    "career": "신입/경력무관",
-    "edu": "사회복지사 소지자 우대",
-    "tags": [
-      "노인일자리",
-      "분당구",
-      "성남시지원"
-    ],
-    "memo": "성남시 어르신 공익활동형 및 시장형 일자리 사업단 450명 관리.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-011",
-    "company": "고양시 덕양행신종합사회복지관",
-    "institution": "고양시 덕양행신종합사회복지관",
-    "title": "통합사례관리팀 경력직 사회복지사 모집",
-    "role": "선임 사회복지사",
-    "fieldId": "community",
-    "fieldName": "지역사회복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-21",
-    "dday": "D-21",
-    "location": "경기 고양시",
-    "region": "경기",
-    "subRegion": "고양시",
-    "salary": "경기도 사회복지 인건비 가이드라인 선임호봉",
-    "career": "경력 3년 이상",
-    "edu": "사회복지사 1급 필수",
-    "tags": [
-      "사례관리",
-      "고양시",
-      "선임호봉",
-      "덕양구"
-    ],
-    "memo": "고양특례시 위기가구 발굴 및 민관통합솔루션회의 주관.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-012",
-    "company": "부천시장애인종합복지관",
-    "institution": "부천시장애인종합복지관",
-    "title": "권익옹호팀 인권상담 및 권익증진 사회복지사 채용",
-    "role": "권익옹호 담당자",
-    "fieldId": "disability",
-    "fieldName": "장애인복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-23",
-    "dday": "D-23",
-    "location": "경기 부천시",
-    "region": "경기",
-    "subRegion": "부천시",
-    "salary": "부천시 복지시설 가이드라인",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급 소지자",
-    "tags": [
-      "인권옹호",
-      "부천시",
-      "장애인인권"
-    ],
-    "memo": "장애인 차별 및 학대 피해상담, 성년후견 지원 및 권익옹호 캠페인.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-013",
-    "company": "용인시기흥장애인복지관",
-    "institution": "용인시기흥장애인복지관",
-    "title": "발달재활서비스 언어재활 및 사회통합 복지사",
-    "role": "사회통합 코디네이터",
-    "fieldId": "disability",
-    "fieldName": "장애인복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-25",
-    "dday": "D-25",
-    "location": "경기 용인시",
-    "region": "경기",
-    "subRegion": "용인시",
-    "salary": "경기도 호봉 기준 (퇴직연금 별도)",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급 또는 재활치료사",
-    "tags": [
-      "발달재활",
-      "용인시",
-      "기흥구"
-    ],
-    "memo": "아동·청소년 사회성 증진 그룹치료 및 부모상담 지원.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-014",
-    "company": "안산시 본오종합사회복지관",
-    "institution": "안산시 본오종합사회복지관",
-    "title": "다문화가족 통합돌봄 사회복지사 채용",
-    "role": "다문화복지 전담",
-    "fieldId": "multicultural",
-    "fieldName": "다문화복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-27",
-    "dday": "D-27",
-    "location": "경기 안산시",
-    "region": "경기",
-    "subRegion": "안산시",
-    "salary": "경기도 인건비 기준",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급, 외국어 가능자 우대",
-    "tags": [
-      "다문화",
-      "안산시",
-      "상록구",
-      "한국어교실"
-    ],
-    "memo": "다문화 밀집지역 이주민 아동 한국어 기초교육 및 가족통합 사례관리.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-015",
-    "company": "화성시남부종합사회복지관",
-    "institution": "화성시남부종합사회복지관",
-    "title": "농어촌 취약계층 이동복지관 전담인력 채용",
-    "role": "이동복지 사회복지사",
-    "fieldId": "community",
-    "fieldName": "지역사회복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-29",
-    "dday": "D-29",
-    "location": "경기 화성시",
-    "region": "경기",
-    "subRegion": "화성시",
-    "salary": "월 250만원 ~ 280만원",
-    "career": "운전면허 1종 필수",
-    "edu": "사회복지사 자격증",
-    "tags": [
-      "이동복지관",
-      "화성시",
-      "농어촌복지"
-    ],
-    "memo": "복지사각지대 농어촌 마을 순회 진료보조 및 생필품 긴급배송 지원.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-016",
-    "company": "남양주시노인복지관",
-    "institution": "남양주시노인복지관",
-    "title": "응급안전안심서비스 전담 사회복지사 채용",
-    "role": "응급안전요원",
-    "fieldId": "elderly",
-    "fieldName": "노인복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2027-01-03",
-    "dday": "D-33",
-    "location": "경기 남양주시",
-    "region": "경기",
-    "subRegion": "남양주시",
-    "salary": "보건복지부 인건비 가이드라인",
-    "career": "신입/경력무관",
-    "edu": "사회복지사 자격증",
-    "tags": [
-      "응급안전",
-      "남양주시",
-      "독거노인"
-    ],
-    "memo": "독거어르신 댁내 화재·가스 감지 센서 연동 24시간 안전 모니터링.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-017",
-    "company": "인천 미추홀종합사회복지관",
-    "institution": "인천 미추홀종합사회복지관",
-    "title": "마을돌봄네트워크 사례관리 사회복지사 채용",
-    "role": "사례관리 담당",
-    "fieldId": "community",
-    "fieldName": "지역사회복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-17",
-    "dday": "D-17",
-    "location": "인천 미추홀구",
-    "region": "인천",
-    "subRegion": "미추홀구",
-    "salary": "인천시 단일임금 기준",
-    "career": "신입 환영",
-    "edu": "사회복지사 1급 소지자",
-    "tags": [
-      "인천단일임금",
-      "사례관리",
-      "미추홀구"
-    ],
-    "memo": "원도심 취약계층 발굴 및 민관 돌봄안전망 구축 사업.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-018",
-    "company": "인천 부평구노인복지관",
-    "institution": "인천 부평구노인복지관",
-    "title": "경로당 활성화 사업 전담 사회복지사 선발",
-    "role": "경로당 코디네이터",
-    "fieldId": "elderly",
-    "fieldName": "노인복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-20",
-    "dday": "D-20",
-    "location": "인천 부평구",
-    "region": "인천",
-    "subRegion": "부평구",
-    "salary": "인천시 호봉 기준 준용",
-    "career": "경력무관",
-    "edu": "사회복지사 자격증, 운전가능자",
-    "tags": [
-      "경로당활성화",
-      "부평구",
-      "여가프로그램"
-    ],
-    "memo": "부평구 관내 170개소 경로당 순회 건강교실 및 특화프로그램 보급.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-019",
-    "company": "인천 남동장애인종합복지관",
-    "institution": "인천 남동장애인종합복지관",
-    "title": "평생교육지원팀 전환교육 전담 사회복지사 공채",
-    "role": "전환교육 복지사",
-    "fieldId": "disability",
-    "fieldName": "장애인복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-26",
-    "dday": "D-26",
-    "location": "인천 남동구",
-    "region": "인천",
-    "subRegion": "남동구",
-    "salary": "인천시 인건비 기준",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급",
-    "tags": [
-      "학령기전환",
-      "남동구",
-      "장애인복지관"
-    ],
-    "memo": "특수학교 졸업예정 장애청소년 성인기 자립전환 교육과정 기획.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-020",
-    "company": "인천 서구 연희노인복지관",
-    "institution": "인천 서구 연희노인복지관",
-    "title": "노인맞춤돌봄 특화서비스 전담 사회복지사 채용",
-    "role": "특화서비스 복지사",
-    "fieldId": "elderly",
-    "fieldName": "노인복지",
-    "track": "계약직(연장가능)",
-    "category": "복지시설",
-    "deadline": "2027-01-02",
-    "dday": "D-32",
-    "location": "인천 서구",
-    "region": "인천",
-    "subRegion": "서구",
-    "salary": "월 255만원 + 특화수당 10만원",
-    "career": "사회복지경력 1년 이상",
-    "edu": "사회복지사 1급 또는 2급",
-    "tags": [
-      "우울예방",
-      "서구",
-      "노인맞춤돌봄"
-    ],
-    "memo": "우울·고립감이 높은 취약어르신 대상 집단미술치료 및 정신건강 연계.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-021",
-    "company": "대전 대덕구종합사회복지관",
-    "institution": "대전 대덕구종합사회복지관",
-    "title": "지역밀착형 복지관 사업팀 사회복지사 채용",
-    "role": "마을복지사",
-    "fieldId": "community",
-    "fieldName": "지역사회복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-22",
-    "dday": "D-22",
-    "location": "대전 대덕구",
-    "region": "대전",
-    "subRegion": "대덕구",
-    "salary": "대전시 인건비 기준",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급",
-    "tags": [
-      "대전시",
-      "대덕구",
-      "지역조직"
-    ],
-    "memo": "주민공동체 회복 및 복지공동체 조성을 위한 골목상생 프로젝트.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-022",
-    "company": "부산 영도구노인복지관",
-    "institution": "부산 영도구노인복지관",
-    "title": "독거노인 고독사 예방 전담인력 채용",
-    "role": "고독사예방 코디",
-    "fieldId": "elderly",
-    "fieldName": "노인복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-25",
-    "dday": "D-25",
-    "location": "부산 영도구",
-    "region": "부산",
-    "subRegion": "영도구",
-    "salary": "부산시 사회복지시설 인건비 준용",
-    "career": "경력무관",
-    "edu": "사회복지사 자격증 소지자",
-    "tags": [
-      "고독사예방",
-      "영도구",
-      "부산노인복지"
-    ],
-    "memo": "원도심 고지대 홀몸 어르신 일상돌봄 및 ICT 센서 결합 안부살핌.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-023",
-    "company": "대구 달서구장애인복지관",
-    "institution": "대구 달서구장애인복지관",
-    "title": "장애인활동지원사업 전담인력 채용",
-    "role": "활동지원 전담인력",
-    "fieldId": "disability",
-    "fieldName": "장애인복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-28",
-    "dday": "D-28",
-    "location": "대구 달서구",
-    "region": "대구",
-    "subRegion": "달서구",
-    "salary": "보건복지부 인건비 가이드라인",
-    "career": "신입 환영",
-    "edu": "사회복지사 소지자",
-    "tags": [
-      "활동지원",
-      "달서구",
-      "대구복지관"
-    ],
-    "memo": "활동지원사 배정 및 수급자 모니터링, 부정수급 예방 교육 주관.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-024",
-    "company": "광주 북구 두암종합사회복지관",
-    "institution": "광주 북구 두암종합사회복지관",
-    "title": "위기가정 긴급지원 전담 사회복지사 채용",
-    "role": "사례관리팀 복지사",
-    "fieldId": "community",
-    "fieldName": "지역사회복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2027-01-04",
-    "dday": "D-34",
-    "location": "광주 북구",
-    "region": "광주",
-    "subRegion": "북구",
-    "salary": "광주시 사회복지시설 기준",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급 소지자",
-    "tags": [
-      "위기가정",
-      "광주북구",
-      "긴급지원"
-    ],
-    "memo": "영구임대 밀집지 긴급생계비 지원 및 주거환경개선 연계 사업.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-025",
-    "company": "서울대학교병원 공공의료사회공헌팀",
-    "institution": "서울대학교병원 공공의료사회공헌팀",
-    "title": "2026년도 정규직 의료사회복지사 채용 (임상사회사업)",
-    "role": "정규직 의료사회복지사",
-    "fieldId": "medical",
-    "fieldName": "의료사회복지",
-    "track": "정규직",
-    "category": "병원직원",
-    "deadline": "2026-12-18",
-    "dday": "D-18",
-    "location": "서울 종로구",
-    "region": "서울",
-    "subRegion": "종로구",
-    "salary": "서울대병원 정규직 급여 규정 (초임 연봉 4,300만원 수준)",
-    "career": "의료사회복지사 자격 소지자",
-    "edu": "학사 이상, 의료사회복지사 법정자격증 필수",
-    "tags": [
-      "상급종합",
-      "서울대병원",
-      "정규직",
-      "의료사회복지사"
-    ],
-    "memo": "본원 중환자실 및 소아완화의료 환자·가족 심리사회적 사정, 긴급의료비 지원 심의 총괄.",
-    "url": "https://www.snuh.org",
-    "verified": true
-  },
-  {
-    "id": "job-hub-026",
-    "company": "연세대학교 신촌세브란스병원 사회사업팀",
-    "institution": "연세대학교 신촌세브란스병원 사회사업팀",
-    "title": "임상사회복지사 일반직 채용 (재활·심뇌혈관센터)",
-    "role": "정규직 사회사업사",
-    "fieldId": "medical",
-    "fieldName": "의료사회복지",
-    "track": "정규직",
-    "category": "병원직원",
-    "deadline": "2026-12-20",
-    "dday": "D-20",
-    "location": "서울 서대문구",
-    "region": "서울",
-    "subRegion": "서대문구",
-    "salary": "세브란스병원 급여 테이블 (연봉 4,200만원~)",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급 및 의료사회복지사 2급 이상",
-    "tags": [
-      "세브란스",
-      "재활의료",
-      "서대문구",
-      "정규직"
-    ],
-    "memo": "급성기 재활환자 퇴원 후 지역사회 연계(Care Plan), 간병돌봄 코디네이션.",
-    "url": "https://yuhs.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-027",
-    "company": "서울아산병원 사회복지팀",
-    "institution": "서울아산병원 사회복지팀",
-    "title": "장기이식 및 암환자 지원 전담 사회복지사 채용",
-    "role": "전임 사회복지사",
-    "fieldId": "medical",
-    "fieldName": "의료사회복지",
-    "track": "정규직",
-    "category": "병원직원",
-    "deadline": "2026-12-22",
-    "dday": "D-22",
-    "location": "서울 송파구",
-    "region": "서울",
-    "subRegion": "송파구",
-    "salary": "아산재단 정규직 처우 (연봉 4,400만원, 복지포인트 별도)",
-    "career": "경력 2년 이상 우대",
-    "edu": "의료사회복지사 자격증 필수",
-    "tags": [
-      "서울아산병원",
-      "장기이식",
-      "암환자지원",
-      "송파구"
-    ],
-    "memo": "간·신장·골수이식 대기환자 및 소아암 환아 맞춤형 공익기금 연계 심의.",
-    "url": "https://www.amc.seoul.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-028",
-    "company": "삼성서울병원 의료사회사업실",
-    "institution": "삼성서울병원 의료사회사업실",
-    "title": "희귀난치성질환 공공의료 코디네이터 채용",
-    "role": "공공의료 전문복지사",
-    "fieldId": "medical",
-    "fieldName": "의료사회복지",
-    "track": "정규직",
-    "category": "병원직원",
-    "deadline": "2026-12-25",
-    "dday": "D-25",
-    "location": "서울 강남구",
-    "region": "서울",
-    "subRegion": "강남구",
-    "salary": "삼성서울병원 정규직 처우",
-    "career": "의료복지 실무 1년 이상",
-    "edu": "사회복지사 1급 및 의료사회복지사",
-    "tags": [
-      "삼성서울병원",
-      "희귀질환",
-      "강남구",
-      "정규직"
-    ],
-    "memo": "소아청소년 희귀질환 환아 치료비 펀딩 및 교육청 연계 병원학교 지원.",
-    "url": "https://www.samsunghospital.com",
-    "verified": true
-  },
-  {
-    "id": "job-hub-029",
-    "company": "가톨릭대학교 서울성모병원 사회사업팀",
-    "institution": "가톨릭대학교 서울성모병원 사회사업팀",
-    "title": "혈액내과 조혈모세포이식 전담 사회복지사 채용",
-    "role": "임상사회복지사",
-    "fieldId": "medical",
-    "fieldName": "의료사회복지",
-    "track": "정규직",
-    "category": "병원직원",
-    "deadline": "2026-12-27",
-    "dday": "D-27",
-    "location": "서울 서초구",
-    "region": "서울",
-    "subRegion": "서초구",
-    "salary": "가톨릭중앙의료원 급여 기준 준용",
-    "career": "경력 1년 이상",
-    "edu": "의료사회복지사 자격증 소지자",
-    "tags": [
-      "혈액내과",
-      "서울성모병원",
-      "조혈모세포",
-      "서초구"
-    ],
-    "memo": "가톨릭 성모 자선기금 집행 및 완화의료 호스피스 전담 상담.",
-    "url": "https://www.cmcseoul.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-030",
-    "company": "국립암센터 공공의료사업팀",
-    "institution": "국립암센터 공공의료사업팀",
-    "title": "암생존자통합지지센터 전담 연구원/사회복지사 채용",
-    "role": "암생존자 전담 복지사",
-    "fieldId": "medical",
-    "fieldName": "의료사회복지",
-    "track": "정규직(무기)",
-    "category": "병원직원",
-    "deadline": "2026-12-30",
-    "dday": "D-30",
-    "location": "경기 고양시",
-    "region": "경기",
-    "subRegion": "고양시",
-    "salary": "공공기관 인건비 가이드라인 (연봉 3,800만원 수준)",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급, 의료사회복지 수련 수료자 우대",
-    "tags": [
-      "국립암센터",
-      "암생존자",
-      "고양시",
-      "일산"
-    ],
-    "memo": "암 치료 완료 후 직장 복귀 지원 프로그램 기획 및 지역사회 사회복귀 그룹워크.",
-    "url": "https://www.ncc.re.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-031",
-    "company": "분당서울대학교병원 의료사회복지팀",
-    "institution": "분당서울대학교병원 의료사회복지팀",
-    "title": "권역응급의료센터 전담 위기개입 사회복지사 채용",
-    "role": "응급의료 사회복지사",
-    "fieldId": "medical",
-    "fieldName": "의료사회복지",
-    "track": "정규직",
-    "category": "병원직원",
-    "deadline": "2027-01-05",
-    "dday": "D-35",
-    "location": "경기 성남시",
-    "region": "경기",
-    "subRegion": "성남시",
-    "salary": "서울대병원 정규직 급여 규정 (연봉 4,200만원~)",
-    "career": "의료기관 1년 이상",
-    "edu": "의료사회복지사 또는 정신건강사회복지사 필수",
-    "tags": [
-      "분당서울대",
-      "응급실위기개입",
-      "성남시",
-      "분당"
-    ],
-    "memo": "응급실 내원 자살시도자·학대피해자 24시간 긴급위기상담 및 전원 체계 구축.",
-    "url": "https://www.snubh.org",
-    "verified": true
-  },
-  {
-    "id": "job-hub-032",
-    "company": "한국보훈복지의료공단 중앙보훈병원",
-    "institution": "한국보훈복지의료공단 중앙보훈병원",
-    "title": "정규직 사회복지직(의료사회사업) 공개채용",
-    "role": "공공의료 사회복지사",
-    "fieldId": "medical",
-    "fieldName": "의료사회복지",
-    "track": "정규직",
-    "category": "병원직원",
-    "deadline": "2027-01-08",
-    "dday": "D-38",
-    "location": "서울 강동구",
-    "region": "서울",
-    "subRegion": "강동구",
-    "salary": "공단 보수규정 (연봉 3,900만원, 성과급 별도)",
-    "career": "공인시험(NCS) 전형",
-    "edu": "사회복지사 1급 소지자, 의료/정신건강 수련 수료자 우대",
-    "tags": [
-      "중앙보훈병원",
-      "공공기관",
-      "정규직",
-      "강동구"
-    ],
-    "memo": "국가유공자 및 취약계층 재가복지 연계, 호스피스 완화의료 심리사회적 사정.",
-    "url": "https://seoul.bohun.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-033",
-    "company": "인하대학교병원 공공보건의료사업팀",
-    "institution": "인하대학교병원 공공보건의료사업팀",
-    "title": "지역책임의료기관 퇴원환자 연계사업 전담인력 채용",
-    "role": "공공의료 코디네이터",
-    "fieldId": "medical",
-    "fieldName": "의료사회복지",
-    "track": "정규직",
-    "category": "병원직원",
-    "deadline": "2027-01-10",
-    "dday": "D-40",
-    "location": "인천 중구",
-    "region": "인천",
-    "subRegion": "중구",
-    "salary": "인하대병원 정규직 규정",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급 자격증",
-    "tags": [
-      "인하대병원",
-      "퇴원환자연계",
-      "인천중구"
-    ],
-    "memo": "급성기 뇌혈관질환자 퇴원 후 방문간호 및 보건소 연계 돌봄 계획 수립.",
-    "url": "https://www.inha.com",
-    "verified": true
-  },
-  {
-    "id": "job-hub-034",
-    "company": "국립정신건강센터 성인정신과",
-    "institution": "국립정신건강센터 성인정신과",
-    "title": "정규직 정신건강사회복지사(전문경력관) 채용",
-    "role": "정신건강전문요원",
-    "fieldId": "mental",
-    "fieldName": "정신보건",
-    "track": "공무원/정규",
-    "category": "병원직원",
-    "deadline": "2027-01-12",
-    "dday": "D-42",
-    "location": "서울 광진구",
-    "region": "서울",
-    "subRegion": "광진구",
-    "salary": "공무원 보수규정 전문경력관 나군 (수당 별도)",
-    "career": "정신건강사회복지사 2급 이상",
-    "edu": "정신건강복지법 제17조에 따른 자격 소지자",
-    "tags": [
-      "국립정신건강센터",
-      "전문경력관",
-      "국가직",
-      "광진구"
-    ],
-    "memo": "입원환자 사회적응훈련, 낮병원 인지재활 프로그램 및 가족교육 주관.",
-    "url": "https://www.mentalhealth.go.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-035",
-    "company": "용인정신병원 사회사업실",
-    "institution": "용인정신병원 사회사업실",
-    "title": "정신재활팀 정규직 사회사업사 채용",
-    "role": "정신건강사회복지사",
-    "fieldId": "mental",
-    "fieldName": "정신보건",
-    "track": "정규직",
-    "category": "병원직원",
-    "deadline": "2027-01-15",
-    "dday": "D-45",
-    "location": "경기 용인시",
-    "region": "경기",
-    "subRegion": "용인시",
-    "salary": "연봉 3,600만원 ~ 4,000만원 (기숙사 완비)",
-    "career": "신입/경력",
-    "edu": "정신건강사회복지사 자격 소지자",
-    "tags": [
-      "용인정신병원",
-      "기숙사제공",
-      "정신재활",
-      "용인시"
-    ],
-    "memo": "만성 정신질환자 탈시설화 및 독립생활 주거훈련 프로그램 운영.",
-    "url": "https://www.yonginmh.co.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-036",
-    "company": "부산대학교병원 공공보건의료사업실",
-    "institution": "부산대학교병원 공공보건의료사업실",
-    "title": "정규직 의료사회복지사 채용",
-    "role": "의료사회복지사",
-    "fieldId": "medical",
-    "fieldName": "의료사회복지",
-    "track": "정규직",
-    "category": "병원직원",
-    "deadline": "2027-01-15",
-    "dday": "D-45",
-    "location": "부산 서구",
-    "region": "부산",
-    "subRegion": "서구",
-    "salary": "부산대학교병원 보수규정 (연봉 4,100만원~)",
-    "career": "의료사회복지사 자격 소지자",
-    "edu": "학사 이상, 1급 및 의료사회복지사",
-    "tags": [
-      "부산대병원",
-      "국립대병원",
-      "정규직",
-      "부산서구"
-    ],
-    "memo": "부산권역 필수의료 전달체계 및 저소득 취약환자 긴급치료비 지원 총괄.",
-    "url": "https://www.pnuh.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-037",
-    "company": "국민건강보험공단",
-    "institution": "국민건강보험공단",
-    "title": "2026년도 상반기 청년인턴(체험형) 공개채용 - 요양복지직무",
-    "role": "건강보험 청년인턴",
-    "fieldId": "policy",
-    "fieldName": "사회복지행정",
-    "track": "인턴십",
-    "category": "청년인턴",
-    "deadline": "2026-12-14",
-    "dday": "D-14",
-    "location": "전국 본부 및 지사",
-    "region": "전국",
-    "subRegion": "전국",
-    "salary": "월 215만원 (주 40시간, 4대보험, 수료 시 신규공채 가점)",
-    "career": "만 15세 이상 34세 이하 청년",
-    "edu": "학력 및 전공 제한 없음 (사회복지 전공자 우대)",
-    "tags": [
-      "국민건강보험공단",
-      "청년인턴",
-      "공채가점",
-      "공공기관"
-    ],
-    "memo": "노인장기요양보험 인정조사 동행 및 등급판정위원회 행정 실무 지원.",
-    "url": "https://www.nhis.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-038",
-    "company": "국민연금공단",
-    "institution": "국민연금공단",
-    "title": "2026년도 체험형 청년인턴 채용 - 장애인지원 및 복지서비스",
-    "role": "국민연금 청년인턴",
-    "fieldId": "policy",
-    "fieldName": "사회복지행정",
-    "track": "인턴십",
-    "category": "청년인턴",
-    "deadline": "2026-12-19",
-    "dday": "D-19",
-    "location": "전국 지사",
-    "region": "전국",
-    "subRegion": "전국",
-    "salary": "월 210만원 + 자기개발 휴가 부여",
-    "career": "청년고용촉진특별법상 청년",
-    "edu": "사회복지사 1급 또는 관련 자격증 가산점",
-    "tags": [
-      "국민연금공단",
-      "기초연금",
-      "체험형인턴",
-      "공기업"
-    ],
-    "memo": "기초연금 신청 접수 안내 및 장애정도 심사 서류 검토 보조.",
-    "url": "https://www.nps.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-039",
-    "company": "근로복지공단",
-    "institution": "근로복지공단",
-    "title": "산재재활 및 사회복지 전담 체험형 청년인턴 모집",
-    "role": "산재재활 청년인턴",
-    "fieldId": "medical",
-    "fieldName": "의료사회복지",
-    "track": "인턴십",
-    "category": "청년인턴",
-    "deadline": "2026-12-21",
-    "dday": "D-21",
-    "location": "서울 및 수도권 지사",
-    "region": "서울",
-    "subRegion": "영등포구",
-    "salary": "월 212만원 (4대보험, 우수 수료자 서류면제)",
-    "career": "만 34세 이하",
-    "edu": "사회복지학, 직업재활학 전공자 우대",
-    "tags": [
-      "근로복지공단",
-      "산재보험",
-      "청년인턴",
-      "서류면제"
-    ],
-    "memo": "산재근로자 직업복귀 및 심리상담 프로그램 현장 지원.",
-    "url": "https://www.comwel.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-040",
-    "company": "한국장애인고용공단",
-    "institution": "한국장애인고용공단",
-    "title": "청년인턴(체용전제형/체험형) 채용 - 맞춤훈련 및 고용지원",
-    "role": "고용지원 인턴",
-    "fieldId": "disability",
-    "fieldName": "장애인복지",
-    "track": "인턴십",
-    "category": "청년인턴",
-    "deadline": "2026-12-23",
-    "dday": "D-23",
-    "location": "경기 성남시 본부",
-    "region": "경기",
-    "subRegion": "성남시",
-    "salary": "월 220만원 + 정규직 전환 가점",
-    "career": "청년",
-    "edu": "사회복지사, 직업재활사 우대",
-    "tags": [
-      "장애인고용공단",
-      "취업알선",
-      "청년인턴",
-      "성남시"
-    ],
-    "memo": "장애인 취업성공패키지 상담 보조 및 대기업 연계 맞춤훈련센터 운영 보조.",
-    "url": "https://www.kead.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-041",
-    "company": "한국토지주택공사(LH)",
-    "institution": "한국토지주택공사(LH)",
-    "title": "주거복지 청년인턴 채용 - 영구임대단지 커뮤니티케어",
-    "role": "주거복지 청년인턴",
-    "fieldId": "community",
-    "fieldName": "지역사회복지",
-    "track": "인턴십",
-    "category": "청년인턴",
-    "deadline": "2026-12-26",
-    "dday": "D-26",
-    "location": "서울·경기 지역본부",
-    "region": "수도권",
-    "subRegion": "서울",
-    "salary": "월 218만원 (주거지원 수당 별도)",
-    "career": "만 19~34세",
-    "edu": "사회복지학 전공자 우대",
-    "tags": [
-      "LH",
-      "주거복지",
-      "청년인턴",
-      "영구임대"
-    ],
-    "memo": "LH 임대주택 입주민 고독사 방지 스마트돌봄 및 복지관 연계 상담.",
-    "url": "https://www.lh.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-042",
-    "company": "한국사회보장정보원",
-    "institution": "한국사회보장정보원",
-    "title": "사회복지 전공자 대상 행정 데이터 청년인턴 채용",
-    "role": "사회보장 청년인턴",
-    "fieldId": "policy",
-    "fieldName": "사회복지행정",
-    "track": "인턴십",
-    "category": "청년인턴",
-    "deadline": "2026-12-28",
-    "dday": "D-28",
-    "location": "서울 광진구",
-    "region": "서울",
-    "subRegion": "광진구",
-    "salary": "월 220만원 (NCS 기반 교육훈련)",
-    "career": "만 34세 이하 청년",
-    "edu": "사회복지사 1급 또는 통계학 복수전공 우대",
-    "tags": [
-      "사회보장정보원",
-      "행복e음",
-      "데이터복지",
-      "광진구"
-    ],
-    "memo": "행복e음(사회보장정보시스템) 복지자원 정비 및 복지멤버십 데이터 검증 지원.",
-    "url": "https://www.ssis.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-043",
-    "company": "초록우산 어린이재단",
-    "institution": "초록우산 어린이재단",
-    "title": "2026년 상반기 정규 신입 복지사업가 공채 (국내아동지원)",
-    "role": "국내아동사업 옹호관",
-    "fieldId": "child",
-    "fieldName": "아동청소년",
-    "track": "정규직",
-    "category": "메이저NGO",
-    "deadline": "2026-12-20",
-    "dday": "D-20",
-    "location": "서울 중구 본부",
-    "region": "서울",
-    "subRegion": "중구",
-    "salary": "초록우산 정규직 테이블 (연봉 3,700만원~, 복지카드)",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급 필수, 아동권리옹호 경험 우대",
-    "tags": [
-      "초록우산",
-      "아동옹호",
-      "정규직",
-      "메이저NGO"
-    ],
-    "memo": "이주배경아동 권리보장, 주거빈곤아동 맞춤지원 및 권리지표 모니터링.",
-    "url": "https://www.childfund.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-044",
-    "company": "굿네이버스 (Good Neighbors)",
-    "institution": "굿네이버스 (Good Neighbors)",
-    "title": "국내사업본부 정규직 사회복지사 채용 (아동보호전문기관/좋은마음센터)",
-    "role": "아동보호 사회복지사",
-    "fieldId": "child",
-    "fieldName": "아동청소년",
-    "track": "정규직",
-    "category": "메이저NGO",
-    "deadline": "2026-12-22",
-    "dday": "D-22",
-    "location": "서울 영등포구 본부",
-    "region": "서울",
-    "subRegion": "영등포구",
-    "salary": "굿네이버스 내규 (초임 연봉 3,650만원 수준)",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급 소지자 필수",
-    "tags": [
-      "굿네이버스",
-      "아동보호전문기관",
-      "심리치료",
-      "영등포구"
-    ],
-    "memo": "학대피해아동 현장조사 및 심리치료 연계, 재학대 방지 가족기능강화 프로그램.",
-    "url": "https://www.goodneighbors.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-045",
-    "company": "월드비전 (World Vision Korea)",
-    "institution": "월드비전 (World Vision Korea)",
-    "title": "국내사업본부 꿈꾸는아이들 사업기획 전임간사 채용",
-    "role": "국내아동 결연사업가",
-    "fieldId": "child",
-    "fieldName": "아동청소년",
-    "track": "정규직",
-    "category": "메이저NGO",
-    "deadline": "2026-12-24",
-    "dday": "D-24",
-    "location": "서울 영등포구",
-    "region": "서울",
-    "subRegion": "영등포구",
-    "salary": "연봉 3,800만원 ~ 4,100만원",
-    "career": "경력 1~3년 우대",
-    "edu": "사회복지사 1급, 비영리 모금/사업 경험자",
-    "tags": [
-      "월드비전",
-      "꿈꾸는아이들",
-      "비영리마케팅",
-      "영등포구"
-    ],
-    "memo": "취약계층 아동 자립역량강화 '꿈디자이너' 캠프 및 기업 후원 연계 사업.",
-    "url": "https://www.worldvision.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-046",
-    "company": "세이브더칠드런 (Save the Children)",
-    "institution": "세이브더칠드런 (Save the Children)",
-    "title": "국내사업부문 아동식사지원 및 권리옹호 매니저 공채",
-    "role": "권리옹호 매니저",
-    "fieldId": "child",
-    "fieldName": "아동청소년",
-    "track": "정규직",
-    "category": "메이저NGO",
-    "deadline": "2026-12-27",
-    "dday": "D-27",
-    "location": "서울 마포구",
-    "region": "서울",
-    "subRegion": "마포구",
-    "salary": "연봉 3,850만원 (유연근무제, 안식휴가)",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급 또는 아동인권 전공",
-    "tags": [
-      "세이브더칠드런",
-      "아동식사지원",
-      "마포구",
-      "글로벌NGO"
-    ],
-    "memo": "결식위기 아동 건강한 한 끼 식사지원 및 지자체 아동권리조례 제정 모니터링.",
-    "url": "https://www.sc.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-047",
-    "company": "밀알복지재단",
-    "institution": "밀알복지재단",
-    "title": "장애인 일자리 지원 및 굿윌스토어 원장/매니저 채용",
-    "role": "장애인고용 매니저",
-    "fieldId": "disability",
-    "fieldName": "장애인복지",
-    "track": "정규직",
-    "category": "메이저NGO",
-    "deadline": "2026-12-29",
-    "dday": "D-29",
-    "location": "서울 강남구 본부",
-    "region": "서울",
-    "subRegion": "강남구",
-    "salary": "연봉 3,500만원 ~ 3,900만원",
-    "career": "신입/경력",
-    "edu": "사회복지사 또는 직업재활사",
-    "tags": [
-      "밀알복지재단",
-      "굿윌스토어",
-      "장애인일자리",
-      "강남구"
-    ],
-    "memo": "기증물품 재가공 및 중증장애인 자립형 매장(굿윌스토어) 직무지도 총괄.",
-    "url": "https://www.miral.org",
-    "verified": true
-  },
-  {
-    "id": "job-hub-048",
-    "company": "기아대책 (KFHI)",
-    "institution": "기아대책 (KFHI)",
-    "title": "국내복지본부 희망온 복지사업팀 담당 간사 채용",
-    "role": "사회복지 간사",
-    "fieldId": "community",
-    "fieldName": "지역사회복지",
-    "track": "정규직",
-    "category": "메이저NGO",
-    "deadline": "2027-01-03",
-    "dday": "D-33",
-    "location": "서울 강서구",
-    "region": "서울",
-    "subRegion": "강서구",
-    "salary": "기아대책 보수규정 (연봉 3,600만원~)",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급 자격증 소지자",
-    "tags": [
-      "기아대책",
-      "위기가정긴급지원",
-      "강서구",
-      "NGO"
-    ],
-    "memo": "복지사각지대 저소득가정 주거비·의료비 긴급지원 및 지역아동센터 연계망 구축.",
-    "url": "https://www.kfhi.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-049",
-    "company": "사랑의열매 사회복지공동모금회",
-    "institution": "사랑의열매 사회복지공동모금회",
-    "title": "2026년도 신입 정규직 공채 - 나눔사업 및 배분사업",
-    "role": "배분사업 사회복지사",
-    "fieldId": "policy",
-    "fieldName": "사회복지행정",
-    "track": "정규직",
-    "category": "메이저NGO",
-    "deadline": "2027-01-06",
-    "dday": "D-36",
-    "location": "서울 중구 중앙회",
-    "region": "서울",
-    "subRegion": "중구",
-    "salary": "공동모금회 보수규정 (연봉 4,100만원, 정규직)",
-    "career": "NCS 및 인성검사",
-    "edu": "사회복지사 1급 소지자 우대",
-    "tags": [
-      "사랑의열매",
-      "공동모금회",
-      "배분사업",
-      "중구본부"
-    ],
-    "memo": "전국 사회복지시설 프로그램 공모기획, 복지현장 배분사업 성과평가 관리.",
-    "url": "https://www.chest.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-050",
-    "company": "현대차 정몽구재단",
-    "institution": "현대차 정몽구재단",
-    "title": "사회복지 및 미래인재육성 사회공헌 기획 매니저 채용",
-    "role": "온드림 사회공헌 기획",
-    "fieldId": "community",
-    "fieldName": "지역사회복지",
-    "track": "정규직",
-    "category": "기업CSR",
-    "deadline": "2026-12-21",
-    "dday": "D-21",
-    "location": "서울 중구",
-    "region": "서울",
-    "subRegion": "중구",
-    "salary": "재단 정규직 처우 (연봉 4,600만원 수준, 성과급 별도)",
-    "career": "사회복지/CSR 경력 2년 이상",
-    "edu": "사회복지학 석사 또는 1급 소지자 우대",
-    "tags": [
-      "현대차정몽구재단",
-      "온드림",
-      "CSR기획",
-      "사회공헌"
-    ],
-    "memo": "의료취약계층 온드림 의료지원사업 및 청소년 미래 인재 장학 멘토링 프로그램 운영.",
-    "url": "https://www.hyundai-cmkfoundation.org",
-    "verified": true
-  },
-  {
-    "id": "job-hub-051",
-    "company": "삼성복지재단",
-    "institution": "삼성복지재단",
-    "title": "어린이집 보육복지 및 드림클래스 기획 운영 매니저 채용",
-    "role": "CSR 프로그램 매니저",
-    "fieldId": "child",
-    "fieldName": "아동청소년",
-    "track": "정규직",
-    "category": "기업CSR",
-    "deadline": "2026-12-23",
-    "dday": "D-23",
-    "location": "서울 용산구",
-    "region": "서울",
-    "subRegion": "용산구",
-    "salary": "삼성복지재단 연봉 테이블 (대기업 수준 대우)",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급 또는 아동가족학 전공",
-    "tags": [
-      "삼성복지재단",
-      "드림클래스",
-      "교육복지",
-      "용산구"
-    ],
-    "memo": "취약계층 중학생 온라인 멘토링(드림클래스) 및 우수 사회복지 프로그램 지원사업.",
-    "url": "https://www.samsungfoundation.org",
-    "verified": true
-  },
-  {
-    "id": "job-hub-052",
-    "company": "SK 행복나눔재단",
-    "institution": "SK 행복나눔재단",
-    "title": "청년소셜벤처 및 사회변화 프로젝트 프로덕트 매니저(PM)",
-    "role": "소셜임팩트 기획자",
-    "fieldId": "community",
-    "fieldName": "지역사회복지",
-    "track": "정규직",
-    "category": "기업CSR",
-    "deadline": "2026-12-26",
-    "dday": "D-26",
-    "location": "서울 용산구",
-    "region": "서울",
-    "subRegion": "용산구",
-    "salary": "SK 관계사 처우 준용 (연봉 4,700만원~, 복지포인트)",
-    "career": "사회혁신/복지기획 1년 이상",
-    "edu": "사회복지사 1급 또는 소셜벤처 경험자",
-    "tags": [
-      "SK행복나눔재단",
-      "소셜이노베이터",
-      "행복도시락",
-      "용산구"
-    ],
-    "memo": "장애인 이동권 혁신 휠체어 프로젝트 및 결식아동 맞춤형 행복얼라이언스 연계.",
-    "url": "https://www.skhappiness.org",
-    "verified": true
-  },
-  {
-    "id": "job-hub-053",
-    "company": "포스코 1%나눔재단",
-    "institution": "포스코 1%나눔재단",
-    "title": "철강 거점지역(포항/광양/인천) 사회공헌사업 전담 매니저",
-    "role": "지역상생 CSR 매니저",
-    "fieldId": "community",
-    "fieldName": "지역사회복지",
-    "track": "정규직",
-    "category": "기업CSR",
-    "deadline": "2026-12-28",
-    "dday": "D-28",
-    "location": "서울 강남구 포스코센터",
-    "region": "서울",
-    "subRegion": "강남구",
-    "salary": "포스코 그룹 급여 기준 준용 (연봉 4,500만원 수준)",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급 소지자 우대",
-    "tags": [
-      "포스코1%나눔재단",
-      "포스코센터",
-      "기업사회공헌",
-      "강남구"
-    ],
-    "memo": "포항·광양 취약계층 주거환경개선 '희망하우스' 및 장애인 자립 맞춤 보조기구 지원.",
-    "url": "https://www.poscofoundation.org",
-    "verified": true
-  },
-  {
-    "id": "job-hub-054",
-    "company": "카카오임팩트 (Kakao Impact)",
-    "institution": "카카오임팩트 (Kakao Impact)",
-    "title": "사회문제 해결 테크포굿(Tech for Good) 프로그램 매니저",
-    "role": "테크사회공헌 매니저",
-    "fieldId": "policy",
-    "fieldName": "사회복지행정",
-    "track": "정규직",
-    "category": "기업CSR",
-    "deadline": "2027-01-04",
-    "dday": "D-34",
-    "location": "경기 성남시 판교",
-    "region": "경기",
-    "subRegion": "성남시",
-    "salary": "카카오 그룹 처우 (유연근무, 복지포인트, 연봉 4,800만원~)",
-    "career": "비영리/IT기획 2년 이상",
-    "edu": "사회복지학 또는 IT 복수전공 우대",
-    "tags": [
-      "카카오임팩트",
-      "판교",
-      "테크포굿",
-      "디지털복지"
-    ],
-    "memo": "비영리 디지털 전환 지원 프로그램 및 시민참여 기부 플랫폼 '카카오같이가치' 기획.",
-    "url": "https://kakaoimpact.org",
-    "verified": true
-  },
-  {
-    "id": "job-hub-055",
-    "company": "네이버 해피빈 (Happybean)",
-    "institution": "네이버 해피빈 (Happybean)",
-    "title": "공익펀딩 및 비영리 모금 파트너십 매니저 공채",
-    "role": "공익플랫폼 기획자",
-    "fieldId": "policy",
-    "fieldName": "사회복지행정",
-    "track": "정규직",
-    "category": "기업CSR",
-    "deadline": "2027-01-07",
-    "dday": "D-37",
-    "location": "경기 성남시 분당",
-    "region": "경기",
-    "subRegion": "성남시",
-    "salary": "네이버 계열사 처우 (연봉 4,600만원~)",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급 또는 온라인 모금 경력자",
-    "tags": [
-      "네이버해피빈",
-      "온라인기부",
-      "분당구",
-      "그린팩토리"
-    ],
-    "memo": "전국 8,000여 개 복지기관 해피로그 온라인 모금함 검수 및 공익펀딩 프로젝트 발굴.",
-    "url": "https://happybean.naver.com",
-    "verified": true
-  },
-  {
-    "id": "job-hub-056",
-    "company": "아산나눔재단",
-    "institution": "아산나눔재단",
-    "title": "비영리 스타트업 및 소셜섹터 인재육성 프로그램 매니저",
-    "role": "비영리스타트업 PM",
-    "fieldId": "community",
-    "fieldName": "지역사회복지",
-    "track": "정규직",
-    "category": "기업CSR",
-    "deadline": "2027-01-10",
-    "dday": "D-40",
-    "location": "서울 종로구",
-    "region": "서울",
-    "subRegion": "종로구",
-    "salary": "아산나눔재단 내규 (연봉 4,400만원, 안식월)",
-    "career": "경력 2년 이상",
-    "edu": "사회복지사 또는 비영리 실무 경험",
-    "tags": [
-      "아산나눔재단",
-      "비영리스타트업",
-      "종로구",
-      "체인지메이커"
-    ],
-    "memo": "사회복지 현장 혁신가 육성 아카데미 및 비영리 스타트업 인큐베이팅 지원사업.",
-    "url": "https://asan-nanum.org",
-    "verified": true
-  },
-  {
-    "id": "job-hub-057",
-    "company": "수원중앙복지재단",
-    "institution": "수원중앙복지재단",
-    "title": "2026년 정규직 복지사 채용 (수원굿윌스토어)",
-    "role": "직업재활사/복지사",
-    "fieldId": "disability",
-    "fieldName": "장애인복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-24",
-    "dday": "D-24",
-    "location": "경기 수원시",
-    "region": "경기",
-    "subRegion": "수원시",
-    "salary": "연봉 3,400만원",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급 또는 직업재활사",
-    "tags": [
-      "수원시",
-      "장애인일자리",
-      "굿윌스토어"
-    ],
-    "memo": "발달장애인 기증물품 상품화 및 직업적응훈련.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-058",
-    "company": "성남시 중원노인종합복지관",
-    "institution": "성남시 중원노인종합복지관",
-    "title": "스마트복지 건강누리터 전담 복지사 채용",
-    "role": "스마트복지사",
-    "fieldId": "elderly",
-    "fieldName": "노인복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-27",
-    "dday": "D-27",
-    "location": "경기 성남시",
-    "region": "경기",
-    "subRegion": "성남시",
-    "salary": "경기도 호봉 기준",
-    "career": "경력 1년 이상",
-    "edu": "사회복지사 1급",
-    "tags": [
-      "성남시",
-      "중원구",
-      "스마트케어"
-    ],
-    "memo": "어르신 맞춤형 디지털 헬스케어 및 로봇돌봄 연계.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-059",
-    "company": "고양시 일산노인종합복지관",
-    "institution": "고양시 일산노인종합복지관",
-    "title": "노인맞춤돌봄서비스 선임 사회복지사 공채",
-    "role": "선임 사회복지사",
-    "fieldId": "elderly",
-    "fieldName": "노인복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-29",
-    "dday": "D-29",
-    "location": "경기 고양시",
-    "region": "경기",
-    "subRegion": "고양시",
-    "salary": "경기도 가이드라인",
-    "career": "경력 2년 이상",
-    "edu": "사회복지사 1급",
-    "tags": [
-      "고양시",
-      "일산동구",
-      "노인맞춤돌봄"
-    ],
-    "memo": "고양시 일산동구 취약노인 450명 안전지원망 총괄.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-060",
-    "company": "용인시기흥노인복지관",
-    "institution": "용인시기흥노인복지관",
-    "title": "치매안심 통합돌봄 사회복지사 모집",
-    "role": "치매전담 복지사",
-    "fieldId": "elderly",
-    "fieldName": "노인복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2027-01-02",
-    "dday": "D-32",
-    "location": "경기 용인시",
-    "region": "경기",
-    "subRegion": "용인시",
-    "salary": "경기도 호봉제",
-    "career": "신입/경력",
-    "edu": "사회복지사 자격증",
-    "tags": [
-      "용인시",
-      "기흥구",
-      "치매안심"
-    ],
-    "memo": "초기 치매 어르신 인지재활 쉼터 프로그램 운영.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-061",
-    "company": "부천시오정종합사회복지관",
-    "institution": "부천시오정종합사회복지관",
-    "title": "마을공동체 활성화 복지활동가 채용",
-    "role": "마을활동가",
-    "fieldId": "community",
-    "fieldName": "지역사회복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2027-01-05",
-    "dday": "D-35",
-    "location": "경기 부천시",
-    "region": "경기",
-    "subRegion": "부천시",
-    "salary": "부천시 기준",
-    "career": "신입 환영",
-    "edu": "사회복지사 1급",
-    "tags": [
-      "부천시",
-      "오정구",
-      "주민조직"
-    ],
-    "memo": "원도심 골목길 환경개선 및 주민자생모임 조직화.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-062",
-    "company": "화성시동탄아동보호전문기관",
-    "institution": "화성시동탄아동보호전문기관",
-    "title": "학대피해아동 현장조사 전담 사회복지사 채용",
-    "role": "아동보호상담원",
-    "fieldId": "child",
-    "fieldName": "아동청소년",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2027-01-08",
-    "dday": "D-38",
-    "location": "경기 화성시",
-    "region": "경기",
-    "subRegion": "화성시",
-    "salary": "보건복지부 인건비 기준",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급 필수",
-    "tags": [
-      "화성시",
-      "동탄",
-      "아동보호"
-    ],
-    "memo": "아동학대 24시간 응급조치 및 피해아동 쉼터 연계.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-063",
-    "company": "안산시장애인복지관",
-    "institution": "안산시장애인복지관",
-    "title": "중증장애인 맞춤형 일자리 코디네이터 채용",
-    "role": "일자리전담사",
-    "fieldId": "disability",
-    "fieldName": "장애인복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2027-01-11",
-    "dday": "D-41",
-    "location": "경기 안산시",
-    "region": "경기",
-    "subRegion": "안산시",
-    "salary": "경기도 호봉제",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급 또는 2급",
-    "tags": [
-      "안산시",
-      "단원구",
-      "장애인일자리"
-    ],
-    "memo": "안산 스마트허브 공단 연계 장애인 고용연계 지원.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-064",
-    "company": "평택북부종합사회복지관",
-    "institution": "평택북부종합사회복지관",
-    "title": "다문화가정 아동성장지원 사회복지사 채용",
-    "role": "다문화복지사",
-    "fieldId": "multicultural",
-    "fieldName": "다문화복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2027-01-14",
-    "dday": "D-44",
-    "location": "경기 평택시",
-    "region": "경기",
-    "subRegion": "평택시",
-    "salary": "경기도 기준",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급",
-    "tags": [
-      "평택시",
-      "송탄",
-      "다문화가정"
-    ],
-    "memo": "외국인 근로자 자녀 방과후 학습멘토링 지원.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-065",
-    "company": "의정부시종합사회복지관",
-    "institution": "의정부시종합사회복지관",
-    "title": "북한이탈주민 지역적응센터(하나센터) 전담인력",
-    "role": "하나센터 상담사",
-    "fieldId": "multicultural",
-    "fieldName": "다문화복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2027-01-16",
-    "dday": "D-46",
-    "location": "경기 의정부시",
-    "region": "경기",
-    "subRegion": "의정부시",
-    "salary": "통일부 인건비 기준 준용",
-    "career": "경력 1년 이상 우대",
-    "edu": "사회복지사 1급",
-    "tags": [
-      "의정부시",
-      "하나센터",
-      "북한이탈주민"
-    ],
-    "memo": "경기 북부 탈북주민 초기정착 및 취업지원.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-066",
-    "company": "시흥시노인종합복지관",
-    "institution": "시흥시노인종합복지관",
-    "title": "어르신 스마트건강센터 물리치료 및 사회복지 코디",
-    "role": "통합돌봄 코디",
-    "fieldId": "elderly",
-    "fieldName": "노인복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2027-01-18",
-    "dday": "D-48",
-    "location": "경기 시흥시",
-    "region": "경기",
-    "subRegion": "시흥시",
-    "salary": "시흥시 인건비 기준",
-    "career": "신입 환영",
-    "edu": "사회복지사 소지자",
-    "tags": [
-      "시흥시",
-      "능곡동",
-      "스마트돌봄"
-    ],
-    "memo": "건강 취약 어르신 맞춤형 낙상예방 및 영양관리.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-067",
-    "company": "김포시종합사회복지관",
-    "institution": "김포시종합사회복지관",
-    "title": "아동·청소년 방과후 돋움교실 전담교사 채용",
-    "role": "아동복지사",
-    "fieldId": "child",
-    "fieldName": "아동청소년",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2027-01-20",
-    "dday": "D-50",
-    "location": "경기 김포시",
-    "region": "경기",
-    "subRegion": "김포시",
-    "salary": "경기도 호봉 기준",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급 또는 보육교사",
-    "tags": [
-      "김포시",
-      "방과후교실",
-      "아동복지"
-    ],
-    "memo": "맞벌이·한부모 가정 아동 급식지원 및 특기적성 지도.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-068",
-    "company": "파주시문산종합사회복지관",
-    "institution": "파주시문산종합사회복지관",
-    "title": "접경지역 고령농가 마을복지 전담인력",
-    "role": "마을순회복지사",
-    "fieldId": "community",
-    "fieldName": "지역사회복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2027-01-22",
-    "dday": "D-52",
-    "location": "경기 파주시",
-    "region": "경기",
-    "subRegion": "파주시",
-    "salary": "월 260만원 (운전수당)",
-    "career": "운전면허 1종 필수",
-    "edu": "사회복지사 1급/2급",
-    "tags": [
-      "파주시",
-      "문산",
-      "농촌복지"
-    ],
-    "memo": "민통선 인근 고령마을 이동세탁 및 생필품 배송.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-069",
-    "company": "인천 서구 가좌종합사회복지관",
-    "institution": "인천 서구 가좌종합사회복지관",
-    "title": "사례관리팀 위기가구 발굴 사회복지사",
-    "role": "사례관리자",
-    "fieldId": "community",
-    "fieldName": "지역사회복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-25",
-    "dday": "D-25",
-    "location": "인천 서구",
-    "region": "인천",
-    "subRegion": "서구",
-    "salary": "인천시 단일임금 기준",
-    "career": "신입 환영",
-    "edu": "사회복지사 1급",
-    "tags": [
-      "인천서구",
-      "가좌동",
-      "사례관리"
-    ],
-    "memo": "원도심 다세대 밀집지역 위기가구 발굴.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-070",
-    "company": "인천 연수종합사회복지관",
-    "institution": "인천 연수종합사회복지관",
-    "title": "고려인 및 다문화 주민 정착지원 복지사 채용",
-    "role": "다문화전담사",
-    "fieldId": "multicultural",
-    "fieldName": "다문화복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2026-12-28",
-    "dday": "D-28",
-    "location": "인천 연수구",
-    "region": "인천",
-    "subRegion": "연수구",
-    "salary": "인천시 호봉제",
-    "career": "러시아어 가능자 우대",
-    "edu": "사회복지사 자격증",
-    "tags": [
-      "연수구",
-      "함박마을",
-      "고려인정착"
-    ],
-    "memo": "연수구 함박마을 고려인 동포 생활안정 지원.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-071",
-    "company": "인천 계양구노인복지관",
-    "institution": "인천 계양구노인복지관",
-    "title": "노인사회활동지원사업 전담인력 공채",
-    "role": "노인일자리 코디",
-    "fieldId": "elderly",
-    "fieldName": "노인복지",
-    "track": "정규직",
-    "category": "복지시설",
-    "deadline": "2027-01-05",
-    "dday": "D-35",
-    "location": "인천 계양구",
-    "region": "인천",
-    "subRegion": "계양구",
-    "salary": "월 245만원 (처우개선비 별도)",
-    "career": "경력무관",
-    "edu": "사회복지사 소지자",
-    "tags": [
-      "계양구",
-      "노인일자리",
-      "사회활동"
-    ],
-    "memo": "스쿨존 교통안전지킴이 어르신 320명 파견 관리.",
-    "url": "https://sasw.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-072",
-    "company": "국민건강보험 일산병원",
-    "institution": "국민건강보험 일산병원",
-    "title": "의료사회복지실 정규직 임상사회사업사 채용",
-    "role": "정규직 의료사회복지사",
-    "fieldId": "medical",
-    "fieldName": "의료사회복지",
-    "track": "정규직",
-    "category": "병원직원",
-    "deadline": "2027-01-08",
-    "dday": "D-38",
-    "location": "경기 고양시",
-    "region": "경기",
-    "subRegion": "고양시",
-    "salary": "병원 규정 (연봉 4,100만원~)",
-    "career": "의료사회복지 수련 수료자",
-    "edu": "의료사회복지사 자격 소지자",
-    "tags": [
-      "일산병원",
-      "공공병원",
-      "정규직",
-      "고양시"
-    ],
-    "memo": "호스피스 완화의료 및 희귀난치 질환자 진료비 지원 심의.",
-    "url": "https://www.nhimc.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-073",
-    "company": "가톨릭대학교 인천성모병원",
-    "institution": "가톨릭대학교 인천성모병원",
-    "title": "사회사업팀 정규직 사회사업사 채용",
-    "role": "의료사회복지사",
-    "fieldId": "medical",
-    "fieldName": "의료사회복지",
-    "track": "정규직",
-    "category": "병원직원",
-    "deadline": "2027-01-12",
-    "dday": "D-42",
-    "location": "인천 부평구",
-    "region": "인천",
-    "subRegion": "부평구",
-    "salary": "가톨릭의료원 급여 테이블 준용",
-    "career": "경력 1년 이상",
-    "edu": "의료사회복지사 필수",
-    "tags": [
-      "인천성모병원",
-      "부평구",
-      "정규직",
-      "자선진료"
-    ],
-    "memo": "취약계층 긴급의료비 자선펀드 운용 및 가정간호 연계.",
-    "url": "https://www.cmcism.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-074",
-    "company": "한림대학교 성심병원",
-    "institution": "한림대학교 성심병원",
-    "title": "의료사회복지팀 환자안전 및 완화의료 사회복지사",
-    "role": "임상사회복지사",
-    "fieldId": "medical",
-    "fieldName": "의료사회복지",
-    "track": "정규직",
-    "category": "병원직원",
-    "deadline": "2027-01-15",
-    "dday": "D-45",
-    "location": "경기 안양시",
-    "region": "경기",
-    "subRegion": "안양시",
-    "salary": "병원 규정 준용 (연봉 4,000만원 수준)",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급 및 의료사회복지사",
-    "tags": [
-      "안양시",
-      "평촌",
-      "한림대성심",
-      "완화의료"
-    ],
-    "memo": "암환자 디스트레스 스크리닝 및 사회경제적 사정.",
-    "url": "https://hallym.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-075",
-    "company": "월드비전 경기남부사업본부",
-    "institution": "월드비전 경기남부사업본부",
-    "title": "지역위기아동 조식지원사업 '아침머꼬' 담당 매니저",
-    "role": "아동복지 매니저",
-    "fieldId": "child",
-    "fieldName": "아동청소년",
-    "track": "정규직",
-    "category": "메이저NGO",
-    "deadline": "2027-01-09",
-    "dday": "D-39",
-    "location": "경기 수원시",
-    "region": "경기",
-    "subRegion": "수원시",
-    "salary": "연봉 3,750만원",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급",
-    "tags": [
-      "월드비전",
-      "아침머꼬",
-      "수원시",
-      "NGO"
-    ],
-    "memo": "경기도 120개 초중교 결식아동 아침식사 및 심리상담 지원.",
-    "url": "https://www.worldvision.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-076",
-    "company": "초록우산 인천지역본부",
-    "institution": "초록우산 인천지역본부",
-    "title": "인천 이주배경 아동 맞춤형 학습지원 전담간사",
-    "role": "아동권리 간사",
-    "fieldId": "child",
-    "fieldName": "아동청소년",
-    "track": "정규직",
-    "category": "메이저NGO",
-    "deadline": "2027-01-14",
-    "dday": "D-44",
-    "location": "인천 남동구",
-    "region": "인천",
-    "subRegion": "남동구",
-    "salary": "초록우산 규정 (연봉 3,700만원)",
-    "career": "신입/경력",
-    "edu": "사회복지사 1급",
-    "tags": [
-      "초록우산",
-      "이주배경아동",
-      "인천남동구"
-    ],
-    "memo": "다문화 및 중도입국 아동 한국어 기초교육 및 장학금 지원.",
-    "url": "https://www.childfund.or.kr",
-    "verified": true
-  },
-  {
-    "id": "job-hub-077",
-    "company": "카카오임팩트 펠로우십팀",
-    "institution": "카카오임팩트 펠로우십팀",
-    "title": "사회혁신가(Social Innovator) 발굴 지원 매니저",
-    "role": "사회혁신 PM",
-    "fieldId": "policy",
-    "fieldName": "사회복지행정",
-    "track": "정규직",
-    "category": "기업CSR",
-    "deadline": "2027-01-16",
-    "dday": "D-46",
-    "location": "경기 성남시",
-    "region": "경기",
-    "subRegion": "성남시",
-    "salary": "카카오 그룹 처우 (연봉 4,800만원~)",
-    "career": "비영리/혁신 2년 이상",
-    "edu": "사회복지 또는 사회학 전공 우대",
-    "tags": [
-      "카카오",
-      "카카오임팩트",
-      "판교",
-      "펠로우십"
-    ],
-    "memo": "복지·환경·지역문제 현장 혁신가 활동비 및 네트워크 지원.",
-    "url": "https://kakaoimpact.org",
-    "verified": true
-  },
-  {
-    "id": "job-hub-078",
-    "company": "네이버 해피빈 재단",
-    "institution": "네이버 해피빈 재단",
-    "title": "소상공인·복지시설 온라인 판로지원 기획자",
-    "role": "공익e커머스 매니저",
-    "fieldId": "community",
-    "fieldName": "지역사회복지",
-    "track": "정규직",
-    "category": "기업CSR",
-    "deadline": "2027-01-18",
-    "dday": "D-48",
-    "location": "경기 성남시",
-    "region": "경기",
-    "subRegion": "성남시",
-    "salary": "네이버 계열사 처우",
-    "career": "신입/경력",
-    "edu": "사회복지학 또는 경영학 전공",
-    "tags": [
-      "네이버",
-      "해피빈",
-      "분당구",
-      "가치소비"
-    ],
-    "memo": "장애인 직업재활시설 생산품 온라인 펀딩 및 판매 기획.",
-    "url": "https://happybean.naver.com",
-    "verified": true
-  }
-];
+        const ALL_JOB_POSTINGS = (typeof window !== 'undefined' && window.ALL_JOB_POSTINGS) ? window.ALL_JOB_POSTINGS : [];
         const defaultWelfareNews = [
     // --- 정책/제도 & 노인·통합돌봄 ---
     {
@@ -14197,9 +12164,181 @@
             renderResidencyCards();
         }
 
-        // 7. View 4: 75선 취업처 카드 렌더링 & 필터
+        // 7. View 4: 인턴·취업처 & 전국 복지관 채용센터 둘러보기 허브
         
+        // --- 7-1. 우리 동네 복지관 공식 채용센터 (Table) 허브 상태 및 로직 ---
+        let currentJobHubRegion = '서울';
+        let currentJobHubSubRegion = '전체';
+        let currentJobHubSearch = '';
+        let currentJobHubLimit = 15;
+        let isJobsHubOpen = true;
+
+        function toggleJobsHubTable() {
+            const content = document.getElementById('jobs-hub-content');
+            const icon = document.getElementById('jobs-hub-toggle-icon');
+            const text = document.getElementById('jobs-hub-toggle-text');
+            if (!content) return;
+            isJobsHubOpen = !isJobsHubOpen;
+            if (isJobsHubOpen) {
+                content.classList.remove('hidden');
+                if (icon) icon.innerText = '▼';
+                if (text) text.innerText = '채용센터 디렉토리 닫기';
+            } else {
+                content.classList.add('hidden');
+                if (icon) icon.innerText = '▶';
+                if (text) text.innerText = '채용센터 디렉토리 펼치기';
+            }
+        }
+
+        function onJobHubRegionChange(reg) {
+            currentJobHubRegion = reg;
+            currentJobHubSubRegion = '전체';
+            currentJobHubLimit = 15;
+            
+            // Populate subregion select
+            const subSelect = document.getElementById('jobs-hub-subregion-select');
+            if (subSelect) {
+                let optionsHtml = '<option value="전체">시·군·구 전체</option>';
+                const subList = (typeof SUB_REGIONS_DATA !== 'undefined' && SUB_REGIONS_DATA[reg]) ? SUB_REGIONS_DATA[reg] : [];
+                subList.forEach(d => { optionsHtml += `<option value="${d}">${d}</option>`; });
+                subSelect.innerHTML = optionsHtml;
+                subSelect.value = '전체';
+            }
+            renderJobsHubTable();
+        }
+
+        function onJobHubSubRegionChange(sub) {
+            currentJobHubSubRegion = sub;
+            currentJobHubLimit = 15;
+            renderJobsHubTable();
+        }
+
+        function onJobHubSearchInput(val) {
+            currentJobHubSearch = (val || '').trim().toLowerCase();
+            currentJobHubLimit = 15;
+            renderJobsHubTable();
+        }
+
+        function clearJobHubSearch() {
+            const input = document.getElementById('jobs-hub-search-input');
+            if (input) input.value = '';
+            currentJobHubSearch = '';
+            currentJobHubLimit = 15;
+            renderJobsHubTable();
+        }
+
+        function loadMoreJobHubInstitutions() {
+            currentJobHubLimit += 15;
+            renderJobsHubTable();
+        }
+
+        function renderJobsHubTable() {
+            const tbody = document.getElementById('jobs-hub-table-body');
+            const countEl = document.getElementById('jobs-hub-match-count');
+            const moreBtn = document.getElementById('jobs-hub-more-btn');
+            if (!tbody) return;
+
+            const instList = window.ALL_CERTIFIED_PRACTICUM_INSTITUTIONS || window.ALL_PRACTICUM_INSTITUTIONS || [];
+            
+            let filtered = instList.filter(inst => {
+                // 1) Region match
+                if (currentJobHubRegion !== '전체') {
+                    if (inst.region !== currentJobHubRegion) return false;
+                }
+                // 2) SubRegion match
+                if (currentJobHubSubRegion !== '전체') {
+                    if (inst.subRegion !== currentJobHubSubRegion) return false;
+                }
+                // 3) Keyword match
+                if (currentJobHubSearch) {
+                    const text = ((inst.name || '') + ' ' + (inst.field || '') + ' ' + (inst.subRegion || '') + ' ' + (inst.address || '')).toLowerCase();
+                    if (!text.includes(currentJobHubSearch)) return false;
+                }
+                return true;
+            });
+
+            if (countEl) countEl.innerText = filtered.length.toLocaleString();
+
+            const paged = filtered.slice(0, currentJobHubLimit);
+            if (moreBtn) {
+                if (filtered.length > currentJobHubLimit) {
+                    moreBtn.classList.remove('hidden');
+                    moreBtn.innerText = `+ 15개 더보기 (남은 ${filtered.length - currentJobHubLimit}개)`;
+                } else {
+                    moreBtn.classList.add('hidden');
+                }
+            }
+
+            if (paged.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="py-8 text-center text-slate-400">
+                            🔍 해당 조건에 일치하는 복지시설이 없습니다. 다른 지역이나 검색어를 입력해보세요.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = paged.map((inst, idx) => {
+                const searchLink = `https://search.naver.com/search.naver?query=${encodeURIComponent(inst.name)}+채용`;
+                const telLink = inst.tel ? `tel:${inst.tel.replace(/[^0-9-]/g, '')}` : '#';
+                return `
+                    <tr class="hover:bg-blue-50/40 transition">
+                        <td class="py-2.5 px-3 text-center text-slate-400 font-bold">${idx + 1}</td>
+                        <td class="py-2.5 px-3">
+                            <span class="font-extrabold text-slate-900">${escapeHtml(inst.name)}</span>
+                        </td>
+                        <td class="py-2.5 px-3 text-slate-600">
+                            <span class="px-1.5 py-0.5 rounded bg-slate-100 font-bold text-[11px] text-slate-700">${escapeHtml(inst.region || '')}</span>
+                            <span class="ml-1">${escapeHtml(inst.subRegion || '')}</span>
+                        </td>
+                        <td class="py-2.5 px-3">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                                (inst.field || '').includes('종합') ? 'bg-blue-50 text-blue-700 border border-blue-200' :
+                                (inst.field || '').includes('노인') ? 'bg-amber-50 text-amber-700 border border-amber-200' :
+                                (inst.field || '').includes('장애') ? 'bg-purple-50 text-purple-700 border border-purple-200' :
+                                'bg-slate-100 text-slate-700 border border-slate-200'
+                            }">
+                                ${escapeHtml(inst.field || '사회복지')}
+                            </span>
+                        </td>
+                        <td class="py-2.5 px-3 text-center text-[11px] text-slate-500 font-bold">${escapeHtml(inst.supervisors || '보유')}</td>
+                        <td class="py-2.5 px-3 text-center">
+                            <a href="${searchLink}" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-600 text-blue-700 hover:text-white font-bold text-[11px] transition border border-blue-200 hover:border-transparent">
+                                채용공고 바로가기 ↗
+                            </a>
+                        </td>
+                        <td class="py-2.5 px-3 text-center">
+                            ${inst.tel ? `<a href="${telLink}" class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] transition">📞 ${escapeHtml(inst.tel)}</a>` : '<span class="text-slate-300">-</span>'}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // --- 7-2. 실시간 채용공고 570선 피드 상태 및 렌더링 ---
+        let currentJobEmploymentType = '전체';
         let currentJobCategory = '전체';
+        let currentJobRegion = '전체';
+        currentJobSubRegion = '전체';
+        let currentJobSearch = '';
+        let currentJobSort = 'dday';
+        let currentJobTag = '';
+        let currentJobDisplayLimit = 15;
+
+        function setJobEmploymentType(empType) {
+            currentJobEmploymentType = empType;
+            document.querySelectorAll('.job-emp-btn').forEach(b => {
+                if (b.innerText.includes(empType) || (empType === '전체' && b.innerText.includes('전체'))) {
+                    b.className = 'job-emp-btn px-2.5 py-1 rounded-lg bg-slate-900 text-white font-bold text-xs flex-shrink-0 cursor-pointer';
+                } else {
+                    b.className = 'job-emp-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer';
+                }
+            });
+            currentJobDisplayLimit = 15;
+            renderJobsCards();
+        }
 
         function setJobCategory(cat) {
             currentJobCategory = cat;
@@ -14210,29 +12349,42 @@
                     b.className = 'job-cat-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer';
                 }
             });
-            currentJobDisplayLimit = 12;
+            currentJobDisplayLimit = 15;
             renderJobsCards();
         }
 
-        let currentJobTrack = '전체';
-        let currentJobRegion = '전체';
-        let currentJobSearch = '';
-        let currentJobSort = 'dday';
-        let currentJobTag = '';
+        function loadMoreJobs() {
+            currentJobDisplayLimit += 15;
+            renderJobsCards();
+        }
 
         function renderJobsCards() {
             const grid = document.getElementById('jobs-cards-grid');
             if (!grid) return;
 
-            let filtered = ALL_JOB_POSTINGS.filter(j => {
-                // 1) Category match (5-Pillar)
+            const jobList = window.ALL_JOB_POSTINGS || [];
+
+            // Update top metric counts dynamically from DB
+            const statTotal = document.getElementById('jobs-stat-total');
+            const statIntern = document.getElementById('jobs-stat-intern');
+            const statRegular = document.getElementById('jobs-stat-regular');
+            const statContract = document.getElementById('jobs-stat-contract');
+
+            if (statTotal) statTotal.innerText = jobList.length;
+            if (statIntern) statIntern.innerText = jobList.filter(j => j.employmentType === '청년인턴' || j.track === '인턴').length;
+            if (statRegular) statRegular.innerText = jobList.filter(j => j.employmentType === '정규직').length;
+            if (statContract) statContract.innerText = jobList.filter(j => j.employmentType === '계약직').length;
+
+            let filtered = jobList.filter(j => {
+                // 1) Employment Type match
+                if (currentJobEmploymentType !== '전체') {
+                    if (j.employmentType !== currentJobEmploymentType) return false;
+                }
+
+                // 2) Category match (5-Pillar)
                 if (currentJobCategory !== '전체') {
                     if (j.category !== currentJobCategory) return false;
                 }
-
-                // 2) Track match (fallback)
-                if (currentJobTrack === '인턴' && j.track !== '인턴') return false;
-                if (currentJobTrack === '신입·정규직' && j.track === '인턴') return false;
 
                 // 3) Region & SubRegion match
                 const matchRegion = matchItemLocation(j, currentJobRegion, currentJobSubRegion);
@@ -14248,21 +12400,22 @@
                         (j.location || '') + ' ' +
                         (j.memo || '') + ' ' +
                         (j.requirements || '') + ' ' +
-                        (j.responsibilities || '')
+                        (j.salary || '') + ' ' +
+                        (j.employmentType || '')
                     ).toLowerCase();
                     if (!fullText.includes(currentJobSearch)) return false;
                 }
 
                 // 5) Tag match
                 if (currentJobTag) {
-                    const fullText = ((j.tags || []).join(' ') + ' ' + (j.role || '') + ' ' + (j.title || '')).toLowerCase();
+                    const fullText = ((j.tags || []).join(' ') + ' ' + (j.role || '') + ' ' + (j.title || '') + ' ' + (j.employmentType || '')).toLowerCase();
                     if (!fullText.includes(currentJobTag.toLowerCase())) return false;
                 }
 
                 return true;
             });
 
-            // 4) Sort
+            // 6) Sort
             if (currentJobSort === 'dday') {
                 filtered.sort((a, b) => (a.deadline || '9999').localeCompare(b.deadline || '9999'));
             } else if (currentJobSort === 'latest') {
@@ -14271,13 +12424,52 @@
                 filtered.sort((a, b) => (b.salary || '').localeCompare(a.salary || ''));
             }
 
-            grid.innerHTML = filtered.map(j => `
-                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:border-blue-400 transition flex flex-col justify-between">
+            // Paging
+            const paged = filtered.slice(0, currentJobDisplayLimit);
+            const loadMoreContainer = document.getElementById('jobs-load-more-container');
+            const remainingCountEl = document.getElementById('jobs-remaining-count');
+
+            if (loadMoreContainer) {
+                if (filtered.length > currentJobDisplayLimit) {
+                    loadMoreContainer.classList.remove('hidden');
+                    if (remainingCountEl) remainingCountEl.innerText = `${filtered.length - currentJobDisplayLimit}건 더 있음`;
+                } else {
+                    loadMoreContainer.classList.add('hidden');
+                }
+            }
+
+            if (paged.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-12 text-center text-slate-400 bg-white rounded-2xl border border-slate-200 p-8">
+                        <div class="text-3xl mb-2">🔍</div>
+                        <p class="font-bold text-slate-700">해당 조건에 부합하는 채용공고가 없습니다.</p>
+                        <p class="text-xs text-slate-400 mt-1">고용형태나 권역 필터를 '전체'로 변경하거나 검색어를 재설정해보세요.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = paged.map(j => {
+                const empBadge = j.employmentType === '정규직' ?
+                    '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">👔 정규직</span>' :
+                    j.employmentType === '계약직' ?
+                    '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">📋 계약직</span>' :
+                    '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">🌱 청년인턴</span>';
+
+                const catBadge = j.category === '병원직원' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
+                    j.category === '청년인턴' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
+                    j.category === '메이저NGO' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
+                    j.category === '기업CSR' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
+                    'bg-slate-100 text-slate-700 border border-slate-200';
+
+                return `
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:border-blue-400 hover:shadow-sm transition flex flex-col justify-between">
                     <div>
                         <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center gap-1.5">
-                                <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${j.category === '병원직원' ? 'bg-blue-50 text-blue-700 border border-blue-200' : j.category === '청년인턴' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : j.category === '메이저NGO' ? 'bg-purple-50 text-purple-700 border border-purple-200' : j.category === '기업CSR' ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-slate-100 text-slate-700 border border-slate-200'}">${escapeHtml(j.category || '복지시설')}</span>
-                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-50 text-slate-600 border border-slate-200/60">${escapeHtml(j.track || '정규직')}</span>
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${catBadge}">${escapeHtml(j.category || '복지시설')}</span>
+                                ${empBadge}
+                                ${j.contractPeriod && j.employmentType === '계약직' ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-50 text-slate-500 border border-slate-200">${escapeHtml(j.contractPeriod)}</span>` : ''}
                             </div>
                             <span class="px-2 py-0.5 rounded-full text-[10px] font-black ${j.dday && j.dday.includes('D-') ? 'bg-rose-50 text-rose-600 border border-rose-200' : 'bg-slate-100 text-slate-600 border border-slate-200'}">${escapeHtml(j.dday || '접수중')}</span>
                         </div>
@@ -14286,16 +12478,20 @@
                         <div class="bg-slate-50 rounded-xl p-3 border border-slate-100 text-xs text-slate-600 space-y-1.5 mb-4">
                             <div class="flex justify-between"><span>채용분야:</span><strong class="text-slate-900">${escapeHtml(j.fieldName || '사회복지')}</strong></div>
                             <div class="flex justify-between"><span>원서마감:</span><strong class="text-slate-900">${escapeHtml(j.deadline || '마감전')}</strong></div>
-                            <div class="flex justify-between"><span>보수기준:</span><strong class="text-slate-900">${escapeHtml(j.salary || '가이드라인 준수')}</strong></div>
-                            <div class="pt-1 border-t border-slate-200/60 truncate">소재지: ${escapeHtml(j.location || '수도권')}</div>
+                            <div class="flex justify-between"><span>보수기준:</span><strong class="text-slate-900 truncate max-w-[200px]" title="${escapeHtml(j.salary || '')}">${escapeHtml(j.salary || '가이드라인 준수')}</strong></div>
+                            <div class="pt-1 border-t border-slate-200/60 flex justify-between text-slate-500">
+                                <span>소재지: ${escapeHtml(j.location || '전국')}</span>
+                                <span class="text-[11px] text-slate-400">${escapeHtml(j.sourcePlatform || '공식공고')}</span>
+                            </div>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
-                        <a href="${j.officialUrl || 'https://sasw.or.kr'}" target="_blank" class="flex-1 py-2 rounded-xl bg-blue-600 text-white font-bold text-xs hover:bg-blue-700 transition text-center">공고 원문 ↗</a>
+                        <a href="${j.url || 'https://welfare.net'}" target="_blank" class="flex-1 py-2 rounded-xl bg-blue-600 text-white font-bold text-xs hover:bg-blue-700 transition text-center shadow-2xs">공고 원문 ↗</a>
                         <button type="button" onclick="saveToWorkspace('postings', '${j.id}', '${escapeHtml(j.company || '')}', '${escapeHtml(j.title || '')}', '${escapeHtml(j.deadline || '')}')" class="px-3 py-2 rounded-xl bg-amber-50 text-amber-900 font-bold text-xs border border-amber-200 hover:bg-amber-100 transition cursor-pointer">⭐ 찜하기</button>
                     </div>
                 </div>
-            `).join('');
+            `;
+            }).join('');
         }
 
         function setJobTag(tag) {
@@ -14312,6 +12508,7 @@
                     btn.className = 'job-tag-btn flex-shrink-0 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 font-medium text-[11px] hover:bg-slate-200 cursor-pointer';
                 }
             });
+            currentJobDisplayLimit = 15;
             renderJobsCards();
         }
 
@@ -14323,6 +12520,7 @@
             document.querySelectorAll('.job-tag-btn').forEach(btn => {
                 btn.className = 'job-tag-btn flex-shrink-0 px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 font-medium text-[11px] hover:bg-blue-100 cursor-pointer';
             });
+            currentJobDisplayLimit = 15;
             renderJobsCards();
         }
 
@@ -14342,34 +12540,29 @@
                 }
             });
             renderSubRegionTray('jobs-subregion', reg, currentJobSubRegion, 'setJobSubRegion');
+            currentJobDisplayLimit = 15;
             renderJobsCards();
         }
 
         function setJobSubRegion(sub) {
             currentJobSubRegion = sub;
             renderSubRegionTray('jobs-subregion', currentJobRegion, currentJobSubRegion, 'setJobSubRegion');
+            currentJobDisplayLimit = 15;
             renderJobsCards();
         }
 
         function setJobFilter(type, val) {
-            if (type === 'track') {
-                currentJobTrack = val;
-                document.querySelectorAll('.job-track-btn').forEach(b => {
-                    if (b.innerText.includes(val) || (val === '전체' && b.innerText.includes('전체'))) {
-                        b.className = 'job-track-btn px-2.5 py-1 rounded-lg bg-blue-100 text-blue-800 font-bold text-xs flex-shrink-0 cursor-pointer';
-                    } else {
-                        b.className = 'job-track-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer';
-                    }
-                });
-            } else if (type === 'search') {
+            if (type === 'search') {
                 currentJobSearch = (val || '').trim().toLowerCase();
                 if (!currentJobSearch) currentJobTag = '';
             }
+            currentJobDisplayLimit = 15;
             renderJobsCards();
         }
 
         function setJobSort(sortKey) {
             currentJobSort = sortKey;
+            currentJobDisplayLimit = 15;
             renderJobsCards();
         }
 
@@ -14795,10 +12988,20 @@
 
         // Window global aliases for compatibility & external automation
         window.setPracticumMode = setPracticumMode;
-window.setJobCategory = setJobCategory;
-window.ALL_JOB_POSTINGS = ALL_JOB_POSTINGS;
-window.ALL_RESIDENCY_CENTERS = RESIDENCY_POSTINGS;
-window.showView = showView;
+        window.setJobCategory = setJobCategory;
+        window.setJobEmploymentType = setJobEmploymentType;
+        window.renderJobsHubTable = renderJobsHubTable;
+        window.toggleJobsHubTable = toggleJobsHubTable;
+        window.loadMoreJobs = loadMoreJobs;
+        window.loadMoreJobHubInstitutions = loadMoreJobHubInstitutions;
+        window.onJobHubRegionChange = onJobHubRegionChange;
+        window.onJobHubSubRegionChange = onJobHubSubRegionChange;
+        window.onJobHubSearchInput = onJobHubSearchInput;
+        window.clearJobHubSearch = clearJobHubSearch;
+        window.ALL_JOB_POSTINGS = ALL_JOB_POSTINGS;
+        window.ALL_RESIDENCY_CENTERS = RESIDENCY_POSTINGS;
+        window.ALL_CERTIFIED_PRACTICUM_INSTITUTIONS = window.ALL_PRACTICUM_INSTITUTIONS;
+        window.showView = showView;
         window.switchTab = showView;
         window.toggleWorkspaceDrawer = toggleWorkspaceDrawer;
         window.setDrawerCategory = setDrawerCategory;
@@ -14837,6 +13040,7 @@ window.showView = showView;
             renderPracticumCards();
             renderResidencyCards();
             renderJobsCards();
+            renderJobsHubTable();
             renderNewsCards();
             updateWorkspaceBadge();
         });

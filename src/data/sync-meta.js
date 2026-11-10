@@ -1,12 +1,15 @@
 window.SYNC_META = {
   "status": "success",
-  "timestamp": "2026.11.10 06:00",
-  "last_sync": "2026-11-10 15:04:49",
+  "timestamp": "2026.11.11 06:00",
+  "last_sync": "2026-11-11 00:32:08",
   "counts": {
     "practicum": 148,
     "residency": 284,
-    "hospital_jobs": 15,
-    "internships": 6,
-    "ngo_csr": 18
+    "hospital_jobs": 35,
+    "internships": 100,
+    "ngo_csr": 35,
+    "total_jobs": 570,
+    "regular_jobs": 327,
+    "contract_jobs": 143
   }
 };
