@@ -575,13 +575,13 @@
                             </div>
                         </div>
                         <button type="button" id="quiz-toggle-btn" class="inline-flex items-center gap-1 text-xs font-bold text-brand-600 hover:text-brand-800 transition py-1.5 px-3 rounded-lg hover:bg-blue-50 self-end sm:self-center cursor-pointer">
-                            <span id="quiz-toggle-text">접기</span>
-                            <svg id="quiz-toggle-icon" class="w-3.5 h-3.5 transition-transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg>
+                            <span id="quiz-toggle-text">펼치기</span>
+                            <svg id="quiz-toggle-icon" class="w-3.5 h-3.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg>
                         </button>
                     </div>
 
                     <!-- 퀴즈 내용 영역 -->
-                    <div id="quiz-content-wrapper" class="space-y-4 pt-4 mt-4 border-t border-slate-100">
+                    <div id="quiz-content-wrapper" class="hidden space-y-4 pt-4 mt-4 border-t border-slate-100">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                             <!-- Q1 -->
                             <div class="p-3.5 bg-slate-50/70 rounded-xl border border-slate-200/80 space-y-2">
@@ -706,12 +706,12 @@
                     </div>
                     <!-- 접기/펼치기 토글 버튼 -->
                     <button type="button" onclick="togglePracticumHubTable()" id="prac-hub-toggle-btn" class="self-start md:self-auto px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:border-blue-300 text-slate-700 font-bold text-xs shadow-2xs hover:bg-blue-50/50 transition cursor-pointer flex items-center gap-1.5">
-                        <span id="prac-hub-toggle-icon">▼</span>
-                        <span id="prac-hub-toggle-text">실습기관 디렉토리 닫기</span>
+                        <span id="prac-hub-toggle-icon">▶</span>
+                        <span id="prac-hub-toggle-text">실습기관 디렉토리 펼치기</span>
                     </button>
                 </div>
 
-                <div id="prac-hub-content" class="p-4 sm:p-5 space-y-3.5">
+                <div id="prac-hub-content" class="hidden p-4 sm:p-5 space-y-3.5">
                     <!-- 검색 및 지역 필터 바 -->
                     <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 text-xs">
                         <div class="sm:col-span-3">
@@ -8325,7 +8325,7 @@
         let currentPracHubSubRegion = '전체';
         let currentPracHubSearch = '';
         let currentPracHubLimit = 15;
-        let isPracHubOpen = true;
+        let isPracHubOpen = false;
 
         function togglePracticumHubTable() {
             const content = document.getElementById('prac-hub-content');
