@@ -15,6 +15,7 @@
     <script src="src/data/residency-284-db.js"></script>
     <script src="src/data/jobs-db.js"></script>
     <script src="src/data/practicum-postings-db.js"></script>
+    <script src="src/data/practicum-direct-db.js"></script>
     <script src="src/data/national-practicum-db.js" defer></script>
 
     <script>
@@ -124,7 +125,7 @@
                     <button type="button" data-view="practicum" onclick="showView('practicum')" class="nav-tab-btn flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1.5 transition cursor-pointer">
                         <span>📅</span>
                         <span>실습처 탐색</span>
-                        <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">305</span>
+                        <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">320</span>
                     </button>
                     <button type="button" data-view="residency" onclick="showView('residency')" class="nav-tab-btn flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1.5 transition cursor-pointer">
                         <span>🎓</span>
@@ -164,7 +165,7 @@
         <!-- 모바일 드롭다운 메뉴 -->
         <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 p-4 space-y-2 text-sm font-bold shadow-lg">
             <button type="button" onclick="showView('fields')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-blue-50 text-blue-600">12대 분야와 법령</button>
-            <button type="button" onclick="showView('practicum')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">실습처 탐색 (305건)</button>
+            <button type="button" onclick="showView('practicum')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">실습처 탐색 (320건)</button>
             <button type="button" onclick="showView('residency')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">수련처 탐색 (284곳)</button>
             <button type="button" onclick="showView('jobs')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">인턴·취업처 (78선)</button>
             <button type="button" onclick="showView('news')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">복지 뉴스·브리핑 (21건)</button>
@@ -181,7 +182,7 @@
             <button type="button" data-view="practicum" onclick="showView('practicum')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
                 <span>📅</span>
                 <span>실습처 탐색</span>
-                <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">305</span>
+                <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">320</span>
             </button>
             <button type="button" data-view="residency" onclick="showView('residency')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
                 <span>🎓</span>
@@ -226,7 +227,7 @@
                 </div>
                 <div onclick="showView('practicum')" class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-2xs hover:border-blue-400 transition cursor-pointer">
                     <div class="font-extrabold text-blue-600 mb-1">2. 대학생 현장실습처 탐색 →</div>
-                    <p class="text-slate-500 leading-snug">전국 8,434개 법정 실습기관 전수 DB와 한국사회복지사협회(welfare.net) 공식 실시간 실습생 모집공고 305건 직행.</p>
+                    <p class="text-slate-500 leading-snug">전국 8,434개 법정 실습기관 전수 DB와 사복협 공식 및 자체발굴 실습생 모집공고 320선 직행.</p>
                 </div>
                 <div onclick="showView('residency')" class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-2xs hover:border-blue-400 transition cursor-pointer">
                     <div class="font-extrabold text-blue-600 mb-1">3. 전문수련처(정신·의료·학교) →</div>
@@ -583,12 +584,20 @@
 
             <!-- BEGIN: PracticumListings -->
             <div class="pt-2 space-y-4" data-purpose="practicum-grid">
-                <!-- Results Subheader -->
-                <div class="flex items-center justify-between pb-1">
-                    <div class="flex items-center gap-2">
-                        <span class="font-bold text-slate-900 text-sm sm:text-base">📢 실시간 실습생 모집공고 (한국사회복지사협회 공식)</span>
-                        <span id="practicum-count-metric" class="text-brand-600 font-bold text-sm sm:text-base font-num">305건 표시 중</span>
+                <!-- Results Subheader & Source Filter Pills -->
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="font-bold text-slate-900 text-sm sm:text-base">📢 2026 동계 실습생 모집공고</span>
+                        <span id="practicum-count-metric" class="text-brand-600 font-bold text-sm sm:text-base font-num">320건 표시 중</span>
                     </div>
+
+                    <!-- 출처 필터 (전체 / 사복협 공식 / 기관 자체발굴) -->
+                    <div class="flex items-center gap-1.5 text-xs" id="practicum-source-pills">
+                        <button type="button" onclick="setPracticumSource('all')" id="prac-src-btn-all" class="px-2.5 py-1 rounded-lg font-bold bg-slate-900 text-white cursor-pointer shadow-2xs transition">전체 (<span id="prac-src-cnt-all">320</span>)</button>
+                        <button type="button" onclick="setPracticumSource('welfare')" id="prac-src-btn-welfare" class="px-2.5 py-1 rounded-lg font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 cursor-pointer transition">🏛️ 사복협 공식 (<span id="prac-src-cnt-welfare">305</span>)</button>
+                        <button type="button" onclick="setPracticumSource('direct')" id="prac-src-btn-direct" class="px-2.5 py-1 rounded-lg font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 cursor-pointer transition">🏢 기관 자체발굴 (<span id="prac-src-cnt-direct">16</span>)</button>
+                    </div>
+
                     <!-- Sorting tabs -->
                     <div class="flex items-center text-xs text-slate-500 font-medium">
                         <button id="prac-sort-deadline" onclick="setPracticumSort('deadline')" class="font-bold text-brand-600 cursor-pointer">마감임박순</button>
@@ -7907,10 +7916,92 @@
             }).join('');
         }
 
+        function normalizeOrgName(name) {
+            if (!name) return '';
+            let cleaned = name.replace(/\(.*?\)|\[.*?\]|【.*?】|<.*?>/g, '');
+            cleaned = cleaned.replace(/(사회복지법인|사단법인|재단법인|학교법인|의료법인|종교법인)/g, '');
+            return cleaned.replace(/\s+/g, '').toLowerCase().trim();
+        }
+
+        let COMBINED_PRACTICUM_POSTINGS = null;
+        let currentPracticumSource = 'all'; // 'all' | 'welfare' | 'direct'
         let currentPracRegion = '전체';
         let currentPracField = '전체';
         let currentPracSort = 'deadline'; // 'deadline' | 'latest' | 'fee'
         let currentPracDisplayLimit = 12;
+
+        function getCombinedPracticumPostings() {
+            if (COMBINED_PRACTICUM_POSTINGS) {
+                return COMBINED_PRACTICUM_POSTINGS;
+            }
+
+            const welfareList = (typeof PRACTICUM_POSTINGS !== 'undefined' && Array.isArray(PRACTICUM_POSTINGS))
+                ? PRACTICUM_POSTINGS.map(item => Object.assign({}, item, { source: 'welfare', hasDirectNotice: false, directUrl: null, directTitle: null }))
+                : [];
+            
+            const directList = (typeof PRACTICUM_DIRECT_POSTINGS !== 'undefined' && Array.isArray(PRACTICUM_DIRECT_POSTINGS))
+                ? PRACTICUM_DIRECT_POSTINGS
+                : [];
+
+            // 1) Build welfare map by composite key: normName + '_' + region
+            const welfareMap = new Map();
+            welfareList.forEach(item => {
+                const norm = normalizeOrgName(item.institution);
+                const reg = (item.region || item.location || '').slice(0, 2);
+                const key = norm + '_' + reg;
+                if (!welfareMap.has(key)) {
+                    welfareMap.set(key, item);
+                }
+            });
+
+            // 2) Deduplicate & match direct postings
+            const directDistinct = [];
+            directList.forEach(directItem => {
+                const norm = normalizeOrgName(directItem.institution || directItem.name);
+                const reg = (directItem.region || directItem.location || '').slice(0, 2);
+                const key = norm + '_' + reg;
+
+                if (welfareMap.has(key)) {
+                    // Match found! Welfare posting is primary, attach direct notice info!
+                    const wItem = welfareMap.get(key);
+                    wItem.hasDirectNotice = true;
+                    wItem.directUrl = directItem.originalUrl || directItem.url;
+                    wItem.directTitle = directItem.title;
+                } else {
+                    // Standalone institution direct site posting
+                    const cloned = Object.assign({}, directItem, { source: 'institution_site', hasDirectNotice: false });
+                    directDistinct.push(cloned);
+                }
+            });
+
+            COMBINED_PRACTICUM_POSTINGS = [...welfareList, ...directDistinct];
+
+            // Update UI count pills
+            const elAll = document.getElementById('prac-src-cnt-all');
+            const elWelfare = document.getElementById('prac-src-cnt-welfare');
+            const elDirect = document.getElementById('prac-src-cnt-direct');
+            if (elAll) elAll.innerText = COMBINED_PRACTICUM_POSTINGS.length;
+            if (elWelfare) elWelfare.innerText = welfareList.length;
+            if (elDirect) elDirect.innerText = directList.length;
+
+            return COMBINED_PRACTICUM_POSTINGS;
+        }
+
+        function setPracticumSource(sourceKey) {
+            currentPracticumSource = sourceKey;
+            ['all', 'welfare', 'direct'].forEach(k => {
+                const btn = document.getElementById('prac-src-btn-' + k);
+                if (btn) {
+                    if (k === sourceKey) {
+                        btn.className = 'px-2.5 py-1 rounded-lg font-bold bg-slate-900 text-white cursor-pointer shadow-2xs transition';
+                    } else {
+                        btn.className = 'px-2.5 py-1 rounded-lg font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 cursor-pointer transition';
+                    }
+                }
+            });
+            currentPracDisplayLimit = 12;
+            renderPracticumCards();
+        }
 
         function setPracticumSort(sortKey) {
             currentPracSort = sortKey;
@@ -7936,12 +8027,19 @@
             const grid = document.getElementById('practicum-cards-grid');
             if (!grid) return;
 
-            // Always render 100% verified seasonal & real-time recruitment postings
-            const dataPool = PRACTICUM_POSTINGS;
+            // Dual-source combined & deduplicated pool
+            const dataPool = getCombinedPracticumPostings();
 
             let filtered = dataPool.filter(p => {
                 const pName = p.institution || p.name || '';
                 const pField = p.fieldName || p.field || '';
+
+                // 0) Source filter (전체 | 사복협 공식 | 기관 자체발굴)
+                if (currentPracticumSource === 'welfare') {
+                    if (p.source !== 'welfare') return false;
+                } else if (currentPracticumSource === 'direct') {
+                    if (p.source !== 'institution_site' && !p.hasDirectNotice) return false;
+                }
 
                 // 1) Term filter
                 const matchTerm = currentPracTerm === '전체' || ((p.term || '').includes(currentPracTerm));
@@ -8042,15 +8140,31 @@
 
                 const postTitle = p.title || `${p.institution} ${p.term || '사회복지 현장실습생 모집'}`;
                 const recruitCount = p.recruits || p.capacity || '0명';
-                const postUrl = p.postUrl || p.sourceUrl || p.url || `https://www.welfare.net/prm/find-training-center/recruitment-trainees`;
+                const postUrl = p.postUrl || p.originalUrl || p.sourceUrl || p.url || `https://www.welfare.net/prm/find-training-center/recruitment-trainees`;
 
                 return `
                 <article class="bg-white border border-slate-200/90 rounded-2xl p-5 card-hover-transition flex flex-col justify-between" data-purpose="listing-card">
                     <div>
                         <div class="flex items-center justify-between mb-2">
-                            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-brand-600 border border-blue-200/70">
-                                ${escapeHtml(p.facilityType || p.term || '사회복지시설')}
-                            </span>
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-brand-600 border border-blue-200/70">
+                                    ${escapeHtml(p.facilityType || p.term || '사회복지시설')}
+                                </span>
+                                ${p.source === 'welfare' ? `
+                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-blue-600 text-white flex items-center gap-1 shadow-2xs">
+                                        <span>🏛️</span><span>사복협 공식</span>
+                                    </span>
+                                ` : `
+                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-purple-600 text-white flex items-center gap-1 shadow-2xs">
+                                        <span>🏢</span><span>기관 자체공고</span>
+                                    </span>
+                                `}
+                                ${p.hasDirectNotice ? `
+                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-emerald-600 text-white flex items-center gap-1 shadow-2xs" title="기관 공식 홈페이지에서도 동시 공고 확인됨">
+                                        <span>✨</span><span>자체공고 확인됨</span>
+                                    </span>
+                                ` : ''}
+                            </div>
                             <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-bold ${isUrgent ? 'bg-rose-50 text-rose-600 border border-rose-200' : 'bg-slate-100 text-slate-600'}">
                                 <span class="w-1.5 h-1.5 rounded-full ${isUrgent ? 'bg-rose-500 animate-pulse' : 'bg-slate-400'}"></span>
                                 ${escapeHtml(ddayText)}
@@ -8080,10 +8194,21 @@
                     </div>
 
                     <div class="grid grid-cols-5 gap-2 mt-5 pt-2 border-t border-slate-100">
-                        <a href="${postUrl}" target="_blank" rel="noopener noreferrer" class="col-span-3 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold transition flex items-center justify-center gap-1 shadow-sm cursor-pointer">
-                            <span>공고 원문</span>
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-                        </a>
+                        ${p.hasDirectNotice ? `
+                            <div class="col-span-3 grid grid-cols-2 gap-1.5">
+                                <a href="${postUrl}" target="_blank" rel="noopener noreferrer" class="py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold transition flex items-center justify-center gap-0.5 shadow-sm cursor-pointer" title="한국사회복지사협회 공고 원문">
+                                    <span>사복협 ↗</span>
+                                </a>
+                                <a href="${p.directUrl}" target="_blank" rel="noopener noreferrer" class="py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold transition flex items-center justify-center gap-0.5 shadow-sm cursor-pointer" title="복지관 공식 홈페이지 공고 원문">
+                                    <span>기관홈피 ↗</span>
+                                </a>
+                            </div>
+                        ` : `
+                            <a href="${postUrl}" target="_blank" rel="noopener noreferrer" class="col-span-3 py-2.5 rounded-xl ${p.source === 'institution_site' ? 'bg-purple-600 hover:bg-purple-700' : 'bg-brand-600 hover:bg-brand-700'} text-white text-xs font-bold transition flex items-center justify-center gap-1 shadow-sm cursor-pointer">
+                                <span>${p.source === 'institution_site' ? '기관 공고 원문' : '공고 원문'}</span>
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                            </a>
+                        `}
                         <button type="button" onclick="saveToWorkspace('postings', '${p.id}', '${escapeHtml(p.institution || '')}', '${escapeHtml(postTitle)}', '${escapeHtml(ddayText)}')" class="col-span-2 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200/80 text-amber-800 text-xs font-semibold transition flex items-center justify-center gap-1 cursor-pointer">
                             <span>⭐</span>
                             <span>찜하기</span>
