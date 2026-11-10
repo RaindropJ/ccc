@@ -445,16 +445,38 @@
                     <div id="prac-subregion-tray" class="hidden p-2.5 rounded-xl bg-slate-50/90 border border-slate-200/90 transition-all">
                         <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs py-0.5" id="prac-subregion-pills"></div>
                     </div>
-                    <!-- Category Filter Row -->
+                    <!-- Category Filter Row (한국사회복지사협회 공식 시설분류 리스트) -->
                     <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4" id="prac-field-pills">
-                        <span class="text-xs font-bold text-slate-500 w-12 shrink-0">분야</span>
+                        <span class="text-xs font-bold text-slate-500 w-16 shrink-0 flex items-center gap-1">
+                            <span>🏢</span>
+                            <span>시설분류</span>
+                        </span>
+                        <!-- 드롭다운 리스트 (welfare.net 공식 목록) -->
+                        <div class="relative shrink-0 w-full sm:w-48">
+                            <select id="prac-facility-select" onchange="setPracticumField(this.value)" class="w-full pl-3 pr-8 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-bold text-slate-800 shadow-2xs focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none cursor-pointer appearance-none transition">
+                                <option value="전체">시설분류 (전체)</option>
+                                <option value="사회복지시설">사회복지시설</option>
+                                <option value="장기요양">장기요양</option>
+                                <option value="기관/단체">기관/단체</option>
+                                <option value="학교">학교</option>
+                                <option value="의료기관">의료기관</option>
+                                <option value="관공서/공공기관">관공서/공공기관</option>
+                                <option value="기타">기타</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-400">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            </div>
+                        </div>
+                        <!-- 원클릭 알약 칩 리스트 (동일 옵션 빠른 선택) -->
                         <div class="flex flex-wrap items-center gap-1.5">
-                            <button onclick="setPracticumField('전체')" class="prac-field-btn px-3 py-1.5 rounded-md text-xs font-semibold bg-brand-600 text-white cursor-pointer">전체</button>
-                            <button onclick="setPracticumField('지역사회복지관')" class="prac-field-btn px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">지역사회복지관</button>
-                            <button onclick="setPracticumField('노인복지')" class="prac-field-btn px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">노인복지</button>
-                            <button onclick="setPracticumField('장애인재활')" class="prac-field-btn px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">장애인재활</button>
-                            <button onclick="setPracticumField('아동·청소년')" class="prac-field-btn px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">아동·청소년</button>
-                            <button onclick="setPracticumField('의료사회복지')" class="prac-field-btn px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">의료사회복지</button>
+                            <button type="button" data-value="전체" onclick="setPracticumField('전체')" class="prac-field-btn px-2.5 py-1.5 rounded-md text-xs font-semibold bg-brand-600 text-white cursor-pointer transition">전체</button>
+                            <button type="button" data-value="사회복지시설" onclick="setPracticumField('사회복지시설')" class="prac-field-btn px-2.5 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">사회복지시설</button>
+                            <button type="button" data-value="장기요양" onclick="setPracticumField('장기요양')" class="prac-field-btn px-2.5 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">장기요양</button>
+                            <button type="button" data-value="기관/단체" onclick="setPracticumField('기관/단체')" class="prac-field-btn px-2.5 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">기관/단체</button>
+                            <button type="button" data-value="학교" onclick="setPracticumField('학교')" class="prac-field-btn px-2.5 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">학교</button>
+                            <button type="button" data-value="의료기관" onclick="setPracticumField('의료기관')" class="prac-field-btn px-2.5 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">의료기관</button>
+                            <button type="button" data-value="관공서/공공기관" onclick="setPracticumField('관공서/공공기관')" class="prac-field-btn px-2.5 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">관공서/공공기관</button>
+                            <button type="button" data-value="기타" onclick="setPracticumField('기타')" class="prac-field-btn px-2.5 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer">기타</button>
                         </div>
                     </div>
                 </div>
@@ -7936,8 +7958,30 @@
                 const matchRegion = matchItemLocation(p, currentPracRegion, currentPracSubRegion);
                 if (!matchRegion) return false;
 
-                // 4) Field filter
-                const matchField = currentPracField === '전체' || pField.includes(currentPracField);
+                // 4) Facility Type & Field filter (한국사회복지사협회 공식 시설분류 리스트 매칭)
+                let matchField = true;
+                if (currentPracField && currentPracField !== '전체' && currentPracField !== '시설분류') {
+                    const fType = p.facilityType || '';
+                    const fullText = (fType + ' ' + (p.title || '') + ' ' + (p.institution || '') + ' ' + (p.memo || '') + ' ' + pField).toLowerCase();
+                    
+                    if (currentPracField === '장기요양') {
+                        matchField = fType.includes('장기요양') || fullText.includes('장기요양') || fullText.includes('요양') || fullText.includes('주야간보호') || fullText.includes('데이케어');
+                    } else if (currentPracField === '사회복지시설') {
+                        matchField = fType.includes('사회복지시설') || fullText.includes('복지관') || fullText.includes('센터') || fullText.includes('시설');
+                    } else if (currentPracField === '기관/단체') {
+                        matchField = fType.includes('기관') || fType.includes('단체') || fullText.includes('협회') || fullText.includes('재단') || fullText.includes('단체');
+                    } else if (currentPracField === '의료기관') {
+                        matchField = fType.includes('의료') || fullText.includes('병원') || fullText.includes('의료원') || fullText.includes('재활병원');
+                    } else if (currentPracField === '학교') {
+                        matchField = fType.includes('학교') || fullText.includes('학교') || fullText.includes('대학');
+                    } else if (currentPracField === '관공서/공공기관') {
+                        matchField = fType.includes('관공서') || fType.includes('공공') || fullText.includes('구청') || fullText.includes('시청') || fullText.includes('공단');
+                    } else if (currentPracField === '기타') {
+                        matchField = fType.includes('기타');
+                    } else {
+                        matchField = fType.includes(currentPracField) || pField.includes(currentPracField);
+                    }
+                }
                 if (!matchField) return false;
 
                 // 5) Search input
@@ -8197,11 +8241,20 @@
 
         function setPracticumField(field) {
             currentPracField = field;
+            
+            // Sync dropdown select if exists
+            const selectEl = document.getElementById('prac-facility-select');
+            if (selectEl) {
+                selectEl.value = (field === '시설분류' || !field) ? '전체' : field;
+            }
+
+            // Sync pill buttons
             document.querySelectorAll('.prac-field-btn').forEach(btn => {
-                if (btn.innerText.includes(field) || (field === '전체' && btn.innerText.includes('전체'))) {
-                    btn.className = 'prac-field-btn px-3 py-1.5 rounded-md text-xs font-semibold bg-brand-600 text-white cursor-pointer';
+                const val = btn.getAttribute('data-value') || btn.innerText.trim();
+                if (val === field || (field === '전체' && (val === '전체' || val === '시설분류'))) {
+                    btn.className = 'prac-field-btn px-2.5 py-1.5 rounded-md text-xs font-semibold bg-brand-600 text-white cursor-pointer transition';
                 } else {
-                    btn.className = 'prac-field-btn px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer';
+                    btn.className = 'prac-field-btn px-2.5 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer';
                 }
             });
             currentPracDisplayLimit = 12;
