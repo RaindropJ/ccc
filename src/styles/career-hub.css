@@ -1,0 +1,191 @@
+/* ========================================================
+   사회복지 현장의 이해 - 'Insights' 프리미엄 에디토리얼 매거진 디자인 시스템
+   - 라이트 모드 메인: Clean Slate (#F8FAFC) & Pure White (#FFFFFF) with Tech Blue (#2563EB)
+   - 다크 모드 토글: Deep Slate Navy (#0B0F17) with Surface Card (#161F30)
+   ======================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Epilogue:wght@600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+:root {
+    --editorial-canvas: #F8FAFC;
+    --editorial-card: #FFFFFF;
+    --editorial-text: #0F172A;
+    --editorial-subtext: #475569;
+    --editorial-border: #E2E8F0;
+    --editorial-blue: #2563EB;
+    --editorial-blue-hover: #1D4ED8;
+    --editorial-blue-light: #EFF6FF;
+    --editorial-glow: rgba(37, 99, 235, 0.15);
+}
+
+body {
+    background-color: var(--editorial-canvas);
+    color: var(--editorial-text);
+    font-family: 'Plus Jakarta Sans', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+::selection {
+    background-color: #2563EB;
+    color: #FFFFFF;
+}
+
+/* 스크롤바 커스텀 */
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+::-webkit-scrollbar-track {
+    background: #F1F5F9;
+}
+::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* 뷰 전환 부드러운 페이드인 */
+.view-section {
+    animation: editorialFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes editorialFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 에디토리얼 카드 호버 효과 */
+.editorial-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.editorial-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(37, 99, 235, 0.4);
+    box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+}
+
+/* 에디토리얼 버튼 시스템 */
+.btn-editorial-primary {
+    background-color: #2563EB;
+    color: #FFFFFF;
+    font-weight: 700;
+    transition: all 0.15s ease;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+.btn-editorial-primary:hover {
+    background-color: #1D4ED8;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+}
+
+.btn-editorial-soft {
+    background-color: #F1F5F9;
+    color: #1E293B;
+    border: 1px solid #E2E8F0;
+    font-weight: 600;
+    transition: all 0.15s ease;
+}
+.btn-editorial-soft:hover {
+    background-color: #E2E8F0;
+    border-color: #CBD5E1;
+    color: #0F172A;
+}
+
+/* ==================== 다크 테마 (Deep Slate Navy) ==================== */
+html.dark {
+    color-scheme: dark;
+}
+
+html.dark body {
+    background-color: #0B0F17 !important;
+    color: #F8FAFC !important;
+}
+
+html.dark ::-webkit-scrollbar-track {
+    background: #0B0F17;
+}
+html.dark ::-webkit-scrollbar-thumb {
+    background: #1E293B;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+    background: #334155;
+}
+
+html.dark nav {
+    background-color: rgba(11, 15, 23, 0.92) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+html.dark .editorial-card,
+html.dark .bg-white {
+    background-color: #161F30 !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    color: #F8FAFC !important;
+}
+
+html.dark .editorial-card:hover {
+    border-color: rgba(96, 165, 250, 0.4) !important;
+    box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.2) !important;
+}
+
+html.dark .text-camping-text,
+html.dark .text-gray-900,
+html.dark .text-gray-800 {
+    color: #F8FAFC !important;
+}
+
+html.dark .text-camping-subtext,
+html.dark .text-gray-600,
+html.dark .text-gray-500 {
+    color: #94A3B8 !important;
+}
+
+html.dark .bg-gray-50,
+html.dark .bg-slate-50,
+html.dark .bg-camping-bg {
+    background-color: #0F172A !important;
+}
+
+html.dark .border-camping-beige,
+html.dark .border-gray-200,
+html.dark .border-slate-200 {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+html.dark .btn-editorial-soft {
+    background-color: #1E293B !important;
+    color: #E2E8F0 !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+html.dark .btn-editorial-soft:hover {
+    background-color: #334155 !important;
+    color: #FFFFFF !important;
+}
+
+html.dark input,
+html.dark select,
+html.dark textarea {
+    background-color: #0F172A !important;
+    color: #F8FAFC !important;
+    border-color: #334155 !important;
+}

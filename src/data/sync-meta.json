@@ -1,0 +1,12 @@
+{
+  "status": "success",
+  "timestamp": "2026.11.10 06:00",
+  "last_sync": "2026-11-10 23:15:44",
+  "counts": {
+    "practicum": 148,
+    "residency": 284,
+    "hospital_jobs": 15,
+    "internships": 6,
+    "ngo_csr": 18
+  }
+}

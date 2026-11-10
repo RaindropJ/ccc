@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>사회복지 현장 나침반 | 12대 분야 법령·기관 도감</title>
+<!-- Tailwind CSS v3 CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              900: '#1e3a8a',
+            },
+            slate: {
+              850: '#151f32',
+              950: '#090d16',
+            }
+          },
+          fontFamily: {
+            sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-scrollbars-and-base">
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    /* Subtle custom horizontal scrollbar for wide responsive tables */
+    .custom-scrollbar::-webkit-scrollbar {
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+<link data-snapdom="injected-import" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"/></head>
+<body class="bg-[#f8fafc] text-slate-800 antialiased min-h-screen flex flex-col selection:bg-blue-100 selection:text-blue-900">
+<!-- BEGIN: MainHeader -->
+<header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/80 transition-all duration-200" data-purpose="primary-navbar">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16 gap-4">
+<!-- Brand & Subtitle -->
+<div class="flex items-center gap-4 flex-shrink-0">
+<a aria-label="사회복지 현장 나침반 홈으로 이동" class="flex items-center gap-2.5 group cursor-pointer" href="#"><img alt="사회복지 현장 나침반 로고" class="w-9 h-9 rounded-xl object-contain shadow-xs group-hover:scale-105 transition-transform duration-150" src="https://lh3.googleusercontent.com/aida/ALJJyrCSpuMkZGfcWG6T7fRY2S06lW1MgxSvFKnMitYxOiKPGMChb6AfeRyORnmU-0dF5pt0zTqF3g4CRLkGsN85cU8c9AsTup403LidEifBnChEr9JjtuAHu6fzG7GoFHJv41UKfCYJCfIwxqipe2DVbPRVTxEbmS7_Wb6_tn_wUDP5UWPVFBRwTGtx3IU_zmnQYzDhiXJvAPfmJM_m5q11DlDWA5xsHgwewOAKxgAVaO7G"/><div class="flex flex-col justify-center leading-tight"><div class="flex items-center gap-1.5"><span class="text-[15px] font-extrabold tracking-tight text-slate-900">현장 나침반</span><span class="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-blue-500/10 text-blue-600 border border-blue-200/60">INSIGHTS</span></div><span class="hidden sm:inline-block text-[11px] font-medium text-slate-500 tracking-tight leading-none mt-0.5">대학생 사회복지 실습 · 취업 도감</span></div></a>
+</div>
+<!-- Navigation Tabs (Sleek, No Emojis) -->
+<nav aria-label="메인 메뉴" class="hidden lg:flex items-center space-x-1"><a class="px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-colors" href="#">
+  12대 분야와 법령
+</a>
+<a class="relative px-3.5 py-2 text-sm font-bold text-blue-600 border-b-2 border-blue-600 pb-1 transition-colors" href="#">
+  현장실습 자가탐색
+</a>
+<a class="px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-colors inline-flex items-center gap-1.5" href="#">
+<span>인턴·취업처</span>
+<span class="text-[11px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded-full">75</span>
+</a>
+<a class="px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-colors inline-flex items-center gap-1.5" href="#">
+<span>복지 뉴스·브리핑</span>
+<span class="text-[11px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded-full">21</span>
+</a></nav>
+<!-- Right Utility Actions -->
+<div class="flex items-center gap-2">
+<!-- My Bookmarks/Preparation Button -->
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200/80 rounded-lg transition-colors" title="내 준비함" type="button">
+<svg class="w-3.5 h-3.5 text-amber-500 fill-amber-400" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674c.3-.922.755-1.688 1.538-1.118l3.976-2.888z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="font-semibold text-slate-900">내 준비함</span>
+<span class="ml-0.5 px-1 py-0.2 text-[10px] font-bold text-amber-800 bg-amber-100 rounded">0</span>
+</button>
+<!-- Clean Minimal Dark Mode Switch -->
+<button aria-label="다크 모드 전환" class="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+</svg>
+</button>
+</div>
+</div>
+</div>
+</header>
+<!-- END: MainHeader -->
+<!-- BEGIN: MainContent -->
+<main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-7" id="main-content">
+<!-- Hero Title & Context Banner -->
+<section class="text-center max-w-3xl mx-auto pt-2 pb-1 space-y-2.5" data-purpose="page-hero"><div class="inline-flex items-center justify-center p-2 bg-blue-50 text-blue-600 rounded-xl mb-1 border border-blue-100">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
+  대학생 사회복지 현장실습 자가탐색 가이드
+</h1>
+<p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-2xl mx-auto">
+  나의 성향·실천 가치에 맞춘 4문항 자가진단(STEP 1), 12대 분야별 실습 분석(STEP 2), 160시간 법정 요건 체크리스트(STEP 3)를 통해 성공적인 실습을 준비하세요.
+</p></section>
+<!-- Quick Editorial Feature Cards (3-Column Grid) -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-4" data-purpose="quick-shortcuts"><!-- Card 1: Active Focus -->
+<a class="group relative bg-blue-50/50 dark:bg-blue-950/20 p-5 rounded-2xl border-2 border-blue-600 shadow-sm transition-all flex flex-col justify-between" href="#practicum-diagnosis-container">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold tracking-wider uppercase bg-blue-600 text-white shadow-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+        STEP 01 진행 중
+      </span>
+<span class="text-[11px] font-bold text-blue-600">4문항 진단</span>
+</div>
+<h3 class="text-sm font-bold text-blue-900 flex items-center gap-1.5">
+<span>🧭 나에게 맞는 실습 분야 자가진단</span>
+</h3>
+<p class="text-xs text-slate-600 leading-relaxed">
+      관심 대상, 업무 스타일, 커리어 지향점을 분석하여 최적의 12대 분야와 추천 실습기관을 자동 매칭합니다.
+    </p>
+</div>
+</a>
+<!-- Card 2 -->
+<a class="group relative bg-white dark:bg-[#161F30] p-5 rounded-2xl border border-slate-200/80 dark:border-white/10 shadow-xs hover:shadow-md hover:-translate-y-0.5 hover:border-blue-500/40 transition-all flex flex-col justify-between" href="#practicum-cards-section">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold tracking-wider uppercase bg-slate-100 text-slate-700 border border-slate-200/60">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+        STEP 02
+      </span>
+<span class="text-[11px] text-slate-500">분야별 가이드</span>
+</div>
+<h3 class="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors flex items-center gap-1.5">
+<span>📚 12대 분야별 실습 가이드</span>
+</h3>
+<p class="text-xs text-slate-500 leading-relaxed">
+      종합복지관, 노인복지관, 병원 의료사회사업팀 등 주요 분야별 핵심 과업, 선수 과목, 서류 합격 팁을 확인합니다.
+    </p>
+</div>
+</a>
+<!-- Card 3 -->
+<a class="group relative bg-white dark:bg-[#161F30] p-5 rounded-2xl border border-slate-200/80 dark:border-white/10 shadow-xs hover:shadow-md hover:-translate-y-0.5 hover:border-blue-500/40 transition-all flex flex-col justify-between" href="#practicum-checklist-container">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold tracking-wider uppercase bg-slate-100 text-slate-700 border border-slate-200/60">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+        STEP 03
+      </span>
+<span class="text-[11px] text-slate-500">요건 검증</span>
+</div>
+<h3 class="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors flex items-center gap-1.5">
+<span>✅ 160시간 법정 요건 체크리스트</span>
+</h3>
+<p class="text-xs text-slate-500 leading-relaxed">
+      보건복지부 개정 법정 실습 160시간, 실습세미나 30시간, 실습지도자 자격 기준, 기관 인정 확인 체크리스트입니다.
+    </p>
+</div>
+</a></section>
+<!-- Filter & View Mode Controls -->
+<section class="bg-white dark:bg-[#161F30] rounded-2xl border border-slate-200/80 dark:border-white/10 p-5 space-y-4 shadow-xs" data-purpose="filter-panel"><div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3.5">
+<!-- Left: Section Title + Sub Navigation Tabs -->
+<div class="flex flex-wrap items-center gap-3">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+<span class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">실습 자가탐색 내비게이션</span>
+</div>
+<div class="inline-flex p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl text-xs font-medium text-slate-600 border border-slate-200/60">
+<button class="px-3 py-1.5 rounded-lg bg-blue-600 text-white font-semibold shadow-xs flex items-center gap-1.5 transition-colors" type="button">
+<span>🧭 STEP 1. 자가진단</span>
+</button>
+<button class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1.5" type="button">
+<span>📚 STEP 2. 실습 가이드</span>
+</button>
+<button class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1.5" type="button">
+<span>✅ STEP 3. 법정 체크리스트</span>
+</button>
+<button class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1.5" type="button">
+<span>전체 보기(all)</span>
+</button>
+</div>
+</div>
+<!-- Right: Status / Filter info -->
+<div class="flex items-center gap-2 text-xs text-slate-600">
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 font-medium">
+<svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+      2026-2027 학사연계 현행 기준 반영
+    </span>
+</div>
+</div>
+<!-- Quick Jump Filter Pills -->
+<div class="pt-3 border-t border-slate-100 dark:border-white/5 flex flex-wrap items-center gap-1.5 text-xs">
+<span class="text-[11px] font-semibold text-slate-500 mr-1 flex items-center gap-1">
+<svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+    빠른 단계 이동:
+  </span>
+<a class="px-3 py-1 rounded-full font-semibold bg-blue-600 text-white shadow-xs transition-colors" href="#practicum-diagnosis-container">STEP 1. 진단 4문항</a>
+<a class="px-3 py-1 rounded-full font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors" href="#practicum-cards-section">STEP 2. 12대 분야 실습 가이드</a>
+<a class="px-3 py-1 rounded-full font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors" href="#practicum-checklist-container">STEP 3. 160시간 법정 요건</a>
+<a class="px-3 py-1 rounded-full font-medium text-slate-500 bg-slate-50 hover:bg-slate-100 border border-slate-200 ml-auto transition-colors" href="#">전국 8,434개 실습기관 DB 바로가기 →</a>
+</div></section>
+<!-- BEGIN: FacilityClassificationTableSection -->
+<div class="space-y-8 w-full" id="view-practicum">
+<!-- BEGIN: STEP 1: 나에게 맞는 실습 분야 자가진단 (4문항) -->
+<section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6" id="practicum-diagnosis-container">
+<!-- Step 1 Header -->
+<div class="border-b border-slate-100 pb-5 space-y-2">
+<div class="flex flex-wrap items-center justify-between gap-3">
+<div class="flex items-center gap-2.5">
+<span class="p-2 bg-blue-50 text-blue-600 rounded-xl">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 14.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm0-4a1 1 0 01-2 0V7a1 1 0 012 0v5.5z"></path>
+</svg>
+</span>
+<div>
+<span class="text-[11px] font-bold text-blue-600 uppercase tracking-wider block">STEP 01. SELF-ASSESSMENT</span>
+<h2 class="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
+              나에게 맞는 실습 분야 자가진단 (4개 핵심 문항)
+            </h2>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+          실시간 맞춤 분석 ON
+        </span>
+</div>
+<p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+        나의 관심 대상, 근무 형태, 실천 가치를 바탕으로 12대 분야 중 가장 적합한 실습 분야와 추천 기관을 매칭해 드립니다.
+      </p>
+</div>
+<!-- 4 Diagnostic Question Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<!-- Q1 -->
+<div class="bg-slate-50/50 rounded-2xl border border-slate-200/90 p-5 space-y-3.5 hover:border-blue-400/60 transition-colors">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0">1</span>
+<h3 class="text-sm font-bold text-slate-900">내가 가장 마음이 쓰이고 깊이 공감하는 실천 대상은?</h3>
+</div>
+<div class="space-y-2 text-xs">
+<label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-blue-50/40 hover:border-blue-300 cursor-pointer transition-all">
+<input checked="" class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" name="q1" type="radio"/>
+<span class="font-medium text-slate-800">지역사회 취약계층 · 주민 전체 (종합적 돌봄)</span>
+</label>
+<label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-blue-50/40 hover:border-blue-300 cursor-pointer transition-all">
+<input class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" name="q1" type="radio"/>
+<span class="font-medium text-slate-800">어르신 · 노인 (치매·일상생활돌봄·노후여가)</span>
+</label>
+<label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-blue-50/40 hover:border-blue-300 cursor-pointer transition-all">
+<input class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" name="q1" type="radio"/>
+<span class="font-medium text-slate-800">아동 · 청소년 (돌봄·보호·위기지원·학교생활)</span>
+</label>
+<label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-blue-50/40 hover:border-blue-300 cursor-pointer transition-all">
+<input class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" name="q1" type="radio"/>
+<span class="font-medium text-slate-800">환자 및 가족 · 정신건강 대상자 (의료·재활)</span>
+</label>
+</div>
+</div>
+<!-- Q2 -->
+<div class="bg-slate-50/50 rounded-2xl border border-slate-200/90 p-5 space-y-3.5 hover:border-blue-400/60 transition-colors">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0">2</span>
+<h3 class="text-sm font-bold text-slate-900">선호하는 실무 환경과 업무 스타일은?</h3>
+</div>
+<div class="space-y-2 text-xs">
+<label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-blue-50/40 hover:border-blue-300 cursor-pointer transition-all">
+<input checked="" class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" name="q2" type="radio"/>
+<span class="font-medium text-slate-800">프로그램 기획 및 다채로운 집단 활동 운영</span>
+</label>
+<label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-blue-50/40 hover:border-blue-300 cursor-pointer transition-all">
+<input class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" name="q2" type="radio"/>
+<span class="font-medium text-slate-800">1:1 심층 상담 및 장기 심리사회적 사례관리</span>
+</label>
+<label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-blue-50/40 hover:border-blue-300 cursor-pointer transition-all">
+<input class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" name="q2" type="radio"/>
+<span class="font-medium text-slate-800">행정·정책 분석, 자원 연계 및 후원·홍보 실무</span>
+</label>
+<label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-blue-50/40 hover:border-blue-300 cursor-pointer transition-all">
+<input class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" name="q2" type="radio"/>
+<span class="font-medium text-slate-800">현장 방문·가정 출장 중심의 재가 밀착 복지 서비스</span>
+</label>
+</div>
+</div>
+<!-- Q3 -->
+<div class="bg-slate-50/50 rounded-2xl border border-slate-200/90 p-5 space-y-3.5 hover:border-blue-400/60 transition-colors">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0">3</span>
+<h3 class="text-sm font-bold text-slate-900">향후 전문 자격증 및 커리어 지향점은?</h3>
+</div>
+<div class="space-y-2 text-xs">
+<label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-blue-50/40 hover:border-blue-300 cursor-pointer transition-all">
+<input checked="" class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" name="q3" type="radio"/>
+<span class="font-medium text-slate-800">종합복지관 / 단과복지관 정규직 사회복지사</span>
+</label>
+<label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-blue-50/40 hover:border-blue-300 cursor-pointer transition-all">
+<input class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" name="q3" type="radio"/>
+<span class="font-medium text-slate-800">의료사회복지사 / 정신건강사회복지사 1년 법정 수련</span>
+</label>
+<label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-blue-50/40 hover:border-blue-300 cursor-pointer transition-all">
+<input class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" name="q3" type="radio"/>
+<span class="font-medium text-slate-800">학교사회복지사 / 교육복지우선지원사업 전문인력</span>
+</label>
+<label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-blue-50/40 hover:border-blue-300 cursor-pointer transition-all">
+<input class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" name="q3" type="radio"/>
+<span class="font-medium text-slate-800">공공 사회복지직 공무원 / 건강보험·국민연금 등 공단</span>
+</label>
+</div>
+</div>
+<!-- Q4 -->
+<div class="bg-slate-50/50 rounded-2xl border border-slate-200/90 p-5 space-y-3.5 hover:border-blue-400/60 transition-colors">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0">4</span>
+<h3 class="text-sm font-bold text-slate-900">실습 중 가장 경험해보고 싶은 실천 기술은?</h3>
+</div>
+<div class="space-y-2 text-xs">
+<label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-blue-50/40 hover:border-blue-300 cursor-pointer transition-all">
+<input checked="" class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" name="q4" type="radio"/>
+<span class="font-medium text-slate-800">공동모금회 프로포절 사업계획서 직접 기획 및 피드백</span>
+</label>
+<label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-blue-50/40 hover:border-blue-300 cursor-pointer transition-all">
+<input class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" name="q4" type="radio"/>
+<span class="font-medium text-slate-800">위기 개입 및 심리사회적 사정(Assessment) 실무</span>
+</label>
+<label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-blue-50/40 hover:border-blue-300 cursor-pointer transition-all">
+<input class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" name="q4" type="radio"/>
+<span class="font-medium text-slate-800">지역사회 네트워크 구축 및 주민 밀착 조직화</span>
+</label>
+<label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-blue-50/40 hover:border-blue-300 cursor-pointer transition-all">
+<input class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" name="q4" type="radio"/>
+<span class="font-medium text-slate-800">직업재활 훈련 및 주거·경제적 자립 역량 강화 지원</span>
+</label>
+</div>
+</div>
+</div>
+<!-- Diagnosis Actions Bar -->
+<div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100">
+<div class="flex items-center gap-3">
+<button class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center gap-2" type="button">
+<span>나만의 추천 실습 분야 분석하기</span>
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<button class="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs rounded-xl transition-colors" type="button">
+          선택 초기화
+        </button>
+</div>
+<span class="text-xs text-slate-500">응답 소요시간 약 1분 · 실시간 분석</span>
+</div>
+<!-- Realtime Diagnostic Result Preview Box -->
+<div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-5 space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-blue-600"></span>
+<span class="text-xs font-bold text-blue-900 uppercase tracking-wider">자가진단 추천 결과 프리뷰</span>
+</div>
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-600 text-white">일치도 94%</span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 text-xs">
+<div class="p-3 bg-white/80 rounded-xl border border-blue-100 space-y-1">
+<span class="text-slate-500 font-medium block text-[11px]">1순위 추천 분야</span>
+<p class="font-bold text-slate-900 text-sm">지역사회복지관 (종합사회복지관)</p>
+<p class="text-slate-600 text-[11px]">3대 기능(사례관리·서비스제공·지역조직화) 전반 탐색에 가장 적합합니다.</p>
+</div>
+<div class="p-3 bg-white/80 rounded-xl border border-blue-100 space-y-1">
+<span class="text-slate-500 font-medium block text-[11px]">추천 핵심 과업</span>
+<p class="font-bold text-slate-900 text-sm">공동모금회 프로포절 기획 &amp; 주민인터뷰</p>
+<p class="text-slate-600 text-[11px]">실습 기간 내 실제 예산 편성 및 모의 배분 신청서 작성 피드백 권장.</p>
+</div>
+<div class="p-3 bg-white/80 rounded-xl border border-blue-100 space-y-1">
+<span class="text-slate-500 font-medium block text-[11px]">권장 선수 과목</span>
+<p class="font-bold text-slate-900 text-sm">지역사회복지론 · 사회복지실천론</p>
+<p class="text-slate-600 text-[11px]">법정 필수 이수 과목과 더불어 면접 시 지역 사정 도구 질문에 대비하세요.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- END: STEP 1 -->
+<!-- BEGIN: STEP 2: 12대 분야별 실습 가이드 -->
+<section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6" id="practicum-cards-section">
+<!-- Step 2 Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-5">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="text-[11px] font-bold text-blue-600 uppercase tracking-wider block">STEP 02. PRACTICUM GUIDES</span>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">12개 전 분야 DB</span>
+</div>
+<h2 class="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
+          📚 12대 분야별 실습 가이드 &amp; 합격 전략
+        </h2>
+</div>
+<!-- Field Filter Chips -->
+<div class="flex flex-wrap items-center gap-1.5 text-xs">
+<button class="px-3 py-1 rounded-full bg-blue-600 text-white font-semibold">전체</button>
+<button class="px-3 py-1 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200">종합복지관</button>
+<button class="px-3 py-1 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200">노인복지</button>
+<button class="px-3 py-1 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200">장애인복지</button>
+<button class="px-3 py-1 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200">의료·정신건강</button>
+</div>
+</div>
+<!-- Modern Slate Practicum Cards (3 Exemplary Fields) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+<!-- Guide Card 1: 종합사회복지관 -->
+<div class="bg-slate-50/60 rounded-2xl border border-slate-200 p-5 space-y-4 hover:border-blue-400 hover:shadow-sm transition-all flex flex-col justify-between">
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-blue-100 text-blue-800">지역사회복지</span>
+<span class="text-[11px] font-bold text-amber-600">경쟁률 4.2:1</span>
+</div>
+<h3 class="text-base font-bold text-slate-900">종합사회복지관 실습</h3>
+<p class="text-xs text-slate-600 leading-relaxed">
+            사례관리, 서비스제공, 지역조직화의 3대 핵심 기능을 종합적으로 순환 실습하며 기본기를 가장 탄탄하게 다지는 코스입니다.
+          </p>
+<div class="space-y-1.5 text-xs pt-1 border-t border-slate-200/80">
+<div class="flex items-center justify-between text-slate-600">
+<span class="font-medium text-slate-500">주요 과업:</span>
+<span class="font-semibold text-slate-800">프로포절 기획, 주민축제 참여</span>
+</div>
+<div class="flex items-center justify-between text-slate-600">
+<span class="font-medium text-slate-500">선수 과목:</span>
+<span class="font-semibold text-slate-800">지역사회복지론, 프로그램개발과평가</span>
+</div>
+</div>
+</div>
+<div class="pt-2 border-t border-slate-200">
+<span class="text-[11px] font-medium text-blue-600 block mb-2">💡 합격 팁: 자기소개서에 지역 욕구에 대한 관심과 집단 활동 경험을 구체적으로 서술하세요.</span>
+<button class="w-full py-2 bg-white hover:bg-blue-50 text-blue-700 text-xs font-bold rounded-xl border border-slate-200 hover:border-blue-200 transition-colors" type="button">
+            상세 가이드 &amp; 모집공고 보기
+          </button>
+</div>
+</div>
+<!-- Guide Card 2: 노인종합복지관 -->
+<div class="bg-slate-50/60 rounded-2xl border border-slate-200 p-5 space-y-4 hover:border-blue-400 hover:shadow-sm transition-all flex flex-col justify-between">
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-100 text-amber-800">노인·통합돌봄</span>
+<span class="text-[11px] font-bold text-amber-600">경쟁률 3.1:1</span>
+</div>
+<h3 class="text-base font-bold text-slate-900">노인복지관 실습</h3>
+<p class="text-xs text-slate-600 leading-relaxed">
+            평생교육·취미여가 프로그램, 재가노인 식사배달 및 2026 의료·요양 통합돌봄 연계 상담 실무를 현장에서 집중 경험합니다.
+          </p>
+<div class="space-y-1.5 text-xs pt-1 border-t border-slate-200/80">
+<div class="flex items-center justify-between text-slate-600">
+<span class="font-medium text-slate-500">주요 과업:</span>
+<span class="font-semibold text-slate-800">평생교육 기획, 재가 어르신 인테이크</span>
+</div>
+<div class="flex items-center justify-between text-slate-600">
+<span class="font-medium text-slate-500">선수 과목:</span>
+<span class="font-semibold text-slate-800">노인복지론, 사회복지실천기술론</span>
+</div>
+</div>
+</div>
+<div class="pt-2 border-t border-slate-200">
+<span class="text-[11px] font-medium text-amber-700 block mb-2">💡 합격 팁: 어르신과의 원활한 라포 형성과 공감 커뮤니케이션 사례를 강조하는 것이 유리합니다.</span>
+<button class="w-full py-2 bg-white hover:bg-amber-50 text-amber-800 text-xs font-bold rounded-xl border border-slate-200 hover:border-amber-200 transition-colors" type="button">
+            상세 가이드 &amp; 모집공고 보기
+          </button>
+</div>
+</div>
+<!-- Guide Card 3: 병원 의료사회사업팀 -->
+<div class="bg-slate-50/60 rounded-2xl border border-slate-200 p-5 space-y-4 hover:border-blue-400 hover:shadow-sm transition-all flex flex-col justify-between">
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-teal-100 text-teal-800">의료·수련연계</span>
+<span class="text-[11px] font-bold text-rose-600">경쟁률 8.5:1</span>
+</div>
+<h3 class="text-base font-bold text-slate-900">상급병원 의료사회사업팀</h3>
+<p class="text-xs text-slate-600 leading-relaxed">
+            의료비 지원 연계, 퇴원 환자 지역사회 전환 돌봄, 심리사회적 사정 등 향후 1년 법정 수련을 목표로 하는 학생에게 최적입니다.
+          </p>
+<div class="space-y-1.5 text-xs pt-1 border-t border-slate-200/80">
+<div class="flex items-center justify-between text-slate-600">
+<span class="font-medium text-slate-500">주요 과업:</span>
+<span class="font-semibold text-slate-800">심리사회적 사정, 외부 재단 의료비 신청</span>
+</div>
+<div class="flex items-center justify-between text-slate-600">
+<span class="font-medium text-slate-500">선수 과목:</span>
+<span class="font-semibold text-slate-800">의료사회복지론, 사회복지조사론</span>
+</div>
+</div>
+</div>
+<div class="pt-2 border-t border-slate-200">
+<span class="text-[11px] font-medium text-teal-700 block mb-2">💡 합격 팁: 의료사회복지 수련 진로에 대한 명확한 로드맵과 질병 이해도를 어필하세요.</span>
+<button class="w-full py-2 bg-white hover:bg-teal-50 text-teal-800 text-xs font-bold rounded-xl border border-slate-200 hover:border-teal-200 transition-colors" type="button">
+            상세 가이드 &amp; 모집공고 보기
+          </button>
+</div>
+</div>
+</div>
+</section>
+<!-- END: STEP 2 -->
+<!-- BEGIN: STEP 3: 160시간 법정 요건 & 준비 체크리스트 -->
+<section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6" id="practicum-checklist-container">
+<!-- Step 3 Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-5">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="text-[11px] font-bold text-blue-600 uppercase tracking-wider block">STEP 03. STATUTORY CHECKLIST</span>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">법정 필수</span>
+</div>
+<h2 class="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
+          ✅ 160시간 법정 요건 &amp; 실습생 체크리스트
+        </h2>
+</div>
+<!-- Progress visualization -->
+<div class="w-full sm:w-64 space-y-1.5">
+<div class="flex justify-between text-xs font-semibold text-slate-700">
+<span>준비 완성도</span>
+<span class="text-blue-600 font-bold">4 / 4 항목 완료 (100%)</span>
+</div>
+<div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-blue-600 rounded-full w-full transition-all duration-300"></div>
+</div>
+</div>
+</div>
+<!-- 4 Key Statutory Requirements Checkpoints -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Item 1 -->
+<div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/30 flex items-start gap-3.5">
+<div class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 mt-0.5">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="space-y-1">
+<h4 class="text-xs sm:text-sm font-bold text-slate-900">1. 실습 전 선수과목 이수 요건</h4>
+<p class="text-xs text-slate-600 leading-relaxed">
+            사회복지 필수과목 중 4과목 이상 및 선택과목 중 2과목 이상을 실습 개시 전 학기까지 반드시 이수 완료해야 합니다.
+          </p>
+<span class="inline-block text-[11px] font-semibold text-emerald-700">기준 충족 여부: 학사 포털 성적증명서 확인</span>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/30 flex items-start gap-3.5">
+<div class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 mt-0.5">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="space-y-1">
+<h4 class="text-xs sm:text-sm font-bold text-slate-900">2. 법정 실습 시간 (총 160시간 이상)</h4>
+<p class="text-xs text-slate-600 leading-relaxed">
+            개정 사회복지사업법 시행규칙에 따라 기관 현장실습 최소 160시간 이상과 학과 실습세미나(30시간/15회)를 병행해야 합니다.
+          </p>
+<span class="inline-block text-[11px] font-semibold text-emerald-700">1일 8시간 × 20일(4주 전일제) 또는 학기중 파트타임</span>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/30 flex items-start gap-3.5">
+<div class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 mt-0.5">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="space-y-1">
+<h4 class="text-xs sm:text-sm font-bold text-slate-900">3. 실습지도자(슈퍼바이저) 자격 기준</h4>
+<p class="text-xs text-slate-600 leading-relaxed">
+            사회복지사 1급 자격 취득 후 3년 이상 또는 2급 자격 취득 후 5년 이상 실무 경력을 보유하고 당해 연도 보수교육을 이수한 자여야 합니다.
+          </p>
+<span class="inline-block text-[11px] font-semibold text-emerald-700">지도자 1인당 동시 실습생 최대 5인 이내 엄수</span>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/30 flex items-start gap-3.5">
+<div class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 mt-0.5">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="space-y-1">
+<h4 class="text-xs sm:text-sm font-bold text-slate-900">4. 보건복지부 선정 실습기관 등록 확인</h4>
+<p class="text-xs text-slate-600 leading-relaxed">
+            한국사회복지사협회 자격관리센터(lic.welfare.net)에 고시된 보건복지부 장관 선정 법정 실습기관인지 사전에 반드시 확인해야 합니다.
+          </p>
+<span class="inline-block text-[11px] font-semibold text-emerald-700">미등록 기관 실습 시 자격증 발급 절대 불가</span>
+</div>
+</div>
+</div>
+<!-- Bottom Checklist Note -->
+<div class="p-4 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between text-xs text-slate-600">
+<div class="flex items-center gap-2">
+<svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>위 4개 법정 기준을 모두 검증해야 졸업 시 사회복지사 1·2급 자격 심사가 승인됩니다.</span>
+</div>
+<a class="font-bold text-blue-600 hover:text-blue-800 hover:underline" href="#">
+        실습일지 양식 &amp; 서약서 다운로드 →
+      </a>
+</div>
+</section>
+<!-- END: STEP 3 -->
+</div>
+<!-- END: FacilityClassificationTableSection -->
+<!-- BEGIN: BottomGuideBanner -->
+<section class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white rounded-2xl p-6 sm:p-8 relative overflow-hidden shadow-md" data-purpose="call-to-action-banner">
+<div class="relative z-10 max-w-2xl space-y-3">
+<span class="inline-block px-2.5 py-1 text-xs font-semibold bg-blue-500/30 text-blue-200 border border-blue-400/30 rounded-lg">
+          2026-2027 학사 연계 가이드북
+        </span>
+<h2 class="text-xl sm:text-2xl font-bold tracking-tight text-white">
+          내 관심 분야와 딱 맞는 기관을 찾지 못하셨나요?
+        </h2>
+<p class="text-xs sm:text-sm text-blue-100 leading-relaxed">
+          12대 분야별(노인, 장애인, 아동, 의료, 정신건강, 청소년 등) 인턴·실습 지원 절차와 현직 사회복지사 선배들의 생생한 취업 포트폴리오를 자가진단 리포트로 확인해보세요.
+        </p>
+<div class="pt-2 flex flex-wrap items-center gap-3">
+<a class="px-4 py-2 bg-white text-blue-900 text-xs sm:text-sm font-bold rounded-lg shadow-sm hover:bg-blue-50 transition-colors" href="#">
+            현장실습 자가진단 시작하기
+          </a>
+<a class="px-4 py-2 bg-blue-800/80 hover:bg-blue-700 text-white text-xs sm:text-sm font-medium rounded-lg border border-blue-600/60 transition-colors" href="#">
+            채용·인턴십 공고 둘러보기
+          </a>
+</div>
+</div>
+<!-- Subtle Background Decorative Shape -->
+<div class="absolute -right-10 -bottom-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+</section>
+<!-- END: BottomGuideBanner -->
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: MainFooter -->
+<footer class="bg-white border-t border-slate-200/80 mt-12 pt-10 pb-8 text-xs text-slate-600" data-purpose="footer">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+<!-- Top Section: Brand & Contact Info Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-8 border-b border-slate-200/80">
+<!-- Left Brand & Vision Lockup (col-span-5) -->
+<div class="lg:col-span-5 space-y-3">
+<div class="flex items-center gap-2">
+<span class="font-extrabold text-base tracking-tight text-slate-900">사회복지 현장 나침반</span>
+<span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-blue-50 text-blue-600 border border-blue-200/60">INSIGHTS</span>
+</div>
+<p class="text-xs text-slate-600 leading-relaxed font-medium">
+          대학생을 위한 12대 분야 법령 기관 도감 · 실습 · 수련 · 취업 에디토리얼 포털
+        </p>
+<p class="text-[11px] text-slate-500 leading-relaxed">
+          사회복지 전공생과 예비 사회복지사를 위해 현행 법령 체계, 실습 기관 현황 및 수련·취업 진로 가이드를 한눈에 조망할 수 있도록 구조화한 현장 실무 정보 플랫폼입니다.
+        </p>
+</div>
+<!-- Middle: Creator & Inquiries (col-span-4) -->
+<div class="lg:col-span-4 space-y-3">
+<div class="flex items-center gap-1.5 text-slate-900 font-bold text-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+<span>기획 · 제작 및 프로젝트 문의</span>
+</div>
+<div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 space-y-2 text-xs">
+<div class="flex items-center justify-between">
+<span class="text-slate-500 font-medium">기획 및 제작 담당</span>
+<span class="font-bold text-slate-800">정다운</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-slate-500 font-medium">연락처</span>
+<a class="font-semibold text-blue-600 hover:text-blue-800 hover:underline" href="tel:010-5328-6117">010-5328-6117</a>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-slate-500 font-medium">이메일</span>
+<a class="font-semibold text-blue-600 hover:text-blue-800 hover:underline" href="mailto:ddauny00@gmail.com">ddauny00@gmail.com</a>
+</div>
+</div>
+</div>
+<!-- Right: Academic Advisory Notice (col-span-3) -->
+<div class="lg:col-span-3 space-y-3">
+<div class="flex items-center gap-1.5 text-slate-900 font-bold text-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+<span>학술 자문 및 대학 연계</span>
+</div>
+<div class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 text-xs text-amber-800 leading-relaxed space-y-1.5">
+<p class="font-semibold text-slate-900">교수님 문의 안내</p>
+<p class="text-[11px] text-slate-700 leading-normal">
+            학술 자문, 대학 연계 및 연구 관련 문의는 <span class="font-bold text-slate-900">천덕희 교수님</span>께 문의 부탁드립니다.
+          </p>
+</div>
+</div>
+</div>
+<!-- Middle Section: Legal & Editorial Data Verification Notice -->
+<div class="bg-slate-50 rounded-xl p-4 border border-slate-200/70 text-slate-500 text-[11px] leading-relaxed space-y-1">
+<div class="flex items-center gap-1.5 font-semibold text-slate-700 mb-1">
+<svg class="w-3.5 h-3.5 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>법적 고지 및 데이터 감수 기준</span>
+</div>
+<p>
+        본 포털의 모든 법령 정보 및 시설 분류는 보건복지부, 행정안전부 법령정보센터, 국가법령정보센터 및 관계법령을 기준으로 감수되었습니다. 등록된 공고 및 기사 브리핑의 저작권은 각 언론사 및 발표 기관에 귀속됩니다.
+      </p>
+</div>
+<!-- Bottom Section: Policy Links & Copyright -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 text-xs text-slate-500">
+<div class="flex flex-wrap items-center gap-x-4 gap-y-1.5 font-medium">
+<a class="hover:text-slate-800 hover:underline transition-colors" href="#">이용약관</a>
+<span class="text-slate-300">|</span>
+<a class="hover:text-slate-800 hover:underline transition-colors font-semibold text-slate-700" href="#">개인정보처리방침</a>
+<span class="text-slate-300">|</span>
+<a class="hover:text-slate-800 hover:underline transition-colors" href="#">면책조항</a>
+<span class="text-slate-300">|</span>
+<a class="hover:text-slate-800 hover:underline transition-colors" href="#">오류제보·제휴문의</a>
+</div>
+<p class="text-slate-400 text-[11px] text-center sm:text-right">
+        Copyright © 2026 사회복지 현장 나침반 (정다운). All rights reserved.
+      </p>
+</div>
+</div>
+</footer>
+<!-- END: MainFooter -->
+</body></html>

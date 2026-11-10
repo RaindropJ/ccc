@@ -1,0 +1,553 @@
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>복지 뉴스·브리핑 | 사회복지 현장 나침반</title>
+<!-- Tailwind CSS CDN with Forms & Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            }
+          },
+          fontFamily: {
+            sans: ['"Noto Sans KR"', '"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<!-- Google Web Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style data-purpose="base-styling">
+    body {
+      background-color: #F8FAFC;
+      color: #0F172A;
+      font-family: 'Noto Sans KR', 'Plus Jakarta Sans', sans-serif;
+      letter-spacing: -0.015em;
+    }
+  </style>
+<style data-purpose="custom-scrollbar">
+    .source-scroll::-webkit-scrollbar {
+      height: 4px;
+    }
+    .source-scroll::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    .source-scroll::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
+    }
+    .drawer-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .drawer-scroll::-webkit-scrollbar-track {
+      background: #F8FAFC;
+    }
+    .drawer-scroll::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+    .drawer-scroll::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-blue-100 selection:text-blue-900 overflow-hidden">
+<!-- BEGIN: MainHeader -->
+<header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+<!-- Brand Logo & Identity -->
+<div class="flex items-center space-x-3">
+<a class="flex items-center space-x-2.5 group" href="#">
+<!-- Compass needle icon -->
+<div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-500 flex items-center justify-center shadow-sm shadow-blue-500/20 group-hover:scale-105 transition-transform duration-200">
+<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M12 2v2m0 16v2m10-10h-2M4 12H2m15.071-7.071l-1.414 1.414M7.05 16.95l-1.414 1.414M16.95 16.95l1.414 1.414M7.05 7.05L5.636 5.636" opacity="0.3" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M12 8l3 4-3 4-3-4 3-4z" fill="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center space-x-1.5">
+<span class="font-black text-slate-900 text-lg tracking-tight">현장 나침반</span>
+<span class="text-[10px] font-bold tracking-wider uppercase px-1.5 py-0.5 rounded bg-blue-50 text-blue-600 border border-blue-200/60">Insights</span>
+</div>
+<span class="text-[11px] text-slate-500 font-medium hidden sm:inline-block">대학생 사회복지 실습·취업 도감</span>
+</div>
+</a>
+</div>
+<!-- Navigation Tabs -->
+<nav aria-label="메인 내비게이션" class="hidden md:flex items-center space-x-1 lg:space-x-2 text-sm font-medium">
+<a class="px-3 py-5 text-slate-600 hover:text-slate-900 transition-colors" href="#">
+          12대 분야와 법령
+        </a>
+<a class="px-3 py-5 text-slate-600 hover:text-slate-900 transition-colors" href="#">
+          실습처 탐색
+        </a>
+<a class="px-3 py-5 text-slate-600 hover:text-slate-900 flex items-center space-x-1.5 transition-colors" href="#">
+<span>수련처 탐색</span>
+<span class="px-1.5 py-0.5 text-[11px] font-semibold rounded-full bg-slate-100 text-slate-600">284곳</span>
+</a>
+<a class="px-3 py-5 text-slate-600 hover:text-slate-900 flex items-center space-x-1.5 transition-colors" href="#">
+<span>인턴·취업처</span>
+<span class="px-1.5 py-0.5 text-[11px] font-semibold rounded-full bg-slate-100 text-slate-600">75</span>
+</a>
+<!-- Active Tab: 복지 뉴스·브리핑 -->
+<a aria-current="page" class="relative px-3 py-5 text-blue-600 font-bold flex items-center space-x-1.5" href="#">
+<span>복지 뉴스·브리핑</span>
+<span class="px-1.5 py-0.5 text-[11px] font-bold rounded-full bg-blue-100 text-blue-700">21</span>
+<span class="absolute bottom-0 left-0 w-full h-[2.5px] bg-blue-600 rounded-t-full"></span>
+</a>
+</nav>
+<!-- Right Actions: Saved Items & Theme -->
+<div class="flex items-center space-x-3">
+<!-- Bookmark Pill Button -->
+<button class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200/80 hover:bg-amber-100/70 text-xs font-semibold shadow-xs transition-colors" type="button"><svg class="w-3.5 h-3.5 fill-amber-500" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg><span>내 준비함</span><span class="font-bold ml-0.5 text-amber-800 bg-amber-200/80 px-1.5 py-0.2 rounded-full text-[10px]">2</span></button>
+<!-- Dark Mode Toggle -->
+<button aria-label="다크 모드 전환" class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</div>
+</header>
+<!-- END: MainHeader -->
+<!-- BEGIN: MainContent -->
+<main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+<!-- BEGIN: PageEditorialHeader -->
+<section class="text-center max-w-3xl mx-auto pt-2 pb-2 space-y-3" data-purpose="editorial-intro">
+<div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-blue-700 text-xs font-semibold tracking-tight shadow-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>
+<span>2026 복지동향 · 정책 법령 이슈 아카이브</span>
+</div>
+<h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+        사회복지 &amp; 공익 시사 뉴스 브리핑
+      </h1>
+<p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+        현행 정책·법령 개정 이슈와 현장 동향, 그리고 실습·취업 면접에서 즉시 활용할 수 있는 실전 체크포인트를 제공합니다.
+      </p>
+</section>
+<!-- END: PageEditorialHeader -->
+<!-- BEGIN: QuickStatsOverview -->
+<section class="grid grid-cols-2 lg:grid-cols-4 gap-4" data-purpose="quick-metrics">
+<!-- Metric 1 -->
+<div class="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col justify-between hover:border-blue-300 transition-colors">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-semibold text-slate-500 uppercase">실시간 주요 브리핑</span>
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+</div>
+<div class="flex items-baseline space-x-1.5">
+<span class="text-2xl sm:text-3xl font-extrabold text-slate-900">21</span>
+<span class="text-sm font-bold text-slate-600">건</span>
+</div>
+<p class="text-[11px] text-slate-500 mt-1">최신 법령·제도 개정 이슈 전수</p>
+</div>
+<!-- Metric 2 -->
+<div class="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col justify-between hover:border-blue-300 transition-colors">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-semibold text-slate-500 uppercase">2026 핵심 아젠다</span>
+<span class="w-2 h-2 rounded-full bg-blue-500"></span>
+</div>
+<div class="flex items-baseline">
+<span class="text-xl sm:text-2xl font-extrabold text-blue-700 tracking-tight">지역 통합돌봄</span>
+</div>
+<p class="text-[11px] text-slate-500 mt-1">Aging in Place 전국 시행</p>
+</div>
+<!-- Metric 3 -->
+<div class="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col justify-between hover:border-blue-300 transition-colors">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-semibold text-slate-500 uppercase">실무·면접 연계 포인트</span>
+<span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+</div>
+<div class="flex items-baseline space-x-1.5">
+<span class="text-2xl sm:text-3xl font-extrabold text-slate-900">100%</span>
+<span class="text-xs font-semibold text-emerald-600">전 문항 탑재</span>
+</div>
+<p class="text-[11px] text-slate-500 mt-1">당사자 중심 실천 가이드</p>
+</div>
+<!-- Metric 4 -->
+<div class="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col justify-between hover:border-blue-300 transition-colors">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-semibold text-slate-500 uppercase">전문 미디어 제휴</span>
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+</div>
+<div class="flex items-baseline space-x-1.5">
+<span class="text-2xl sm:text-3xl font-extrabold text-slate-900">12</span>
+<span class="text-sm font-bold text-slate-600">개사</span>
+</div>
+<p class="text-[11px] text-slate-500 mt-1">공식 포털 원문 직행 연계</p>
+</div>
+</section>
+<!-- END: QuickStatsOverview -->
+<!-- BEGIN: MediaPartnerQuickLinks -->
+<section class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-3" data-purpose="media-source-hub">
+<div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+<div class="flex items-center space-x-2">
+<svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M19 20H5a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<h2 class="text-xs font-bold text-slate-800 tracking-tight uppercase">공인 복지 전문 미디어 &amp; 정책 허브 직행</h2>
+</div>
+<span class="text-[11px] text-slate-400">클릭 시 각 기관 원문 브리핑센터로 이동합니다</span>
+</div>
+<!-- Source badges grid -->
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 pt-1 text-xs">
+<a class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200/80 hover:border-blue-200 group transition" href="http://www.welfarenews.net" rel="noopener noreferrer" target="_blank">
+<span class="font-medium text-slate-700 group-hover:text-blue-700">웰페어뉴스</span>
+<span class="text-[10px] text-slate-400 group-hover:text-blue-500">복지종합</span>
+</a>
+<a class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200/80 hover:border-blue-200 group transition" href="http://www.ablenews.co.kr" rel="noopener noreferrer" target="_blank">
+<span class="font-medium text-slate-700 group-hover:text-blue-700">에이블뉴스</span>
+<span class="text-[10px] text-slate-400 group-hover:text-blue-500">장애인</span>
+</a>
+<a class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200/80 hover:border-blue-200 group transition" href="https://www.ibabynews.com" rel="noopener noreferrer" target="_blank">
+<span class="font-medium text-slate-700 group-hover:text-blue-700">베이비뉴스</span>
+<span class="text-[10px] text-slate-400 group-hover:text-blue-500">아동·보육</span>
+</a>
+<a class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200/80 hover:border-blue-200 group transition" href="http://www.mindpost.or.kr" rel="noopener noreferrer" target="_blank">
+<span class="font-medium text-slate-700 group-hover:text-blue-700">마인드포스트</span>
+<span class="text-[10px] text-slate-400 group-hover:text-blue-500">정신건강</span>
+</a>
+<a class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200/80 hover:border-blue-200 group transition" href="https://www.kamsw.or.kr" rel="noopener noreferrer" target="_blank">
+<span class="font-medium text-slate-700 group-hover:text-blue-700">대한의료사회복지사</span>
+<span class="text-[10px] text-slate-400 group-hover:text-blue-500">의료보건</span>
+</a>
+<a class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200/80 hover:border-blue-200 group transition" href="https://www.bokjiro.go.kr" rel="noopener noreferrer" target="_blank">
+<span class="font-medium text-slate-700 group-hover:text-blue-700">복지로 정책브리핑</span>
+<span class="text-[10px] text-slate-400 group-hover:text-blue-500">복지부공식</span>
+</a>
+<a class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200/80 hover:border-blue-200 group transition" href="https://www.peoplepower21.org" rel="noopener noreferrer" target="_blank">
+<span class="font-medium text-slate-700 group-hover:text-blue-700">참여연대 복지동향</span>
+<span class="text-[10px] text-slate-400 group-hover:text-blue-500">사회정책</span>
+</a>
+<a class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200/80 hover:border-blue-200 group transition" href="https://www.ngokcoc.or.kr" rel="noopener noreferrer" target="_blank">
+<span class="font-medium text-slate-700 group-hover:text-blue-700">KCOC 국제구호협회</span>
+<span class="text-[10px] text-slate-400 group-hover:text-blue-500">개발·NGO</span>
+</a>
+<a class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200/80 hover:border-blue-200 group transition" href="https://www.pressian.com" rel="noopener noreferrer" target="_blank">
+<span class="font-medium text-slate-700 group-hover:text-blue-700">프레시안 사회/노동</span>
+<span class="text-[10px] text-slate-400 group-hover:text-blue-500">공공복지</span>
+</a>
+<a class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200/80 hover:border-blue-200 group transition" href="https://www.sasw.or.kr" rel="noopener noreferrer" target="_blank">
+<span class="font-medium text-slate-700 group-hover:text-blue-700">서울시사회복지사협회</span>
+<span class="text-[10px] text-slate-400 group-hover:text-blue-500">현장정책</span>
+</a>
+</div>
+</section>
+<!-- END: MediaPartnerQuickLinks -->
+<!-- BEGIN: SearchAndFilterBar -->
+<section class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs mb-6 space-y-4" data-purpose="filtering-controls">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+<div class="flex flex-wrap items-center gap-2 text-xs">
+<button class="px-3.5 py-1.5 rounded-full bg-blue-600 text-white font-bold shadow-xs flex items-center space-x-1.5 transition">
+<span>전체</span>
+<span class="px-1.5 py-0.5 rounded-full bg-white/20 text-[11px] font-bold">21</span>
+</button>
+<button class="px-3.5 py-1.5 rounded-full bg-white text-slate-600 border border-slate-200/90 hover:bg-slate-50 font-medium flex items-center space-x-1.5 transition shadow-2xs">
+<span>정책·제도</span>
+<span class="px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[11px] font-semibold">7</span>
+</button>
+<button class="px-3.5 py-1.5 rounded-full bg-white text-slate-600 border border-slate-200/90 hover:bg-slate-50 font-medium flex items-center space-x-1.5 transition shadow-2xs">
+<span>지역복지관·현장</span>
+<span class="px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[11px] font-semibold">5</span>
+</button>
+<button class="px-3.5 py-1.5 rounded-full bg-white text-slate-600 border border-slate-200/90 hover:bg-slate-50 font-medium flex items-center space-x-1.5 transition shadow-2xs">
+<span>정신건강</span>
+<span class="px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[11px] font-semibold">3</span>
+</button>
+<button class="px-3.5 py-1.5 rounded-full bg-white text-slate-600 border border-slate-200/90 hover:bg-slate-50 font-medium flex items-center space-x-1.5 transition shadow-2xs">
+<span>의료사회복지</span>
+<span class="px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[11px] font-semibold">2</span>
+</button>
+<button class="px-3.5 py-1.5 rounded-full bg-white text-slate-600 border border-slate-200/90 hover:bg-slate-50 font-medium flex items-center space-x-1.5 transition shadow-2xs">
+<span>장애인·인권</span>
+<span class="px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[11px] font-semibold">2</span>
+</button>
+<button class="px-3.5 py-1.5 rounded-full bg-white text-slate-600 border border-slate-200/90 hover:bg-slate-50 font-medium flex items-center space-x-1.5 transition shadow-2xs">
+<span>비영리 NGO·CSR</span>
+<span class="px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[11px] font-semibold">2</span>
+</button>
+</div>
+<button class="inline-flex items-center justify-center space-x-1.5 px-3.5 py-1.5 rounded-xl border border-slate-200/90 hover:border-slate-300 bg-slate-50/80 hover:bg-slate-100 text-slate-700 text-xs font-semibold transition shrink-0 shadow-2xs" type="button">
+<svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>내 시사 노트 스크랩</span>
+</button>
+</div>
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-3 border-t border-slate-100">
+<div class="relative flex-1">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<input class="w-full pl-10 pr-4 py-3 text-xs sm:text-sm bg-slate-50 border border-slate-200/90 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all text-slate-800 placeholder-slate-400" placeholder="이슈 키워드, 정책명, 면접 포인트 검색 (예: 지역통합돌봄, 수련 면접, 유보통합)..." type="text">
+</div>
+<button class="px-5 py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold rounded-xl shadow-xs transition shrink-0" type="button">
+검색 필터 적용
+</button>
+</div>
+<div class="flex items-center space-x-2 text-xs text-slate-500 overflow-x-auto pt-1 pb-0.5">
+<span class="font-bold text-slate-700 shrink-0 text-xs">추천 키워드:</span>
+<div class="flex items-center space-x-1.5 whitespace-nowrap">
+<a class="px-2.5 py-1 text-xs rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-600 transition text-slate-600 font-medium" href="#">#지역통합돌봄</a>
+<a class="px-2.5 py-1 text-xs rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-600 transition text-slate-600 font-medium" href="#">#유보통합_교육부</a>
+<a class="px-2.5 py-1 text-xs rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-600 transition text-slate-600 font-medium" href="#">#간병비_급여화</a>
+<a class="px-2.5 py-1 text-xs rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-600 transition text-slate-600 font-medium" href="#">#정신건강_위기대응</a>
+<a class="px-2.5 py-1 text-xs rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-600 transition text-slate-600 font-medium" href="#">#사회복지사_호봉가이드</a>
+<a class="px-2.5 py-1 text-xs rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-600 transition text-slate-600 font-medium" href="#">#발달장애인_통합돌봄</a>
+</div>
+</div>
+</section>
+<!-- END: SearchAndFilterBar -->
+<!-- BEGIN: NewsCardsGrid -->
+<div class="flex flex-wrap items-center justify-between gap-2 p-3 bg-gradient-to-r from-amber-50 via-blue-50 to-slate-50 rounded-xl border border-amber-200/60 text-xs mb-3"><div class="flex items-center space-x-2"><span class="flex h-2 w-2 relative"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span></span><span class="font-bold text-slate-800">시사 스크랩 상태 구분 안내</span><span class="text-slate-600 hidden sm:inline">스크랩 버튼 클릭 시 '내 준비함'으로 동기화되며 강조 표시됩니다.</span></div><div class="flex items-center space-x-3 text-[11px]"><span class="inline-flex items-center gap-1 text-amber-800 font-bold bg-amber-100/90 px-2 py-0.5 rounded"><svg class="w-3 h-3 fill-amber-500" viewBox="0 0 20 20"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z"></path></svg>스크랩됨 (2건)</span><span class="text-slate-300">|</span><span class="inline-flex items-center gap-1 text-slate-600 font-medium bg-white border border-slate-200 px-2 py-0.5 rounded"><svg class="w-3 h-3 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24"><path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>미스크랩</span></div></div><div class="flex items-center justify-between px-1 text-xs text-slate-500 mb-1"><div class="flex items-center space-x-2"><span class="font-bold text-slate-900 text-sm">브리핑 목록</span><span class="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-bold text-[11px] border border-blue-200/60">총 21건</span></div><div class="flex items-center space-x-1"><button class="px-2.5 py-1 rounded-md text-blue-600 bg-blue-50 font-bold hover:bg-blue-100/70 transition-colors" type="button">최신순</button><span class="text-slate-300">·</span><button class="px-2.5 py-1 rounded-md text-slate-500 font-medium hover:text-slate-800 transition-colors" type="button">중요도순</button><span class="text-slate-300">·</span><button class="px-2.5 py-1 rounded-md text-slate-500 font-medium hover:text-slate-800 transition-colors" type="button">스크랩 많은순</button></div></div><section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-purpose="news-cards-container">
+<!-- Card 1: 지역통합돌봄 -->
+<article class="relative border-2 border-amber-300 bg-amber-50/20 hover:border-amber-400 hover:shadow-md transition-all duration-200 rounded-2xl p-6 flex flex-col justify-between"><div class="space-y-4"><div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="px-2.5 py-0.5 text-[11px] font-bold rounded-md bg-blue-50 text-blue-700 border border-blue-200/60">정책·제도</span><span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-rose-50 text-rose-600 border border-rose-200/60">D-Day 2026</span><span class="px-2 py-0.5 text-[10px] font-extrabold rounded-md bg-amber-100 text-amber-800 border border-amber-300 flex items-center gap-1"><svg class="w-2.5 h-2.5 fill-amber-600" viewBox="0 0 20 20"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z"></path></svg>내 준비함 저장됨</span></div><span class="text-xs text-slate-400 font-medium">2026.03.02</span></div><div><h3 class="text-slate-900 font-extrabold text-base leading-snug hover:text-blue-600 transition-colors cursor-pointer">2026년 3월 '지역돌봄 통합지원법' 전국 본격 시행, 지자체 전담인력 및 전담기구 가동</h3><div class="flex items-center space-x-1.5 mt-2 text-xs text-slate-500"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span><span class="font-medium text-slate-600">보건복지부 지역복지과</span></div></div><p class="text-slate-600 text-xs leading-relaxed">병원·시설 중심에서 살던 곳 중심(Aging in Place)으로 전환. 읍면동 통합창구와 퇴원환자 연계 거점 구축 본격화.</p><div class="rounded-xl p-3.5 bg-slate-50/80 border border-slate-200/70 space-y-1.5"><div class="flex items-center space-x-1.5"><span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200/80">면접 실무 포인트</span></div><p class="text-[11px] text-slate-700 leading-relaxed font-medium">지자체 사회복지직 및 종합사회복지관 사례관리팀 면접 시 민·관 협력 기반의 <span class="font-bold text-slate-900">'살던 곳에서의 노화(Aging in Place)'</span> 실천 모델과 퇴원환자 연계 프로세스를 중점 준비하세요.</p></div></div><div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between"><button class="px-3.5 py-1.5 rounded-lg text-xs font-extrabold bg-amber-500 text-white hover:bg-amber-600 shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer" type="button"><svg class="w-3.5 h-3.5 fill-white stroke-white" viewBox="0 0 24 24"><path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>저장완료</span></button><a class="px-3 py-1.5 rounded-lg text-xs font-bold text-blue-600 hover:bg-blue-50 transition-colors flex items-center gap-1" href="#"><span>공식 원문</span><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round"></path></svg></a></div></article>
+<!-- Card 2: 의료사회복지 -->
+<article class="border border-slate-200/90 hover:border-blue-500/50 hover:shadow-md transition-all duration-200 rounded-2xl bg-white p-6 flex flex-col justify-between"><div class="space-y-4"><div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="px-2.5 py-0.5 text-[11px] font-bold rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200/60">의료사회복지</span><span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-slate-100 text-slate-600 border border-slate-200">건보 적용 이슈</span></div><span class="text-xs text-slate-400 font-medium">2026.02.18</span></div><div><h3 class="text-slate-900 font-extrabold text-base leading-snug hover:text-blue-600 transition-colors cursor-pointer">급성기 환자 퇴원지원 및 재택의료 시범사업 확대, 의료사회복지사 역할 법정화 논의</h3><div class="flex items-center space-x-1.5 mt-2 text-xs text-slate-500"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span class="font-medium text-slate-600">청년의사 / 대한의료사회복지사협회</span></div></div><p class="text-slate-600 text-xs leading-relaxed">상급종합병원 및 재활병원 다학제 팀 내 의료사회복지사의 조기 퇴원계획 및 지역사회 자원 연계 수가 신설 추진.</p><div class="rounded-xl p-3.5 bg-slate-50/80 border border-slate-200/70 space-y-1.5"><div class="flex items-center space-x-1.5"><span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200/80">면접 실무 포인트</span></div><p class="text-[11px] text-slate-700 leading-relaxed font-medium">상급종합병원 및 재활병원 다학제 팀 내 의료사회복지사의 <span class="font-bold text-slate-900">조기 퇴원계획(Discharge Planning)</span> 평가 지표와 지역사회 복지관 연계망 구축 방안 숙지 필수.</p></div></div><div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between"><button class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-slate-50 hover:bg-amber-50 hover:text-amber-700 hover:border-amber-200 text-slate-600 transition-colors flex items-center gap-1.5 cursor-pointer" type="button"><svg class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24"><path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>스크랩</span></button><a class="px-3 py-1.5 rounded-lg text-xs font-bold text-blue-600 hover:bg-blue-50 transition-colors flex items-center gap-1" href="#"><span>공식 원문</span><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round"></path></svg></a></div></article>
+<!-- Card 3: 정신건강 -->
+<article class="border border-slate-200/90 hover:border-blue-500/50 hover:shadow-md transition-all duration-200 rounded-2xl bg-white p-6 flex flex-col justify-between"><div class="space-y-4"><div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="px-2.5 py-0.5 text-[11px] font-bold rounded-md bg-purple-50 text-purple-700 border border-purple-200/60">정신건강</span><span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-slate-100 text-slate-600 border border-slate-200">인프라 확충</span></div><span class="text-xs text-slate-400 font-medium">2026.02.10</span></div><div><h3 class="text-slate-900 font-extrabold text-base leading-snug hover:text-blue-600 transition-colors cursor-pointer">전국 24시간 정신응급위기대응체계 전면 강화 및 광역정신건강복지센터 전담팀 증원</h3><div class="flex items-center space-x-1.5 mt-2 text-xs text-slate-500"><span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span><span class="font-medium text-slate-600">마인드포스트</span></div></div><p class="text-slate-600 text-xs leading-relaxed">중증 정신질환자 외래치료지원제 활성화와 자살예방 상담전화 '109' 연계 강화. 정신건강사회복지사 채용 확대.</p><div class="rounded-xl p-3.5 bg-slate-50/80 border border-slate-200/70 space-y-1.5"><div class="flex items-center space-x-1.5"><span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200/80">면접 실무 포인트</span></div><p class="text-[11px] text-slate-700 leading-relaxed font-medium">정신건강복지법 제17조 수련 및 센터 면접 시 <span class="font-bold text-slate-900">24시간 위기개입 절차</span>와 클라이언트 당사자 인권보호 균형 실천 질문 빈출.</p></div></div><div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between"><button class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-slate-50 hover:bg-amber-50 hover:text-amber-700 hover:border-amber-200 text-slate-600 transition-colors flex items-center gap-1.5 cursor-pointer" type="button"><svg class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24"><path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>스크랩</span></button><a class="px-3 py-1.5 rounded-lg text-xs font-bold text-blue-600 hover:bg-blue-50 transition-colors flex items-center gap-1" href="#"><span>공식 원문</span><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round"></path></svg></a></div></article>
+<!-- Card 4: 아동·보육 -->
+<article class="relative border-2 border-amber-300 bg-amber-50/20 hover:border-amber-400 hover:shadow-md transition-all duration-200 rounded-2xl p-6 flex flex-col justify-between"><div class="space-y-4"><div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="px-2.5 py-0.5 text-[11px] font-bold rounded-md bg-amber-50 text-amber-700 border border-amber-200/60">아동·보육</span><span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-slate-100 text-slate-600 border border-slate-200">유보통합 전환</span><span class="px-2 py-0.5 text-[10px] font-extrabold rounded-md bg-amber-100 text-amber-800 border border-amber-300 flex items-center gap-1"><svg class="w-2.5 h-2.5 fill-amber-600" viewBox="0 0 20 20"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z"></path></svg>저장됨</span></div><span class="text-xs text-slate-400 font-medium">2026.01.25</span></div><div><h3 class="text-slate-900 font-extrabold text-base leading-snug hover:text-blue-600 transition-colors cursor-pointer">교육부로 이관된 영유아보육체계, '유보통합' 1차 선도학교 및 돌봄센터 시범 운영</h3><div class="flex items-center space-x-1.5 mt-2 text-xs text-slate-500"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span><span class="font-medium text-slate-600">베이비뉴스 / 교육부 유보통합추진단</span></div></div><p class="text-slate-600 text-xs leading-relaxed">보건복지부 소관 어린이집이 교육부 관리 체계로 일원화됨에 따라 교사 처우 개선 및 늘봄학교와의 돌봄 연계망 재편.</p><div class="rounded-xl p-3.5 bg-slate-50/80 border border-slate-200/70 space-y-1.5"><div class="flex items-center space-x-1.5"><span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200/80">면접 실무 포인트</span></div><p class="text-[11px] text-slate-700 leading-relaxed font-medium">사회복지시설 관리감독 부처 변동에 따른 <span class="font-bold text-slate-900">0~5세 영유아 돌봄 생태계 변화</span>와 취약가정 아동 발굴 방안 대비.</p></div></div><div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between"><button class="px-3.5 py-1.5 rounded-lg text-xs font-extrabold bg-amber-500 text-white hover:bg-amber-600 shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer" type="button"><svg class="w-3.5 h-3.5 fill-white stroke-white" viewBox="0 0 24 24"><path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>저장완료</span></button><a class="px-3 py-1.5 rounded-lg text-xs font-bold text-blue-600 hover:bg-blue-50 transition-colors flex items-center gap-1" href="#"><span>공식 원문</span><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round"></path></svg></a></div></article>
+<!-- Card 5: 지역사회·복지관 -->
+<article class="border border-slate-200/90 hover:border-blue-500/50 hover:shadow-md transition-all duration-200 rounded-2xl bg-white p-6 flex flex-col justify-between"><div class="space-y-4"><div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="px-2.5 py-0.5 text-[11px] font-bold rounded-md bg-teal-50 text-teal-700 border border-teal-200/60">지역사회·복지관</span><span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-slate-100 text-slate-600 border border-slate-200">디지털 전환</span></div><span class="text-xs text-slate-400 font-medium">2026.01.15</span></div><div><h3 class="text-slate-900 font-extrabold text-base leading-snug hover:text-blue-600 transition-colors cursor-pointer">고독사 예방을 위한 AI 스마트 안부확인 서비스 및 AI 복지 사각지대 발굴 고도화</h3><div class="flex items-center space-x-1.5 mt-2 text-xs text-slate-500"><span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span><span class="font-medium text-slate-600">웰페어뉴스</span></div></div><p class="text-slate-600 text-xs leading-relaxed">전력·통신·수도 사용량 빅데이터와 AI 통화 모니터링을 결합한 1인가구 위기감지 시스템 전국 지자체 확산.</p><div class="rounded-xl p-3.5 bg-slate-50/80 border border-slate-200/70 space-y-1.5"><div class="flex items-center space-x-1.5"><span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200/80">면접 실무 포인트</span></div><p class="text-[11px] text-slate-700 leading-relaxed font-medium">기술 기반 스마트 발굴 시스템과 사회복지사의 대면 <span class="font-bold text-slate-900">휴먼터치(Human-Touch)</span> 간의 상호보완적 결합 전략 제시.</p></div></div><div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between"><button class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-slate-50 hover:bg-amber-50 hover:text-amber-700 hover:border-amber-200 text-slate-600 transition-colors flex items-center gap-1.5 cursor-pointer" type="button"><svg class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24"><path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>스크랩</span></button><a class="px-3 py-1.5 rounded-lg text-xs font-bold text-blue-600 hover:bg-blue-50 transition-colors flex items-center gap-1" href="#"><span>공식 원문</span><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round"></path></svg></a></div></article>
+<!-- Card 6: 장애인·자립 -->
+<article class="border border-slate-200/90 hover:border-blue-500/50 hover:shadow-md transition-all duration-200 rounded-2xl bg-white p-6 flex flex-col justify-between"><div class="space-y-4"><div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="px-2.5 py-0.5 text-[11px] font-bold rounded-md bg-sky-50 text-sky-700 border border-sky-200/60">장애인·자립</span><span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-slate-100 text-slate-600 border border-slate-200">권리 보장</span></div><span class="text-xs text-slate-400 font-medium">2026.01.05</span></div><div><h3 class="text-slate-900 font-extrabold text-base leading-snug hover:text-blue-600 transition-colors cursor-pointer">최중증 발달장애인 24시간 개별 1:1 통합돌봄 서비스 전국 거점 기관 평가 및 개선안</h3><div class="flex items-center space-x-1.5 mt-2 text-xs text-slate-500"><span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span><span class="font-medium text-slate-600">에이블뉴스</span></div></div><p class="text-slate-600 text-xs leading-relaxed">도전적 행동으로 주간보호시설 이용이 어려웠던 발달장애인을 위한 전담 전문인력 파견 및 야간돌봄 체계 점검.</p><div class="rounded-xl p-3.5 bg-slate-50/80 border border-slate-200/70 space-y-1.5"><div class="flex items-center space-x-1.5"><span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200/80">면접 실무 포인트</span></div><p class="text-[11px] text-slate-700 leading-relaxed font-medium">장애인복지관 및 거주시설 면접 빈출: 당사자 자기결정권 보장과 <span class="font-bold text-slate-900">긍정적 행동지원(PBS)</span> 현장 적용 방안.</p></div></div><div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between"><button class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-slate-50 hover:bg-amber-50 hover:text-amber-700 hover:border-amber-200 text-slate-600 transition-colors flex items-center gap-1.5 cursor-pointer" type="button"><svg class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24"><path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>스크랩</span></button><a class="px-3 py-1.5 rounded-lg text-xs font-bold text-blue-600 hover:bg-blue-50 transition-colors flex items-center gap-1" href="#"><span>공식 원문</span><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round"></path></svg></a></div></article>
+</section>
+<!-- END: NewsCardsGrid -->
+<!-- BEGIN: InteractiveCalloutBanner -->
+<section class="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden" data-purpose="bottom-cta-banner">
+<!-- Background Ambient Glow -->
+<div class="absolute -right-10 -bottom-10 w-60 h-60 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="space-y-2 text-center md:text-left">
+<div class="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 text-xs font-semibold">
+<span>💡 포트폴리오 &amp; 면접 준비 팁</span>
+</div>
+<h2 class="text-xl sm:text-2xl font-bold tracking-tight">
+            실습·면접 대비 나만의 시사 아카이브를 만들고 계신가요?
+          </h2>
+<p class="text-slate-300 text-xs sm:text-sm max-w-xl">
+            저장한 스크랩 기사와 실무 체크포인트를 바탕으로 면접관의 예기치 않은 최신 복지 이슈 질문에 막힘없이 답변하세요.
+          </p>
+</div>
+<div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto shrink-0">
+<button class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs sm:text-sm shadow-md transition-all text-center" type="button">
+            시사 이슈 스크랩 노트 열기
+          </button>
+<button class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium text-xs sm:text-sm backdrop-blur-xs border border-white/10 transition-all text-center" type="button">
+            사회복지사 협회 공인 이슈집 다운로드
+          </button>
+</div>
+</div>
+</section>
+<!-- END: InteractiveCalloutBanner -->
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: MainFooter -->
+<footer class="mt-16 bg-white border-t border-slate-200 py-10" data-purpose="site-footer">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+<div class="flex flex-col md:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+<div class="flex items-center space-x-2">
+<span class="font-bold text-slate-800">사회복지 현장 나침반 에디토리얼 포털</span>
+<span>|</span>
+<span>실습·인턴·취업 정보 큐레이션 도감</span>
+</div>
+<div class="flex items-center space-x-4">
+<a class="hover:underline" href="#">이용약관</a>
+<a class="hover:underline font-semibold text-slate-700" href="#">개인정보처리방침</a>
+<a class="hover:underline" href="#">면책조항</a>
+<a class="hover:underline" href="#">오류제보·제휴문의</a>
+</div>
+</div>
+<p class="text-[11px] text-slate-400 text-center md:text-left leading-relaxed">
+        본 포털의 모든 법령 정보 및 시설 분류는 보건복지부, 행정안전부 법령정보센터 및 관계법령을 기준으로 감수되었습니다. 등록된 기사 브리핑의 저작권은 각 언론사 및 발표 기관에 귀속됩니다.
+      </p>
+</div>
+</footer>
+<!-- END: MainFooter -->
+<!-- BEGIN: WorkspaceSlideOverDrawer -->
+<div aria-modal="true" class="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-xs transition-opacity duration-300" id="workspace-drawer" role="dialog">
+<aside class="w-full max-w-lg bg-white h-full shadow-2xl flex flex-col border-l border-slate-200 relative animate-in slide-in-from-right duration-300" id="workspace-drawer-panel">
+<!-- Drawer Header -->
+<header class="p-5 border-b border-slate-200/90 bg-white sticky top-0 z-10 flex items-start justify-between">
+<div class="space-y-1">
+<div class="flex items-center space-x-2">
+<span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+<h2 class="text-base sm:text-lg font-black text-slate-900 tracking-tight">내 준비함 (마이 워크스페이스)</h2>
+<span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[11px] font-bold border border-amber-200">총 2건 보관</span>
+</div>
+<p class="text-xs text-slate-500">실시간 스크랩 시사 브리핑 · 관심 실습 공고 · 찜한 법령</p>
+</div>
+<button aria-label="준비함 닫기" class="p-1.5 -mr-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors flex items-center justify-center" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</header>
+<!-- Drawer Navigation Tabs -->
+<nav aria-label="준비함 분류" class="flex items-center px-4 border-b border-slate-200 bg-slate-50/70 overflow-x-auto text-xs">
+<button class="py-3 px-3.5 border-b-2 border-blue-600 text-blue-700 font-bold flex items-center space-x-1.5 whitespace-nowrap bg-white shadow-2xs" type="button">
+<span>📰 시사 스크랩</span>
+<span class="px-1.5 py-0.2 rounded-full bg-blue-100 text-blue-700 text-[10px] font-extrabold">2</span>
+</button>
+<button class="py-3 px-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-medium flex items-center space-x-1.5 whitespace-nowrap transition-colors" type="button">
+<span>🎒 실습 공고</span>
+<span class="px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-400 text-[10px]">0</span>
+</button>
+<button class="py-3 px-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-medium flex items-center space-x-1.5 whitespace-nowrap transition-colors" type="button">
+<span>📜 찜한 법령</span>
+<span class="px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-400 text-[10px]">0</span>
+</button>
+<button class="py-3 px-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-medium whitespace-nowrap transition-colors" type="button">
+<span>📋 법정 체크리스트</span>
+</button>
+</nav>
+<!-- Scrapped Articles Body -->
+<div class="flex-1 overflow-y-auto p-5 space-y-4 drawer-scroll bg-slate-50/40" id="workspace-drawer-body">
+<!-- Article 1 Card -->
+<article class="bg-white rounded-2xl border border-amber-200/90 shadow-sm p-4 space-y-3 relative hover:border-amber-300 transition-all">
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-center flex-wrap gap-1.5">
+<span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-blue-50 text-blue-700 border border-blue-200/60">정책·제도</span>
+<span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-rose-50 text-rose-600 border border-rose-200/60">D-Day 2026</span>
+</div>
+<span class="text-[11px] text-slate-400 font-medium">2026.03.02</span>
+</div>
+<div>
+<h3 class="text-slate-900 font-bold text-sm leading-snug hover:text-blue-600 cursor-pointer">
+            2026년 3월 '지역돌봄 통합지원법' 전국 본격 시행, 지자체 전담인력 및 전담기구 가동
+          </h3>
+<p class="text-xs text-slate-500 mt-1 flex items-center space-x-1">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+<span>보건복지부 지역복지과</span>
+</p>
+</div>
+<!-- Interview Tip -->
+<div class="rounded-xl p-3 bg-amber-50/70 border border-amber-200/70 space-y-1">
+<div class="flex items-center space-x-1">
+<svg class="w-3.5 h-3.5 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
+<path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14H8a4 4 0 01-.82-7.915 4.962 4.962 0 016.64 0A4 4 0 0112 14z"></path>
+</svg>
+<span class="text-[10px] font-bold text-amber-800">면접 실무 체크포인트</span>
+</div>
+<p class="text-[11px] text-slate-700 leading-relaxed">
+            지자체 사회복지직 및 종합사회복지관 사례관리팀 면접 시 민·관 협력 기반의 <span class="font-bold text-slate-900">'살던 곳에서의 노화(Aging in Place)'</span> 실천 모델과 퇴원환자 연계 프로세스를 중점 준비하세요.
+          </p>
+</div>
+<!-- Personal Memo box -->
+<div class="rounded-xl p-3 bg-slate-50 border border-slate-200/90 space-y-1">
+<div class="flex items-center justify-between text-[11px]">
+<span class="font-bold text-slate-700 flex items-center space-x-1">
+<span>✍️ 나의 준비 메모</span>
+</span>
+<span class="text-[10px] text-slate-400">저장됨</span>
+</div>
+<p class="text-xs text-blue-950 font-medium bg-white p-2 rounded-lg border border-slate-200/60 leading-relaxed">
+            면접 1순위 질문 - 통합돌봄과 읍면동 통합창구 연계 프로세스 암기할 것
+          </p>
+</div>
+<!-- Article Actions -->
+<div class="pt-2 flex items-center justify-between border-t border-slate-100 text-xs">
+<a class="text-blue-600 font-bold hover:underline flex items-center gap-1" href="#">
+<span>원문 바로가기</span>
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+<div class="flex items-center space-x-2">
+<button class="text-slate-500 hover:text-slate-800 font-medium px-2 py-1 rounded hover:bg-slate-100 transition-colors" type="button">
+              메모 수정
+            </button>
+<button class="text-rose-600 hover:text-rose-700 font-medium px-2 py-1 rounded hover:bg-rose-50 transition-colors" type="button">
+              스크랩 취소 (삭제)
+            </button>
+</div>
+</div>
+</article>
+<!-- Article 2 Card -->
+<article class="bg-white rounded-2xl border border-amber-200/90 shadow-sm p-4 space-y-3 relative hover:border-amber-300 transition-all">
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-center flex-wrap gap-1.5">
+<span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-amber-50 text-amber-700 border border-amber-200/60">아동·보육</span>
+<span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-slate-100 text-slate-600 border border-slate-200">유보통합 전환</span>
+</div>
+<span class="text-[11px] text-slate-400 font-medium">2026.01.25</span>
+</div>
+<div>
+<h3 class="text-slate-900 font-bold text-sm leading-snug hover:text-blue-600 cursor-pointer">
+            교육부로 이관된 영유아보육체계, '유보통합' 1차 선도학교 및 돌봄센터 시범 운영
+          </h3>
+<p class="text-xs text-slate-500 mt-1 flex items-center space-x-1">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+<span>베이비뉴스 / 교육부 유보통합추진단</span>
+</p>
+</div>
+<!-- Interview Tip -->
+<div class="rounded-xl p-3 bg-amber-50/70 border border-amber-200/70 space-y-1">
+<div class="flex items-center space-x-1">
+<svg class="w-3.5 h-3.5 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
+<path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14H8a4 4 0 01-.82-7.915 4.962 4.962 0 016.64 0A4 4 0 0112 14z"></path>
+</svg>
+<span class="text-[10px] font-bold text-amber-800">면접 실무 체크포인트</span>
+</div>
+<p class="text-[11px] text-slate-700 leading-relaxed">
+            사회복지시설 관리감독 부처 변동에 따른 <span class="font-bold text-slate-900">0~5세 영유아 돌봄 생태계 변화</span>와 취약가정 아동 발굴 방안 대비.
+          </p>
+</div>
+<!-- Personal Memo box -->
+<div class="rounded-xl p-3 bg-slate-50 border border-slate-200/90 space-y-1">
+<div class="flex items-center justify-between text-[11px]">
+<span class="font-bold text-slate-700 flex items-center space-x-1">
+<span>✍️ 나의 준비 메모</span>
+</span>
+<span class="text-[10px] text-slate-400">저장됨</span>
+</div>
+<p class="text-xs text-blue-950 font-medium bg-white p-2 rounded-lg border border-slate-200/60 leading-relaxed">
+            보육체계 개편안 및 늘봄학교-지역아동센터 연계 쟁점 정리 완료
+          </p>
+</div>
+<!-- Article Actions -->
+<div class="pt-2 flex items-center justify-between border-t border-slate-100 text-xs">
+<a class="text-blue-600 font-bold hover:underline flex items-center gap-1" href="#">
+<span>원문 바로가기</span>
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+<div class="flex items-center space-x-2">
+<button class="text-slate-500 hover:text-slate-800 font-medium px-2 py-1 rounded hover:bg-slate-100 transition-colors" type="button">
+              메모 수정
+            </button>
+<button class="text-rose-600 hover:text-rose-700 font-medium px-2 py-1 rounded hover:bg-rose-50 transition-colors" type="button">
+              스크랩 취소 (삭제)
+            </button>
+</div>
+</div>
+</article>
+</div>
+<!-- Drawer Bottom Action Footer -->
+<footer class="p-4 border-t border-slate-200 bg-white space-y-2 sticky bottom-0 z-10 shadow-lg"><div class="flex items-center justify-between gap-3"><button class="flex-1 bg-slate-50 border border-slate-200 text-slate-600 hover:text-rose-600 hover:bg-rose-50 hover:border-rose-200 font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1.5" type="button"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>전체 비우기</span></button></div></footer>
+</aside>
+</div>
+<!-- END: WorkspaceSlideOverDrawer -->
+
+
+</body></html>

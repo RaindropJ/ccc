@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>현장 나침반 INSIGHTS - 사회복지 실습처 탐색</title>
+<!-- Tailwind CSS CDN with forms and container-queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Custom Configuration -->
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+            },
+            neutral: {
+              850: '#1f2937',
+            }
+          },
+          fontFamily: {
+            sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<!-- Google Fonts: Pretendard alternative for clean Korean display -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Custom Styles for Typography & UI Polish -->
+<style data-purpose="typography">
+    body {
+      font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+      letter-spacing: -0.015em;
+    }
+    .font-num {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+  </style>
+<style data-purpose="custom-effects">
+    /* Subtle glow for modern interactive feel */
+    .card-hover-transition {
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .card-hover-transition:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px -10px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+    }
+  </style>
+</head>
+<body class="bg-[#F8FAFC] text-slate-800 antialiased min-h-screen flex flex-col">
+<!-- BEGIN: MainHeader -->
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+<!-- Brand Logo & Tagline -->
+<div class="flex items-center gap-3">
+<a class="flex items-center gap-2.5 group" href="#">
+<div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-700 via-brand-600 to-indigo-500 flex items-center justify-center text-white shadow-sm shadow-brand-500/30">
+<svg class="w-5 h-5 transition-transform group-hover:rotate-45" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10" stroke-width="2"></circle>
+<polygon fill="currentColor" points="12,7 15,15 12,13 9,15"></polygon>
+</svg>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5 leading-tight">
+<span class="font-bold text-lg text-slate-900 tracking-tight">현장 나침반</span>
+<span class="text-[10px] uppercase font-extrabold px-1.5 py-0.5 rounded-full bg-blue-50 text-brand-600 border border-blue-200/80">INSIGHTS</span>
+</div>
+<span class="text-[11px] text-slate-500 font-normal">대학생 사회복지 실습·취업 네비게이터</span>
+</div>
+</a>
+</div>
+<!-- Navigation Links -->
+<nav class="hidden lg:flex items-center gap-1.5">
+<a class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span>12대 분야·법령</span>
+</a>
+<!-- Active Practicum Search Nav -->
+<a class="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold bg-brand-600 text-white shadow-sm shadow-brand-600/25" href="#">
+<svg class="w-4 h-4 text-blue-200" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span>실습처 탐색</span>
+<span class="px-1.5 py-0.2 rounded-full bg-white/20 text-xs font-bold font-num">148</span>
+</a>
+<a class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 14l9-5-9-5-9 5 9 5z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span>수련처 탐색</span>
+<span class="text-xs px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-600 font-num">284곳</span>
+</a>
+<a class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span>취업공고</span>
+<span class="text-xs px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-600 font-num">75</span>
+</a>
+<a class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span>복지 뉴스</span>
+<span class="text-xs px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-600 font-num">21</span>
+</a>
+</nav>
+<!-- User Cart / Bookmark Action -->
+<div class="flex items-center gap-3">
+<a class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-800 text-sm font-semibold border border-amber-200 transition-colors" href="#">
+<svg class="w-4 h-4 text-amber-500 fill-amber-400" viewbox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+<span>내 준비함</span>
+<span class="w-5 h-5 rounded-full bg-amber-500 text-white text-[11px] font-bold flex items-center justify-center font-num">6</span>
+</a>
+</div>
+</div>
+</header>
+<!-- END: MainHeader -->
+<!-- BEGIN: MainContent -->
+<main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-6">
+<!-- Hero Title & Season Selector -->
+<section class="text-center pt-2 pb-4" data-purpose="hero-section">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-brand-600 text-xs font-semibold mb-3">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-600 animate-pulse"></span>
+        2026 동계·학기중 실습기관 전수 DB
+      </div>
+<h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">사회복지 실습처 탐색</h1>
+<p class="mt-2 text-slate-500 text-sm sm:text-base max-w-xl mx-auto">
+        전국 8,434개 법정 실습기관 및 실시간 동계·하계 실습생 모집공고 전수 DB
+      </p>
+<!-- Practicum Period Filter Tabs -->
+<div class="flex items-center justify-center gap-2 mt-6">
+<button class="px-4 py-2 rounded-full text-sm font-semibold bg-brand-600 text-white shadow-sm hover:bg-brand-700 transition" type="button">
+          전체 공고
+        </button>
+<button class="px-4 py-2 rounded-full text-sm font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition flex items-center gap-1.5" type="button">
+<span>❄️</span>
+<span>2026~2027 동계방학</span>
+</button>
+<button class="px-4 py-2 rounded-full text-sm font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition flex items-center gap-1.5" type="button">
+<span>🌱</span>
+<span>학기 중 실습</span>
+</button>
+</div>
+</section>
+<!-- BEGIN: SearchAndFilters -->
+<section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-7 space-y-5" data-purpose="search-filters">
+<!-- Main Search Input -->
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<input class="w-full pl-11 pr-10 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm sm:text-base focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none" type="text" value="기관명, 지역구, 분야(예: 마포, 노인복지관)"/>
+<button class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+<!-- Popular Tags -->
+<div class="flex flex-wrap items-center gap-2 pt-1">
+<span class="text-xs font-semibold text-slate-500 mr-1">인기 태그</span>
+<button class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 hover:text-slate-900 transition"># 종합사회복지관</button>
+<button class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 hover:text-slate-900 transition"># 장애인복지관</button>
+<button class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 hover:text-slate-900 transition"># 노인맞춤돌봄</button>
+<button class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 hover:text-slate-900 transition"># 정신재활시설</button>
+</div>
+<div class="h-px bg-slate-100"></div>
+<!-- Filter Rows Container -->
+<div class="space-y-3.5 text-sm">
+<!-- Region Filter Row -->
+<div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+<span class="text-xs font-bold text-slate-500 w-12 shrink-0">지역</span>
+<div class="flex flex-wrap items-center gap-1.5">
+<button class="px-3 py-1.5 rounded-md text-xs font-semibold bg-slate-900 text-white">전국</button>
+<button class="px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition">서울 (52)</button>
+<button class="px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition">경기·인천 (41)</button>
+<button class="px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition">대전·충청 (19)</button>
+<button class="px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition">부산·영남 (24)</button>
+</div>
+</div>
+<!-- Category Filter Row -->
+<div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+<span class="text-xs font-bold text-slate-500 w-12 shrink-0">분야</span>
+<div class="flex flex-wrap items-center gap-1.5">
+<button class="px-3 py-1.5 rounded-md text-xs font-semibold bg-brand-600 text-white">전체</button>
+<button class="px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition">지역사회복지관</button>
+<button class="px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition">노인복지</button>
+<button class="px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition">장애인재활</button>
+<button class="px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition">아동·청소년</button>
+<button class="px-3 py-1.5 rounded-md text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition">의료사회복지</button>
+</div>
+</div>
+</div>
+</section>
+<!-- END: SearchAndFilters -->
+<!-- BEGIN: BannerCards -->
+<section class="grid grid-cols-1 gap-3.5" data-purpose="guidance-banners">
+<!-- 1. Self Assessment Expandable Banner -->
+<div class="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-4.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs hover:border-slate-300 transition-colors">
+<div class="flex items-start sm:items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-blue-50 text-brand-600 flex items-center justify-center shrink-0 text-lg">
+            🧭
+          </div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-bold text-slate-900 text-sm sm:text-base">나에게 맞는 실습 분야 4문항 적성 자가진단</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-100 text-brand-700">추천 알고리즘</span>
+</div>
+<p class="text-xs text-slate-500 mt-0.5">관심 대상, 업무 스타일, 커리어 지향점을 분석하여 최적의 12대 분야를 자동 추천합니다.</p>
+</div>
+</div>
+<button class="inline-flex items-center gap-1 text-xs font-bold text-brand-600 hover:text-brand-800 transition py-1 px-2.5 rounded-md hover:bg-blue-50 self-end sm:self-center">
+<span>펼치기</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg>
+</button>
+</div>
+<!-- 2. Practicum Roadmap Blue Banner -->
+<div class="relative overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 text-white p-5 sm:p-6 shadow-md shadow-blue-500/10 flex items-center justify-between">
+<!-- Background decorative graphic pattern -->
+<div class="absolute -right-10 -bottom-10 w-44 h-44 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+<div class="relative z-10 space-y-1">
+<span class="text-[11px] font-extrabold tracking-wider text-blue-200 uppercase">PRACTICUM ROADMAP</span>
+<h2 class="text-base sm:text-lg font-bold tracking-tight">현장실습 합격 가이드 STEP 1~3</h2>
+<p class="text-xs sm:text-sm text-blue-100/90 font-normal">프로파일 작성 팁부터 슈퍼바이저 면접 기출까지 (클릭하여 열람)</p>
+</div>
+<button aria-label="합격 가이드 열람" class="relative z-10 w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition backdrop-blur-sm shrink-0">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></path></svg>
+</button>
+</div>
+</section>
+<!-- END: BannerCards -->
+<!-- BEGIN: PracticumListings -->
+<section class="pt-2 space-y-4" data-purpose="practicum-grid">
+<!-- Results Subheader -->
+<div class="flex items-center justify-between pb-1">
+<div class="flex items-center gap-2">
+<span class="font-bold text-slate-900 text-sm sm:text-base">선정 실습처</span>
+<span class="text-brand-600 font-bold text-sm sm:text-base font-num">36건 표시 중</span>
+</div>
+<!-- Sorting tabs -->
+<div class="flex items-center text-xs text-slate-500 font-medium">
+<button class="font-bold text-brand-600">마감임박순</button>
+<span class="mx-2 text-slate-300">·</span>
+<button class="hover:text-slate-800 transition">최신순</button>
+<span class="mx-2 text-slate-300">·</span>
+<button class="hover:text-slate-800 transition">실습비낮은순</button>
+</div>
+</div>
+<!-- 3-Column Card Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+<!-- Card 1 -->
+<article class="bg-white border border-slate-200/90 rounded-2xl p-5 card-hover-transition flex flex-col justify-between" data-purpose="listing-card">
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-brand-600 border border-blue-200/70">
+                2026~2027 동계방학 실습
+              </span>
+<span class="w-2 h-2 rounded-full bg-rose-500" title="마감 임박"></span>
+</div>
+<h3 class="text-base font-bold text-slate-900 mt-2 truncate">다솔장애인주간보호센터</h3>
+<!-- Metadata details -->
+<dl class="mt-4 space-y-2 text-xs">
+<div class="flex justify-between items-center py-1 border-b border-slate-100">
+<dt class="text-slate-400">분야</dt>
+<dd class="font-bold text-slate-800">장애인복지</dd>
+</div>
+<div class="flex justify-between items-center py-1 border-b border-slate-100">
+<dt class="text-slate-400">실습비</dt>
+<dd class="font-bold text-slate-900 font-num">130,000원</dd>
+</div>
+<div class="flex justify-between items-center py-1 border-b border-slate-100">
+<dt class="text-slate-400">모집인원</dt>
+<dd class="font-medium text-slate-700">2명</dd>
+</div>
+<div class="flex justify-between items-center py-1">
+<dt class="text-slate-400">소재지</dt>
+<dd class="font-medium text-slate-700">서울 서대문구</dd>
+</div>
+</dl>
+</div>
+<!-- Card Actions -->
+<div class="grid grid-cols-5 gap-2 mt-5 pt-2">
+<button class="col-span-3 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold transition flex items-center justify-center gap-1 shadow-sm">
+<span>공고 원문</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<button class="col-span-2 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200/80 text-amber-800 text-xs font-semibold transition flex items-center justify-center gap-1">
+<span>⭐</span>
+<span>찜하기</span>
+</button>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="bg-white border border-slate-200/90 rounded-2xl p-5 card-hover-transition flex flex-col justify-between" data-purpose="listing-card">
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-brand-600 border border-blue-200/70">
+                2026~2027 동계방학 실습
+              </span>
+<span class="w-2 h-2 rounded-full bg-rose-500" title="마감 임박"></span>
+</div>
+<h3 class="text-base font-bold text-slate-900 mt-2 truncate">세나장애인직업재활센터</h3>
+<dl class="mt-4 space-y-2 text-xs">
+<div class="flex justify-between items-center py-1 border-b border-slate-100">
+<dt class="text-slate-400">분야</dt>
+<dd class="font-bold text-slate-800">장애인복지</dd>
+</div>
+<div class="flex justify-between items-center py-1 border-b border-slate-100">
+<dt class="text-slate-400">실습비</dt>
+<dd class="font-bold text-slate-900 font-num">200,000원</dd>
+</div>
+<div class="flex justify-between items-center py-1 border-b border-slate-100">
+<dt class="text-slate-400">모집인원</dt>
+<dd class="font-medium text-slate-700">3명</dd>
+</div>
+<div class="flex justify-between items-center py-1">
+<dt class="text-slate-400">소재지</dt>
+<dd class="font-medium text-slate-700">부산 금정구</dd>
+</div>
+</dl>
+</div>
+<div class="grid grid-cols-5 gap-2 mt-5 pt-2">
+<button class="col-span-3 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold transition flex items-center justify-center gap-1 shadow-sm">
+<span>공고 원문</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<button class="col-span-2 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200/80 text-amber-800 text-xs font-semibold transition flex items-center justify-center gap-1">
+<span>⭐</span>
+<span>찜하기</span>
+</button>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="bg-white border border-slate-200/90 rounded-2xl p-5 card-hover-transition flex flex-col justify-between" data-purpose="listing-card">
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-brand-600 border border-blue-200/70">
+                2026~2027 동계방학 실습
+              </span>
+<span class="w-2 h-2 rounded-full bg-rose-500" title="마감 임박"></span>
+</div>
+<h3 class="text-base font-bold text-slate-900 mt-2 truncate">비타 재활 주간보호센터</h3>
+<dl class="mt-4 space-y-2 text-xs">
+<div class="flex justify-between items-center py-1 border-b border-slate-100">
+<dt class="text-slate-400">분야</dt>
+<dd class="font-bold text-slate-800">장애인복지</dd>
+</div>
+<div class="flex justify-between items-center py-1 border-b border-slate-100">
+<dt class="text-slate-400">실습비</dt>
+<dd class="font-bold text-slate-900 font-num">100,000원</dd>
+</div>
+<div class="flex justify-between items-center py-1 border-b border-slate-100">
+<dt class="text-slate-400">모집인원</dt>
+<dd class="font-medium text-slate-700">2명</dd>
+</div>
+<div class="flex justify-between items-center py-1">
+<dt class="text-slate-400">소재지</dt>
+<dd class="font-medium text-slate-700">경기 의정부시</dd>
+</div>
+</dl>
+</div>
+<div class="grid grid-cols-5 gap-2 mt-5 pt-2">
+<button class="col-span-3 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold transition flex items-center justify-center gap-1 shadow-sm">
+<span>공고 원문</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<button class="col-span-2 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200/80 text-amber-800 text-xs font-semibold transition flex items-center justify-center gap-1">
+<span>⭐</span>
+<span>찜하기</span>
+</button>
+</div>
+</article>
+<!-- Card 4 -->
+<article class="bg-white border border-slate-200/90 rounded-2xl p-5 card-hover-transition flex flex-col justify-between" data-purpose="listing-card">
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-brand-600 border border-blue-200/70">
+                2026~2027 동계방학 실습
+              </span>
+<span class="w-2 h-2 rounded-full bg-rose-500" title="마감 임박"></span>
+</div>
+<h3 class="text-base font-bold text-slate-900 mt-2 truncate">선린나래</h3>
+<dl class="mt-4 space-y-2 text-xs">
+<div class="flex justify-between items-center py-1 border-b border-slate-100">
+<dt class="text-slate-400">분야</dt>
+<dd class="font-bold text-slate-800">지역·자활·노숙</dd>
+</div>
+<div class="flex justify-between items-center py-1 border-b border-slate-100">
+<dt class="text-slate-400">실습비</dt>
+<dd class="font-bold text-slate-900 font-num">200,000원</dd>
+</div>
+<div class="flex justify-between items-center py-1 border-b border-slate-100">
+<dt class="text-slate-400">모집인원</dt>
+<dd class="font-medium text-slate-700">1명</dd>
+</div>
+<div class="flex justify-between items-center py-1">
+<dt class="text-slate-400">소재지</dt>
+<dd class="font-medium text-slate-700">경북 포항시</dd>
+</div>
+</dl>
+</div>
+<div class="grid grid-cols-5 gap-2 mt-5 pt-2">
+<button class="col-span-3 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold transition flex items-center justify-center gap-1 shadow-sm">
+<span>공고 원문</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<button class="col-span-2 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200/80 text-amber-800 text-xs font-semibold transition flex items-center justify-center gap-1">
+<span>⭐</span>
+<span>찜하기</span>
+</button>
+</div>
+</article>
+<!-- Card 5 -->
+<article class="bg-white border border-slate-200/90 rounded-2xl p-5 card-hover-transition flex flex-col justify-between" data-purpose="listing-card">
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-brand-600 border border-blue-200/70">
+                2026~2027 동계방학 실습
+              </span>
+<span class="w-2 h-2 rounded-full bg-rose-500" title="마감 임박"></span>
+</div>
+<h3 class="text-base font-bold text-slate-900 mt-2 truncate">의료법인 온그룹의료재단 온병원</h3>
+<dl class="mt-4 space-y-2 text-xs">
+<div class="flex justify-between items-center py-1 border-b border-slate-100">
+<dt class="text-slate-400">분야</dt>
+<dd class="font-bold text-slate-800">의료·병원</dd>
+</div>
+<div class="flex justify-between items-center py-1 border-b border-slate-100">
+<dt class="text-slate-400">실습비</dt>
+<dd class="font-bold text-slate-900 font-num">200,000원</dd>
+</div>
+<div class="flex justify-between items-center py-1 border-b border-slate-100">
+<dt class="text-slate-400">모집인원</dt>
+<dd class="font-medium text-slate-700">4명</dd>
+</div>
+<div class="flex justify-between items-center py-1">
+<dt class="text-slate-400">소재지</dt>
+<dd class="font-medium text-slate-700">부산 부산진구</dd>
+</div>
+</dl>
+</div>
+<div class="grid grid-cols-5 gap-2 mt-5 pt-2">
+<button class="col-span-3 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold transition flex items-center justify-center gap-1 shadow-sm">
+<span>공고 원문</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<button class="col-span-2 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200/80 text-amber-800 text-xs font-semibold transition flex items-center justify-center gap-1">
+<span>⭐</span>
+<span>찜하기</span>
+</button>
+</div>
+</article>
+<!-- Card 6 -->
+<article class="bg-white border border-slate-200/90 rounded-2xl p-5 card-hover-transition flex flex-col justify-between" data-purpose="listing-card">
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-brand-600 border border-blue-200/70">
+                2026~2027 동계방학 실습
+              </span>
+<span class="w-2 h-2 rounded-full bg-rose-500" title="마감 임박"></span>
+</div>
+<h3 class="text-base font-bold text-slate-900 mt-2 truncate">일동노인복지센터</h3>
+<dl class="mt-4 space-y-2 text-xs">
+<div class="flex justify-between items-center py-1 border-b border-slate-100">
+<dt class="text-slate-400">분야</dt>
+<dd class="font-bold text-slate-800">노인복지</dd>
+</div>
+<div class="flex justify-between items-center py-1 border-b border-slate-100">
+<dt class="text-slate-400">실습비</dt>
+<dd class="font-bold text-slate-900 font-num">100,000원</dd>
+</div>
+<div class="flex justify-between items-center py-1 border-b border-slate-100">
+<dt class="text-slate-400">모집인원</dt>
+<dd class="font-medium text-slate-700">2명</dd>
+</div>
+<div class="flex justify-between items-center py-1">
+<dt class="text-slate-400">소재지</dt>
+<dd class="font-medium text-slate-700">경기 포천시</dd>
+</div>
+</dl>
+</div>
+<div class="grid grid-cols-5 gap-2 mt-5 pt-2">
+<button class="col-span-3 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold transition flex items-center justify-center gap-1 shadow-sm">
+<span>공고 원문</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<button class="col-span-2 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200/80 text-amber-800 text-xs font-semibold transition flex items-center justify-center gap-1">
+<span>⭐</span>
+<span>찜하기</span>
+</button>
+</div>
+</article>
+</div>
+<!-- Pagination or Load More -->
+<div class="py-8 text-center">
+<button class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold shadow-xs transition">
+<span>더 많은 실습 공고 불러오기</span>
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+</section>
+<!-- END: PracticumListings -->
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: Footer -->
+<footer class="bg-white border-t border-slate-200 mt-auto py-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:flex sm:justify-between sm:items-center text-xs text-slate-400">
+<div class="space-y-1">
+<p class="font-medium text-slate-600">현장 나침반 INSIGHTS · 전국 사회복지 실습·취업 통합 정보망</p>
+<p>본 플랫폼의 실습 기관 정보는 한국사회복지사협회 법정기준 및 공공데이터를 기반으로 업데이트됩니다.</p>
+</div>
+<div class="mt-4 sm:mt-0 flex justify-center gap-4 text-slate-500">
+<a class="hover:text-slate-800 underline" href="#">이용약관</a>
+<a class="hover:text-slate-800 underline" href="#">개인정보처리방침</a>
+<a class="hover:text-slate-800 underline" href="#">실습기관 등록문의</a>
+</div>
+</div>
+</footer>
+<!-- END: Footer -->
+</body></html>

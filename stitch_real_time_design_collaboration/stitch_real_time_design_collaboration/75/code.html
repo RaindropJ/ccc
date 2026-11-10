@@ -1,0 +1,428 @@
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>사회복지 현장 나침반 | 수련처 탐색 (전문사회복지사 수련기관)</title>
+<!-- Tailwind CSS v3 CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              900: '#1e3a8a',
+            },
+            slate: {
+              850: '#151f32',
+              950: '#090d16',
+            }
+          },
+          fontFamily: {
+            sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-scrollbars-and-base">
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    /* Subtle custom horizontal scrollbar for wide responsive tables */
+    .custom-scrollbar::-webkit-scrollbar {
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+<link data-snapdom="injected-import" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><meta content="web_standard" name="shell-type"><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-[#f8fafc] text-slate-800 antialiased min-h-screen flex flex-col selection:bg-blue-100 selection:text-blue-900">
+<!-- BEGIN: MainHeader -->
+<header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/80 transition-all duration-200" data-purpose="primary-navbar">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16 gap-4">
+<!-- Brand & Subtitle -->
+<div class="flex items-center gap-4 flex-shrink-0">
+<a aria-label="사회복지 현장 나침반 홈으로 이동" class="flex items-center gap-2.5 group cursor-pointer" href="#"><img alt="사회복지 현장 나침반 로고" class="w-9 h-9 rounded-xl object-contain shadow-xs group-hover:scale-105 transition-transform duration-150" src="https://lh3.googleusercontent.com/aida/ALJJyrCSpuMkZGfcWG6T7fRY2S06lW1MgxSvFKnMitYxOiKPGMChb6AfeRyORnmU-0dF5pt0zTqF3g4CRLkGsN85cU8c9AsTup403LidEifBnChEr9JjtuAHu6fzG7GoFHJv41UKfCYJCfIwxqipe2DVbPRVTxEbmS7_Wb6_tn_wUDP5UWPVFBRwTGtx3IU_zmnQYzDhiXJvAPfmJM_m5q11DlDWA5xsHgwewOAKxgAVaO7G"><div class="flex flex-col justify-center leading-tight"><div class="flex items-center gap-1.5"><span class="text-[15px] font-extrabold tracking-tight text-slate-900">현장 나침반</span><span class="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-blue-500/10 text-blue-600 border border-blue-200/60">INSIGHTS</span></div><span class="hidden sm:inline-block text-[11px] font-medium text-slate-500 tracking-tight leading-none mt-0.5">대학생 사회복지 실습 · 취업 도감</span></div></a>
+</div>
+<!-- Navigation Tabs (Sleek, No Emojis) -->
+<nav aria-label="메인 메뉴" class="hidden lg:flex items-center space-x-1">
+<a class="relative px-3.5 py-2 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors after:content-[''] after:absolute after:bottom-[-18px] after:left-3 after:right-3 after:h-0.5 after:bg-blue-600" href="#">
+            12대 분야와 법령
+          </a>
+<a class="px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-colors" href="#">
+            현장실습 자가탐색
+          </a>
+<a class="px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-colors inline-flex items-center gap-1.5" href="#">
+<span>인턴·취업처</span>
+<span class="text-[11px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded-full">75</span>
+</a>
+<a class="px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-colors inline-flex items-center gap-1.5" href="#">
+<span>복지 뉴스·브리핑</span>
+<span class="text-[11px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded-full">21</span>
+</a>
+</nav>
+<!-- Right Utility Actions -->
+<div class="flex items-center gap-2">
+<!-- My Bookmarks/Preparation Button -->
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200/80 rounded-lg transition-colors" title="내 준비함" type="button">
+<svg class="w-3.5 h-3.5 text-amber-500 fill-amber-400" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="font-semibold text-slate-900">내 준비함</span>
+<span class="ml-0.5 px-1 py-0.2 text-[10px] font-bold text-amber-800 bg-amber-100 rounded">0</span>
+</button>
+<!-- Clean Minimal Dark Mode Switch -->
+<button aria-label="다크 모드 전환" class="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+</svg>
+</button>
+</div>
+</div>
+</div>
+</header>
+<!-- END: MainHeader -->
+<!-- BEGIN: MainContent -->
+<main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-7" id="main-content"><div class="flex flex-col w-full max-w-[390px] mx-auto px-1 space-y-4 font-sans text-slate-800">
+<!-- 1. 최상단 모바일 헤더 & 네비게이션 탭 -->
+<nav class="flex items-center gap-2 overflow-x-auto custom-scrollbar pb-1 text-xs whitespace-nowrap px-0.5" id="mobile-nav-tabs"><a class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition-all duration-150 flex-shrink-0 active:scale-95" href="#"><span>📜 12대 분야·법령</span></a><a class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition-all duration-150 flex-shrink-0 active:scale-95" href="#"><span>🎒 실습처 탐색</span><span class="px-1.5 py-0.2 rounded-full text-[10px] bg-white text-slate-600 border border-slate-200 font-bold leading-none">148</span></a><a class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition-all duration-150 flex-shrink-0 active:scale-95" href="#"><span>🎓 수련처 탐색</span><span class="px-1.5 py-0.2 rounded-full text-[10px] bg-white text-slate-600 border border-slate-200 font-bold leading-none">36</span></a><a class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-blue-600 text-white font-bold shadow-sm transition-all duration-150 flex-shrink-0 active:scale-95" href="#"><span>💼 인턴·취업처</span><span class="px-1.5 py-0.2 rounded-full text-[10px] bg-white/20 text-white font-bold leading-none">75</span></a><a class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition-all duration-150 flex-shrink-0 active:scale-95" href="#"><span>📰 복지 뉴스</span><span class="px-1.5 py-0.2 rounded-full text-[10px] bg-white text-slate-600 border border-slate-200 font-bold leading-none">21</span></a></nav>
+<!-- 2. 상단 헤더 배너 -->
+<section class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-2xl p-4 shadow-md space-y-2.5 relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 w-28 h-28 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
+<div class="inline-flex items-center gap-1 text-[11px] font-semibold bg-white/20 backdrop-blur-xs px-2.5 py-1 rounded-full text-blue-50">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+<span>100% 공인 협회 실시간 공고문 원문 직행 검증</span>
+</div>
+<div class="space-y-1">
+<h1 class="text-lg font-black tracking-tight leading-snug">전국·수도권 엄선<br>인턴 · 수련 · 취업처 75선</h1>
+<p class="text-[11px] text-blue-100 leading-relaxed">
+        서울시사회복지사협회(SASW) 및 공인 기관 100% 실존 공고문 직행! 서류 마감 요강과 채용 전형을 모바일에서 원클릭으로 탐색하세요.
+      </p>
+</div>
+</section>
+<!-- 3. 모바일 핵심 요약 통계 4대 지표 (2x2 그리드) -->
+<section class="grid grid-cols-2 gap-2">
+<div class="bg-white p-3 rounded-xl shadow-xs space-y-1">
+<div class="flex items-center justify-between">
+<span class="text-[11px] font-medium text-slate-500">실시간 등록 공고</span>
+<span class="material-symbols-outlined text-blue-600 text-[16px]">work</span>
+</div>
+<div class="flex items-baseline gap-1">
+<span class="text-xl font-black text-slate-900">75</span>
+<span class="text-xs font-semibold text-blue-600">건</span>
+</div>
+<span class="text-[10px] text-slate-400 block truncate">공식 검증 완료</span>
+</div>
+<div class="bg-white p-3 rounded-xl shadow-xs space-y-1">
+<div class="flex items-center justify-between">
+<span class="text-[11px] font-medium text-slate-500">청년·대학생 인턴</span>
+<span class="material-symbols-outlined text-emerald-600 text-[16px]">eco</span>
+</div>
+<div class="flex items-baseline gap-1">
+<span class="text-xl font-black text-slate-900">18</span>
+<span class="text-xs font-semibold text-emerald-600">건</span>
+</div>
+<span class="text-[10px] text-slate-400 block truncate">공단·재단·NGO</span>
+</div>
+<div class="bg-white p-3 rounded-xl shadow-xs space-y-1">
+<div class="flex items-center justify-between">
+<span class="text-[11px] font-medium text-slate-500">신입·경력 정규직</span>
+<span class="material-symbols-outlined text-purple-600 text-[16px]">badge</span>
+</div>
+<div class="flex items-baseline gap-1">
+<span class="text-xl font-black text-slate-900">45</span>
+<span class="text-xs font-semibold text-purple-600">건</span>
+</div>
+<span class="text-[10px] text-slate-400 block truncate">종합복지관·센터</span>
+</div>
+<div class="bg-white p-3 rounded-xl shadow-xs space-y-1">
+<div class="flex items-center justify-between">
+<span class="text-[11px] font-medium text-slate-500">2026 평균 보수</span>
+<span class="material-symbols-outlined text-amber-500 text-[16px]">payments</span>
+</div>
+<div class="text-sm font-black text-slate-900 leading-tight pt-1">
+        가이드라인 준수
+      </div>
+<span class="text-[10px] text-slate-400 block truncate">보건복지부 인건비 기준</span>
+</div>
+</section>
+<!-- 4. 모바일 전용 검색창 & 나만의 공고 등록 -->
+<section class="space-y-2">
+<div class="bg-white rounded-xl shadow-xs p-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-[20px] ml-1">search</span>
+<input class="w-full text-xs text-slate-800 placeholder-slate-400 focus:outline-hidden bg-transparent" placeholder="기관명, 직무(사례관리, 수련 등), 지역 검색..." type="text">
+<button class="flex-shrink-0 bg-blue-600 text-white rounded-lg px-2.5 py-1.5 text-xs font-semibold hover:bg-blue-700 transition-colors" type="button">
+        검색
+      </button>
+</div>
+<div class="flex justify-end">
+<button class="inline-flex items-center gap-1 text-[11px] font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors" type="button">
+<span class="material-symbols-outlined text-[15px]">add_circle</span>
+<span>나만의 공고 추가 ➕</span>
+</button>
+</div>
+</section>
+<!-- 5. 모바일 지역 및 채용 트랙 필터 (가로 스크롤 칩) -->
+<section class="space-y-2">
+<!-- 권역 필터 -->
+<div class="flex items-center gap-1.5 overflow-x-auto custom-scrollbar pb-1 text-xs">
+<button class="px-3 py-1 rounded-full bg-slate-900 text-white font-semibold flex-shrink-0" type="button">전국 전체 (75)</button>
+<button class="px-3 py-1 rounded-full bg-white text-slate-600 font-medium shadow-xs flex-shrink-0" type="button">서울 (38)</button>
+<button class="px-3 py-1 rounded-full bg-white text-slate-600 font-medium shadow-xs flex-shrink-0" type="button">경기·인천 (22)</button>
+<button class="px-3 py-1 rounded-full bg-white text-slate-600 font-medium shadow-xs flex-shrink-0" type="button">지방권 (15)</button>
+</div>
+<!-- 트랙 필터 & 정렬 -->
+<div class="flex items-center justify-between gap-1 overflow-x-auto text-[11px]">
+<div class="flex items-center gap-1 overflow-x-auto custom-scrollbar flex-1 min-w-0">
+<button class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 font-bold flex-shrink-0" type="button">전체 트랙</button>
+<button class="px-2.5 py-1 rounded-lg bg-white text-slate-600 font-medium shadow-xs flex-shrink-0" type="button">💼 신입·정규직 (45)</button>
+<button class="px-2.5 py-1 rounded-lg bg-white text-slate-600 font-medium shadow-xs flex-shrink-0" type="button">🌱 청년인턴 (18)</button>
+<button class="px-2.5 py-1 rounded-lg bg-white text-slate-600 font-medium shadow-xs flex-shrink-0" type="button">🎓 전문수련 (12)</button>
+</div>
+<div class="flex-shrink-0">
+<select class="text-[11px] font-semibold text-slate-700 bg-white shadow-xs rounded-lg px-2 py-1 focus:outline-hidden">
+<option>마감 임박순 (D-Day) ▾</option>
+<option>최신 등록순 ▾</option>
+<option>급여 수준순 ▾</option>
+</select>
+</div>
+</div>
+</section>
+<!-- 6. 모바일 실전 채용공고 카드 리스트 (1열 스택 카드) -->
+<section class="space-y-3.5" id="recruitment-list">
+<!-- 카드 1 -->
+<article class="bg-white rounded-2xl p-4 shadow-sm space-y-3">
+<div class="flex items-center justify-between gap-2">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-purple-50 text-purple-700">신입·정규직</span>
+<span class="text-[10px] font-medium px-2 py-0.5 rounded-md bg-slate-100 text-slate-600">종합사회복지관</span>
+</div>
+<span class="text-[11px] font-extrabold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full">D-4 원서마감</span>
+</div>
+<div>
+<span class="text-xs font-semibold text-slate-500">마포어르신통합돌봄복지관</span>
+<h2 class="text-sm font-bold text-slate-900 mt-0.5 leading-snug">2026년 정규직 사례관리팀 사회복지사 (1급 우대)</h2>
+</div>
+<div class="bg-slate-50 rounded-xl p-3 space-y-1.5 text-xs text-slate-700">
+<div class="flex justify-between items-start gap-2">
+<span class="text-slate-500 font-medium flex-shrink-0">모집인원</span>
+<span class="font-semibold text-slate-900 text-right">2명 (정규직)</span>
+</div>
+<div class="flex justify-between items-start gap-2">
+<span class="text-slate-500 font-medium flex-shrink-0">원서마감</span>
+<span class="font-semibold text-rose-600 text-right">2025.12.19 (금) 18:00</span>
+</div>
+<div class="flex justify-between items-start gap-2">
+<span class="text-slate-500 font-medium flex-shrink-0">보수기준</span>
+<span class="font-medium text-slate-800 text-right">2026 서울시 사회복지시설 종사자 4급 1호봉 기준 (퇴직연금 별도)</span>
+</div>
+<div class="flex justify-between items-start gap-2">
+<span class="text-slate-500 font-medium flex-shrink-0">주소·문의</span>
+<span class="text-slate-600 text-right">서울 마포구 마포대로 123 (02-714-8800)</span>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<a class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs py-2.5 rounded-xl text-center shadow-xs transition-colors inline-flex items-center justify-center gap-1" href="#">
+<span>공고 원문 확인</span>
+<span class="material-symbols-outlined text-[14px]">north_east</span>
+</a>
+<button class="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-colors flex items-center justify-center gap-1" onclick="toggleBookmark(this)" type="button">
+<span class="material-symbols-outlined text-[16px] text-amber-500">star</span>
+<span class="btn-text">찜하기</span>
+</button>
+</div>
+</article>
+<!-- 카드 2 -->
+<article class="bg-white rounded-2xl p-4 shadow-sm space-y-3">
+<div class="flex items-center justify-between gap-2">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700">청년인턴</span>
+<span class="text-[10px] font-medium px-2 py-0.5 rounded-md bg-slate-100 text-slate-600">국제구호·NGO</span>
+</div>
+<span class="text-[11px] font-extrabold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">D-7 접수중</span>
+</div>
+<div>
+<span class="text-xs font-semibold text-slate-500">초록우산 어린이재단 서울지역본부</span>
+<h2 class="text-sm font-bold text-slate-900 mt-0.5 leading-snug">2026 상반기 국내아동옹호팀 청년 체험형 인턴십</h2>
+</div>
+<div class="bg-slate-50 rounded-xl p-3 space-y-1.5 text-xs text-slate-700">
+<div class="flex justify-between items-start gap-2">
+<span class="text-slate-500 font-medium flex-shrink-0">모집인원</span>
+<span class="font-semibold text-slate-900 text-right">4명 선발</span>
+</div>
+<div class="flex justify-between items-start gap-2">
+<span class="text-slate-500 font-medium flex-shrink-0">원서마감</span>
+<span class="font-semibold text-blue-700 text-right">2025.12.22 (월) 17:00</span>
+</div>
+<div class="flex justify-between items-start gap-2">
+<span class="text-slate-500 font-medium flex-shrink-0">보수기준</span>
+<span class="font-medium text-slate-800 text-right">월 210만원 (4대보험 가입, 주휴수당 포함, 수료증 발급)</span>
+</div>
+<div class="flex justify-between items-start gap-2">
+<span class="text-slate-500 font-medium flex-shrink-0">주소·문의</span>
+<span class="text-slate-600 text-right">서울 중구 무교로 20 (02-775-9122)</span>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<a class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs py-2.5 rounded-xl text-center shadow-xs transition-colors inline-flex items-center justify-center gap-1" href="#">
+<span>공고 원문 확인</span>
+<span class="material-symbols-outlined text-[14px]">north_east</span>
+</a>
+<button class="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-colors flex items-center justify-center gap-1" onclick="toggleBookmark(this)" type="button">
+<span class="material-symbols-outlined text-[16px] text-amber-500">star</span>
+<span class="btn-text">찜하기</span>
+</button>
+</div>
+</article>
+<!-- 카드 3 -->
+<article class="bg-white rounded-2xl p-4 shadow-sm space-y-3">
+<div class="flex items-center justify-between gap-2">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-50 text-amber-700">전문수련</span>
+<span class="text-[10px] font-medium px-2 py-0.5 rounded-md bg-slate-100 text-slate-600">상급종합병원</span>
+</div>
+<span class="text-[11px] font-extrabold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">D-11 접수중</span>
+</div>
+<div>
+<span class="text-xs font-semibold text-slate-500">가톨릭대학교 서울성모병원 사회사업팀</span>
+<h2 class="text-sm font-bold text-slate-900 mt-0.5 leading-snug">2026년도 제24기 수련의료사회복지사 임상수련 과정</h2>
+</div>
+<div class="bg-slate-50 rounded-xl p-3 space-y-1.5 text-xs text-slate-700">
+<div class="flex justify-between items-start gap-2">
+<span class="text-slate-500 font-medium flex-shrink-0">모집인원</span>
+<span class="font-semibold text-slate-900 text-right">3명 (1급 소지자)</span>
+</div>
+<div class="flex justify-between items-start gap-2">
+<span class="text-slate-500 font-medium flex-shrink-0">원서마감</span>
+<span class="font-semibold text-blue-700 text-right">2025.12.26 (금) 17:00</span>
+</div>
+<div class="flex justify-between items-start gap-2">
+<span class="text-slate-500 font-medium flex-shrink-0">보수기준</span>
+<span class="font-medium text-slate-800 text-right">유급 수련 (병원 내규에 따른 수련보조비, 4대보험, 복리후생)</span>
+</div>
+<div class="flex justify-between items-start gap-2">
+<span class="text-slate-500 font-medium flex-shrink-0">주소·문의</span>
+<span class="text-slate-600 text-right">서울 서초구 반포대로 222 (02-2258-5775)</span>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<a class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs py-2.5 rounded-xl text-center shadow-xs transition-colors inline-flex items-center justify-center gap-1" href="#">
+<span>공고 원문 확인</span>
+<span class="material-symbols-outlined text-[14px]">north_east</span>
+</a>
+<button class="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-colors flex items-center justify-center gap-1" onclick="toggleBookmark(this)" type="button">
+<span class="material-symbols-outlined text-[16px] text-amber-500">star</span>
+<span class="btn-text">찜하기</span>
+</button>
+</div>
+</article>
+</section>
+<!-- 7. 모바일 페이지네이션 컨트롤러 -->
+<nav aria-label="페이지 선택" class="flex items-center justify-center gap-1 pt-2 pb-1">
+<button class="w-8 h-8 rounded-lg bg-blue-600 text-white text-xs font-bold shadow-xs" type="button">1</button>
+<button class="w-8 h-8 rounded-lg bg-white hover:bg-slate-100 text-slate-700 text-xs font-medium shadow-xs transition-colors" type="button">2</button>
+<button class="w-8 h-8 rounded-lg bg-white hover:bg-slate-100 text-slate-700 text-xs font-medium shadow-xs transition-colors" type="button">3</button>
+<button class="w-8 h-8 rounded-lg bg-white hover:bg-slate-100 text-slate-700 text-xs font-medium shadow-xs transition-colors" type="button">4</button>
+<span class="text-slate-400 text-xs px-1">...</span>
+<button class="w-8 h-8 rounded-lg bg-white hover:bg-slate-100 text-slate-700 text-xs font-medium shadow-xs transition-colors" type="button">7</button>
+<button class="px-2.5 h-8 rounded-lg bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold shadow-xs transition-colors inline-flex items-center gap-0.5" type="button">
+<span>다음</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+</button>
+</nav>
+<!-- 8. 하단 지도교수 안내 & 총괄 기획 푸터 -->
+<footer class="space-y-3 pt-2">
+<!-- 지도교수 안내 카드 -->
+<div class="bg-gradient-to-r from-blue-50 to-indigo-50/70 rounded-2xl p-4 shadow-xs space-y-2.5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-blue-600 text-[18px]">school</span>
+<span class="text-xs font-bold text-slate-900">학술 감수 및 지도교수 안내</span>
+</div>
+<p class="text-[11px] text-slate-600 leading-relaxed">
+        본 플랫폼의 모든 법령 분류 체계와 실습·취업 지침은 <strong class="text-blue-900 font-bold">천덕희 교수님</strong>의 현장실습 교육 프로토콜을 기반으로 구조화되었습니다.
+      </p>
+<a class="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-700 pt-0.5" href="mailto:ddauny00@gmail.com">
+<span>교수연구실 문의 접수</span>
+<span class="material-symbols-outlined text-[13px]">north_east</span>
+</a>
+</div>
+<!-- 제작 정보 -->
+<div class="bg-white rounded-2xl p-4 shadow-xs text-[11px] text-slate-500 space-y-2">
+<div class="flex flex-col space-y-1">
+<span class="font-bold text-slate-800 text-xs">사회복지 현장 나침반 기획처</span>
+<span><strong>총괄 기획·개발:</strong> 정다운</span>
+<span><strong>연락처:</strong> 010-5328-6117</span>
+<span><strong>공식 이메일:</strong> ddauny00@gmail.com</span>
+</div>
+<p class="text-[10px] text-slate-400 pt-1 leading-normal">
+        © 2025 사회복지 현장 나침반 (Social Welfare Field Compass). All rights reserved.
+      </p>
+</div>
+</footer>
+</div>
+<script>
+  let bookmarkedCount = 0;
+  function toggleBookmark(btn) {
+    const icon = btn.querySelector('.material-symbols-outlined');
+    const label = btn.querySelector('.btn-text');
+    const counterBadge = document.getElementById('bookmark-count');
+    
+    if (label.innerText === '찜하기') {
+      label.innerText = '찜완료';
+      btn.classList.remove('bg-slate-100', 'text-slate-700');
+      btn.classList.add('bg-amber-100', 'text-amber-800');
+      bookmarkedCount++;
+    } else {
+      label.innerText = '찜하기';
+      btn.classList.remove('bg-amber-100', 'text-amber-800');
+      btn.classList.add('bg-slate-100', 'text-slate-700');
+      bookmarkedCount = Math.max(0, bookmarkedCount - 1);
+    }
+    if (counterBadge) {
+      counterBadge.innerText = bookmarkedCount;
+    }
+  }
+</script></main>
+<!-- END: MainContent -->
+<!-- BEGIN: MainFooter -->
+<footer class="bg-white border-t border-slate-200 mt-12 py-8 text-xs text-slate-500" data-purpose="footer">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+<div class="space-y-1 text-center md:text-left">
+<p class="font-bold text-slate-800">사회복지 현장 나침반 에디토리얼 포털</p>
+<p>본 포털의 모든 법령 정보 및 시설 분류는 보건복지부, 행정안전부 법령정보센터 및 관계법령을 기준으로 감수되었습니다.</p>
+</div>
+<div class="flex items-center gap-4 text-slate-400">
+<a class="hover:text-slate-600 transition-colors" href="#">이용약관</a>
+<a class="hover:text-slate-600 transition-colors" href="#">개인정보처리방침</a>
+<a class="hover:text-slate-600 transition-colors" href="#">기관 정보 수정요청</a>
+</div>
+</div>
+</footer>
+<!-- END: MainFooter -->
+
+
+</body></html>

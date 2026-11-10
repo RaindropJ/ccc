@@ -1,0 +1,43 @@
+name: Daily Welfare DB 06:00 Auto Crawler & Sync
+
+on:
+  schedule:
+    # 21:00 UTC = 06:00 KST every day
+    - cron: '0 21 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  crawl_and_sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run Daily 06:00 Sync Pipeline
+        run: |
+          python scripts/crawlers/run_daily_sync.py
+
+      - name: Commit and Push Updated Datasets
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "Daily 06:00 Welfare Bot"
+          git add src/data/
+          if git diff --staged --quiet; then
+            echo "No data changes detected. Skipping commit."
+          else
+            git commit -m "chore(sync): automated daily 06:00 welfare DB sync [skip ci]"
+            git push
+          fi
