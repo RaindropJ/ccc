@@ -483,94 +483,6 @@
                 </div>
             </div>
 
-            <!-- 🏛️ [상단 허브] 우리 동네 법정 실습기관 공식 실습센터 둘러보기 (전국 8,434개소 연동 Table) -->
-            <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs mb-6 overflow-hidden">
-                <div class="p-4 sm:p-5 bg-gradient-to-r from-slate-50 via-blue-50/30 to-indigo-50/20 border-b border-slate-200/80 flex flex-col md:flex-row md:items-center justify-between gap-3">
-                    <div class="space-y-1">
-                        <div class="flex items-center gap-2">
-                            <span class="px-2 py-0.5 rounded-md bg-blue-600 text-white font-extrabold text-[10px]">전국 8,434개 연동</span>
-                            <h3 class="text-base sm:text-lg font-black text-slate-900 tracking-tight">🏢 우리 동네 법정 실습기관 공식 실습센터 둘러보기</h3>
-                        </div>
-                        <p class="text-xs text-slate-500">보건복지부 법정 선정 전국 8,434개 실습인증기관의 실습지도자 현황 및 공식 실습모집 공고, 대표전화로 바로 연결됩니다.</p>
-                    </div>
-                    <!-- 접기/펼치기 토글 버튼 -->
-                    <button type="button" onclick="togglePracticumHubTable()" id="prac-hub-toggle-btn" class="self-start md:self-auto px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:border-blue-300 text-slate-700 font-bold text-xs shadow-2xs hover:bg-blue-50/50 transition cursor-pointer flex items-center gap-1.5">
-                        <span id="prac-hub-toggle-icon">▼</span>
-                        <span id="prac-hub-toggle-text">실습기관 디렉토리 닫기</span>
-                    </button>
-                </div>
-
-                <div id="prac-hub-content" class="p-4 sm:p-5 space-y-3.5">
-                    <!-- 검색 및 지역 필터 바 -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 text-xs">
-                        <div class="sm:col-span-3">
-                            <select id="prac-hub-region-select" onchange="onPracticumHubRegionChange(this.value)" class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="전체">전국 전체 (8,434개소)</option>
-                                <option value="서울" selected>서울 (1,190개소)</option>
-                                <option value="경기">경기 (1,881개소)</option>
-                                <option value="인천">인천 (412개소)</option>
-                                <option value="부산">부산 (615개소)</option>
-                                <option value="대구">대구 (420개소)</option>
-                                <option value="대전">대전 (295개소)</option>
-                                <option value="광주">광주 (310개소)</option>
-                                <option value="울산">울산 (180개소)</option>
-                                <option value="세종">세종 (75개소)</option>
-                                <option value="강원">강원 (365개소)</option>
-                                <option value="충북">충북 (320개소)</option>
-                                <option value="충남">충남 (410개소)</option>
-                                <option value="전북">전북 (390개소)</option>
-                                <option value="전남">전남 (450개소)</option>
-                                <option value="경북">경북 (485개소)</option>
-                                <option value="경남">경남 (520개소)</option>
-                                <option value="제주">제주 (147개소)</option>
-                            </select>
-                        </div>
-                        <div class="sm:col-span-3">
-                            <select id="prac-hub-subregion-select" onchange="onPracticumHubSubRegionChange(this.value)" class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="전체">시·군·구 전체</option>
-                            </select>
-                        </div>
-                        <div class="sm:col-span-6 relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
-                            <input id="prac-hub-search-input" oninput="onPracticumHubSearchInput(this.value)" class="w-full pl-9 pr-8 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500" placeholder="기관명·시설분야 검색 (예: 마포, 신사, 분당, 장애인, 데이케어...)" type="text">
-                            <button type="button" onclick="clearPracticumHubSearch()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs font-bold cursor-pointer">✕</button>
-                        </div>
-                    </div>
-
-                    <!-- 컴팩트 Table 리스트 -->
-                    <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white">
-                        <table class="w-full text-left text-xs border-collapse">
-                            <thead>
-                                <tr class="bg-slate-50/90 text-slate-600 font-bold border-b border-slate-200">
-                                    <th class="py-2.5 px-3 text-center w-12">번호</th>
-                                    <th class="py-2.5 px-3 min-w-[140px]">기관명 (법정 실습기관)</th>
-                                    <th class="py-2.5 px-3 min-w-[100px]">소재지</th>
-                                    <th class="py-2.5 px-3 min-w-[110px]">시설분야</th>
-                                    <th class="py-2.5 px-3 min-w-[80px] text-center">지도자</th>
-                                    <th class="py-2.5 px-3 text-center min-w-[130px]">실습모집 직행</th>
-                                    <th class="py-2.5 px-3 text-center min-w-[100px]">실습문의</th>
-                                </tr>
-                            </thead>
-                            <tbody id="prac-hub-table-body" class="divide-y divide-slate-100 text-slate-700 font-medium">
-                                <!-- Injected dynamically by renderPracticumHubTable() -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- 테이블 하단 푸터 및 더보기 -->
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1 text-xs text-slate-500">
-                        <div id="prac-hub-count-info" class="font-medium">
-                            검색 결과: <strong class="text-blue-600" id="prac-hub-match-count">0</strong>개 기관
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button type="button" onclick="loadMorePracticumHubInstitutions()" id="prac-hub-more-btn" class="px-3 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-bold text-xs border border-slate-200 cursor-pointer transition">
-                                + 15개 더보기
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- BEGIN: SearchAndFilters -->
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-7 space-y-5" data-purpose="search-filters">
                 <!-- Main Search Input -->
@@ -801,6 +713,94 @@
                         <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
                     </button>
                 </div>
+
+                <!-- 🏛️ [하단 허브] 우리 동네 법정 실습기관 공식 실습센터 둘러보기 (전국 8,434개소 연동 Table) -->
+            <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs mt-6 mb-6 overflow-hidden">
+                <div class="p-4 sm:p-5 bg-gradient-to-r from-slate-50 via-blue-50/30 to-indigo-50/20 border-b border-slate-200/80 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded-md bg-blue-600 text-white font-extrabold text-[10px]">전국 8,434개 연동</span>
+                            <h3 class="text-base sm:text-lg font-black text-slate-900 tracking-tight">🏢 우리 동네 법정 실습기관 공식 실습센터 둘러보기</h3>
+                        </div>
+                        <p class="text-xs text-slate-500">보건복지부 법정 선정 전국 8,434개 실습인증기관의 실습지도자 현황 및 공식 실습모집 공고, 대표전화로 바로 연결됩니다.</p>
+                    </div>
+                    <!-- 접기/펼치기 토글 버튼 -->
+                    <button type="button" onclick="togglePracticumHubTable()" id="prac-hub-toggle-btn" class="self-start md:self-auto px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:border-blue-300 text-slate-700 font-bold text-xs shadow-2xs hover:bg-blue-50/50 transition cursor-pointer flex items-center gap-1.5">
+                        <span id="prac-hub-toggle-icon">▼</span>
+                        <span id="prac-hub-toggle-text">실습기관 디렉토리 닫기</span>
+                    </button>
+                </div>
+
+                <div id="prac-hub-content" class="p-4 sm:p-5 space-y-3.5">
+                    <!-- 검색 및 지역 필터 바 -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 text-xs">
+                        <div class="sm:col-span-3">
+                            <select id="prac-hub-region-select" onchange="onPracticumHubRegionChange(this.value)" class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="전체">전국 전체 (8,434개소)</option>
+                                <option value="서울" selected>서울 (1,190개소)</option>
+                                <option value="경기">경기 (1,881개소)</option>
+                                <option value="인천">인천 (412개소)</option>
+                                <option value="부산">부산 (615개소)</option>
+                                <option value="대구">대구 (420개소)</option>
+                                <option value="대전">대전 (295개소)</option>
+                                <option value="광주">광주 (310개소)</option>
+                                <option value="울산">울산 (180개소)</option>
+                                <option value="세종">세종 (75개소)</option>
+                                <option value="강원">강원 (365개소)</option>
+                                <option value="충북">충북 (320개소)</option>
+                                <option value="충남">충남 (410개소)</option>
+                                <option value="전북">전북 (390개소)</option>
+                                <option value="전남">전남 (450개소)</option>
+                                <option value="경북">경북 (485개소)</option>
+                                <option value="경남">경남 (520개소)</option>
+                                <option value="제주">제주 (147개소)</option>
+                            </select>
+                        </div>
+                        <div class="sm:col-span-3">
+                            <select id="prac-hub-subregion-select" onchange="onPracticumHubSubRegionChange(this.value)" class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="전체">시·군·구 전체</option>
+                            </select>
+                        </div>
+                        <div class="sm:col-span-6 relative">
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
+                            <input id="prac-hub-search-input" oninput="onPracticumHubSearchInput(this.value)" class="w-full pl-9 pr-8 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500" placeholder="기관명·시설분야 검색 (예: 마포, 신사, 분당, 장애인, 데이케어...)" type="text">
+                            <button type="button" onclick="clearPracticumHubSearch()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs font-bold cursor-pointer">✕</button>
+                        </div>
+                    </div>
+
+                    <!-- 컴팩트 Table 리스트 -->
+                    <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50/90 text-slate-600 font-bold border-b border-slate-200">
+                                    <th class="py-2.5 px-3 text-center w-12">번호</th>
+                                    <th class="py-2.5 px-3 min-w-[140px]">기관명 (법정 실습기관)</th>
+                                    <th class="py-2.5 px-3 min-w-[100px]">소재지</th>
+                                    <th class="py-2.5 px-3 min-w-[110px]">시설분야</th>
+                                    <th class="py-2.5 px-3 min-w-[80px] text-center">지도자</th>
+                                    <th class="py-2.5 px-3 text-center min-w-[130px]">실습모집 직행</th>
+                                    <th class="py-2.5 px-3 text-center min-w-[100px]">실습문의</th>
+                                </tr>
+                            </thead>
+                            <tbody id="prac-hub-table-body" class="divide-y divide-slate-100 text-slate-700 font-medium">
+                                <!-- Injected dynamically by renderPracticumHubTable() -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 테이블 하단 푸터 및 더보기 -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1 text-xs text-slate-500">
+                        <div id="prac-hub-count-info" class="font-medium">
+                            검색 결과: <strong class="text-blue-600" id="prac-hub-match-count">0</strong>개 기관
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="loadMorePracticumHubInstitutions()" id="prac-hub-more-btn" class="px-3 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-bold text-xs border border-slate-200 cursor-pointer transition">
+                                + 15개 더보기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             </div>
             <!-- END: PracticumListings -->
         </section>
