@@ -182,26 +182,6 @@
             </div>
         </div>
 
-        <!-- 2. 하단 서브 안내 & 바로가기 바 (스티치 원본 사양) -->
-        <div class="border-t border-slate-100 bg-slate-50/80 text-xs text-slate-600">
-            <div class="max-w-[1600px] mx-auto px-4 sm:px-6 h-9 flex items-center justify-between">
-                <!-- 공지사항 인라인 -->
-                <div class="flex items-center gap-2 truncate">
-                    <span class="px-1.5 py-0.5 rounded bg-slate-200/80 text-slate-700 font-semibold text-[11px]">공지</span>
-                    <a href="#" onclick="showView('fields'); return false;" class="truncate hover:text-blue-600 transition">2026 현행 사회복지사업법 및 필수 실습 규정 안내</a>
-                </div>
-
-                <!-- 퀵 서브 링크 -->
-                <div class="hidden sm:flex items-center gap-4 text-slate-500 flex-shrink-0">
-                    <a href="#" onclick="openPracticumGuideModal(); return false;" class="hover:text-slate-900 transition cursor-pointer">실습일지 양식 모음</a>
-                    <span class="w-px h-3 bg-slate-300"></span>
-                    <a href="#" onclick="showView('residency'); return false;" class="hover:text-slate-900 transition cursor-pointer">자격기준 간편조회</a>
-                    <span class="w-px h-3 bg-slate-300"></span>
-                    <a href="#" onclick="showView('practicum'); return false;" class="hover:text-slate-900 transition cursor-pointer">실습인정기관 리스트</a>
-                </div>
-            </div>
-        </div>
-
         <!-- 모바일 드롭다운 메뉴 -->
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-200 p-4 space-y-2 text-sm font-bold shadow-lg">
             <button type="button" onclick="showView('fields')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-blue-50 text-blue-600">분야·법령 가이드</button>
@@ -215,7 +195,7 @@
     </header>
 
     <!-- 모바일 전용 가로 스크롤 탭 바 (Sticky Horizontal Tabs) -->
-    <div class="md:hidden sticky top-[100px] z-30 px-3 py-2 bg-slate-50/95 backdrop-blur-md border-b border-slate-200/80">
+    <div class="md:hidden sticky top-16 z-30 px-3 py-2 bg-slate-50/95 backdrop-blur-md border-b border-slate-200/80">
         <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="mobile-sticky-tabs">
             <button type="button" data-view="fields" onclick="showView('fields')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-blue-600 shadow-sm shadow-blue-200 flex items-center gap-1 transition cursor-pointer">
                 <span>분야·법령</span>
