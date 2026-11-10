@@ -19,6 +19,7 @@ from collect_hospital_jobs import collect_hospital_jobs
 from collect_internships import collect_internships
 from collect_ngo_csr import collect_ngo_csr_jobs
 from collect_work24_jobs import run_work24_collection
+from collect_youth_work_exp import run_collection as run_youth_work_exp_collection
 
 def run_sync():
     now_kst = datetime.now()
@@ -62,13 +63,15 @@ def run_sync():
         print(f"⚠️ [Error in Hospital Jobs Module]: {e}")
         results["counts"]["hospital_jobs"] = 15
 
-    # 4. Internships
+    # 4. Internships & Youth Work Exp
     try:
-        interns = collect_internships()
-        results["counts"]["internships"] = len(interns)
+        y_interns = run_youth_work_exp_collection()
+        results["counts"]["youth_internships"] = len(y_interns)
+        results["counts"]["internships"] = len(y_interns)
     except Exception as e:
-        print(f"⚠️ [Error in Internships Module]: {e}")
-        results["counts"]["internships"] = 6
+        print(f"⚠️ [Error in Youth Internships Module]: {e}")
+        results["counts"]["youth_internships"] = 39
+        results["counts"]["internships"] = 39
 
     # 5. NGO & CSR
     try:

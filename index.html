@@ -13,6 +13,7 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="src/data/sync-meta.js"></script>
     <script src="src/data/residency-284-db.js"></script>
+    <script src="src/data/internships-db.js"></script>
     <script src="src/data/work24-jobs-db.js"></script>
     <script src="src/data/jobs-db.js"></script>
     <script src="src/data/practicum-postings-db.js"></script>
@@ -133,10 +134,15 @@
                         <span>수련처 탐색</span>
                         <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">284곳</span>
                     </button>
+                    <button type="button" data-view="internship" onclick="showView('internship')" class="nav-tab-btn flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1.5 transition cursor-pointer">
+                        <span>🌱</span>
+                        <span>청년인턴·일경험</span>
+                        <span id="nav-internship-badge" class="nav-badge px-1.5 py-0.2 text-[10px] bg-emerald-100 text-emerald-800 rounded-full font-bold">39</span>
+                    </button>
                     <button type="button" data-view="jobs" onclick="showView('jobs')" class="nav-tab-btn flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1.5 transition cursor-pointer">
                         <span>💼</span>
                         <span>취업공고</span>
-                        <span id="nav-jobs-badge" class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">3,962</span>
+                        <span id="nav-jobs-badge" class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">3,862</span>
                     </button>
                     <button type="button" data-view="news" onclick="showView('news')" class="nav-tab-btn flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1.5 transition cursor-pointer">
                         <span>📄</span>
@@ -168,7 +174,8 @@
             <button type="button" onclick="showView('fields')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-blue-50 text-blue-600">12대 분야와 법령</button>
             <button type="button" onclick="showView('practicum')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">실습처 탐색 (320건)</button>
             <button type="button" onclick="showView('residency')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">수련처 탐색 (284곳)</button>
-            <button type="button" onclick="showView('jobs')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">실시간 채용공고 (3,962건)</button>
+            <button type="button" onclick="showView('internship')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-emerald-50 text-emerald-800">청년인턴·일경험 (39건)</button>
+            <button type="button" onclick="showView('jobs')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">실시간 취업공고 (3,862건)</button>
             <button type="button" onclick="showView('news')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">복지 뉴스·브리핑 (21건)</button>
         </div>
     </nav>
@@ -190,10 +197,15 @@
                 <span>수련처 탐색</span>
                 <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">284곳</span>
             </button>
+            <button type="button" data-view="internship" onclick="showView('internship')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
+                <span>🌱</span>
+                <span>청년인턴·일경험</span>
+                <span id="mobile-nav-internship-badge" class="nav-badge px-1.5 py-0.2 text-[10px] bg-emerald-100 text-emerald-800 rounded-full font-bold">39</span>
+            </button>
             <button type="button" data-view="jobs" onclick="showView('jobs')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
                 <span>💼</span>
                 <span>취업공고</span>
-                <span id="mobile-nav-jobs-badge" class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">3,962</span>
+                <span id="mobile-nav-jobs-badge" class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">3,862</span>
             </button>
             <button type="button" data-view="news" onclick="showView('news')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
                 <span>📄</span>
@@ -812,19 +824,169 @@
                 </div>
             </div>
 
-            <div id="residency-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                <!-- Injected dynamically by renderResidencyCards() -->
+        </section>
+
+        <!-- ==================== VIEW 4: 청년인턴 & 청년 일경험 ==================== -->
+        <section id="view-internship" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 hidden">
+            <!-- 섹션 헤더 및 타이틀 -->
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold mb-3 shadow-2xs">
+                    🌱 고용노동부 미래내일 일경험 · 공공기관 알리오 · 메이저 NGO · 기업 ESG 청년인턴십 공식 통합 풀
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mb-2">청년인턴 & 청년 일경험 탐색</h2>
+                <p class="text-xs sm:text-sm text-slate-500 max-w-2xl mx-auto">
+                    만 15~34세 청년을 위한 고용24 미래내일 일경험(주당 35만원, 월 최대 140만원 참여수당)부터 국민건강보험·국민연금 등 공공기관 체험형 인턴, 월드비전·초록우산 등 메이저 NGO 청년인턴까지 한눈에 비교·탐색하세요.
+                </p>
+            </div>
+
+            <!-- 핵심 요약 통계 4대 지표 카드 -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                <div onclick="setInternshipType('전체')" class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-2xs hover:border-emerald-400 hover:shadow-xs transition cursor-pointer space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-medium text-slate-500">전체 인턴·일경험</span>
+                        <span class="text-emerald-600 text-sm font-bold">🌱</span>
+                    </div>
+                    <div class="flex items-baseline gap-1">
+                        <span id="intern-stat-total" class="text-xl sm:text-2xl font-black text-slate-900">39</span>
+                        <span class="text-xs font-bold text-emerald-600">선</span>
+                    </div>
+                    <span class="text-[10px] text-slate-400 block">전국 단위 활성 선발공고</span>
+                </div>
+                <div onclick="setInternshipType('공공기관·정부인턴')" class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-2xs hover:border-blue-400 hover:shadow-xs transition cursor-pointer space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-medium text-slate-500">공공기관·지자체</span>
+                        <span class="text-blue-600 text-sm font-bold">🏛️</span>
+                    </div>
+                    <div class="flex items-baseline gap-1">
+                        <span id="intern-stat-public" class="text-xl sm:text-2xl font-black text-slate-900">18</span>
+                        <span class="text-xs font-bold text-blue-600">건</span>
+                    </div>
+                    <span class="text-[10px] text-slate-400 block">건보·연금·개발원 서류가점</span>
+                </div>
+                <div onclick="setInternshipType('고용24 일경험')" class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-2xs hover:border-teal-400 hover:shadow-xs transition cursor-pointer space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-medium text-slate-500">미래내일 일경험</span>
+                        <span class="text-teal-600 text-sm font-bold">💼</span>
+                    </div>
+                    <div class="flex items-baseline gap-1">
+                        <span id="intern-stat-yw" class="text-xl sm:text-2xl font-black text-slate-900">9</span>
+                        <span class="text-xs font-bold text-teal-600">건</span>
+                    </div>
+                    <span class="text-[10px] text-slate-400 block">월 최대 140만원 참여수당 지원</span>
+                </div>
+                <div onclick="setInternshipType('메이저 NGO·공익재단')" class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-2xs hover:border-amber-400 hover:shadow-xs transition cursor-pointer space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-medium text-slate-500">메이저 NGO·재단</span>
+                        <span class="text-amber-600 text-sm font-bold">🌍</span>
+                    </div>
+                    <div class="flex items-baseline gap-1">
+                        <span id="intern-stat-ngo" class="text-xl sm:text-2xl font-black text-slate-900">8</span>
+                        <span class="text-xs font-bold text-amber-600">건</span>
+                    </div>
+                    <span class="text-[10px] text-slate-400 block">월드비전·초록우산·아산나눔</span>
+                </div>
+            </div>
+
+            <!-- 퀵 검색 & 필터 콘솔 박스 -->
+            <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-xs space-y-4">
+                <!-- 1열: 검색창 및 정렬 -->
+                <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+                    <div class="relative flex-1">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                            🔍
+                        </span>
+                        <input type="text" id="internship-search-input" oninput="handleInternshipSearch(this.value)" placeholder="기관명, 프로그램명, 직무(사례관리, BF인증, 모금개발 등) 검색..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm placeholder-slate-400">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <label for="internship-sort-select" class="text-xs font-semibold text-slate-500 flex-shrink-0">정렬:</label>
+                        <select id="internship-sort-select" onchange="setInternshipSort(this.value)" class="rounded-xl border border-slate-200 text-xs py-2 px-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium text-slate-700 bg-white">
+                            <option value="dday">마감임박순 (D-Day)</option>
+                            <option value="latest">최신등록순</option>
+                            <option value="allowance">지원금·급여순</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 2열: 빠른 추천 키워드 태그 -->
+                <div class="flex items-center gap-1.5 flex-wrap pt-1 border-t border-slate-100">
+                    <span class="text-[11px] font-bold text-slate-500 mr-1 flex items-center gap-1">⚡ 추천태그:</span>
+                    <button type="button" onclick="setInternshipSearchTag('#고용24일경험')" class="intern-tag-btn text-[11px] px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 text-slate-600 transition font-medium">#고용24일경험</button>
+                    <button type="button" onclick="setInternshipSearchTag('#공공기관인턴')" class="intern-tag-btn text-[11px] px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 text-slate-600 transition font-medium">#공공기관인턴</button>
+                    <button type="button" onclick="setInternshipSearchTag('#체험형인턴')" class="intern-tag-btn text-[11px] px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 text-slate-600 transition font-medium">#체험형인턴</button>
+                    <button type="button" onclick="setInternshipSearchTag('#월140만지원금')" class="intern-tag-btn text-[11px] px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 text-slate-600 transition font-medium">#월140만지원금</button>
+                    <button type="button" onclick="setInternshipSearchTag('#NGO재단')" class="intern-tag-btn text-[11px] px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 text-slate-600 transition font-medium">#NGO재단</button>
+                    <button type="button" onclick="setInternshipSearchTag('#서류가점우대')" class="intern-tag-btn text-[11px] px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 text-slate-600 transition font-medium">#서류가점우대</button>
+                    <button type="button" onclick="clearInternshipTags()" id="intern-tag-clear-btn" class="hidden text-[11px] px-2 py-0.5 rounded-lg bg-rose-50 text-rose-600 border border-rose-200 font-bold ml-1">초기화 ✕</button>
+                </div>
+
+                <!-- 3열: 5대 프로그램 유형 필터 -->
+                <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+                    <span class="text-xs font-bold text-slate-600 flex-shrink-0">프로그램:</span>
+                    <button type="button" onclick="setInternshipType('전체')" class="intern-type-btn px-2.5 py-1 rounded-lg bg-slate-900 text-white font-bold text-xs flex-shrink-0 cursor-pointer shadow-2xs">전체보기</button>
+                    <button type="button" onclick="setInternshipType('공공기관·정부인턴')" class="intern-type-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏛️ 공공기관·지자체</button>
+                    <button type="button" onclick="setInternshipType('고용24 일경험')" class="intern-type-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🌱 고용24 일경험</button>
+                    <button type="button" onclick="setInternshipType('메이저 NGO·공익재단')" class="intern-type-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🌍 메이저 NGO·재단</button>
+                    <button type="button" onclick="setInternshipType('복지관·시설 현장인턴')" class="intern-type-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏘️ 복지관 현장인턴</button>
+                    <button type="button" onclick="setInternshipType('기업 CSR·ESG인턴')" class="intern-type-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">💼 기업 CSR·ESG</button>
+                </div>
+
+                <!-- 4열: 정보제공처 필터 -->
+                <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+                    <span class="text-xs font-bold text-slate-600 flex-shrink-0">출처채널:</span>
+                    <button type="button" id="intern-src-all" onclick="setInternshipSource('전체')" class="intern-src-btn px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-bold text-xs flex-shrink-0 cursor-pointer">전체출처</button>
+                    <button type="button" id="intern-src-yw" onclick="setInternshipSource('yw_work24')" class="intern-src-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">고용24 청년 일경험 (미래내일)</button>
+                    <button type="button" id="intern-src-alio" onclick="setInternshipSource('alio')" class="intern-src-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">공공기관 알리오 (ALIO)</button>
+                    <button type="button" id="intern-src-ngo" onclick="setInternshipSource('ngo_portal')" class="intern-src-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">민간채용 (링커리어/잡코리아)</button>
+                    <button type="button" id="intern-src-welfare" onclick="setInternshipSource('welfarenet')" class="intern-src-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">복지넷</button>
+                </div>
+
+                <!-- 5열: 2-Tier 지역 필터 트레이 -->
+                <div class="pt-2 border-t border-slate-100 space-y-2">
+                    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+                        <span class="text-xs font-bold text-slate-600 flex-shrink-0">근무지역:</span>
+                        <div class="flex items-center gap-1 overflow-x-auto no-scrollbar" id="intern-region-pills">
+                            <!-- Injected dynamically by initInternshipRegions() -->
+                        </div>
+                    </div>
+                    <!-- 2차 세부 시군구 트레이 -->
+                    <div id="intern-subregion-tray" class="hidden flex items-center gap-1 overflow-x-auto no-scrollbar pl-14 py-1 text-xs">
+                        <!-- Injected dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 활성 필터 상태 요약 표시 -->
+            <div class="flex items-center justify-between text-xs text-slate-500 px-1">
+                <div>
+                    총 <strong id="internship-total-count" class="text-emerald-700 font-extrabold">0</strong>건의 청년인턴 및 일경험 공고 탐색됨
+                </div>
+                <div class="text-[11px] text-slate-400">
+                    💡 미래내일 일경험은 사전직무교육 및 1:1 멘토링이 포함됩니다.
+                </div>
+            </div>
+
+            <!-- 공고 카드 그리드 -->
+            <div id="internship-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Dynamically populated by renderInternshipCards() -->
+            </div>
+
+            <!-- 더보기 버튼 -->
+            <div id="internship-load-more-wrapper" class="text-center pt-4">
+                <button type="button" id="internship-load-more-btn" onclick="loadMoreInternships()" class="px-6 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-700 font-bold text-xs hover:bg-slate-50 transition shadow-xs cursor-pointer inline-flex items-center gap-1.5">
+                    <span>더 많은 인턴십·일경험 공고 보기 (+15)</span>
+                    <span class="text-slate-400">▼</span>
+                </button>
             </div>
         </section>
 
-        <!-- ==================== VIEW 4: 인턴·취업처 ==================== -->
+        <!-- ==================== VIEW 5: 실시간 취업공고 ==================== -->
         <section id="view-jobs" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 hidden">
             <div class="text-center mb-6">
                 <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold mb-3">
-                    2026 복지넷 · 사복협 · 공공기관 알리오 공식 채용 실시간 DB
+                    2026 고용24 (Work24 3,392건 풀연동) · 복지넷 · 한국사회복지사협회 공식 채용 DB
                 </div>
-                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mb-2">인턴·취업처 & 채용공고 570선</h2>
-                <p class="text-xs sm:text-sm text-slate-500">전국 8,434개 복지기관 공식 채용 탐색 허브 및 실시간 신입·정규직·계약직·청년인턴 채용 요강</p>
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mb-2">정규직·계약직 실시간 취업공고 (3,862선)</h2>
+                <p class="text-xs sm:text-sm text-slate-500">전국 8,434개 복지기관 공식 채용 탐색 허브 및 실시간 신입·정규직·계약직 채용 요강 (청년인턴은 전용 탭으로 분리)</p>
             </div>
 
             <!-- 모바일/데스크톱 핵심 요약 통계 4대 지표 카드 -->
@@ -840,16 +1002,16 @@
                     </div>
                     <span class="text-[10px] text-slate-400 block">전국 단위 활성 공고</span>
                 </div>
-                <div onclick="setJobEmploymentType('청년인턴')" class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-2xs hover:border-emerald-400 hover:shadow-xs transition cursor-pointer space-y-1">
+                <div onclick="showView('internship')" class="bg-gradient-to-br from-emerald-50 to-teal-50 p-3.5 sm:p-4 rounded-2xl border border-emerald-200 shadow-2xs hover:border-emerald-400 hover:shadow-xs transition cursor-pointer space-y-1">
                     <div class="flex items-center justify-between">
-                        <span class="text-[11px] font-medium text-slate-500">청년·공공인턴</span>
+                        <span class="text-[11px] font-bold text-emerald-800">청년인턴·일경험 ↗</span>
                         <span class="text-emerald-600 text-sm font-bold">🌱</span>
                     </div>
                     <div class="flex items-baseline gap-1">
-                        <span id="jobs-stat-intern" class="text-xl sm:text-2xl font-black text-slate-900">100</span>
-                        <span class="text-xs font-bold text-emerald-600">건</span>
+                        <span id="jobs-stat-intern" class="text-xl sm:text-2xl font-black text-emerald-900">39</span>
+                        <span class="text-xs font-bold text-emerald-700">선</span>
                     </div>
-                    <span class="text-[10px] text-slate-400 block">건보·연금·지자체 인턴</span>
+                    <span class="text-[10px] text-emerald-600 block">고용24·알리오 청년인턴 탭 이동</span>
                 </div>
                 <div onclick="setJobEmploymentType('정규직')" class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-2xs hover:border-indigo-400 hover:shadow-xs transition cursor-pointer space-y-1">
                     <div class="flex items-center justify-between">
@@ -1008,7 +1170,7 @@
                     <button type="button" onclick="setJobEmploymentType('전체')" class="job-emp-btn px-2.5 py-1 rounded-lg bg-slate-900 text-white font-bold text-xs flex-shrink-0 cursor-pointer">전체 (<span id="job-emp-cnt-all">3,962</span>)</button>
                     <button type="button" onclick="setJobEmploymentType('정규직')" class="job-emp-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">👔 정규직 (<span id="job-emp-cnt-regular">1,100+</span>)</button>
                     <button type="button" onclick="setJobEmploymentType('계약직')" class="job-emp-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">📋 계약직·전담 (<span id="job-emp-cnt-contract">500+</span>)</button>
-                    <button type="button" onclick="setJobEmploymentType('청년인턴')" class="job-emp-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🌱 청년인턴 (<span id="job-emp-cnt-intern">100+</span>)</button>
+                    <button type="button" onclick="showView('internship')" class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 hover:bg-emerald-100 font-bold text-xs flex-shrink-0 cursor-pointer border border-emerald-200" title="신설된 청년인턴·일경험 전용 탭으로 이동">🌱 청년인턴·일경험 탭 ↗ (<span id="job-emp-cnt-intern">39</span>)</button>
                 </div>
 
                 <!-- 4행: 권역별 필터 (전국, 서울, 경기, 인천, 지방권) -->
@@ -7634,7 +7796,7 @@
 
         // 3. 뷰 전환 및 서랍 인터랙션 스크립트
         function showView(viewId) {
-            const sections = ['fields', 'practicum', 'residency', 'jobs', 'news'];
+            const sections = ['fields', 'practicum', 'residency', 'internship', 'jobs', 'news'];
             sections.forEach(id => {
                 const el = document.getElementById('view-' + id);
                 if (el) el.classList.toggle('hidden', id !== viewId);
@@ -8963,6 +9125,398 @@
             }).join('');
         }
 
+        // --- 7-1.5 청년인턴 & 청년 일경험 통합 피드 상태 및 렌더링 ---
+        let currentInternshipType = '전체';
+        let currentInternshipSource = '전체';
+        let currentInternshipRegion = '전체';
+        let currentInternshipSubRegion = '전체';
+        let currentInternshipSearch = '';
+        let currentInternshipSort = 'dday';
+        let currentInternshipTag = '';
+        let currentInternshipDisplayLimit = 15;
+
+        const INTERNSHIP_REGIONS = [
+            '전체', '서울', '경기', '인천', '부산', '대구', '대전', '광주',
+            '울산', '세종', '강원', '충북', '충남', '전북', '전남', '경북', '경남', '제주'
+        ];
+
+        function initInternshipRegions() {
+            const container = document.getElementById('intern-region-pills');
+            if (!container) return;
+            container.innerHTML = INTERNSHIP_REGIONS.map(reg => `
+                <button type="button" onclick="setInternshipRegion('${reg}')"
+                    class="intern-reg-btn px-2.5 py-1 rounded-lg text-xs font-semibold flex-shrink-0 cursor-pointer transition ${reg === currentInternshipRegion ? 'bg-emerald-600 text-white shadow-2xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+                    ${reg}
+                </button>
+            `).join('');
+        }
+
+        function setInternshipType(type) {
+            currentInternshipType = type;
+            document.querySelectorAll('.intern-type-btn').forEach(b => {
+                const isMatch = (type === '전체' && b.innerText.includes('전체')) || b.innerText.includes(type.split('·')[0]);
+                if (isMatch) {
+                    b.className = 'intern-type-btn px-2.5 py-1 rounded-lg bg-emerald-700 text-white font-bold text-xs flex-shrink-0 cursor-pointer shadow-2xs';
+                } else {
+                    b.className = 'intern-type-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer';
+                }
+            });
+            currentInternshipDisplayLimit = 15;
+            renderInternshipCards();
+        }
+
+        function setInternshipSource(src) {
+            currentInternshipSource = src;
+            const buttons = [
+                { id: 'intern-src-all', key: '전체' },
+                { id: 'intern-src-yw', key: 'yw_work24' },
+                { id: 'intern-src-alio', key: 'alio' },
+                { id: 'intern-src-ngo', key: 'ngo_portal' },
+                { id: 'intern-src-welfare', key: 'welfarenet' }
+            ];
+            buttons.forEach(b => {
+                const el = document.getElementById(b.id);
+                if (el) {
+                    if (b.key === src) {
+                        el.className = 'intern-src-btn px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-bold text-xs flex-shrink-0 cursor-pointer shadow-2xs';
+                    } else {
+                        el.className = 'intern-src-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer';
+                    }
+                }
+            });
+            currentInternshipDisplayLimit = 15;
+            renderInternshipCards();
+        }
+
+        function setInternshipRegion(reg) {
+            currentInternshipRegion = reg;
+            currentInternshipSubRegion = '전체';
+            document.querySelectorAll('.intern-reg-btn').forEach(b => {
+                if (b.innerText.trim() === reg) {
+                    b.className = 'intern-reg-btn px-2.5 py-1 rounded-lg text-xs font-semibold flex-shrink-0 cursor-pointer transition bg-emerald-600 text-white shadow-2xs';
+                } else {
+                    b.className = 'intern-reg-btn px-2.5 py-1 rounded-lg text-xs font-semibold flex-shrink-0 cursor-pointer transition bg-slate-100 text-slate-600 hover:bg-slate-200';
+                }
+            });
+
+            // Update subregion tray
+            const subTray = document.getElementById('intern-subregion-tray');
+            if (subTray) {
+                if (reg === '전체' || reg === '전국') {
+                    subTray.classList.add('hidden');
+                    subTray.innerHTML = '';
+                } else {
+                    const allList = window.ALL_INTERNSHIP_POSTINGS || [];
+                    const subRegions = Array.from(new Set(
+                        allList.filter(item => item.region === reg && item.subRegion && item.subRegion !== '전체')
+                               .map(item => item.subRegion)
+                    )).sort();
+
+                    if (subRegions.length > 0) {
+                        subTray.classList.remove('hidden');
+                        subTray.innerHTML = `
+                            <span class="text-[11px] font-bold text-slate-400 mr-1">세부시군구:</span>
+                            <button type="button" onclick="setInternshipSubRegion('전체')" class="intern-subreg-btn px-2 py-0.5 rounded text-[11px] font-bold bg-slate-800 text-white">전체</button>
+                            ${subRegions.map(s => `
+                                <button type="button" onclick="setInternshipSubRegion('${s}')" class="intern-subreg-btn px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-600 hover:bg-slate-200">${s}</button>
+                            `).join('')}
+                        `;
+                    } else {
+                        subTray.classList.add('hidden');
+                        subTray.innerHTML = '';
+                    }
+                }
+            }
+
+            currentInternshipDisplayLimit = 15;
+            renderInternshipCards();
+        }
+
+        function setInternshipSubRegion(sub) {
+            currentInternshipSubRegion = sub;
+            document.querySelectorAll('.intern-subreg-btn').forEach(b => {
+                if (b.innerText.trim() === sub) {
+                    b.className = 'intern-subreg-btn px-2 py-0.5 rounded text-[11px] font-bold bg-slate-800 text-white';
+                } else {
+                    b.className = 'intern-subreg-btn px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-600 hover:bg-slate-200';
+                }
+            });
+            currentInternshipDisplayLimit = 15;
+            renderInternshipCards();
+        }
+
+        function setInternshipSort(sortVal) {
+            currentInternshipSort = sortVal;
+            currentInternshipDisplayLimit = 15;
+            renderInternshipCards();
+        }
+
+        function handleInternshipSearch(val) {
+            currentInternshipSearch = (val || '').trim();
+            currentInternshipDisplayLimit = 15;
+            renderInternshipCards();
+        }
+
+        function setInternshipSearchTag(tag) {
+            currentInternshipTag = tag;
+            const input = document.getElementById('internship-search-input');
+            const clearBtn = document.getElementById('intern-tag-clear-btn');
+            if (clearBtn) clearBtn.classList.remove('hidden');
+
+            document.querySelectorAll('.intern-tag-btn').forEach(b => {
+                if (b.innerText.trim() === tag) {
+                    b.className = 'intern-tag-btn text-[11px] px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-bold transition shadow-2xs';
+                } else {
+                    b.className = 'intern-tag-btn text-[11px] px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 text-slate-600 transition font-medium';
+                }
+            });
+
+            currentInternshipDisplayLimit = 15;
+            renderInternshipCards();
+        }
+
+        function clearInternshipTags() {
+            currentInternshipTag = '';
+            const clearBtn = document.getElementById('intern-tag-clear-btn');
+            if (clearBtn) clearBtn.classList.add('hidden');
+            document.querySelectorAll('.intern-tag-btn').forEach(b => {
+                b.className = 'intern-tag-btn text-[11px] px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 text-slate-600 transition font-medium';
+            });
+            currentInternshipDisplayLimit = 15;
+            renderInternshipCards();
+        }
+
+        function loadMoreInternships() {
+            currentInternshipDisplayLimit += 15;
+            renderInternshipCards();
+        }
+
+        function renderInternshipCards() {
+            const grid = document.getElementById('internship-cards-grid');
+            if (!grid) return;
+
+            const allList = window.ALL_INTERNSHIP_POSTINGS || [];
+
+            // Update top metric indicators
+            const statTotal = document.getElementById('intern-stat-total');
+            const statPublic = document.getElementById('intern-stat-public');
+            const statYw = document.getElementById('intern-stat-yw');
+            const statNgo = document.getElementById('intern-stat-ngo');
+
+            const pubCount = allList.filter(i => i.programType === '공공기관·정부인턴').length;
+            const ywCount = allList.filter(i => i.programType === '고용24 일경험' || i.source === 'yw_work24').length;
+            const ngoCount = allList.filter(i => i.programType === '메이저 NGO·공익재단' || i.programType === '기업 CSR·ESG인턴').length;
+
+            if (statTotal) statTotal.innerText = allList.length.toLocaleString();
+            if (statPublic) statPublic.innerText = pubCount.toLocaleString();
+            if (statYw) statYw.innerText = ywCount.toLocaleString();
+            if (statNgo) statNgo.innerText = ngoCount.toLocaleString();
+
+            // Filter logic
+            const todayStr = new Date().toISOString().slice(0, 10);
+            let filtered = allList.filter(item => {
+                // Deadline screening
+                if (item.deadline && item.deadline < todayStr) return false;
+
+                // Program type filter
+                if (currentInternshipType !== '전체') {
+                    if (item.programType !== currentInternshipType) return false;
+                }
+
+                // Source filter
+                if (currentInternshipSource !== '전체') {
+                    if (currentInternshipSource === 'yw_work24' && item.source !== 'yw_work24') return false;
+                    if (currentInternshipSource === 'alio' && !['alio', 'gojobs'].includes(item.source)) return false;
+                    if (currentInternshipSource === 'welfarenet' && item.source !== 'welfarenet') return false;
+                    if (currentInternshipSource === 'ngo_portal' && !['ngo_portal', 'linkareer', 'jobkorea'].includes(item.source)) return false;
+                }
+
+                // Region filter
+                if (currentInternshipRegion !== '전체' && currentInternshipRegion !== '전국') {
+                    if (item.region !== currentInternshipRegion && item.region !== '전국') return false;
+                }
+                if (currentInternshipSubRegion !== '전체') {
+                    if (item.subRegion !== currentInternshipSubRegion) return false;
+                }
+
+                // Tag filter
+                if (currentInternshipTag) {
+                    const tagRaw = currentInternshipTag.replace('#', '');
+                    const matchText = (item.title + ' ' + item.programType + ' ' + (item.memo || '') + ' ' + (item.allowance || '')).toLowerCase();
+                    if (!matchText.includes(tagRaw.toLowerCase())) return false;
+                }
+
+                // Search query
+                if (currentInternshipSearch) {
+                    const q = currentInternshipSearch.toLowerCase();
+                    const combined = (item.title + ' ' + item.company + ' ' + (item.duty || '') + ' ' + (item.location || '') + ' ' + (item.qualification || '')).toLowerCase();
+                    if (!combined.includes(q)) return false;
+                }
+
+                return true;
+            });
+
+            // Sorting
+            filtered.sort((a, b) => {
+                if (currentInternshipSort === 'dday') {
+                    return (a.deadline || '9999-99-99').localeCompare(b.deadline || '9999-99-99');
+                } else if (currentInternshipSort === 'allowance') {
+                    return (b.allowance || '').localeCompare(a.allowance || '');
+                } else {
+                    return (b.id || '').localeCompare(a.id || '');
+                }
+            });
+
+            // Update counter
+            const totalCountEl = document.getElementById('internship-total-count');
+            if (totalCountEl) totalCountEl.innerText = filtered.length.toLocaleString();
+
+            const navBadge = document.getElementById('nav-internship-badge');
+            const mNavBadge = document.getElementById('mobile-nav-internship-badge');
+            if (navBadge) navBadge.innerText = allList.length.toLocaleString();
+            if (mNavBadge) mNavBadge.innerText = allList.length.toLocaleString();
+
+            // Load more handling
+            const loadMoreWrapper = document.getElementById('internship-load-more-wrapper');
+            if (loadMoreWrapper) {
+                if (filtered.length <= currentInternshipDisplayLimit) {
+                    loadMoreWrapper.classList.add('hidden');
+                } else {
+                    loadMoreWrapper.classList.remove('hidden');
+                }
+            }
+
+            const visibleItems = filtered.slice(0, currentInternshipDisplayLimit);
+
+            if (visibleItems.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-16 text-center bg-white rounded-2xl border border-dashed border-slate-200">
+                        <span class="text-4xl block mb-2">🔍</span>
+                        <h3 class="text-base font-bold text-slate-800 mb-1">일치하는 청년인턴·일경험 공고가 없습니다</h3>
+                        <p class="text-xs text-slate-400">검색어나 지역 필터 조건을 변경하여 다시 확인해보세요.</p>
+                        <button type="button" onclick="setInternshipType('전체'); setInternshipRegion('전체'); handleInternshipSearch('');" class="mt-4 px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700 transition">필터 초기화</button>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = visibleItems.map(item => {
+                const isBookmarked = typeof isItemBookmarked === 'function' ? isItemBookmarked('internship', item.id) : false;
+
+                // Badge styling by type
+                let typeBadgeBg = 'bg-emerald-50 text-emerald-700 border-emerald-200';
+                if (item.programType === '공공기관·정부인턴') typeBadgeBg = 'bg-blue-50 text-blue-700 border-blue-200';
+                else if (item.programType === '메이저 NGO·공익재단') typeBadgeBg = 'bg-amber-50 text-amber-700 border-amber-200';
+                else if (item.programType === '기업 CSR·ESG인턴') typeBadgeBg = 'bg-purple-50 text-purple-700 border-purple-200';
+                else if (item.programType === '복지관·시설 현장인턴') typeBadgeBg = 'bg-slate-100 text-slate-700 border-slate-300';
+
+                // D-Day badge styling
+                const ddayText = item.dday || '접수중';
+                let ddayBadgeClass = 'bg-slate-100 text-slate-700 border-slate-200';
+                if (ddayText.includes('D-0') || ddayText.includes('Day') || ddayText.includes('오늘')) {
+                    ddayBadgeClass = 'bg-rose-500 text-white border-rose-600 animate-pulse font-extrabold';
+                } else if (ddayText.includes('D-1') || ddayText.includes('D-2') || ddayText.includes('D-3')) {
+                    ddayBadgeClass = 'bg-rose-50 text-rose-700 border-rose-300 font-bold';
+                } else if (ddayText.includes('D-')) {
+                    ddayBadgeClass = 'bg-amber-50 text-amber-700 border-amber-300 font-bold';
+                }
+
+                // Sources link buttons
+                const sourcesList = item.sources && item.sources.length > 0
+                    ? item.sources
+                    : [{ platform: item.sourcePlatform || '공식공고', badge: '공고 원문 ↗', url: item.url }];
+
+                const sourceButtonsHtml = sourcesList.map(s => `
+                    <a href="${s.url}" target="_blank" rel="noopener noreferrer"
+                       class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-600 text-emerald-800 hover:text-white font-bold text-[11px] transition border border-emerald-200 hover:border-transparent">
+                        <span>${escapeHtml(s.badge || s.platform + ' ↗')}</span>
+                    </a>
+                `).join(' ');
+
+                return `
+                    <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:shadow-md hover:border-emerald-300 transition-all duration-200 flex flex-col justify-between group">
+                        <div class="space-y-3">
+                            <!-- 헤더: 기관명, D-Day, 프로그램 뱃지 -->
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-1.5 flex-wrap mb-1">
+                                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border ${typeBadgeBg}">
+                                            ${escapeHtml(item.programTypeLabel || item.programType)}
+                                        </span>
+                                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border ${ddayBadgeClass}">
+                                            ${escapeHtml(ddayText)}
+                                        </span>
+                                        <span class="text-[11px] text-slate-400 font-medium">
+                                            마감: ${escapeHtml(item.deadline || '채용시 마감')}
+                                        </span>
+                                    </div>
+                                    <h4 class="text-xs font-bold text-slate-500 truncate" title="${escapeHtml(item.company)}">
+                                        ${escapeHtml(item.company)}
+                                    </h4>
+                                </div>
+                                <button type="button" onclick="toggleBookmark('internship', '${item.id}')"
+                                    class="p-1.5 rounded-xl text-slate-400 hover:text-amber-500 hover:bg-amber-50 transition cursor-pointer flex-shrink-0" title="찜하기">
+                                    <span class="text-base">${isBookmarked ? '⭐' : '☆'}</span>
+                                </button>
+                            </div>
+
+                            <!-- 공고 타이틀 -->
+                            <h3 class="text-sm font-extrabold text-slate-900 group-hover:text-emerald-700 transition line-clamp-2 leading-snug">
+                                <a href="${item.url}" target="_blank" rel="noopener noreferrer">
+                                    ${escapeHtml(item.title)}
+                                </a>
+                            </h3>
+
+                            <!-- 핵심 지원조건 그리드 -->
+                            <div class="bg-slate-50/80 rounded-xl p-3 space-y-1.5 text-xs text-slate-600 border border-slate-100">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-slate-400 font-medium w-14 flex-shrink-0">💰 지원금</span>
+                                    <span class="font-bold text-slate-800 truncate">${escapeHtml(item.allowance || '월 215만원')}</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-slate-400 font-medium w-14 flex-shrink-0">⏱️ 기 간</span>
+                                    <span class="font-medium text-slate-700 truncate">${escapeHtml(item.period || '3~6개월')}</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-slate-400 font-medium w-14 flex-shrink-0">📍 지 역</span>
+                                    <span class="font-medium text-slate-700 truncate">${escapeHtml(item.location || item.region)} (선발 ${escapeHtml(item.recruits || '0명')})</span>
+                                </div>
+                            </div>
+
+                            <!-- 직무 및 자격 칩 -->
+                            <div class="space-y-1 pt-1 text-xs">
+                                <div class="flex items-start gap-1.5 text-slate-600">
+                                    <span class="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.2 rounded flex-shrink-0">직무</span>
+                                    <span class="text-[11px] text-slate-600 line-clamp-1">${escapeHtml(item.duty || '사회복지 직무 지원')}</span>
+                                </div>
+                                <div class="flex items-start gap-1.5 text-slate-600">
+                                    <span class="text-[11px] font-bold text-slate-700 bg-slate-100 px-1.5 py-0.2 rounded flex-shrink-0">자격</span>
+                                    <span class="text-[11px] text-slate-500 line-clamp-1">${escapeHtml(item.qualification || '만 15~34세 청년')}</span>
+                                </div>
+                            </div>
+
+                            <!-- 기관 메모 팁 -->
+                            ${item.memo ? `
+                                <p class="text-[11px] text-slate-400 bg-white p-2 rounded-lg border border-dashed border-slate-200 line-clamp-2">
+                                    💡 ${escapeHtml(item.memo)}
+                                </p>
+                            ` : ''}
+                        </div>
+
+                        <!-- 하단 멀티 출처 버튼 트레이 -->
+                        <div class="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                            <span class="text-[10px] text-slate-400 font-medium truncate">
+                                ${escapeHtml(item.sourcePlatform || '공식채용')}
+                            </span>
+                            <div class="flex items-center gap-1.5 flex-wrap justify-end">
+                                ${sourceButtonsHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
         // --- 7-2. 실시간 채용공고 피드 상태 및 렌더링 (고용24 대량 연동) ---
         let currentJobSource = '전체'; // '전체' | 'work24' | 'welfare' | 'specialized'
         let currentJobEmploymentType = '전체';
@@ -9041,12 +9595,17 @@
 
             const regCount = jobList.filter(j => j.employmentType === '정규직').length;
             const conCount = jobList.filter(j => j.employmentType === '계약직').length;
-            const intCount = jobList.filter(j => j.employmentType === '청년인턴' || j.track === '인턴').length;
+            const internList = window.ALL_INTERNSHIP_POSTINGS || [];
 
             if (statTotal) statTotal.innerText = jobList.length.toLocaleString();
-            if (statIntern) statIntern.innerText = intCount.toLocaleString();
+            if (statIntern) statIntern.innerText = internList.length.toLocaleString();
             if (statRegular) statRegular.innerText = regCount.toLocaleString();
             if (statContract) statContract.innerText = conCount.toLocaleString();
+
+            const navJobsBadge = document.getElementById('nav-jobs-badge');
+            const mNavJobsBadge = document.getElementById('mobile-nav-jobs-badge');
+            if (navJobsBadge) navJobsBadge.innerText = jobList.length.toLocaleString();
+            if (mNavJobsBadge) mNavJobsBadge.innerText = jobList.length.toLocaleString();
 
             // Update feed header total
             const headerTotal = document.getElementById('jobs-header-total');
@@ -9074,7 +9633,7 @@
             if (empCntAll) empCntAll.innerText = jobList.length.toLocaleString();
             if (empCntReg) empCntReg.innerText = regCount.toLocaleString();
             if (empCntCon) empCntCon.innerText = conCount.toLocaleString();
-            if (empCntInt) empCntInt.innerText = intCount.toLocaleString();
+            if (empCntInt) empCntInt.innerText = (window.ALL_INTERNSHIP_POSTINGS || []).length.toLocaleString();
 
             let filtered = jobList.filter(j => {
                 // 0) Source match
@@ -9772,6 +10331,8 @@
             renderPracticumCards();
             renderPracticumHubTable();
             renderResidencyCards();
+            initInternshipRegions();
+            renderInternshipCards();
             renderJobsCards();
             renderJobsHubTable();
             renderNewsCards();
