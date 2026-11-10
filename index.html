@@ -443,7 +443,7 @@
 
                     <!-- 2차 세부 시·군·구 알약 트레이 (서울 자치구 / 경기 시·군 / 인천 군·구 동적 확장) -->
                     <div id="prac-subregion-tray" class="hidden p-2.5 rounded-xl bg-slate-50/90 border border-slate-200/90 transition-all">
-                        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs py-0.5" id="prac-subregion-pills"></div>
+                        <div class="flex flex-wrap items-center gap-1.5 text-xs py-0.5" id="prac-subregion-pills"></div>
                     </div>
                     <!-- Category Filter Row (한국사회복지사협회 공식 시설분류 리스트) -->
                     <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4" id="prac-field-pills">
@@ -655,7 +655,7 @@
 
                 <!-- 수련처 2차 세부 시·군·구 알약 트레이 -->
                 <div id="residency-subregion-tray" class="hidden p-2.5 rounded-xl bg-slate-50/90 border border-slate-200/90 transition-all">
-                    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs py-0.5" id="residency-subregion-pills"></div>
+                    <div class="flex flex-wrap items-center gap-1.5 text-xs py-0.5" id="residency-subregion-pills"></div>
                 </div>
 
                 <!-- 4행: 전문 트랙 분류 & 정렬 -->
@@ -880,7 +880,7 @@
 
                 <!-- 채용공고 2차 세부 시·군·구 알약 트레이 -->
                 <div id="jobs-subregion-tray" class="hidden p-2.5 rounded-xl bg-slate-50/90 border border-slate-200/90 transition-all">
-                    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs py-0.5" id="jobs-subregion-pills"></div>
+                    <div class="flex flex-wrap items-center gap-1.5 text-xs py-0.5" id="jobs-subregion-pills"></div>
                 </div>
 
                 <!-- 5행: 5대 커리어 분야 (복지관·병원·공공인턴·NGO·CSR) 및 정렬 -->
@@ -7685,16 +7685,16 @@
             tray.classList.remove('hidden');
             const regionLabel = region === '서울' ? '서울 25개 자치구' : (region === '경기' ? '경기 31개 시·군' : '인천 10개 군·구');
             
-            let html = `<span class="text-[11px] font-bold text-slate-500 flex-shrink-0 mr-1.5 flex items-center gap-1">
+            let html = `<span class="text-[11px] font-bold text-slate-500 mr-1.5 flex items-center gap-1 py-0.5">
                 <span>📍</span><span>${regionLabel}:</span>
             </span>`;
 
             const isAllActive = (currentSub === '전체');
-            html += `<button type="button" onclick="${clickFnName}('전체')" class="flex-shrink-0 px-2 py-0.5 rounded-lg text-xs font-bold transition cursor-pointer ${isAllActive ? 'bg-blue-600 text-white shadow-2xs' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'}">${region} 전체</button>`;
+            html += `<button type="button" onclick="${clickFnName}('전체')" class="px-2.5 py-1 rounded-md text-xs font-bold transition cursor-pointer ${isAllActive ? 'bg-blue-600 text-white shadow-2xs' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'}">${region} 전체</button>`;
 
             subList.forEach(sub => {
                 const isActive = (currentSub === sub);
-                html += `<button type="button" onclick="${clickFnName}('${sub}')" class="flex-shrink-0 px-2 py-0.5 rounded-lg text-xs transition cursor-pointer ${isActive ? 'bg-blue-600 text-white font-bold shadow-2xs' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 font-medium'}">${sub}</button>`;
+                html += `<button type="button" onclick="${clickFnName}('${sub}')" class="px-2.5 py-1 rounded-md text-xs transition cursor-pointer ${isActive ? 'bg-blue-600 text-white font-bold shadow-2xs' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 font-medium'}">${sub}</button>`;
             });
 
             pillsContainer.innerHTML = html;
