@@ -136,7 +136,7 @@
                     <button type="button" data-view="jobs" onclick="showView('jobs')" class="nav-tab-btn flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1.5 transition cursor-pointer">
                         <span>💼</span>
                         <span>취업공고</span>
-                        <span id="nav-jobs-badge" class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">1,770</span>
+                        <span id="nav-jobs-badge" class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">3,962</span>
                     </button>
                     <button type="button" data-view="news" onclick="showView('news')" class="nav-tab-btn flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1.5 transition cursor-pointer">
                         <span>📄</span>
@@ -168,7 +168,7 @@
             <button type="button" onclick="showView('fields')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-blue-50 text-blue-600">12대 분야와 법령</button>
             <button type="button" onclick="showView('practicum')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">실습처 탐색 (320건)</button>
             <button type="button" onclick="showView('residency')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">수련처 탐색 (284곳)</button>
-            <button type="button" onclick="showView('jobs')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">실시간 채용공고 (1,770건)</button>
+            <button type="button" onclick="showView('jobs')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">실시간 채용공고 (3,962건)</button>
             <button type="button" onclick="showView('news')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">복지 뉴스·브리핑 (21건)</button>
         </div>
     </nav>
@@ -193,7 +193,7 @@
             <button type="button" data-view="jobs" onclick="showView('jobs')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
                 <span>💼</span>
                 <span>취업공고</span>
-                <span id="mobile-nav-jobs-badge" class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">1,770</span>
+                <span id="mobile-nav-jobs-badge" class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">3,962</span>
             </button>
             <button type="button" data-view="news" onclick="showView('news')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
                 <span>📄</span>
@@ -968,9 +968,9 @@
                 <div class="flex items-center justify-between border-b border-slate-100 pb-2">
                     <div class="flex items-center gap-2">
                         <span class="text-blue-600 font-bold text-sm">🔥</span>
-                        <h3 class="text-sm font-extrabold text-slate-800">실시간 채용공고 <span id="jobs-header-total">1,770</span>건 피드 (고용24 공식 연동)</h3>
+                        <h3 class="text-sm font-extrabold text-slate-800">실시간 채용공고 <span id="jobs-header-total">3,962</span>건 피드 (고용24 전수 연동)</h3>
                     </div>
-                    <span class="text-[11px] text-slate-400">고용24 실시간 공고 · 정규직 · 사업전담 · 청년인턴</span>
+                    <span class="text-[11px] text-slate-400">고용24 전수 공고 · 정규직 · 사업전담 · 청년인턴</span>
                 </div>
 
                 <!-- 1행: 검색창 & 클리어 버튼 -->
@@ -996,16 +996,16 @@
                 <!-- 2.5행: 수집처 출처 필터 (전체 / 고용24 공식 / 복지넷·협회 / 병원·재단·인턴) -->
                 <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs pt-1 border-t border-slate-100" id="jobs-source-pills">
                     <span class="text-[11px] font-bold text-slate-400 flex-shrink-0 mr-1 w-12">수집처</span>
-                    <button type="button" id="job-src-btn-all" onclick="setJobSource('전체')" class="job-src-btn px-2.5 py-1 rounded-lg bg-slate-900 text-white font-bold text-xs flex-shrink-0 cursor-pointer shadow-2xs">전체 (<span id="job-src-cnt-all">1,770</span>)</button>
-                    <button type="button" id="job-src-btn-work24" onclick="setJobSource('work24')" class="job-src-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏢 고용24 공식 (<span id="job-src-cnt-work24">1,200</span>)</button>
-                    <button type="button" id="job-src-btn-welfare" onclick="setJobSource('welfare')" class="job-src-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏛️ 복지넷/협회 (<span id="job-src-cnt-welfare">400</span>)</button>
-                    <button type="button" id="job-src-btn-specialized" onclick="setJobSource('specialized')" class="job-src-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏥 병원·재단·인턴 (<span id="job-src-cnt-specialized">170</span>)</button>
+                    <button type="button" id="job-src-btn-all" onclick="setJobSource('전체')" class="job-src-btn px-2.5 py-1 rounded-lg bg-slate-900 text-white font-bold text-xs flex-shrink-0 cursor-pointer shadow-2xs">전체 (<span id="job-src-cnt-all">3,962</span>)</button>
+                    <button type="button" id="job-src-btn-work24" onclick="setJobSource('work24')" class="job-src-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏢 고용24 공식 (<span id="job-src-cnt-work24">3,392</span>)</button>
+                    <button type="button" id="job-src-btn-welfare" onclick="setJobSource('welfare')" class="job-src-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏛️ 복지넷/협회 (<span id="job-src-cnt-welfare">360</span>)</button>
+                    <button type="button" id="job-src-btn-specialized" onclick="setJobSource('specialized')" class="job-src-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🏥 병원·재단·인턴 (<span id="job-src-cnt-specialized">210</span>)</button>
                 </div>
 
                 <!-- 3행: 고용형태 필터 (전체 / 정규직 / 계약직·전담 / 청년인턴) -->
                 <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs pt-1 border-t border-slate-100" id="jobs-employment-pills">
                     <span class="text-[11px] font-bold text-slate-400 flex-shrink-0 mr-1 w-12">고용형태</span>
-                    <button type="button" onclick="setJobEmploymentType('전체')" class="job-emp-btn px-2.5 py-1 rounded-lg bg-slate-900 text-white font-bold text-xs flex-shrink-0 cursor-pointer">전체 (<span id="job-emp-cnt-all">1,770</span>)</button>
+                    <button type="button" onclick="setJobEmploymentType('전체')" class="job-emp-btn px-2.5 py-1 rounded-lg bg-slate-900 text-white font-bold text-xs flex-shrink-0 cursor-pointer">전체 (<span id="job-emp-cnt-all">3,962</span>)</button>
                     <button type="button" onclick="setJobEmploymentType('정규직')" class="job-emp-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">👔 정규직 (<span id="job-emp-cnt-regular">1,100+</span>)</button>
                     <button type="button" onclick="setJobEmploymentType('계약직')" class="job-emp-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">📋 계약직·전담 (<span id="job-emp-cnt-contract">500+</span>)</button>
                     <button type="button" onclick="setJobEmploymentType('청년인턴')" class="job-emp-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium text-xs flex-shrink-0 cursor-pointer">🌱 청년인턴 (<span id="job-emp-cnt-intern">100+</span>)</button>

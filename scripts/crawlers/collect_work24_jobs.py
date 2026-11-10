@@ -41,16 +41,29 @@ def parse_region(address):
     sub = parts[1] if len(parts) > 1 else "전체"
     return region, sub
 
-def parse_work24_page(page_no, result_cnt=50, occupation_code="231100%2C231101%2C231102%2C231103%2C232900%2C232904%2C013500"):
-    url = (
-        f"https://m.work24.go.kr/wk/a/b/1200/retriveDtlEmpSrchList.do?"
-        f"occupation={occupation_code}&"
-        f"keyword=%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80&"
-        f"resultCnt={result_cnt}&"
-        f"currentPageNo={page_no}&"
-        f"pageIndex={page_no}&"
-        f"sortField=DATE&sortOrderBy=DESC"
-    )
+def parse_work24_page(page_no, result_cnt=50, query_mode="occupation"):
+    if query_mode == "occupation":
+        url = (
+            f"https://m.work24.go.kr/wk/a/b/1200/retriveDtlEmpSrchList.do?"
+            f"occupation=231100%2C231101%2C231102%2C231103%2C232900%2C232904%2C013500&"
+            f"keyword=%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80&"
+            f"resultCnt={result_cnt}&"
+            f"currentPageNo={page_no}&"
+            f"pageIndex={page_no}&"
+            f"sortField=DATE&sortOrderBy=DESC"
+        )
+    else:
+        # Title keyword mode ('사회복지사' 제목 검색 풀 1,920건)
+        url = (
+            f"https://m.work24.go.kr/wk/a/b/1200/retriveDtlEmpSrchList.do?"
+            f"srcKeyword=%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%82%AC&"
+            f"keywordWantedTitle=Y&"
+            f"resultCnt={result_cnt}&"
+            f"currentPageNo={page_no}&"
+            f"pageIndex={page_no}&"
+            f"sortField=DATE&sortOrderBy=DESC"
+        )
+        
     req = urllib.request.Request(url, headers={
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -61,7 +74,7 @@ def parse_work24_page(page_no, result_cnt=50, occupation_code="231100%2C231101%2
         with urllib.request.urlopen(req, timeout=15) as resp:
             html = resp.read().decode('utf-8', errors='ignore')
     except Exception as e:
-        print(f"[Work24] Page {page_no} fetch error: {e}")
+        print(f"[Work24-{query_mode}] Page {page_no} fetch error: {e}")
         return []
 
     soup = BeautifulSoup(html, 'html.parser')
@@ -200,42 +213,75 @@ def parse_work24_page(page_no, result_cnt=50, occupation_code="231100%2C231101%2
         
     return postings
 
-def run_work24_collection(target_count=1200, max_pages=35):
-    print(f"[Work24] Starting collection (target: {target_count}+ items, max_pages: {max_pages})...")
+def run_work24_collection(target_count=3500, max_pages=75):
+    print(f"[Work24] Starting FULL collection (target: up to {target_count} items, max_pages: {max_pages})...")
     all_jobs = []
     seen_ids = set()
     
+    # 1. First Pass: Occupation Code 8종 (3,290건 풀 전수 탐색)
+    print("\n--- [Step 1] Crawling Work24 Occupation Pool (8 Social Work Codes) ---")
+    consecutive_empty = 0
     for page in range(1, max_pages + 1):
-        print(f"[Work24] Fetching page {page}/{max_pages}...")
-        jobs = parse_work24_page(page, result_cnt=50)
+        jobs = parse_work24_page(page, result_cnt=50, query_mode="occupation")
+        if not jobs:
+            consecutive_empty += 1
+            if consecutive_empty >= 2:
+                print(f"[Work24-Occupation] Reached end of results at page {page}.")
+                break
+            continue
+        consecutive_empty = 0
         new_cnt = 0
         for j in jobs:
-            key = j['wantedAuthNo'] or j['title'] + j['company']
+            key = j['wantedAuthNo'] or (j['title'] + j['company'])
             if key not in seen_ids:
                 seen_ids.add(key)
                 all_jobs.append(j)
                 new_cnt += 1
                 
-        print(f"       -> Extracted {len(jobs)} jobs ({new_cnt} unique active). Total so far: {len(all_jobs)}")
+        print(f"[Step 1: Page {page:02d}] Fetched {len(jobs)} -> Added {new_cnt} unique active. (Total: {len(all_jobs)})")
         if len(all_jobs) >= target_count:
-            print(f"[Work24] Reached target count of {len(all_jobs)} items!")
             break
-        if len(jobs) == 0:
-            print(f"[Work24] No more items found on page {page}.")
+        time.sleep(0.15)
+
+    # 2. Second Pass: Title Keyword '사회복지사' (1,920건 추가 보완)
+    print("\n--- [Step 2] Crawling Work24 Title Keyword Pool ('사회복지사') ---")
+    consecutive_empty = 0
+    for page in range(1, 45):
+        jobs = parse_work24_page(page, result_cnt=50, query_mode="keyword")
+        if not jobs:
+            consecutive_empty += 1
+            if consecutive_empty >= 2:
+                print(f"[Work24-Keyword] Reached end of results at page {page}.")
+                break
+            continue
+        consecutive_empty = 0
+        new_cnt = 0
+        for j in jobs:
+            key = j['wantedAuthNo'] or (j['title'] + j['company'])
+            if key not in seen_ids:
+                seen_ids.add(key)
+                all_jobs.append(j)
+                new_cnt += 1
+                
+        if new_cnt > 0:
+            print(f"[Step 2: Page {page:02d}] Fetched {len(jobs)} -> Added {new_cnt} NEW unique active! (Total: {len(all_jobs)})")
+        if len(all_jobs) >= target_count:
             break
-        time.sleep(0.3)
+        time.sleep(0.15)
         
-    print(f"\n[Work24] Finished collection. Total valid active jobs: {len(all_jobs)}")
+    print(f"\n=======================================================")
+    print(f"[Work24] FULL Collection Complete! Total valid active jobs: {len(all_jobs)}")
+    print(f"=======================================================\n")
     return all_jobs
 
 if __name__ == "__main__":
-    jobs = run_work24_collection(target_count=1200, max_pages=30)
+    jobs = run_work24_collection(target_count=3500, max_pages=75)
     out_path = "src/data/work24-jobs-db.js"
     with open(out_path, "w", encoding="utf-8") as f:
-        f.write("// 고용24 (Work24) 실시간 사회복지 채용공고 공식 DB\n")
+        f.write("// 고용24 (Work24) 실시간 사회복지 채용공고 공식 DB (전수 수집 풀)\n")
         f.write(f"// 수집 시각: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
         f.write(f"// 총 유효 공고 수: {len(jobs)}건 (마감일 경과 공고 자동 배제)\n\n")
         f.write("window.WORK24_JOB_POSTINGS = ")
         json.dump(jobs, f, ensure_ascii=False, indent=2)
         f.write(";\n")
-    print(f"[Work24] Saved {len(jobs)} items to {out_path}")
+    print(f"[Work24] Successfully saved {len(jobs)} items to {out_path}")
