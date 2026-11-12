@@ -86,6 +86,22 @@
             -ms-overflow-style: none !important;
             scrollbar-width: none !important;
         }
+    
+        .tap-bounce {
+            transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .tap-bounce:active {
+            transform: scale(0.97);
+        }
+        .accordion-content {
+            transition: max-height 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+        }
+        .shadow-subtle {
+            box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.05), 0 1px 3px -1px rgba(15, 23, 42, 0.03);
+        }
+        .shadow-card {
+            box-shadow: 0 4px 16px -4px rgba(15, 23, 42, 0.07), 0 2px 6px -2px rgba(15, 23, 42, 0.04);
+        }
     </style>
 </head>
 <body class="antialiased bg-[#F8FAFC] text-[#0F172A] min-h-screen flex flex-col font-sans selection:bg-blue-600 selection:text-white">
@@ -223,7 +239,155 @@
         
         <!-- ==================== VIEW 1: 12대 분야와 법령 도감 ==================== -->
         <section id="view-fields" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-8">
+            <!-- [구글 스티치 리디자인: 모바일 전용 뷰 (block md:hidden)] -->
+            <div class="block md:hidden space-y-4 pt-1">
+                <!-- 1. 히어로 배너: 모바일 정보 요약 카드 -->
+                <div class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-2xl p-4 text-white shadow-md relative overflow-hidden">
+                    <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
+                    <div class="relative z-10 space-y-1.5">
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/15 text-[11px] font-bold text-blue-100 backdrop-blur-xs">
+                            <span>🏛️</span><span>2026 현행 정부부처 법정 체계</span>
+                        </div>
+                        <h2 class="text-lg font-black tracking-tight leading-snug">
+                            법령별 · 12대 분야별 기관 도감
+                        </h2>
+                        <p class="text-xs text-blue-100/90 leading-relaxed">
+                            거주형 <strong>생활시설</strong>과 통원형 <strong>이용시설</strong>의 법적 구분 및 근거법령을 카드별로 손쉽게 확인하세요.
+                        </p>
+                        <div class="flex items-center gap-2 pt-1 text-[11px] font-semibold text-blue-200">
+                            <span>• 24개 법정분야</span>
+                            <span>• 10개 중앙행정부처</span>
+                            <span>• 민간 제3섹터</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. 모바일 간편 검색창 & 뷰 토글 -->
+                <div class="space-y-2.5">
+                    <div class="relative">
+                        <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
+                        <input id="mobile-field-search" oninput="handleMobileSearch(this.value)" type="text" placeholder="분야명, 시설명, 법령(예: 노인, 장애인, 의료법)..." 
+                               class="w-full pl-9 pr-8 py-2.5 rounded-xl border border-slate-200 bg-white text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-xs">
+                        <button type="button" onclick="clearMobileSearch()" id="search-clear-btn" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold hover:text-slate-600">✕</button>
+                    </div>
+
+                    <!-- 소관부처 가로 스크롤 필터 알약 (1-Row Horizontal Pills) -->
+                    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="mobile-ministry-pills">
+                        <button type="button" onclick="filterByMinistry('전체')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-extrabold bg-slate-900 text-white flex-shrink-0 transition shadow-2xs">전체 (24)</button>
+                        <button type="button" onclick="filterByMinistry('보건복지부')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition">🏥 복지부 (10)</button>
+                        <button type="button" onclick="filterByMinistry('성평등가족부')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition">👨👩👧 성평등가족부 (6)</button>
+                        <button type="button" onclick="filterByMinistry('교육부')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition">🎓 교육부 (2)</button>
+                        <button type="button" onclick="filterByMinistry('고용노동부')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition">💼 고용노동부</button>
+                        <button type="button" onclick="filterByMinistry('법무부')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition">⚖️ 법무부</button>
+                        <button type="button" onclick="filterByMinistry('국가보훈부')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition">🎖️ 국가보훈부</button>
+                        <button type="button" onclick="filterByMinistry('행정안전부')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition">🏛️ 행정안전부</button>
+                        <button type="button" onclick="filterByMinistry('질병관리청')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition">🔬 질병청</button>
+                        <button type="button" onclick="filterByMinistry('통일부')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition">🕊️ 통일부</button>
+                        <button type="button" onclick="filterByMinistry('민간제3섹터')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 flex-shrink-0 transition flex items-center gap-1">
+                            <span>🤝</span><span>민간 제3섹터</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3. 상태 표시 바 (개수 및 모두 펼치기/접기 제어) -->
+                <div class="flex items-center justify-between text-xs text-slate-500 px-1 pt-1">
+                    <div>
+                        검색 결과: <strong id="mobile-match-count" class="text-blue-600 font-extrabold">24</strong>개 법정분야
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="toggleAllCards(true)" class="text-[11px] font-semibold text-slate-600 hover:text-blue-600 transition cursor-pointer">모두 펼치기</button>
+                        <span class="text-slate-300">|</span>
+                        <button type="button" onclick="toggleAllCards(false)" class="text-[11px] font-semibold text-slate-600 hover:text-blue-600 transition cursor-pointer">모두 접기</button>
+                    </div>
+                </div>
+
+                <!-- 4. 모바일 최적화 아코디언 카드 피드 -->
+                <div id="mobile-cards-feed" class="space-y-3">
+                    <!-- Dynamically populated by renderMobileCards() -->
+                </div>
+
+                <!-- 5. 🤝 민간 제3섹터 & 공익임팩트 생태계 모바일 전용 카드 -->
+                <div id="mobile-ngo-section" class="bg-gradient-to-br from-amber-50/70 via-white to-orange-50/50 rounded-2xl border-2 border-amber-200 p-4 shadow-subtle space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="px-2 py-0.5 rounded-md bg-amber-600 text-white font-extrabold text-[10px]">
+                            🤝 정부부처 외 별도 섹터
+                        </span>
+                        <span class="text-[10px] font-bold text-amber-900 bg-amber-100 px-2 py-0.5 rounded border border-amber-300">
+                            근거: 「민법」 제32조
+                        </span>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-900">민간 제3섹터 & 사회혁신 임팩트 생태계</h3>
+                        <p class="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
+                            국제구호 NGO · 모금배분재단 · 기업 CSR/ESG는 정부 행정부처가 아닌 민법 제32조 비영리 공익법인 영역입니다.
+                        </p>
+                    </div>
+
+                    <!-- 3대 영역 모바일 미니 카드 -->
+                    <div class="space-y-2 pt-1">
+                        <!-- 1. 국제구호 -->
+                        <div class="bg-white rounded-xl p-3 border border-slate-200/90 shadow-2xs space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <strong class="text-xs font-bold text-slate-900 flex items-center gap-1">
+                                    <span>🌍</span><span>국제구호 · 개발협력 NGO</span>
+                                </strong>
+                                <span class="text-[10px] text-blue-600 font-semibold">KCOC 회원사</span>
+                            </div>
+                            <p class="text-[11px] text-slate-500">월드비전, 굿네이버스, 초록우산, 세이브더칠드런, 기아대책 등</p>
+                            <div class="text-[10px] text-slate-600 bg-slate-50 p-1.5 rounded border border-slate-100">
+                                <strong>주요 직무:</strong> KOICA YP(청년인턴), 해외사업 PM, 모금개발, 옹호활동
+                            </div>
+                        </div>
+
+                        <!-- 2. 모금배분 -->
+                        <div class="bg-white rounded-xl p-3 border border-slate-200/90 shadow-2xs space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <strong class="text-xs font-bold text-slate-900 flex items-center gap-1">
+                                    <span>🎁</span><span>모금 · 배분 공익재단</span>
+                                </strong>
+                                <span class="text-[10px] text-emerald-600 font-semibold">민간 재원 거점</span>
+                            </div>
+                            <p class="text-[11px] text-slate-500">사랑의열매(공동모금회), 아름다운재단, 바보의나눔, 아산복지재단</p>
+                            <div class="text-[10px] text-slate-600 bg-slate-50 p-1.5 rounded border border-slate-100">
+                                <strong>주요 직무:</strong> 배분사업 기획·공모 심사, 기부자 커뮤니케이션(Donor Care)
+                            </div>
+                        </div>
+
+                        <!-- 3. 기업 CSR -->
+                        <div class="bg-white rounded-xl p-3 border border-slate-200/90 shadow-2xs space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <strong class="text-xs font-bold text-slate-900 flex items-center gap-1">
+                                    <span>🏢</span><span>기업 CSR/ESG & 사회적기업</span>
+                                </strong>
+                                <span class="text-[10px] text-purple-600 font-semibold">소셜 임팩트</span>
+                            </div>
+                            <p class="text-[11px] text-slate-500">현대차정몽구재단, SK행복나눔재단, 포스코1%나눔재단 등</p>
+                            <div class="text-[10px] text-slate-600 bg-slate-50 p-1.5 rounded border border-slate-100">
+                                <strong>주요 직무:</strong> 기업 사회공헌 프로그램 운영, 사회적가치(SV) 측정
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. 하단 바로가기 바 -->
+                <div class="pt-3 pb-4">
+                    <div class="grid grid-cols-3 gap-2">
+                        <button type="button" onclick="showView('practicum')" class="py-2.5 rounded-xl bg-white border border-slate-200 text-slate-800 text-xs font-bold transition flex items-center justify-center gap-1 shadow-2xs tap-bounce cursor-pointer">
+                            <span>🌱</span><span>실습처 찾기</span>
+                        </button>
+                        <button type="button" onclick="showView('residency')" class="py-2.5 rounded-xl bg-white border border-slate-200 text-slate-800 text-xs font-bold transition flex items-center justify-center gap-1 shadow-2xs tap-bounce cursor-pointer">
+                            <span>🧠</span><span>수련처 찾기</span>
+                        </button>
+                        <button type="button" onclick="showView('jobs')" class="py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition flex items-center justify-center gap-1 shadow-sm tap-bounce cursor-pointer">
+                            <span>💼</span><span>취업공고 보기</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- [데스크톱/태블릿 전용 뷰 (hidden md:block)] -->
+            <div class="hidden md:block space-y-6">
+<div class="text-center mb-8">
                 <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold mb-3">
                     2026 현행 복지법령 종합 안내
                 </div>
@@ -423,6 +587,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </section>
 
@@ -7932,6 +8097,596 @@
         }
 
         // 4. View 1: 12대 분야와 법령 테이블 렌더링 & 소관부처별 그룹화
+        
+        // ==================== View 1: 모바일 법령 도감 아코디언 피드 (구글 스티치 리디자인) ====================
+        const STATUTORY_DATA = [
+            {
+                id: 'law-elderly',
+                ministry: '보건복지부',
+                ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
+                ministryIcon: '🏥',
+                facilityCategory: '노인복지시설',
+                fieldId: 'elderly',
+                tag: '노인',
+                livingFacilities: [
+                    '노인주거복지시설 (양로시설, 노인공동생활가정, 노인복지주택)',
+                    '노인의료복지시설 (노인요양시설, 노인요양공동생활가정)',
+                    '학대피해노인전용쉼터'
+                ],
+                usingFacilities: [
+                    '재가노인복지시설 (방문요양, 주야간보호, 단기보호)',
+                    '노인여가복지시설 (노인복지관, 경로당, 노인교실)',
+                    '노인보호전문기관 (학대예방 및 긴급보호)',
+                    '노인일자리지원기관 (시니어클럽 등)'
+                ],
+                laws: ['노인복지법', '노인장기요양보험법'],
+                note: '요양보호사 및 사회복지사 케어매니저 핵심 실천 현장'
+            },
+            {
+                id: 'law-integrated-care',
+                ministry: '보건복지부',
+                ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
+                ministryIcon: '🏥',
+                facilityCategory: '지역 통합돌봄 지원체계 (2026 전면시행)',
+                fieldId: 'elderly',
+                tag: '통합돌봄',
+                livingFacilities: [],
+                usingFacilities: [
+                    '지자체 통합지원 전담조직 및 읍면동 통합창구',
+                    '재택의료 · 퇴원환자 전환돌봄 거점기관',
+                    '살던 곳에서의 돌봄(Aging in Place) 민관 연계망'
+                ],
+                laws: ['의료·요양 등 지역 돌봄의 통합지원에 관한 법률'],
+                note: '2026년 3월 전국 시행 핵심 제도 (의료-요양-주거-복지 통합)'
+            },
+            {
+                id: 'law-rural-elderly',
+                ministry: '보건복지부',
+                ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
+                ministryIcon: '🏥',
+                facilityCategory: '복합노인복지시설 (농어촌)',
+                fieldId: 'elderly',
+                tag: '농어촌복지',
+                livingFacilities: ['복합노인주거복지시설'],
+                usingFacilities: ['복합노인여가·재가복지시설'],
+                laws: ['농어촌주민의 보건복지증진을 위한 특별법', '노인복지법'],
+                note: '농어촌 지역에 한해 설치·운영 가능한 복합형 노인복지 거점'
+            },
+            {
+                id: 'law-child',
+                ministry: '보건복지부',
+                ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
+                ministryIcon: '🏥',
+                facilityCategory: '아동복지시설',
+                fieldId: 'child',
+                tag: '아동',
+                livingFacilities: [
+                    '아동양육시설, 아동일시보호시설, 아동보호치료시설',
+                    '공동생활가정 (그룹홈)',
+                    '자립지원시설, 학대피해아동쉼터'
+                ],
+                usingFacilities: [
+                    '지역아동센터, 다함께돌봄센터 (방과후 돌봄)',
+                    '아동보호전문기관 (학대 조사 및 사례관리)',
+                    '가정위탁지원센터, 자립지원전담기관'
+                ],
+                laws: ['아동복지법'],
+                note: '자립준비청년 및 아동인권 옹호 핵심 영역'
+            },
+            {
+                id: 'law-disability',
+                ministry: '보건복지부',
+                ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
+                ministryIcon: '🏥',
+                facilityCategory: '장애인복지시설',
+                fieldId: 'disability',
+                tag: '장애인',
+                livingFacilities: [
+                    '장애유형별 거주시설, 중증장애인 거주시설',
+                    '장애인공동생활가정 (그룹홈), 장애인단기거주시설',
+                    '피해장애인쉼터'
+                ],
+                usingFacilities: [
+                    '장애인지역사회재활시설 (장애인복지관, 주간이용시설)',
+                    '장애인직업재활시설 (보호작업장, 근로사업장)',
+                    '장애인의료재활시설, 발달장애인지원센터'
+                ],
+                laws: ['장애인복지법', '발달장애인법'],
+                note: '탈시설 자립생활 및 개인예산제 선도 분야'
+            },
+            {
+                id: 'law-mental',
+                ministry: '보건복지부',
+                ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
+                ministryIcon: '🏥',
+                facilityCategory: '정신건강증진시설 · 복지센터',
+                fieldId: 'mental',
+                tag: '정신건강',
+                livingFacilities: [
+                    '정신요양시설, 정신의료기관(입원)',
+                    '정신재활시설 (생활시설형 그룹홈)'
+                ],
+                usingFacilities: [
+                    '광역 · 기초 정신건강복지센터',
+                    '정신재활시설 (주간재활, 직업재활)',
+                    '중독관리통합지원센터, 자살예방센터'
+                ],
+                laws: ['정신건강복지법', '자살예방법'],
+                note: '정신건강사회복지사(법정 1급 1년 수련) 양성 영역'
+            },
+            {
+                id: 'law-welfare-center',
+                ministry: '보건복지부',
+                ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
+                ministryIcon: '🏥',
+                facilityCategory: '사회복지관 · 종합사회복지관',
+                fieldId: 'community',
+                tag: '지역복지',
+                livingFacilities: [],
+                usingFacilities: [
+                    '종합사회복지관 (사례관리 · 서비스제공 · 지역조직화 3대 기능)',
+                    '푸드뱅크 · 푸드마켓 (기부식품 제공사업장)'
+                ],
+                laws: ['사회복지사업법', '국민기초생활보장법'],
+                note: '사회복지 전공 대학생 최대 실습 및 취업 거점'
+            },
+            {
+                id: 'law-selfreliance',
+                ministry: '보건복지부',
+                ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
+                ministryIcon: '🏥',
+                facilityCategory: '지역자활센터 · 자활근로사업단',
+                fieldId: 'community',
+                tag: '자활복지',
+                livingFacilities: [],
+                usingFacilities: ['지역자활센터', '자활근로사업단', '자활기업', '광역자활센터'],
+                laws: ['국민기초생활보장법'],
+                note: '기초수급자 및 차상위계층 취·창업 자립 지원 거점'
+            },
+            {
+                id: 'law-medical',
+                ministry: '보건복지부',
+                ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
+                ministryIcon: '🏥',
+                facilityCategory: '의료사회복지 · 병원 사회사업팀',
+                fieldId: 'medical',
+                tag: '의료보건',
+                livingFacilities: ['호스피스 완화의료 입원형 기관'],
+                usingFacilities: [
+                    '상급종합병원 · 종합병원 의료사회사업실',
+                    '재활병원 · 공공의료원 공공보건의료사업실'
+                ],
+                laws: ['의료법', '사회복지사업법', '재난적의료비지원법'],
+                note: '의료사회복지사(법정 국가자격) 1년 수련병원 연계'
+            },
+            {
+                id: 'law-homeless',
+                ministry: '보건복지부',
+                ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
+                ministryIcon: '🏥',
+                facilityCategory: '노숙인복지시설',
+                fieldId: 'homeless',
+                tag: '주거복지',
+                livingFacilities: ['노숙인자활시설, 노숙인재활시설, 노숙인요양시설'],
+                usingFacilities: ['노숙인종합지원센터, 일시보호시설, 무료급식소, 쪽방상담소'],
+                laws: ['노숙인복지법'],
+                note: '긴급 위기 주거지원 및 사회복귀 체계'
+            },
+            {
+                id: 'law-kdca',
+                ministry: '질병관리청',
+                ministryBadge: 'bg-teal-50 text-teal-800 border-teal-200',
+                ministryIcon: '🔬',
+                facilityCategory: '결핵 · 한센시설',
+                fieldId: 'kdca',
+                tag: '감염병복지',
+                livingFacilities: ['국립소록도병원, 한센인 정착촌 복지시설'],
+                usingFacilities: [],
+                laws: ['사회복지사업법'],
+                note: '특수 감염병 취약계층 전문 의료·생활 지원'
+            },
+            {
+                id: 'law-gender-family',
+                ministry: '성평등가족부',
+                ministryBadge: 'bg-pink-50 text-pink-800 border-pink-200',
+                ministryIcon: '👨👩👧',
+                facilityCategory: '가족센터 · 여성긴급지원',
+                fieldId: 'family',
+                tag: '가족다문화',
+                livingFacilities: ['한부모가족복지시설 (출산·양육·생활지원)'],
+                usingFacilities: [
+                    '가족센터 (구 건강가정·다문화가족지원센터 통합)',
+                    '공동육아나눔터, 여성새로일하기센터'
+                ],
+                laws: ['건강가정기본법', '다문화가족지원법', '한부모가족지원법'],
+                note: '지자체 보편적 가족돌봄 및 통합 상담 거점'
+            },
+            {
+                id: 'law-violence-shelter',
+                ministry: '성평등가족부',
+                ministryBadge: 'bg-pink-50 text-pink-800 border-pink-200',
+                ministryIcon: '👨👩👧',
+                facilityCategory: '폭력피해자 보호 · 상담시설',
+                fieldId: 'violence',
+                tag: '인권보호',
+                livingFacilities: ['가정폭력보호시설, 성폭력피해자보호시설, 스토킹피해자쉼터'],
+                usingFacilities: ['가정폭력상담소, 성폭력피해상담소, 해바라기센터 (통합지원)'],
+                laws: ['가정폭력방지법', '성폭력방지법', '스토킹방지법'],
+                note: '24시간 긴급구호 1366 및 의료·수사·법률 원스톱 지원'
+            },
+            {
+                id: 'law-single-parent',
+                ministry: '성평등가족부',
+                ministryBadge: 'bg-pink-50 text-pink-800 border-pink-200',
+                ministryIcon: '👨👩👧',
+                facilityCategory: '한부모가족복지시설',
+                fieldId: 'family',
+                tag: '한부모가족',
+                livingFacilities: ['기본형(출산·양육지원), 공동생활형, 자립생활형 거주시설'],
+                usingFacilities: ['한부모가족종합지원센터, 일시지원복지시설'],
+                laws: ['한부모가족지원법'],
+                note: '미혼모·부 및 위기 한부모가족 맞춤형 주거·양육·자립 원스톱 지원'
+            },
+            {
+                id: 'law-sexual-violence',
+                ministry: '성평등가족부',
+                ministryBadge: 'bg-pink-50 text-pink-800 border-pink-200',
+                ministryIcon: '👨👩👧',
+                facilityCategory: '성폭력피해자 보호시설 · 해바라기센터',
+                fieldId: 'violence',
+                tag: '성폭력피해자',
+                livingFacilities: ['성폭력피해자보호시설 (일반·특별·장애인쉼터), 자립지원공동생활시설'],
+                usingFacilities: ['성폭력피해상담소, 해바라기센터 (위기지원형·통합형·아동청소년전담형)'],
+                laws: ['성폭력방지 및 피해자보호 등에 관한 법률'],
+                note: '여성·아동 대상 위기 긴급구호 및 수사·법률·의료·상담 24시간 원스톱 연계'
+            },
+            {
+                id: 'law-domestic-violence',
+                ministry: '성평등가족부',
+                ministryBadge: 'bg-pink-50 text-pink-800 border-pink-200',
+                ministryIcon: '👨👩👧',
+                facilityCategory: '가정폭력피해자 보호시설 · 스토킹쉼터',
+                fieldId: 'violence',
+                tag: '가정폭력·스토킹',
+                livingFacilities: ['가정폭력피해자보호시설 (단기·중장기보호시설), 스토킹피해자쉼터'],
+                usingFacilities: ['가정폭력상담소, 긴급여성의전화 1366 센터'],
+                laws: ['가정폭력방지 및 피해자보호 등에 관한 법률', '스토킹방지 및 피해자보호 등에 관한 법률'],
+                note: '긴급 임시거소 제공 및 심리치료·자립지원'
+            },
+            {
+                id: 'law-youth',
+                ministry: '성평등가족부',
+                ministryBadge: 'bg-pink-50 text-pink-800 border-pink-200',
+                ministryIcon: '👨👩👧',
+                facilityCategory: '청소년복지 · 자립지원시설',
+                fieldId: 'youth',
+                tag: '청소년',
+                livingFacilities: ['청소년쉼터 (일시·단기·중장기), 청소년자립지원관'],
+                usingFacilities: ['청소년상담복지센터 (1388), 학교밖청소년지원센터(꿈드림)'],
+                laws: ['청소년복지지원법', '학교밖청소년법'],
+                note: '가정 밖 위기청소년 보호 및 검정고시·자립 연계'
+            },
+            {
+                id: 'law-school',
+                ministry: '교육부',
+                ministryBadge: 'bg-indigo-50 text-indigo-800 border-indigo-200',
+                ministryIcon: '🎓',
+                facilityCategory: '학교사회복지 · 학생맞춤통합지원',
+                fieldId: 'school',
+                tag: '교육복지',
+                livingFacilities: [],
+                usingFacilities: [
+                    '초·중·고교 내 교육복지실 · 학교사회복지실',
+                    '교육지원청 Wee센터 및 학생맞춤통합지원센터'
+                ],
+                laws: ['초·중등교육법', '사회복지사업법', '학생맞춤통합지원법'],
+                note: '학교사회복지사(법정 국가자격) 및 교육복지우선지원사업'
+            },
+            {
+                id: 'law-childcare',
+                ministry: '교육부',
+                ministryBadge: 'bg-indigo-50 text-indigo-800 border-indigo-200',
+                ministryIcon: '🎓',
+                facilityCategory: '어린이집 (유보통합 이관)',
+                fieldId: 'childcare',
+                tag: '보육',
+                livingFacilities: [],
+                usingFacilities: ['어린이집 (국공립, 법인, 민간, 직장 등)'],
+                laws: ['영유아보육법'],
+                note: '유보통합 추진으로 복지부에서 교육부로 이관 반영'
+            },
+            {
+                id: 'law-labor',
+                ministry: '고용노동부',
+                ministryBadge: 'bg-teal-50 text-teal-800 border-teal-200',
+                ministryIcon: '💼',
+                facilityCategory: '장애인 고용 · 산재재활 · 사회적경제',
+                fieldId: 'labor',
+                tag: '고용재활',
+                livingFacilities: ['산재요양시설 (요양형 산재지정기관)'],
+                usingFacilities: [
+                    '한국장애인고용공단 지사 및 맞춤훈련센터',
+                    '근로복지공단 산재병원 의료사회사업팀',
+                    '사회적기업, 협동조합 육성센터'
+                ],
+                laws: ['장애인고용촉진법', '산업재해보상보험법', '사회적기업육성법'],
+                note: '직업복귀, 산재의료사회사업 및 청년 일경험 연계'
+            },
+            {
+                id: 'law-justice',
+                ministry: '법무부',
+                ministryBadge: 'bg-purple-50 text-purple-800 border-purple-200',
+                ministryIcon: '⚖️',
+                facilityCategory: '보호관찰 · 사법·교정보호시설',
+                fieldId: 'justice',
+                tag: '사법교정',
+                livingFacilities: ['교정시설 (교도소 사회복귀과), 소년원, 치료감호소'],
+                usingFacilities: [
+                    '전국 준법지원센터 (보호관찰소)',
+                    '한국법무보호복지공단 (출소자 갱생자립)',
+                    '스마일센터 (범죄피해 트라우마 치유)'
+                ],
+                laws: ['보호관찰법', '형집행법', '보호소년법'],
+                note: '보호직 공무원 및 교정사회복지사 진출 경로'
+            },
+            {
+                id: 'law-public-admin',
+                ministry: '행정안전부',
+                ministryBadge: 'bg-slate-100 text-slate-800 border-slate-300',
+                ministryIcon: '🏛️',
+                facilityCategory: '공공복지 전달체계 · 시도 사회서비스원',
+                fieldId: 'public',
+                tag: '공공전달',
+                livingFacilities: [],
+                usingFacilities: [
+                    '읍면동 행정복지센터 (맞춤형복지팀 전담공무원)',
+                    '시·군·구 희망복지지원단 (통합사례관리)',
+                    '시·도 사회서비스원 (공공돌봄 및 국공립시설 위탁운영)'
+                ],
+                laws: ['사회보장급여법', '사회서비스원법'],
+                note: '사회복지전담공무원 및 공공 사회서비스 총괄'
+            },
+            {
+                id: 'law-veterans',
+                ministry: '국가보훈부',
+                ministryBadge: 'bg-amber-50 text-amber-800 border-amber-200',
+                ministryIcon: '🎖️',
+                facilityCategory: '국가유공자 보훈요양 · 보훈병원',
+                fieldId: 'veterans',
+                tag: '보훈',
+                livingFacilities: ['보훈요양원 (수원·광주·김해·대구·대전·남양주·원주·전주)'],
+                usingFacilities: [
+                    '중앙보훈병원 및 권역별 보훈병원 사회사업팀',
+                    '보훈재가복지센터 (보훈섬김이 방문돌봄)'
+                ],
+                laws: ['국가유공자예우법'],
+                note: '한국보훈복지의료공단 산하 정규 복지 인력'
+            },
+            {
+                id: 'law-unification',
+                ministry: '통일부',
+                ministryBadge: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+                ministryIcon: '🕊️',
+                facilityCategory: '북한이탈주민 지역적응센터 (하나센터)',
+                fieldId: 'unification',
+                tag: '북한이탈',
+                livingFacilities: [],
+                usingFacilities: ['권역별 북한이탈주민 지역적응센터 (하나센터)'],
+                laws: ['북한이탈주민보호법'],
+                note: '탈북민 초기 정착 심리상담 및 자립 지원'
+            }
+        ];
+
+        let openCardMap = { 'law-elderly': true, 'law-child': true };
+        let currentFilteredMobileData = STATUTORY_DATA;
+
+        function renderMobileCards(list = currentFilteredMobileData) {
+            const feed = document.getElementById('mobile-cards-feed');
+            const countEl = document.getElementById('mobile-match-count');
+            const ngoSection = document.getElementById('mobile-ngo-section');
+            if (!feed) return;
+
+            // 민간 제3섹터 필터 처리
+            if (currentMinistryFilter === '민간제3섹터') {
+                feed.innerHTML = `
+                    <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 text-center space-y-1">
+                        <span class="text-xl">🤝</span>
+                        <h4 class="text-xs font-bold text-amber-950">민간 제3섹터 전용 안내</h4>
+                        <p class="text-[11px] text-amber-800">아래 특별 섹션에 정리된 3대 임팩트 영역을 확인하세요.</p>
+                    </div>
+                `;
+                if (countEl) countEl.innerText = '3 (민간섹터)';
+                if (ngoSection) {
+                    ngoSection.classList.remove('hidden');
+                    ngoSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                return;
+            }
+
+            let filtered = list;
+            if (countEl) countEl.innerText = filtered.length;
+
+            if (filtered.length === 0) {
+                feed.innerHTML = `
+                    <div class="py-12 text-center bg-white rounded-2xl border border-slate-200 p-6 space-y-2">
+                        <span class="text-3xl block">🔍</span>
+                        <h3 class="text-sm font-bold text-slate-800">일치하는 법정 분야가 없습니다</h3>
+                        <p class="text-xs text-slate-400">다른 부처나 검색어를 입력해보세요.</p>
+                        <button type="button" onclick="setMinistryFilter('전체'); clearMobileSearch();" class="mt-2 px-3 py-1.5 rounded-xl bg-blue-50 text-blue-600 font-bold text-xs cursor-pointer">필터 초기화</button>
+                    </div>
+                `;
+                return;
+            }
+
+            feed.innerHTML = filtered.map(item => {
+                const isOpen = !!openCardMap[item.id];
+                const livingCount = (item.livingFacilities || []).length;
+                const usingCount = (item.usingFacilities || []).length;
+
+                return `
+                    <article class="bg-white rounded-2xl border border-slate-200 shadow-subtle overflow-hidden transition-all duration-200">
+                        <!-- 카드 헤더 (원클릭 아코디언 트리거) -->
+                        <div onclick="toggleCard('${item.id}')" class="p-3.5 sm:p-4 cursor-pointer hover:bg-slate-50/70 transition flex items-start justify-between gap-3">
+                            <div class="space-y-1.5 flex-1 min-w-0">
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-bold border ${item.ministryBadge} flex items-center gap-1">
+                                        <span>${item.ministryIcon || '🏛️'}</span>
+                                        <span>${item.ministry}</span>
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200/80">
+                                        #${item.tag || '복지법정'}
+                                    </span>
+                                </div>
+                                <h3 class="text-sm font-black text-slate-900 leading-snug">
+                                    ${item.facilityCategory}
+                                </h3>
+                                <div class="flex items-center gap-2 text-[11px] text-slate-500 font-medium">
+                                    <span class="flex items-center gap-0.5">
+                                        <span class="text-blue-600 font-bold">🏠 생활:</span> ${livingCount > 0 ? livingCount + '종' : '없음'}
+                                    </span>
+                                    <span class="text-slate-300">•</span>
+                                    <span class="flex items-center gap-0.5">
+                                        <span class="text-emerald-600 font-bold">🏢 이용:</span> ${usingCount > 0 ? usingCount + '종' : '없음'}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- 우측 아코디언 아이콘 및 찜 버튼 -->
+                            <div class="flex items-center gap-1 flex-shrink-0 pt-0.5">
+                                <button type="button" onclick="event.stopPropagation(); saveToWorkspace('statutory', '${item.id}', '${escapeHtml(item.facilityCategory || '')}', '${escapeHtml(item.ministry || '')}', '법정분야')" 
+                                        class="p-1 rounded-lg text-slate-400 hover:text-amber-500 transition tap-bounce cursor-pointer" title="내 준비함 저장">
+                                    <span class="text-base">⭐</span>
+                                </button>
+                                <div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 text-xs font-bold transition-transform duration-200 ${isOpen ? 'rotate-180 bg-blue-50 text-blue-600' : ''}">
+                                    ▼
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 아코디언 상세 본문 (펼쳐짐) -->
+                        <div class="${isOpen ? 'block' : 'hidden'} border-t border-slate-100 p-3.5 sm:p-4 bg-slate-50/50 space-y-3 text-xs">
+                            
+                            <!-- 1. 생활시설 섹션 -->
+                            <div class="space-y-1.5">
+                                <div class="flex items-center justify-between text-[11px] font-extrabold text-blue-900">
+                                    <span class="flex items-center gap-1">
+                                        <span>🏠</span><span>거주형 생활시설 (입소·보호)</span>
+                                    </span>
+                                    <span class="text-[10px] text-blue-600 bg-blue-100/70 px-1.5 py-0.2 rounded font-bold">${livingCount}개</span>
+                                </div>
+                                ${livingCount > 0 ? `
+                                    <ul class="space-y-1 bg-white p-2.5 rounded-xl border border-slate-200/80 text-[11px] text-slate-700 leading-snug">
+                                        ${item.livingFacilities.map(f => `<li class="flex items-start gap-1.5"><span class="text-blue-500 mt-0.5">•</span><span>${f}</span></li>`).join('')}
+                                    </ul>
+                                ` : `
+                                    <div class="p-2 rounded-xl bg-white/60 border border-dashed border-slate-200 text-slate-400 text-[11px]">
+                                        해당 분야는 법정 생활(거주)시설이 규정되어 있지 않습니다.
+                                    </div>
+                                `}
+                            </div>
+
+                            <!-- 2. 이용시설 섹션 -->
+                            <div class="space-y-1.5">
+                                <div class="flex items-center justify-between text-[11px] font-extrabold text-emerald-900">
+                                    <span class="flex items-center gap-1">
+                                        <span>🏢</span><span>통원형 이용시설 · 전담지원기관</span>
+                                    </span>
+                                    <span class="text-[10px] text-emerald-700 bg-emerald-100/70 px-1.5 py-0.2 rounded font-bold">${usingCount}개</span>
+                                </div>
+                                ${usingCount > 0 ? `
+                                    <ul class="space-y-1 bg-white p-2.5 rounded-xl border border-slate-200/80 text-[11px] text-slate-700 leading-snug">
+                                        ${item.usingFacilities.map(f => `<li class="flex items-start gap-1.5"><span class="text-emerald-500 mt-0.5">•</span><span>${f}</span></li>`).join('')}
+                                    </ul>
+                                ` : `
+                                    <div class="p-2 rounded-xl bg-white/60 border border-dashed border-slate-200 text-slate-400 text-[11px]">
+                                        해당 시설은 전원 거주형 중심입니다.
+                                    </div>
+                                `}
+                            </div>
+
+                            <!-- 3. 근거법령 & 원문 링크 칩 -->
+                            <div class="pt-1 space-y-1">
+                                <span class="text-[10px] font-bold text-slate-400 block">📜 법적 근거 (국가법령정보센터 ↗):</span>
+                                <div class="flex flex-wrap gap-1">
+                                    ${(item.laws || []).map(l => {
+                                        const cleanLaw = l.replace(/[「」]/g, '');
+                                        const query = encodeURIComponent(cleanLaw);
+                                        return `<a href="https://www.law.go.kr/LSW/lsSc.do?menuId=1&subMenuId=15&query=${query}" target="_blank" rel="noopener noreferrer" 
+                                                   class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white hover:bg-blue-600 hover:text-white border border-slate-200 text-slate-700 font-bold text-[10px] transition shadow-2xs">
+                                                    <span>「${cleanLaw}」</span><span>↗</span>
+                                                </a>`;
+                                    }).join('')}
+                                </div>
+                            </div>
+
+                            <!-- 4. 실무 메모 & 실습 연결 팁 -->
+                            ${item.note ? `
+                                <div class="p-2 rounded-lg bg-blue-50/80 border border-blue-100 text-[11px] text-blue-900 flex items-start gap-1.5">
+                                    <span class="mt-0.5">💡</span>
+                                    <span class="leading-snug">${item.note}</span>
+                                </div>
+                            ` : ''}
+
+                            <!-- 5. 하단 퀵 액션 바 -->
+                            <div class="pt-2 flex items-center justify-between gap-2 border-t border-slate-200/70">
+                                <span class="text-[10px] text-slate-400">소관부처: ${item.ministry}</span>
+                                <div class="flex items-center gap-1.5">
+                                    <button type="button" onclick="showView('practicum'); if(typeof setPracticumField==='function') setPracticumField('${item.tag || item.fieldId || '전체'}');" class="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-[10px] border border-blue-200 transition cursor-pointer">
+                                        이 분야 실습처 ↗
+                                    </button>
+                                    <button type="button" onclick="showView('jobs');" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-bold text-[10px] transition cursor-pointer">
+                                        채용공고 ↗
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </article>
+                `;
+            }).join('');
+
+            // NGO 섹션 노출 제어
+            if (ngoSection) {
+                if (currentMinistryFilter === '전체' || currentMinistryFilter === '민간제3섹터') {
+                    ngoSection.classList.remove('hidden');
+                } else {
+                    ngoSection.classList.add('hidden');
+                }
+            }
+        }
+
+        function toggleCard(id) {
+            openCardMap[id] = !openCardMap[id];
+            renderMobileCards(currentFilteredMobileData);
+        }
+
+        function toggleAllCards(open) {
+            STATUTORY_DATA.forEach(d => {
+                openCardMap[d.id] = open;
+            });
+            renderMobileCards(currentFilteredMobileData);
+        }
+
+        function filterByMinistry(min) {
+            setMinistryFilter(min);
+        }
+
+        function handleMobileSearch(val) {
+            currentFieldsQuery = (val || '').trim().toLowerCase();
+            const desktopInput = document.getElementById('fields-search-input');
+            if (desktopInput) desktopInput.value = val;
+            const clearBtn = document.getElementById('search-clear-btn');
+            if (clearBtn) clearBtn.classList.toggle('hidden', !currentFieldsQuery);
+            applyFieldsFilter();
+        }
+
+        function clearMobileSearch() {
+            const input = document.getElementById('mobile-field-search');
+            if (input) input.value = '';
+            handleMobileSearch('');
+        }
+
+
         function renderFieldsTable(rows = STATUTORY_MATRIX) {
             const tbody = document.getElementById('fields-table-body');
             if (!tbody) return;
@@ -8090,6 +8845,19 @@
                 });
             }
             renderFieldsTable(filtered);
+            // Filter mobile STATUTORY_DATA in sync
+            let filteredMobile = STATUTORY_DATA;
+            if (currentMinistryFilter !== '전체') {
+                filteredMobile = filteredMobile.filter(r => r.ministry && r.ministry.includes(currentMinistryFilter.replace(' (구 여가부)', '')));
+            }
+            if (currentFieldsQuery) {
+                filteredMobile = filteredMobile.filter(r => {
+                    const hay = `${r.ministry} ${r.facilityCategory} ${(r.livingFacilities||[]).join(' ')} ${(r.usingFacilities||[]).join(' ')} ${(r.laws||[]).join(' ')}`.toLowerCase();
+                    return hay.includes(currentFieldsQuery);
+                });
+            }
+            currentFilteredMobileData = filteredMobile;
+            renderMobileCards(filteredMobile);
 
             // 3) 민간 제3섹터 섹션 노출 제어:
             // "전체"를 보고 있을 때만 하단에 부가 안내로 노출되고, 
@@ -8128,6 +8896,16 @@
                     } else {
                         btn.className = 'ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer';
                     }
+                }
+            });
+            // Sync mobile pills
+            document.querySelectorAll('.ministry-pill').forEach(pill => {
+                const text = pill.innerText;
+                const isMatch = (ministry === '전체' && text.includes('전체')) || text.includes(ministry);
+                if (isMatch) {
+                    pill.className = 'ministry-pill px-3 py-1.5 rounded-xl text-xs font-extrabold bg-slate-900 text-white flex-shrink-0 transition shadow-2xs';
+                } else {
+                    pill.className = 'ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition';
                 }
             });
             applyFieldsFilter();
@@ -10458,6 +11236,12 @@
         window.openPracticumGuideModal = openPracticumGuideModal;
         window.closePracticumGuideModal = closePracticumGuideModal;
         window.setMinistryFilter = setMinistryFilter;
+        window.renderMobileCards = renderMobileCards;
+        window.toggleCard = toggleCard;
+        window.toggleAllCards = toggleAllCards;
+        window.filterByMinistry = filterByMinistry;
+        window.handleMobileSearch = handleMobileSearch;
+        window.clearMobileSearch = clearMobileSearch;
         window.toggleQuizContainer = toggleQuizContainer;
         window.calculateCareerDiagnostic = calculateCareerDiagnostic;
         window.applyQuizFieldFilter = applyQuizFieldFilter;
@@ -10602,6 +11386,7 @@
         // 10. 초기 구동
         document.addEventListener('DOMContentLoaded', () => {
             renderFieldsTable();
+            renderMobileCards();
             renderPracticumCards();
             onPracticumHubRegionChange('서울');
             renderPracticumHubTable();
