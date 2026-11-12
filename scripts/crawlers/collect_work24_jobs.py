@@ -10,6 +10,24 @@ def clean_text(s):
         return ""
     return " ".join(s.split())
 
+def make_dedup_key(j):
+    """
+    고유 중복 판별 복합 키 생성 함수
+    1. 워크넷 공식 공고번호(wantedAuthNo) 우선 사용
+    2. 없을 경우 정규화된 기관명(법인격 제거) + 핵심 공고제목(앞 20자) + 마감일자 조합
+    """
+    auth = j.get('wantedAuthNo')
+    if auth:
+        return f"auth_{auth.strip()}"
+    raw_comp = j.get('company') or j.get('institution') or ''
+    comp = re.sub(r'\(주\)|\(유\)|주식회사|유한회사|사회복지법인|사단법인|재단법인|의료법인|학교법인', '', raw_comp)
+    comp = re.sub(r'[\s\(\)\[\]\·\,\.\-_/]', '', comp)
+    
+    raw_title = j.get('title') or ''
+    title = re.sub(r'\[[^\]]*\]|\([^\)]*\)|[\s\·\,\.\-_/]', '', raw_title)[:20]
+    dl = j.get('deadline', '')
+    return f"{comp}_{title}_{dl}"
+
 def parse_region(address):
     if not address:
         return "전국", "전체"
@@ -232,7 +250,7 @@ def run_work24_collection(target_count=3500, max_pages=75):
         consecutive_empty = 0
         new_cnt = 0
         for j in jobs:
-            key = j['wantedAuthNo'] or (j['title'] + j['company'])
+            key = make_dedup_key(j)
             if key not in seen_ids:
                 seen_ids.add(key)
                 all_jobs.append(j)
@@ -257,7 +275,7 @@ def run_work24_collection(target_count=3500, max_pages=75):
         consecutive_empty = 0
         new_cnt = 0
         for j in jobs:
-            key = j['wantedAuthNo'] or (j['title'] + j['company'])
+            key = make_dedup_key(j)
             if key not in seen_ids:
                 seen_ids.add(key)
                 all_jobs.append(j)

@@ -11,15 +11,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script src="src/data/sync-meta.js"></script>
-    <script src="src/data/residency-284-db.js"></script>
-    <script src="src/data/internships-db.js"></script>
-    <script src="src/data/useful-sites-db.js"></script>
-    <script src="src/data/work24-jobs-db.js"></script>
-    <script src="src/data/jobs-db.js"></script>
-    <script src="src/data/practicum-postings-db.js"></script>
-    <script src="src/data/practicum-direct-db.js"></script>
-    <script src="src/data/national-practicum-db.js" defer></script>
+    <script src="src/data/sync-meta.js?v=20261112"></script>
+    <script src="src/data/residency-284-db.js?v=20261112"></script>
+    <script src="src/data/internships-db.js?v=20261112"></script>
+    <script src="src/data/useful-sites-db.js?v=20261112"></script>
+    <script src="src/data/work24-jobs-db.js?v=20261112"></script>
+    <script src="src/data/jobs-db.js?v=20261112"></script>
+    <script src="src/data/practicum-postings-db.js?v=20261112"></script>
+    <script src="src/data/practicum-direct-db.js?v=20261112"></script>
+    <script src="src/data/national-practicum-db.js?v=20261112" defer></script>
 
     <script>
         tailwind.config = {
@@ -156,7 +156,7 @@
 
                     <button type="button" data-view="jobs" onclick="showView('jobs')" class="nav-tab-btn flex items-center gap-1.5 px-3 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-sm font-medium transition whitespace-nowrap cursor-pointer">
                         <span>채용공고</span>
-                        <span id="nav-jobs-badge" class="nav-badge text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-semibold border border-slate-200/70">3,862</span>
+                        <span id="nav-jobs-badge" class="nav-badge text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-semibold border border-slate-200/70">3,746</span>
                     </button>
 
                     <button type="button" data-view="useful-sites" onclick="showView('useful-sites')" class="nav-tab-btn flex items-center gap-1.5 px-3 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-sm font-medium transition whitespace-nowrap cursor-pointer">
@@ -195,7 +195,7 @@
             <button type="button" onclick="showView('practicum')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">실습처 탐색 (320건)</button>
             <button type="button" onclick="showView('residency')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">수련처 탐색 (284곳)</button>
             <button type="button" onclick="showView('internship')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-emerald-50 text-emerald-800">청년인턴·일경험 (39건)</button>
-            <button type="button" onclick="showView('jobs')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">채용공고 (3,862건)</button>
+            <button type="button" onclick="showView('jobs')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">채용공고 (3,746건)</button>
             <button type="button" onclick="showView('useful-sites')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-blue-50 text-blue-700">🔗 유용한 공식 사이트 (35곳)</button>
             <button type="button" onclick="showView('news')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">복지 뉴스 (21건)</button>
         </div>
@@ -221,7 +221,7 @@
             </button>
             <button type="button" data-view="jobs" onclick="showView('jobs')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
                 <span>채용공고</span>
-                <span id="mobile-nav-jobs-badge" class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">3,862</span>
+                <span id="mobile-nav-jobs-badge" class="nav-badge px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-500 rounded-full font-bold">3,746</span>
             </button>
             <button type="button" data-view="useful-sites" onclick="showView('useful-sites')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
                 <span>🔗 유용한 사이트</span>
@@ -1190,7 +1190,7 @@
                 <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold mb-3">
                     2026 고용24 (Work24 3,392건 풀연동) · 복지넷 · 한국사회복지사협회 공식 채용 DB
                 </div>
-                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mb-2">정규직·계약직 실시간 취업공고 (3,862선)</h2>
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mb-2">정규직·계약직 실시간 취업공고 (3,746선)</h2>
                 <p class="text-xs sm:text-sm text-slate-500">전국 8,434개 복지기관 공식 채용 탐색 허브 및 실시간 신입·정규직·계약직 채용 요강 (청년인턴은 전용 탭으로 분리)</p>
             </div>
 

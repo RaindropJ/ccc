@@ -38,6 +38,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "No data changes detected. Skipping commit."
           else
-            git commit -m "chore(sync): automated daily 06:00 welfare DB sync [skip ci]"
+            git commit -m "chore(sync): automated daily 06:00 welfare DB sync"
             git push
           fi

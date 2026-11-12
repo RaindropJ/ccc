@@ -15120,12 +15120,49 @@
     ? window.WORK24_JOB_POSTINGS
     : [];
 
-  const combinedJobs = [...work24List, ...jobs];
+  // [Smart Dedup & Expiration Guard]
+  // 1) 당일 기준 마감일 경과 공고 자동 제거 (항상 신선한 공고 유지)
+  // 2) wantedAuthNo 또는 (정규화 기관명 + 핵심제목 + 마감일) 복합키 기준 실시간 중복 차단
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const todayStr = `${year}-${month}-${day}`;
+
+  function getDedupKey(item) {
+    if (item.wantedAuthNo) return 'auth_' + String(item.wantedAuthNo).trim();
+    const rawComp = item.company || item.institution || '';
+    const comp = rawComp
+      .replace(/\(주\)|\(유\)|주식회사|유한회사|사회복지법인|사단법인|재단법인|의료법인|학교법인/g, '')
+      .replace(/[\s()\[\]·,.\-_/]/g, '');
+    const rawTitle = item.title || '';
+    const title = rawTitle
+      .replace(/\[[^\]]*\]|\([^\)]*\)|[\s·,.\-_/]/g, '')
+      .slice(0, 20);
+    const dl = item.deadline || '';
+    return comp + '_' + title + '_' + dl;
+  }
+
+  const seenKeys = new Set();
+  const cleanJobs = [];
+
+  for (const item of [...work24List, ...jobs]) {
+    if (item.deadline && item.deadline !== '채용시까지' && /^\d{4}-\d{2}-\d{2}$/.test(item.deadline)) {
+      if (item.deadline < todayStr) {
+        continue; // 이미 마감된 공고 배제
+      }
+    }
+    const key = getDedupKey(item);
+    if (!seenKeys.has(key)) {
+      seenKeys.add(key);
+      cleanJobs.push(item);
+    }
+  }
 
   if (typeof window !== 'undefined') {
-    window.ALL_JOB_POSTINGS = combinedJobs;
+    window.ALL_JOB_POSTINGS = cleanJobs;
   }
   if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { ALL_JOB_POSTINGS: combinedJobs };
+    module.exports = { ALL_JOB_POSTINGS: cleanJobs };
   }
 })();

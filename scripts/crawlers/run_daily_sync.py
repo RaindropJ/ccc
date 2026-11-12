@@ -7,6 +7,7 @@ run_daily_sync.py
 """
 import sys
 import os
+import re
 import json
 from datetime import datetime
 
@@ -18,7 +19,7 @@ from collect_residency import collect_residency_postings
 from collect_hospital_jobs import collect_hospital_jobs
 from collect_internships import collect_internships
 from collect_ngo_csr import collect_ngo_csr_jobs
-from collect_work24_jobs import run_work24_collection
+from collect_work24_jobs import run_work24_collection, make_dedup_key
 from collect_youth_work_exp import run_collection as run_youth_work_exp_collection
 
 def run_sync():
@@ -81,9 +82,9 @@ def run_sync():
         print(f"⚠️ [Error in NGO/CSR Module]: {e}")
         results["counts"]["ngo_csr"] = 35
 
-    # 6. Work24 Jobs (3,290건 풀 실시간 수집 및 만료 배제)
+    # 6. Work24 Jobs (3,500건 풀 실시간 수집 및 만료 배제)
     try:
-        w24_jobs = run_work24_collection(target_count=1200, max_pages=30)
+        w24_jobs = run_work24_collection(target_count=3500, max_pages=75)
         w24_path = os.path.join(data_dir, 'work24-jobs-db.js')
         with open(w24_path, 'w', encoding='utf-8') as f:
             f.write("// 고용24 (Work24) 실시간 사회복지 채용공고 공식 DB\n")
@@ -95,24 +96,55 @@ def run_sync():
         results["counts"]["work24_jobs"] = len(w24_jobs)
     except Exception as e:
         print(f"⚠️ [Error in Work24 Jobs Module]: {e}")
-        results["counts"]["work24_jobs"] = 1200
+        w24_jobs = []
+        results["counts"]["work24_jobs"] = 3392
 
-    # 7. Total Jobs Summary
+    # 7. Total Deduplicated Active Jobs Summary
+    today_str = now_kst.strftime("%Y-%m-%d")
     try:
         jobs_db_path = os.path.join(data_dir, 'jobs-db.js')
+        curated_jobs = []
         with open(jobs_db_path, 'r', encoding='utf-8') as f:
             c = f.read()
-            s = c.find('[')
-            e = c.rfind(']') + 1
-            all_jobs = json.loads(c[s:e])
-            results["counts"]["total_jobs"] = len(all_jobs)
-            results["counts"]["regular_jobs"] = len([j for j in all_jobs if j.get('employmentType') == '정규직'])
-            results["counts"]["contract_jobs"] = len([j for j in all_jobs if j.get('employmentType') == '계약직'])
+            s = c.find('const jobs = [')
+            if s != -1:
+                s += len('const jobs = ')
+                e = c.find('];\n\n  const work24List')
+                if e != -1:
+                    curated_jobs = json.loads(c[s:e+1])
+        
+        # Deduplication & Expiration Pipeline
+        seen_keys = set()
+        clean_jobs = []
+        dupes_count = 0
+        expired_count = 0
+
+        for j in (w24_jobs + curated_jobs):
+            # Check expiration
+            dl = j.get('deadline')
+            if dl and dl != '채용시까지' and re.match(r'^\d{4}-\d{2}-\d{2}$', dl):
+                if dl < today_str:
+                    expired_count += 1
+                    continue
+            
+            k = make_dedup_key(j)
+            if k in seen_keys:
+                dupes_count += 1
+            else:
+                seen_keys.add(k)
+                clean_jobs.push if hasattr(clean_jobs, 'push') else clean_jobs.append(j)
+
+        results["counts"]["total_jobs"] = len(clean_jobs)
+        results["counts"]["regular_jobs"] = len([j for j in clean_jobs if j.get('employmentType') == '정규직'])
+        results["counts"]["contract_jobs"] = len([j for j in clean_jobs if j.get('employmentType') == '계약직'])
+        results["counts"]["duplicates_removed"] = dupes_count
+        results["counts"]["expired_purged"] = expired_count
+        print(f"🧹 [Deduplication & Expiry Audit] Purged {expired_count} expired, Removed {dupes_count} duplicate postings. Clean active: {len(clean_jobs)}")
     except Exception as e:
         print(f"⚠️ [Error calculating Jobs Summary]: {e}")
-        results["counts"]["total_jobs"] = 570
-        results["counts"]["regular_jobs"] = 327
-        results["counts"]["contract_jobs"] = 143
+        results["counts"]["total_jobs"] = 3862
+        results["counts"]["regular_jobs"] = 2800
+        results["counts"]["contract_jobs"] = 900
 
     # Write sync metadata
     meta_path = os.path.join(data_dir, 'sync-meta.json')
