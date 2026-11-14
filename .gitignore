@@ -1,5 +1,8 @@
 # Temporary scratch & test artifacts
 scratch/
+backups/
+*.zip
+*.tar.gz
 __pycache__/
 *.pyc
 .temp/
