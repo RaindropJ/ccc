@@ -9177,26 +9177,26 @@
                         <td class="p-4 font-bold text-slate-900 border-r border-slate-200">
                             <div class="text-sm font-extrabold mb-1">${escapeHtml(r.facilityCategory)}</div>
                             <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${bCls}">${escapeHtml(r.facilityCategory)}</span>
-                            <!-- 3대 영역 순환 딥링크 칩 -->
-                            <div class="mt-2.5 flex flex-wrap items-center gap-1.5">
-                                <button type="button"
-                                        onclick="showView('hierarchy', { search: '${escapeHtml(r.facilityCategory.replace(/\s*\(.*?\)/g, ''))}' }); return false;"
-                                        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-800 border border-emerald-200 text-[10px] font-bold transition shadow-2xs cursor-pointer"
-                                        title="${escapeHtml(r.facilityCategory)}의 3단계 위계도감 단위서비스로 직결">
-                                    <span>🌳 위계도감 ➔</span>
-                                </button>
-                                <button type="button"
-                                        onclick="showView('archive', { search: '${escapeHtml(r.facilityCategory.replace(/\s*\(.*?\)/g, ''))}' }); return false;"
-                                        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-800 border border-blue-200 text-[10px] font-bold transition shadow-2xs cursor-pointer"
-                                        title="${escapeHtml(r.facilityCategory)} 관련 공식 정본 지침서로 직결">
-                                    <span>📚 지침서 ➔</span>
-                                </button>
-                            </div>
                         </td>
                         <td class="p-4 border-r border-slate-200 leading-relaxed">${livingHtml}</td>
                         <td class="p-4 border-r border-slate-200 leading-relaxed">${usingHtml}</td>
                         <td class="p-4 space-y-2">
                             <div class="flex flex-wrap gap-1">${lawsHtml}</div>
+                            <!-- 3대 영역 순환 탐색 직결 버튼 (위계도감 & 지침서) -->
+                            <div class="pt-1.5 border-t border-slate-100 flex flex-col sm:flex-row items-center gap-1.5">
+                                <button type="button"
+                                        onclick="showView('hierarchy', { search: '${escapeHtml(r.facilityCategory.replace(/\s*\(.*?\)/g, ''))}' }); return false;"
+                                        class="w-full sm:flex-1 inline-flex items-center justify-center gap-1 px-2 py-1 rounded-md bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-800 border border-emerald-200 text-[10px] font-bold transition shadow-2xs cursor-pointer"
+                                        title="${escapeHtml(r.facilityCategory)}의 3단계 위계도감 단위서비스로 직결">
+                                    <span>🌳 위계도감 ➔</span>
+                                </button>
+                                <button type="button"
+                                        onclick="showView('archive', { search: '${escapeHtml(r.facilityCategory.replace(/\s*\(.*?\)/g, ''))}' }); return false;"
+                                        class="w-full sm:flex-1 inline-flex items-center justify-center gap-1 px-2 py-1 rounded-md bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-800 border border-blue-200 text-[10px] font-bold transition shadow-2xs cursor-pointer"
+                                        title="${escapeHtml(r.facilityCategory)} 관련 공식 정본 지침서로 직결">
+                                    <span>📚 지침서 ➔</span>
+                                </button>
+                            </div>
                             <button type="button" onclick="saveToWorkspace('laws', '${r.id}', '${escapeHtml(r.ministry)}', '${escapeHtml(r.facilityCategory)}', '법령 도감')" class="w-full text-center py-1 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold border border-amber-200 text-[11px] cursor-pointer">
                                 ⭐ 찜하기
                             </button>
