@@ -41,10 +41,29 @@
         container.innerHTML = buildHierarchyHTML();
         bindEvents();
 
+        // 1. 도메인 필터 요청 처리 (options.domainKey 또는 options.domainId)
+        if (options.domainKey) {
+            const btn = document.querySelector(`.domain-tab-btn[onclick*="'${options.domainKey}'"]`);
+            if (btn && typeof window.selectDomainFilter === 'function') {
+                window.selectDomainFilter(options.domainKey, btn);
+            }
+        }
+
+        // 2. 검색 키워드 필터 요청 처리 (options.search)
+        if (options.search) {
+            const searchInput = document.getElementById('hierarchySearchInput');
+            if (searchInput) {
+                searchInput.value = options.search;
+                currentSearchKeyword = options.search.toLowerCase();
+                applyFilters();
+            }
+        }
+
+        // 3. 특정 노드 하이라이트 및 스크롤 요청 처리 (options.targetNodeId)
         if (options.targetNodeId) {
             setTimeout(() => {
                 highlightAndScrollNode(options.targetNodeId);
-            }, 150);
+            }, 200);
         }
     };
 
@@ -575,6 +594,21 @@
                                         <div class="font-legal-code text-legal-code text-on-surface-variant flex flex-col gap-0.5 mt-space-xs">
                                             ${domainMeta.legal}
                                         </div>
+                                        <!-- 3대 영역 순환 딥링크 바 -->
+                                        <div class="mt-2.5 pt-2 border-t border-outline-variant/20 flex flex-col gap-1">
+                                            <a href="#" onclick="showView('fields', { search: '${domainMeta.short}' }); return false;"
+                                               class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container hover:bg-primary hover:text-on-primary text-on-surface-variant text-[11px] font-bold transition shadow-2xs group cursor-pointer"
+                                               title="${domainMeta.short} 관련 법정시설 도감으로 이동">
+                                                <span class="material-symbols-outlined text-[13px] text-primary group-hover:text-on-primary">account_balance</span>
+                                                <span>법정시설 도감 ➔</span>
+                                            </a>
+                                            <a href="#" onclick="showView('archive', { search: '${domainMeta.short}' }); return false;"
+                                               class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container hover:bg-secondary hover:text-on-secondary text-on-surface-variant text-[11px] font-bold transition shadow-2xs group cursor-pointer"
+                                               title="${domainMeta.short} 관련 공식 정본 지침서로 이동">
+                                                <span class="material-symbols-outlined text-[13px] text-secondary group-hover:text-on-secondary">menu_book</span>
+                                                <span>관련 지침서 총람 ➔</span>
+                                            </a>
+                                        </div>
                                     </div>
                                 </td>
                             `;
@@ -637,23 +671,35 @@
 
                         html += `
                             <td class="align-top p-space-md text-center bg-surface-container-lowest">
-                                <div class="flex flex-col items-center gap-1 font-legal-code text-legal-code text-on-surface-variant">
+                                <div class="flex flex-col items-center gap-1 font-legal-code text-legal-code text-on-surface-variant relative group/gpopover">
                                     <span class="font-bold text-on-surface" title="${gRef.file}">${shortFile}</span>
                                     <span class="px-space-xs py-0.5 rounded bg-surface-container text-primary font-medium">${formText}</span>
-                                    <span class="font-num">${gRef.page || ''}</span>
-                                    <button 
-                                        type="button" 
-                                        onclick="window.jumpToArchive('${gRef.archiveId || 'doc-004'}')" 
-                                        class="mt-1 inline-flex items-center gap-0.5 px-space-xs py-0.5 rounded bg-primary/10 text-primary hover:bg-primary hover:text-on-primary font-label-sm text-label-sm font-semibold transition-colors cursor-pointer" 
-                                        title="${gRef.file} 원문 열람"
+                                    <span class="font-num text-[11px]">${gRef.page || ''}</span>
+                                    <button
+                                        type="button"
+                                        onclick="window.jumpToArchive('${gRef.archiveId || 'doc-004'}')"
+                                        class="mt-1 inline-flex items-center gap-0.5 px-2 py-0.5 rounded-md bg-primary/10 text-primary hover:bg-primary hover:text-on-primary font-label-sm text-label-sm font-semibold transition-colors cursor-pointer"
+                                        title="${gRef.file} 원문 아카이브 열람"
                                     >
                                         <span>지침서 열람</span>
                                         <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
                                     </button>
+
+                                    <!-- 지침서 인터랙티브 미니 팝오버 프리뷰 -->
+                                    <div class="hidden group-hover/gpopover:flex flex-col text-left absolute z-40 bottom-full mb-1.5 right-0 w-64 p-3 rounded-xl bg-surface-container-highest/95 backdrop-blur-md text-on-surface shadow-lg border border-outline-variant/30 text-xs pointer-events-none animate-fadeIn">
+                                        <div class="flex items-center gap-1 text-primary font-bold mb-1">
+                                            <span class="material-symbols-outlined text-[15px]">menu_book</span>
+                                            <span class="truncate">${cleanFile}</span>
+                                        </div>
+                                        <div class="text-[11px] text-on-surface-variant space-y-0.5">
+                                            <p><span class="font-semibold text-on-surface">근거 챕터:</span> ${gRef.chapter || '총칙'}</p>
+                                            <p><span class="font-semibold text-on-surface">해당 면수:</span> ${gRef.page || '상세 규정'}</p>
+                                            <p class="text-secondary font-medium pt-1">클릭 시 53종 공식 아카이브 해당 지침서로 직결 이동</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </td>
                         `;
-
                         html += `</tr>`;
                     });
                 });
@@ -866,20 +912,37 @@
 
     // 특정 노드 하이라이트 및 스크롤
     function highlightAndScrollNode(nodeId) {
-        const desktopTr = document.getElementById(`hierarchy-node-${nodeId}`);
-        if (desktopTr && desktopTr.style.display !== 'none') {
-            desktopTr.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            desktopTr.classList.add('bg-amber-100', 'transition-colors', 'duration-500');
-            setTimeout(() => desktopTr.classList.remove('bg-amber-100'), 2500);
-            return;
+        const { nodes } = getDB();
+        const targetNode = nodes.find(n => n.id === nodeId);
+        if (targetNode) {
+            const domainMeta = DOMAIN_MAP[targetNode.domainId];
+            if (currentDomainFilter !== 'all' && domainMeta && domainMeta.key !== currentDomainFilter) {
+                currentDomainFilter = 'all';
+                currentMinistryGroup = 'all';
+                applyFilters();
+            }
         }
 
-        const mobileCard = document.getElementById(`mobile-card-${nodeId}`);
-        if (mobileCard) {
-            mobileCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            mobileCard.classList.add('ring-4', 'ring-primary');
-            setTimeout(() => mobileCard.classList.remove('ring-4', 'ring-primary'), 2500);
-        }
+        setTimeout(() => {
+            const desktopTr = document.getElementById(`hierarchy-node-${nodeId}`);
+            if (desktopTr) {
+                desktopTr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                desktopTr.classList.add('ring-4', 'ring-emerald-500', 'bg-emerald-100', 'transition-all', 'duration-500');
+                setTimeout(() => {
+                    desktopTr.classList.remove('ring-4', 'ring-emerald-500', 'bg-emerald-100');
+                }, 2500);
+                return;
+            }
+
+            const mobileCard = document.getElementById(`mobile-card-${nodeId}`);
+            if (mobileCard) {
+                mobileCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                mobileCard.classList.add('ring-4', 'ring-emerald-500', 'bg-emerald-100', 'transition-all', 'duration-500');
+                setTimeout(() => {
+                    mobileCard.classList.remove('ring-4', 'ring-emerald-500', 'bg-emerald-100');
+                }, 2500);
+            }
+        }, 150);
     }
 
     // CSV 내보내기

@@ -115,6 +115,7 @@ function updateHeaderCounters() {
 }
 
 export function showView(viewId, options = {}) {
+    if (viewId === 'encyclopedia') viewId = 'fields';
     document.querySelectorAll('.view-section').forEach((el) => el.classList.add('hidden'));
     const targetSection = document.getElementById(`view-${viewId}`);
     if (targetSection) targetSection.classList.remove('hidden');

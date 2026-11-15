@@ -22,15 +22,16 @@
     <script src="src/data/practicum-direct-db.js?v=20261112"></script>
     <script src="src/data/national-practicum-db.js?v=20261112" defer></script>
     <script src="src/data/guidelines-archive-db.js?v=20261115"></script>
-    <script src="src/js/archive.js?v=20261115_v3"></script>
+    <script src="src/js/archive.js?v=20261115_v6"></script>
     <script src="src/data/welfare-hierarchy-db.js?v=20261115_optA2"></script>
-    <script src="src/js/hierarchy.js?v=20261115_v3"></script>
+    <script src="src/js/hierarchy.js?v=20261115_v4"></script>
 
     <!-- file:// 프로토콜 (ES Module CORS 차단) 환경 대비 글로벌 안전 폴백 -->
     <script>
         if (typeof window.showView !== 'function') {
             window.showView = function(viewId, options = {}) {
-                document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+                if (viewId === 'encyclopedia') viewId = 'fields';
+                document.querySelectorAll('section[id^="view-"], .view-section').forEach(el => el.classList.add('hidden'));
                 const target = document.getElementById(`view-${viewId}`);
                 if (target) target.classList.remove('hidden');
 
@@ -49,7 +50,18 @@
                     }
                 } else if (viewId === 'fields') {
                     if (typeof window.renderFieldsView === 'function') {
-                        window.renderFieldsView();
+                        window.renderFieldsView(options);
+                    } else if (typeof renderFieldsTable === 'function') {
+                        renderFieldsTable();
+                    }
+                    if (options.search) {
+                        const searchInput = document.getElementById('fields-search-input');
+                        if (searchInput) {
+                            searchInput.value = options.search;
+                            if (typeof filterFieldsTable === 'function') {
+                                filterFieldsTable(options.search);
+                            }
+                        }
                     }
                 }
                 
@@ -356,7 +368,7 @@
     <main class="flex-grow pt-8 pb-16">
         
         <!-- ==================== VIEW 1: 12대 분야와 법령 도감 ==================== -->
-        <section id="view-fields" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="view-fields" class="view-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- [구글 스티치 리디자인: 모바일 전용 뷰 (block md:hidden)] -->
             <div class="block md:hidden space-y-4 pt-1">
                 <!-- 모바일 퀵 액션 버튼 -->
@@ -763,7 +775,7 @@
         <section id="view-hierarchy" class="view-section w-full hidden"></section>
 
         <!-- ==================== VIEW 2: 실습처 탐색 (Stitch Full Design) ==================== -->
-        <section id="view-practicum" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 hidden">
+        <section id="view-practicum" class="view-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 hidden">
             <!-- Hero Title & Season Selector -->
             <div class="text-center pt-2 pb-2" data-purpose="hero-section">
                 <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-brand-600 text-xs font-semibold mb-3">
@@ -1113,7 +1125,7 @@
         </section>
 
         <!-- ==================== VIEW 3: 수련처 탐색 ==================== -->
-        <section id="view-residency" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 hidden">
+        <section id="view-residency" class="view-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 hidden">
             <div class="text-center mb-6">
                 <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mb-2">전문사회복지사 수련처 탐색</h2>
                 <p class="text-xs sm:text-sm text-slate-500">정신건강·의료·학교사회복지사 1년 법정 수련기관 공고 및 선발 요강</p>
@@ -1203,7 +1215,7 @@
         </section>
 
         <!-- ==================== VIEW 4: 청년인턴 & 청년 일경험 ==================== -->
-        <section id="view-internship" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 hidden">
+        <section id="view-internship" class="view-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 hidden">
             <!-- 섹션 헤더 및 타이틀 -->
             <div class="text-center mb-6">
                 <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold mb-3 shadow-2xs">
@@ -1356,7 +1368,7 @@
         </section>
 
         <!-- ==================== VIEW 5: 실시간 취업공고 ==================== -->
-        <section id="view-jobs" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 hidden">
+        <section id="view-jobs" class="view-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 hidden">
             <div class="text-center mb-6">
                 <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold mb-3">
                     2026 고용24 (Work24 3,392건 풀연동) · 복지넷 · 한국사회복지사협회 공식 채용 DB
@@ -1527,7 +1539,7 @@
         </section>
 
         <!-- ==================== VIEW 6: 🔗 유용한 사이트 (공식 출처 & 포털 허브) ==================== -->
-        <section id="view-useful-sites" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 hidden">
+        <section id="view-useful-sites" class="view-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 hidden">
             <!-- 섹션 헤더 및 타이틀 -->
             <div class="text-center mb-6">
                 <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold mb-3 shadow-2xs">
@@ -1624,7 +1636,7 @@
         </section>
 
         <!-- ==================== VIEW 7: 복지 뉴스·브리핑 ==================== -->
-        <section id="view-news" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 hidden">
+        <section id="view-news" class="view-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 hidden">
             <div class="text-center mb-6">
                 <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold mb-3">
                     2026 복지 정책·실무 에디토리얼 브리핑
@@ -9022,6 +9034,21 @@
                         <td class="p-4 font-bold text-slate-900 border-r border-slate-200">
                             <div class="text-sm font-extrabold mb-1">${escapeHtml(r.facilityCategory)}</div>
                             <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${bCls}">${escapeHtml(r.facilityCategory)}</span>
+                            <!-- 3대 영역 순환 딥링크 칩 -->
+                            <div class="mt-2.5 flex flex-wrap items-center gap-1.5">
+                                <button type="button"
+                                        onclick="showView('hierarchy', { search: '${escapeHtml(r.facilityCategory.replace(/\s*\(.*?\)/g, ''))}' }); return false;"
+                                        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-800 border border-emerald-200 text-[10px] font-bold transition shadow-2xs cursor-pointer"
+                                        title="${escapeHtml(r.facilityCategory)}의 3단계 위계도감 단위서비스로 직결">
+                                    <span>🌳 위계도감 ➔</span>
+                                </button>
+                                <button type="button"
+                                        onclick="showView('archive', { search: '${escapeHtml(r.facilityCategory.replace(/\s*\(.*?\)/g, ''))}' }); return false;"
+                                        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-800 border border-blue-200 text-[10px] font-bold transition shadow-2xs cursor-pointer"
+                                        title="${escapeHtml(r.facilityCategory)} 관련 공식 정본 지침서로 직결">
+                                    <span>📚 지침서 ➔</span>
+                                </button>
+                            </div>
                         </td>
                         <td class="p-4 border-r border-slate-200 leading-relaxed">${livingHtml}</td>
                         <td class="p-4 border-r border-slate-200 leading-relaxed">${usingHtml}</td>

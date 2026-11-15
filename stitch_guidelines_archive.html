@@ -1779,6 +1779,7 @@ if (typeof module !== 'undefined' && module.exports) {
     let currentMinistry = 'all';
     let searchQuery = '';
     let mobileActiveSection = 'SECTION_1';
+    let activeFilterGuidelines = null;
 
     function getArchiveDB() {
         return (typeof window !== 'undefined' && window.GUIDELINES_ARCHIVE_DB) ? window.GUIDELINES_ARCHIVE_DB : [];
@@ -1901,7 +1902,7 @@ if (typeof module !== 'undefined' && module.exports) {
                         <div class="flex flex-wrap items-center gap-2">
                             <div class="flex items-center p-1 rounded-xl bg-surface-container-low border border-outline-variant/30">
                                 <a class="px-3 py-1.5 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1.5"
-                                   href="#" onclick="showView('encyclopedia'); return false;">
+                                   href="#" onclick="showView('fields'); return false;">
                                     <span class="material-symbols-outlined text-[18px]">account_balance</span>
                                     <span>12대 분야·시설</span>
                                     <span class="px-1.5 py-0.2 rounded-full font-label-sm text-label-sm bg-surface-container text-on-surface-variant">24개</span>
@@ -2123,11 +2124,12 @@ if (typeof module !== 'undefined' && module.exports) {
                         <table class="w-full text-left border-collapse">
                             <thead class="bg-surface-container-low/60 text-on-surface-variant font-label-sm text-label-sm border-b border-surface-container">
                                 <tr class="h-10">
-                                    <th scope="col" class="py-2.5 px-4 w-40 font-semibold border-r border-surface-container">소관 부처 / 담당과</th>
+                                    <th scope="col" class="py-2.5 px-3 w-32 font-semibold border-r border-surface-container text-center">소관 부처</th>
+                                    <th scope="col" class="py-2.5 px-3.5 w-36 font-semibold border-r border-surface-container">담당과</th>
                                     <th scope="col" class="py-2.5 px-4 w-72 font-semibold border-r border-surface-container">지침서 공식 명칭 &amp; 판본</th>
-                                    <th scope="col" class="py-2.5 px-4 w-64 font-semibold border-r border-surface-container">핵심 관할 법령 &amp; 대상 시설</th>
+                                    <th scope="col" class="py-2.5 px-4 w-60 font-semibold border-r border-surface-container">핵심 관할 법령 &amp; 대상 시설</th>
                                     <th scope="col" class="py-2.5 px-4 font-semibold border-r border-surface-container">주요 수록 챕터 및 핵심 지침 요약</th>
-                                    <th scope="col" class="py-2.5 px-4 w-52 text-right font-semibold">연계 위계 &amp; 원문 열람</th>
+                                    <th scope="col" class="py-2.5 px-4 w-48 text-right font-semibold">연계 위계 &amp; 원문 열람</th>
                                 </tr>
                             </thead>
                             <tbody id="table1-tbody" class="divide-y divide-surface-container text-body-sm font-body-sm text-on-surface">
@@ -2175,11 +2177,12 @@ if (typeof module !== 'undefined' && module.exports) {
                         <table class="w-full text-left border-collapse">
                             <thead class="bg-surface-container-low/60 text-on-surface-variant font-label-sm text-label-sm border-b border-surface-container">
                                 <tr class="h-10">
-                                    <th scope="col" class="py-2.5 px-4 w-40 font-semibold border-r border-surface-container">소관 기관 / 소속 부서</th>
+                                    <th scope="col" class="py-2.5 px-3 w-32 font-semibold border-r border-surface-container text-center">소관 기관</th>
+                                    <th scope="col" class="py-2.5 px-3.5 w-36 font-semibold border-r border-surface-container">소속 부서</th>
                                     <th scope="col" class="py-2.5 px-4 w-72 font-semibold border-r border-surface-container">지침서 공식 명칭 &amp; 판본</th>
-                                    <th scope="col" class="py-2.5 px-4 w-64 font-semibold border-r border-surface-container">핵심 관할 법령 &amp; 대상 시설</th>
+                                    <th scope="col" class="py-2.5 px-4 w-60 font-semibold border-r border-surface-container">핵심 관할 법령 &amp; 대상 시설</th>
                                     <th scope="col" class="py-2.5 px-4 font-semibold border-r border-surface-container">주요 수록 챕터 및 핵심 지침 요약</th>
-                                    <th scope="col" class="py-2.5 px-4 w-52 text-right font-semibold">연계 위계 &amp; 원문 열람</th>
+                                    <th scope="col" class="py-2.5 px-4 w-48 text-right font-semibold">연계 위계 &amp; 원문 열람</th>
                                 </tr>
                             </thead>
                             <tbody id="table2-tbody" class="divide-y divide-surface-container text-body-sm font-body-sm text-on-surface">
@@ -2300,7 +2303,34 @@ if (typeof module !== 'undefined' && module.exports) {
 
         bindArchiveEvents(allFiles);
 
-        // Highlight request handling
+        // 1. Search keyword filter request handling (options.search)
+        if (options.search) {
+            const searchInput = document.getElementById('guidelineSearchInput');
+            if (searchInput) {
+                searchInput.value = options.search;
+                searchQuery = options.search.toLowerCase();
+                const clearBtn = document.getElementById('clearSearchBtn');
+                if (clearBtn) clearBtn.classList.remove('hidden');
+                setTimeout(() => {
+                    const pills = document.querySelectorAll('.ministry-pill');
+                    pills.forEach(p => {
+                        if (p.getAttribute('data-ministry') === 'all') {
+                            p.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+                            p.classList.add('bg-primary', 'text-on-primary', 'active-pill');
+                        } else {
+                            p.classList.remove('bg-primary', 'text-on-primary', 'active-pill');
+                            p.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+                        }
+                    });
+                    currentMinistry = 'all';
+                    if (typeof activeFilterGuidelines === 'function') {
+            activeFilterGuidelines();
+        }
+                }, 50);
+            }
+        }
+
+        // 2. Highlight request handling
         if (options.highlightId) {
             setTimeout(() => {
                 highlightAndScrollGuideline(options.highlightId);
@@ -2308,106 +2338,162 @@ if (typeof module !== 'undefined' && module.exports) {
         }
     };
 
-    // 데스크톱 테이블 행(Row) 생성
+    // 데스크톱 테이블 행(Row) 생성 (소관부처/소관기관, 담당과/소속부서 Rowspan 계층 병합)
     function renderDesktopRows(files) {
-        return files.map(f => {
-            const ministryClean = (f.ministry || '관계부처').split('(')[0].trim();
-            const badgeClass = getMinistryBadgeClass(f.ministry);
-            const hl = f.hierarchyLink || { targetId: "comm-case-intake", label: "L1 종합복지 > L2 운영" };
-            const tags = f.keyChapters || ["법정지침", "운영서식"];
-            const tagsHtml = tags.map(t => `<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant text-[11px] font-medium">${t}</span>`).join(' ');
+        if (!files || files.length === 0) {
+            return `<tr><td colspan="6" class="py-12 text-center text-on-surface-variant font-medium">검색 조건에 일치하는 지침서가 없습니다.</td></tr>`;
+        }
 
-            const legalBasis = (f.legalTarget || '').split('·')[0].trim() || '사회복지사업법 관련';
-            const targetFacilities = (f.legalTarget || '').includes('·') ? (f.legalTarget || '').split('·').slice(1).join('·').trim() : (f.department || '관련 시설');
+        // 1. 소관 부처별 -> 담당과별 계층 그룹핑 (순서 보존)
+        const ministryGroups = {};
+        const ministryOrder = [];
 
-            const keywords = [
-                f.title,
-                f.ministry,
-                f.department,
-                f.code,
-                f.legalTarget,
-                ...(f.keyChapters || [])
-            ].filter(Boolean).join(' ').toLowerCase();
+        files.forEach(f => {
+            const m = (f.ministry || '관계부처').split('(')[0].trim();
+            const d = f.department || '총괄부서';
 
-            return `
-            <tr class="guideline-row hover:bg-surface-container-low/70 transition-colors"
-                id="guideline-row-${f.id}"
-                data-ministry="${f.ministry || '기타'}"
-                data-section="${f.section || 'SECTION_1'}"
-                data-keywords="${keywords}">
-                
-                <!-- 1열: 소관 부처 / 담당과 -->
-                <td class="py-3.5 px-4 align-top border-r border-surface-container bg-surface-container-lowest">
-                    <div class="flex flex-col gap-1">
-                        <span class="inline-flex items-center w-fit px-2 py-0.5 rounded ${badgeClass} font-label-sm text-label-sm font-semibold">
-                            ${ministryClean}
-                        </span>
-                        <span class="font-label-sm text-label-sm text-on-surface font-semibold">${f.department || '총괄부서'}</span>
-                        <span class="font-legal-code text-legal-code text-outline">${f.code || f.id}</span>
-                    </div>
-                </td>
+            if (!ministryGroups[m]) {
+                ministryGroups[m] = {};
+                ministryOrder.push(m);
+            }
+            if (!ministryGroups[m][d]) {
+                ministryGroups[m][d] = [];
+            }
+            ministryGroups[m][d].push(f);
+        });
 
-                <!-- 2열: 지침서 공식 명칭 & 판본 -->
-                <td class="py-3.5 px-4 align-top border-r border-surface-container">
-                    <div class="flex flex-col gap-1">
-                        <span class="font-label-md text-label-md font-bold text-on-surface leading-snug">${f.title}</span>
-                        <div class="flex items-center gap-2 text-legal-code font-legal-code text-on-surface-variant flex-wrap mt-0.5">
-                            <span class="px-1.5 py-0.2 rounded bg-error-container text-on-error-container font-semibold">PDF 정본</span>
-                            <span>발간: ${f.year || '2026'}.01</span>
-                            <span>•</span>
-                            <span>${f.totalPages || 250}쪽</span>
-                            <span>•</span>
-                            <span>${f.sizeStr || '14.2 MB'}</span>
+        let html = '';
+
+        ministryOrder.forEach(m => {
+            const deptMap = ministryGroups[m];
+            const deptKeys = Object.keys(deptMap);
+            const ministryTotal = deptKeys.reduce((acc, d) => acc + deptMap[d].length, 0);
+            let isFirstRowOfMinistry = true;
+
+            deptKeys.forEach(d => {
+                const deptFiles = deptMap[d];
+                const deptTotal = deptFiles.length;
+                let isFirstRowOfDept = true;
+
+                deptFiles.forEach(f => {
+                    const badgeClass = getMinistryBadgeClass(f.ministry);
+                    const hl = f.hierarchyLink || { targetId: "comm-case-intake", label: "L1 종합복지 > L2 운영" };
+                    const tags = f.keyChapters || ["법정지침", "운영서식"];
+                    const tagsHtml = tags.map(t => `<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant text-[11px] font-medium">${t}</span>`).join(' ');
+
+                    const legalBasis = (f.legalTarget || '').split('·')[0].trim() || '사회복지사업법 관련';
+                    const targetFacilities = (f.legalTarget || '').includes('·') ? (f.legalTarget || '').split('·').slice(1).join('·').trim() : (f.department || '관련 시설');
+
+                    const keywords = [
+                        f.title,
+                        f.ministry,
+                        f.department,
+                        f.code,
+                        f.legalTarget,
+                        ...(f.keyChapters || [])
+                    ].filter(Boolean).join(' ').toLowerCase();
+
+                    html += `
+                    <tr class="guideline-row hover:bg-surface-container-low/70 transition-colors"
+                        id="guideline-row-${f.id}"
+                        data-ministry="${f.ministry || '기타'}"
+                        data-section="${f.section || 'SECTION_1'}"
+                        data-keywords="${keywords}">`;
+
+                    // 1열: 소관 부처 / 소관 기관 (Rowspan 병합)
+                    if (isFirstRowOfMinistry) {
+                        html += `
+                        <td class="py-3.5 px-3 align-top border-r border-surface-container bg-surface-container-lowest/90 text-center" rowspan="${ministryTotal}">
+                            <div class="sticky top-28 flex flex-col items-center gap-1.5 py-1">
+                                <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-md ${badgeClass} font-label-sm text-label-sm font-bold shadow-2xs whitespace-nowrap">
+                                    ${m}
+                                </span>
+                                <span class="text-[11px] text-on-surface-variant font-medium">${ministryTotal}종 지침</span>
+                            </div>
+                        </td>`;
+                        isFirstRowOfMinistry = false;
+                    }
+
+                    // 2열: 담당과 / 소속 부서 (Rowspan 병합)
+                    if (isFirstRowOfDept) {
+                        html += `
+                        <td class="py-3.5 px-3.5 align-top border-r border-surface-container bg-surface-container-lowest/50" rowspan="${deptTotal}">
+                            <div class="sticky top-28 flex flex-col gap-1 py-1">
+                                <span class="font-label-sm text-label-sm text-on-surface font-bold leading-snug">${d}</span>
+                                <span class="font-legal-code text-legal-code text-outline text-[11px]">${deptTotal}건 수록</span>
+                            </div>
+                        </td>`;
+                        isFirstRowOfDept = false;
+                    }
+
+                    // 3열: 지침서 공식 명칭 & 판본
+                    html += `
+                    <td class="py-3.5 px-4 align-top border-r border-surface-container">
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <span class="font-legal-code text-legal-code text-outline font-semibold bg-surface-container px-1.5 py-0.2 rounded">${f.code || f.id}</span>
+                                <span class="px-1.5 py-0.2 rounded bg-error-container text-on-error-container font-semibold text-[11px]">PDF 정본</span>
+                            </div>
+                            <span class="font-label-md text-label-md font-bold text-on-surface leading-snug">${f.title}</span>
+                            <div class="flex items-center gap-2 text-legal-code font-legal-code text-on-surface-variant flex-wrap mt-0.5">
+                                <span>발간: ${f.year || '2026'}.01</span>
+                                <span>•</span>
+                                <span>${f.totalPages || 250}쪽</span>
+                                <span>•</span>
+                                <span>${f.sizeStr || '14.2 MB'}</span>
+                            </div>
                         </div>
-                    </div>
-                </td>
+                    </td>
 
-                <!-- 3열: 핵심 관할 법령 & 대상 시설 -->
-                <td class="py-3.5 px-4 align-top border-r border-surface-container">
-                    <div class="flex flex-col gap-1">
-                        <span class="font-label-sm text-label-sm text-primary font-medium">${legalBasis}</span>
-                        <p class="font-legal-code text-legal-code text-on-surface-variant">${targetFacilities}</p>
-                    </div>
-                </td>
-
-                <!-- 4열: 주요 수록 챕터 및 핵심 지침 요약 -->
-                <td class="py-3.5 px-4 align-top border-r border-surface-container">
-                    <div class="flex flex-col gap-1">
-                        <div class="flex flex-wrap gap-1">
-                            ${tagsHtml}
+                    <!-- 4열: 핵심 관할 법령 & 대상 시설 -->
+                    <td class="py-3.5 px-4 align-top border-r border-surface-container">
+                        <div class="flex flex-col gap-1">
+                            <span class="font-label-sm text-label-sm text-primary font-medium">${legalBasis}</span>
+                            <p class="font-legal-code text-legal-code text-on-surface-variant">${targetFacilities}</p>
                         </div>
-                        <p class="text-on-surface-variant text-[12px] line-clamp-2 mt-0.5">
-                            ${targetFacilities} 및 실천기관 표준 운영 매뉴얼, 주요 행정 서식, 현장 실무 가이드라인 수록.
-                        </p>
-                    </div>
-                </td>
+                    </td>
 
-                <!-- 5열: 연계 위계 & 원문 열람 -->
-                <td class="py-3.5 px-4 align-top text-right">
-                    <div class="flex flex-col items-end gap-1.5">
-                        <a class="inline-flex items-center gap-1 font-legal-code text-legal-code text-secondary hover:text-primary hover:underline font-semibold bg-surface-container px-2 py-0.5 rounded transition-colors"
-                           href="#" onclick="showView('hierarchy', { targetNodeId: '${hl.targetId}' }); return false;"
-                           title="3단계 위계도감(${hl.label})으로 연계 이동">
-                            <span class="material-symbols-outlined text-[14px]">account_tree</span>
-                            ${hl.label}
-                            <span class="material-symbols-outlined text-[12px]">arrow_forward</span>
-                        </a>
-                        <div class="flex items-center gap-1">
-                            <button class="px-2.5 py-1 rounded bg-surface-container-high hover:bg-primary hover:text-on-primary text-primary font-label-sm text-label-sm transition-colors"
-                                    onclick="window.viewGuidelineModal('${f.id}'); return false;">
-                                즉시열람
-                            </button>
-                            <button class="px-2 py-1 rounded bg-surface-container text-on-surface-variant hover:bg-surface-container-highest transition-colors"
-                                    onclick="window.downloadGuidelineDirect('${f.id}'); return false;"
-                                    title="지침서 다운로드">
-                                <span class="material-symbols-outlined text-[16px]">download</span>
-                            </button>
+                    <!-- 5열: 주요 수록 챕터 및 핵심 지침 요약 -->
+                    <td class="py-3.5 px-4 align-top border-r border-surface-container">
+                        <div class="flex flex-col gap-1">
+                            <div class="flex flex-wrap gap-1">
+                                ${tagsHtml}
+                            </div>
+                            <p class="text-on-surface-variant text-[12px] line-clamp-2 mt-0.5">
+                                ${targetFacilities} 및 실천기관 표준 운영 매뉴얼, 주요 행정 서식, 현장 실무 가이드라인 수록.
+                            </p>
                         </div>
-                    </div>
-                </td>
-            </tr>
-            `;
-        }).join('');
+                    </td>
+
+                    <!-- 6열: 연계 위계 & 원문 열람 -->
+                    <td class="py-3.5 px-4 align-top text-right">
+                        <div class="flex flex-col items-end gap-1.5">
+                            <a class="inline-flex items-center gap-1 font-legal-code text-legal-code text-secondary hover:text-primary hover:underline font-semibold bg-surface-container px-2 py-0.5 rounded transition-colors"
+                               href="#" onclick="showView('hierarchy', { targetNodeId: '${hl.targetId}' }); return false;"
+                               title="3단계 위계도감(${hl.label})으로 연계 이동">
+                                <span class="material-symbols-outlined text-[14px]">account_tree</span>
+                                <span>${hl.label}</span>
+                                <span class="material-symbols-outlined text-[12px]">arrow_forward</span>
+                            </a>
+                            <div class="flex items-center gap-1">
+                                <button class="px-2.5 py-1 rounded bg-surface-container-high hover:bg-primary hover:text-on-primary text-primary font-label-sm text-label-sm transition-colors cursor-pointer"
+                                        onclick="window.viewGuidelineModal('${f.id}'); return false;">
+                                    즉시열람
+                                </button>
+                                <button class="px-2 py-1 rounded bg-surface-container text-on-surface-variant hover:bg-surface-container-highest transition-colors cursor-pointer"
+                                        onclick="window.downloadGuidelineDirect('${f.id}'); return false;"
+                                        title="지침서 다운로드">
+                                    <span class="material-symbols-outlined text-[16px]">download</span>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>`;
+                });
+            });
+        });
+
+        return html;
     }
 
     // 모바일 카드 생성
@@ -2499,25 +2585,34 @@ if (typeof module !== 'undefined' && module.exports) {
             let sec2Count = 0;
             const q = searchQuery.trim().toLowerCase();
 
-            // Filter Desktop Rows
-            rows.forEach(row => {
-                const rowMinistry = row.getAttribute('data-ministry') || '';
-                const rowSection = row.getAttribute('data-section') || 'SECTION_1';
-                const keywords = (row.getAttribute('data-keywords') || '').toLowerCase();
-                const textContent = row.textContent.toLowerCase();
+            // Rowspan 계층 구조 완결성을 위한 데이터 기반 필터링 및 동적 렌더링
+            const filteredFiles = allFiles.filter(f => {
+                const keywords = [
+                    f.title,
+                    f.ministry,
+                    f.department,
+                    f.code,
+                    f.legalTarget,
+                    ...(f.keyChapters || [])
+                ].filter(Boolean).join(' ').toLowerCase();
 
-                let ministryMatch = checkMinistryMatch(rowMinistry, keywords, currentMinistry);
-                let queryMatch = (q.length === 0) || textContent.includes(q) || keywords.includes(q);
+                let ministryMatch = checkMinistryMatch(f.ministry || '', keywords, currentMinistry);
+                let queryMatch = (q.length === 0) || keywords.includes(q) || (f.title || '').toLowerCase().includes(q) || (f.department || '').toLowerCase().includes(q);
 
-                if (ministryMatch && queryMatch) {
-                    row.style.display = '';
-                    visibleCount++;
-                    if (rowSection === 'SECTION_1') sec1Count++;
-                    else sec2Count++;
-                } else {
-                    row.style.display = 'none';
-                }
+                return ministryMatch && queryMatch;
             });
+
+            const sec1Filtered = filteredFiles.filter(f => f.section === 'SECTION_1' || (f.ministry && f.ministry.includes('보건복지부')));
+            const sec2Filtered = filteredFiles.filter(f => f.section === 'SECTION_2' || (f.ministry && !f.ministry.includes('보건복지부')));
+
+            visibleCount = filteredFiles.length;
+            sec1Count = sec1Filtered.length;
+            sec2Count = sec2Filtered.length;
+
+            const t1 = document.getElementById('table1-tbody');
+            const t2 = document.getElementById('table2-tbody');
+            if (t1) t1.innerHTML = renderDesktopRows(sec1Filtered);
+            if (t2) t2.innerHTML = renderDesktopRows(sec2Filtered);
 
             // Filter Mobile Cards
             cards.forEach(card => {
@@ -2553,6 +2648,7 @@ if (typeof module !== 'undefined' && module.exports) {
                 if (tablesContainer) tablesContainer.classList.remove('hidden');
             }
         }
+        activeFilterGuidelines = filterGuidelines;
 
         function checkMinistryMatch(rowMinistry, keywords, target) {
             if (target === 'all') return true;
@@ -2579,7 +2675,9 @@ if (typeof module !== 'undefined' && module.exports) {
                 this.classList.add('bg-primary', 'text-on-primary', 'active-pill');
 
                 currentMinistry = this.getAttribute('data-ministry');
-                filterGuidelines();
+                if (typeof activeFilterGuidelines === 'function') {
+            activeFilterGuidelines();
+        }
             });
         });
 
@@ -2591,7 +2689,9 @@ if (typeof module !== 'undefined' && module.exports) {
                     if (searchQuery.length > 0) clearBtn.classList.remove('hidden');
                     else clearBtn.classList.add('hidden');
                 }
-                filterGuidelines();
+                if (typeof activeFilterGuidelines === 'function') {
+            activeFilterGuidelines();
+        }
             });
         }
 
@@ -2602,7 +2702,9 @@ if (typeof module !== 'undefined' && module.exports) {
                     searchInput.value = '';
                     searchQuery = '';
                     clearBtn.classList.add('hidden');
-                    filterGuidelines();
+                    if (typeof activeFilterGuidelines === 'function') {
+            activeFilterGuidelines();
+        }
                     searchInput.focus();
                 }
             });
@@ -2628,7 +2730,9 @@ if (typeof module !== 'undefined' && module.exports) {
                     }
                 });
 
-                filterGuidelines();
+                if (typeof activeFilterGuidelines === 'function') {
+            activeFilterGuidelines();
+        }
             });
         }
 
@@ -2638,14 +2742,18 @@ if (typeof module !== 'undefined' && module.exports) {
                 mobileActiveSection = 'SECTION_1';
                 mobTabSec1.className = 'flex-1 py-2 text-center rounded-lg bg-primary text-on-primary font-label-sm text-label-sm font-semibold shadow-xs transition-all';
                 mobTabSec2.className = 'flex-1 py-2 text-center rounded-lg text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm font-medium transition-all';
-                filterGuidelines();
+                if (typeof activeFilterGuidelines === 'function') {
+            activeFilterGuidelines();
+        }
             });
 
             mobTabSec2.addEventListener('click', function () {
                 mobileActiveSection = 'SECTION_2';
                 mobTabSec2.className = 'flex-1 py-2 text-center rounded-lg bg-primary text-on-primary font-label-sm text-label-sm font-semibold shadow-xs transition-all';
                 mobTabSec1.className = 'flex-1 py-2 text-center rounded-lg text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm font-medium transition-all';
-                filterGuidelines();
+                if (typeof activeFilterGuidelines === 'function') {
+            activeFilterGuidelines();
+        }
             });
         }
 
@@ -2798,19 +2906,42 @@ if (typeof module !== 'undefined' && module.exports) {
 
     // 위계도감 등 외부에서 특정 지침서로 포커스 요청 시
     function highlightAndScrollGuideline(docId) {
-        const row = document.getElementById(`guideline-row-${docId}`);
-        const card = document.getElementById(`mobile-card-${docId}`);
+        // Reset filters so the row is guaranteed visible
+        searchQuery = '';
+        currentMinistry = 'all';
+        const searchInput = document.getElementById('guidelineSearchInput');
+        if (searchInput) searchInput.value = '';
+        const clearBtn = document.getElementById('clearSearchBtn');
+        if (clearBtn) clearBtn.classList.add('hidden');
+        const pills = document.querySelectorAll('.ministry-pill');
+        pills.forEach(p => {
+            if (p.getAttribute('data-ministry') === 'all') {
+                p.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+                p.classList.add('bg-primary', 'text-on-primary', 'active-pill');
+            } else {
+                p.classList.remove('bg-primary', 'text-on-primary', 'active-pill');
+                p.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+            }
+        });
+        if (typeof activeFilterGuidelines === 'function') {
+            activeFilterGuidelines();
+        }
 
-        const targetEl = (window.innerWidth >= 768) ? row : card;
-        if (!targetEl) return;
-
-        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-        // Highlight ring pulse animation
-        targetEl.classList.add('ring-4', 'ring-secondary', 'bg-secondary-container/40');
         setTimeout(() => {
-            targetEl.classList.remove('ring-4', 'ring-secondary', 'bg-secondary-container/40');
-        }, 2500);
+            const row = document.getElementById(`guideline-row-${docId}`);
+            const card = document.getElementById(`mobile-card-${docId}`);
+
+            const targetEl = (window.innerWidth >= 768) ? row : card;
+            if (!targetEl) return;
+
+            targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // Highlight ring pulse animation
+            targetEl.classList.add('ring-4', 'ring-secondary', 'bg-secondary-container/40', 'transition-all', 'duration-500');
+            setTimeout(() => {
+                targetEl.classList.remove('ring-4', 'ring-secondary', 'bg-secondary-container/40');
+            }, 2500);
+        }, 150);
     }
 
 })();
