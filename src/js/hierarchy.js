@@ -1746,8 +1746,8 @@
                 const matchedCards = document.querySelectorAll('#mobileCardsContainer .domain-card, #mobileCardsContainer > div');
                 const allTargets = (window.innerWidth >= 768) ? matchedTrs : matchedCards;
                 if (allTargets && allTargets.length > 0) {
-                    if (typeof window.triggerMatchHighlightAll === 'function') {
-                        window.triggerMatchHighlightAll(Array.from(allTargets));
+                    if (typeof window.triggerMatchHighlight === 'function') {
+                        window.triggerMatchHighlight(allTargets[0]);
                     }
                     allTargets[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
                 } else {
@@ -1772,8 +1772,8 @@
                     const matchedCards = document.querySelectorAll('#mobileCardsContainer .domain-card, #mobileCardsContainer > div');
                     const allTargets = (window.innerWidth >= 768) ? matchedTrs : matchedCards;
                     if (allTargets && allTargets.length > 0) {
-                        if (typeof window.triggerMatchHighlightAll === 'function') {
-                            window.triggerMatchHighlightAll(Array.from(allTargets));
+                        if (typeof window.triggerMatchHighlight === 'function') {
+                            window.triggerMatchHighlight(allTargets[0]);
                         }
                         allTargets[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
@@ -2682,9 +2682,9 @@
                 if (typeof window.triggerMatchHighlight === 'function') {
                     window.triggerMatchHighlight(targetEl);
                 }
-                targetEl.classList.add('ring-4', 'ring-emerald-500', 'bg-emerald-100', 'transition-all', 'duration-500');
+                targetEl.classList.add('ring-4', 'ring-emerald-500', 'transition-all', 'duration-500');
                 setTimeout(() => {
-                    targetEl.classList.remove('ring-4', 'ring-emerald-500', 'bg-emerald-100');
+                    targetEl.classList.remove('ring-4', 'ring-emerald-500');
                 }, 2800);
             }
         }, 180);

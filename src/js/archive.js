@@ -613,14 +613,14 @@
                         activeFilterGuidelines();
                     }
 
-                    // 1:1 매칭 지침서 행 및 카드 전수 초록 테두리 강조
+                    // 1:1 매칭 지침서 행 및 카드 외곽선 초록 테두리 발광
                     setTimeout(() => {
                         const matchedRows = document.querySelectorAll('.guideline-row');
                         const matchedCards = document.querySelectorAll('#guidelinesMobileList > div');
                         const targets = (window.innerWidth >= 768) ? matchedRows : matchedCards;
                         if (targets && targets.length > 0) {
-                            if (typeof window.triggerMatchHighlightAll === 'function') {
-                                window.triggerMatchHighlightAll(Array.from(targets));
+                            if (typeof window.triggerMatchHighlight === 'function') {
+                                window.triggerMatchHighlight(targets[0]);
                             }
                             targets[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
                         }
@@ -1244,9 +1244,9 @@
             if (typeof window.triggerMatchHighlight === 'function') {
                 window.triggerMatchHighlight(targetEl);
             }
-            targetEl.classList.add('ring-4', 'ring-secondary', 'bg-secondary-container/40', 'transition-all', 'duration-500');
+            targetEl.classList.add('ring-4', 'ring-secondary', 'transition-all', 'duration-500');
             setTimeout(() => {
-                targetEl.classList.remove('ring-4', 'ring-secondary', 'bg-secondary-container/40');
+                targetEl.classList.remove('ring-4', 'ring-secondary');
             }, 2800);
         }, 150);
     }

@@ -64,14 +64,14 @@ def build_exports():
             0% {
                 outline: 3px solid #10b981;
                 outline-offset: -2px;
-                box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.45), inset 0 0 14px rgba(16, 185, 129, 0.2);
-                background-color: rgba(209, 250, 229, 0.55) !important;
+                box-shadow: 0 0 14px rgba(16, 185, 129, 0.75), 0 0 28px rgba(16, 185, 129, 0.45);
+                background-color: transparent !important;
             }
-            40% {
-                outline: 3px solid #059669;
+            45% {
+                outline: 3.5px solid #059669;
                 outline-offset: -2px;
-                box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.55), inset 0 0 20px rgba(16, 185, 129, 0.3);
-                background-color: rgba(209, 250, 229, 0.7) !important;
+                box-shadow: 0 0 20px rgba(16, 185, 129, 0.9), 0 0 38px rgba(16, 185, 129, 0.6);
+                background-color: transparent !important;
             }
             100% {
                 outline: 2px solid transparent;
@@ -84,6 +84,7 @@ def build_exports():
             animation: matchIndicatorPulse 2.8s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
             position: relative;
             z-index: 25;
+            background-color: transparent !important;
         }
     </style>
     <script>
