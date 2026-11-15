@@ -59,7 +59,48 @@ def build_exports():
         /* 스크롤바 숨김 */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        /* 3대 영역 1:1 인터랙티브 매칭 초록 테두리 강조 애니메이션 */
+        @keyframes matchIndicatorPulse {
+            0% {
+                outline: 3px solid #10b981;
+                outline-offset: -2px;
+                box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.45), inset 0 0 14px rgba(16, 185, 129, 0.2);
+                background-color: rgba(209, 250, 229, 0.55) !important;
+            }
+            40% {
+                outline: 3px solid #059669;
+                outline-offset: -2px;
+                box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.55), inset 0 0 20px rgba(16, 185, 129, 0.3);
+                background-color: rgba(209, 250, 229, 0.7) !important;
+            }
+            100% {
+                outline: 2px solid transparent;
+                outline-offset: -2px;
+                box-shadow: none;
+                background-color: transparent !important;
+            }
+        }
+        .interactive-match-highlight {
+            animation: matchIndicatorPulse 2.8s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+            position: relative;
+            z-index: 25;
+        }
     </style>
+    <script>
+        window.triggerMatchHighlight = function(element) {
+            if (!element) return;
+            element.classList.remove('interactive-match-highlight');
+            void element.offsetWidth;
+            element.classList.add('interactive-match-highlight');
+            setTimeout(() => {
+                element.classList.remove('interactive-match-highlight');
+            }, 2900);
+        };
+        window.triggerMatchHighlightAll = function(elements) {
+            if (!elements || elements.length === 0) return;
+            elements.forEach(el => window.triggerMatchHighlight(el));
+        };
+    </script>
 </head>
 <body class="bg-[#F8FAFC] text-[#0F172A] min-h-screen flex flex-col font-sans">
 """

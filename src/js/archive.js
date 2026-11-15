@@ -610,8 +610,21 @@
                     });
                     currentMinistry = 'all';
                     if (typeof activeFilterGuidelines === 'function') {
-            activeFilterGuidelines();
-        }
+                        activeFilterGuidelines();
+                    }
+
+                    // 1:1 매칭 지침서 행 및 카드 전수 초록 테두리 강조
+                    setTimeout(() => {
+                        const matchedRows = document.querySelectorAll('.guideline-row');
+                        const matchedCards = document.querySelectorAll('#guidelinesMobileList > div');
+                        const targets = (window.innerWidth >= 768) ? matchedRows : matchedCards;
+                        if (targets && targets.length > 0) {
+                            if (typeof window.triggerMatchHighlightAll === 'function') {
+                                window.triggerMatchHighlightAll(Array.from(targets));
+                            }
+                            targets[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 120);
                 }, 50);
             }
         }
@@ -1227,11 +1240,14 @@
 
             targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-            // Highlight ring pulse animation
+            // Highlight ring pulse animation (통합 초록 테두리 인터랙티브 강조)
+            if (typeof window.triggerMatchHighlight === 'function') {
+                window.triggerMatchHighlight(targetEl);
+            }
             targetEl.classList.add('ring-4', 'ring-secondary', 'bg-secondary-container/40', 'transition-all', 'duration-500');
             setTimeout(() => {
                 targetEl.classList.remove('ring-4', 'ring-secondary', 'bg-secondary-container/40');
-            }, 2500);
+            }, 2800);
         }, 150);
     }
 

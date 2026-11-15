@@ -1670,7 +1670,7 @@
                     <button type="button" onclick="window.clearFacilityFilter()" class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-100 border border-slate-300 rounded-xl shadow-2xs transition cursor-pointer">
                         <span>✕</span><span>전체 위계 보기</span>
                     </button>
-                    <button type="button" onclick="showView('fields')" class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-2xs transition cursor-pointer">
+                    <button type="button" onclick="window.jumpToFacilityByTerm('${escapeHtml(facilityName)}'); return false;" class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-2xs transition cursor-pointer">
                         <span>🏛️</span><span>시설도감으로 복귀</span>
                     </button>
                 </div>
@@ -1742,9 +1742,19 @@
             if (searchInput) searchInput.value = '';
             applyFilters();
             setTimeout(() => {
-                const banner = document.getElementById('facilityFilterBannerContainer');
-                if (banner) banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 100);
+                const matchedTrs = document.querySelectorAll('#hierarchicalMatrixTable tbody tr.domain-row, #hierarchicalMatrixTable2 tbody tr.domain-row');
+                const matchedCards = document.querySelectorAll('#mobileCardsContainer .domain-card, #mobileCardsContainer > div');
+                const allTargets = (window.innerWidth >= 768) ? matchedTrs : matchedCards;
+                if (allTargets && allTargets.length > 0) {
+                    if (typeof window.triggerMatchHighlightAll === 'function') {
+                        window.triggerMatchHighlightAll(Array.from(allTargets));
+                    }
+                    allTargets[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    const banner = document.getElementById('facilityFilterBannerContainer');
+                    if (banner) banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 180);
         }
 
         // 2. 검색 키워드 필터 요청 처리 (options.search)
@@ -1755,7 +1765,19 @@
                 currentSearchKeyword = options.search.toLowerCase();
                 currentDomainFilter = 'all';
                 currentMinistryGroup = 'all';
+                currentFacilityFilter = null;
                 applyFilters();
+                setTimeout(() => {
+                    const matchedTrs = document.querySelectorAll('#hierarchicalMatrixTable tbody tr.domain-row, #hierarchicalMatrixTable2 tbody tr.domain-row');
+                    const matchedCards = document.querySelectorAll('#mobileCardsContainer .domain-card, #mobileCardsContainer > div');
+                    const allTargets = (window.innerWidth >= 768) ? matchedTrs : matchedCards;
+                    if (allTargets && allTargets.length > 0) {
+                        if (typeof window.triggerMatchHighlightAll === 'function') {
+                            window.triggerMatchHighlightAll(Array.from(allTargets));
+                        }
+                        allTargets[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 180);
             }
         }
 
@@ -2636,34 +2658,36 @@
         const { nodes } = getDB();
         const targetNode = nodes.find(n => n.id === nodeId);
         if (targetNode) {
+            currentFacilityFilter = null;
+            currentParentCategory = null;
+            currentSearchKeyword = '';
+            const searchInput = document.getElementById('matrixSearchInput') || document.getElementById('hierarchySearchInput');
+            if (searchInput) searchInput.value = '';
+
             const domainMeta = DOMAIN_MAP[targetNode.domainId];
             if (currentDomainFilter !== 'all' && domainMeta && domainMeta.key !== currentDomainFilter) {
                 currentDomainFilter = 'all';
                 currentMinistryGroup = 'all';
-                applyFilters();
             }
+            applyFilters();
         }
 
         setTimeout(() => {
             const desktopTr = document.getElementById(`hierarchy-node-${nodeId}`);
-            if (desktopTr) {
-                desktopTr.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                desktopTr.classList.add('ring-4', 'ring-emerald-500', 'bg-emerald-100', 'transition-all', 'duration-500');
-                setTimeout(() => {
-                    desktopTr.classList.remove('ring-4', 'ring-emerald-500', 'bg-emerald-100');
-                }, 2500);
-                return;
-            }
-
             const mobileCard = document.getElementById(`mobile-card-${nodeId}`);
-            if (mobileCard) {
-                mobileCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                mobileCard.classList.add('ring-4', 'ring-emerald-500', 'bg-emerald-100', 'transition-all', 'duration-500');
+            const targetEl = (window.innerWidth >= 768) ? (desktopTr || mobileCard) : (mobileCard || desktopTr);
+
+            if (targetEl) {
+                targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                if (typeof window.triggerMatchHighlight === 'function') {
+                    window.triggerMatchHighlight(targetEl);
+                }
+                targetEl.classList.add('ring-4', 'ring-emerald-500', 'bg-emerald-100', 'transition-all', 'duration-500');
                 setTimeout(() => {
-                    mobileCard.classList.remove('ring-4', 'ring-emerald-500', 'bg-emerald-100');
-                }, 2500);
+                    targetEl.classList.remove('ring-4', 'ring-emerald-500', 'bg-emerald-100');
+                }, 2800);
             }
-        }, 150);
+        }, 180);
     }
 
     // CSV 내보내기
