@@ -3695,6 +3695,11 @@ const WELFARE_HIERARCHY_NODES = [
   }
 ];
 
+if (typeof window !== 'undefined') {
+    window.WELFARE_HIERARCHY_DOMAINS = WELFARE_HIERARCHY_DOMAINS;
+    window.WELFARE_HIERARCHY_NODES = WELFARE_HIERARCHY_NODES;
+}
+
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { WELFARE_HIERARCHY_DOMAINS, WELFARE_HIERARCHY_NODES };
 }
