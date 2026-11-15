@@ -1,3 +1,28 @@
+function renderFacilityInteractiveText(raw_f) {
+    if (!raw_f) return '';
+    const clean_f = String(raw_f).replace(/^[•\s]+/, '').trim();
+    const match = clean_f.match(/^(.*?)\s*\((.*?)\)$/);
+
+    if (!match) {
+        const mainName = clean_f;
+        return `<button type="button" onclick="window.jumpToFacilityHierarchy('${escapeHtml(mainName)}'); return false;" class="font-bold text-slate-800 hover:text-emerald-700 hover:underline cursor-pointer transition text-left" title="'${escapeHtml(mainName)}'의 법정 기능 및 사업 위계 탐색">${escapeHtml(mainName)}</button>`;
+    }
+
+    const mainName = match[1].trim();
+    const subRaw = match[2].trim();
+    const rawSubs = subRaw.split(/[,·/]/).map(s => s.trim()).filter(Boolean);
+
+    const mainHtml = `<button type="button" onclick="window.jumpToFacilityHierarchy('${escapeHtml(mainName)}'); return false;" class="font-bold text-slate-900 hover:text-emerald-700 hover:underline cursor-pointer transition text-left" title="'${escapeHtml(mainName)}'의 법정 기능 및 사업 위계 탐색">${escapeHtml(mainName)}</button>`;
+
+    const subButtons = rawSubs.map(s => {
+        const cleanTarget = s.replace(/(등|포함|연계|제공사업장)\s*$/g, '').trim() || s;
+        return `<button type="button" onclick="window.jumpToFacilityHierarchy('${escapeHtml(cleanTarget)}', '${escapeHtml(mainName)}'); return false;" class="text-slate-600 hover:text-emerald-600 hover:underline cursor-pointer transition font-medium" title="'${escapeHtml(cleanTarget)}'의 세부 기능 및 단위서비스 탐색">${escapeHtml(s)}</button>`;
+    });
+
+    const subsHtml = `<span class="text-slate-400 font-normal text-xs">(${subButtons.join(' · ')})</span>`;
+    return `${mainHtml} ${subsHtml}`;
+}
+
 export function matchesMinistry(rowMinistry, targetMinistry) {
     if (!targetMinistry || targetMinistry === '전체') return true;
     if (!rowMinistry) return false;
@@ -245,7 +270,7 @@ function renderMatrixView(container) {
 
                                 const livingHtml = row.livingFacilities.length
                                     ? `<ul class="space-y-1 text-gray-700">
-                                            ${row.livingFacilities.map((f) => `<li class="flex items-start gap-1.5"><span class="text-camping-green font-bold">•</span><span>${escapeHtml(f)}</span></li>`).join('')}
+                                            ${row.livingFacilities.map((f) => `<li class="flex items-start gap-1.5"><span class="text-camping-green font-bold">•</span><span class="text-xs text-slate-800">${renderFacilityInteractiveText(f)}</span></li>`).join('')}
                                        </ul>`
                                     : row.note && row.usingFacilities.length === 0
                                         ? ''

@@ -5496,6 +5496,1688 @@ if (typeof module !== 'undefined' && module.exports) {
     let currentMinistryGroup = 'all';
     let currentDomainFilter = 'all';
     let currentSearchKeyword = '';
+    let currentFacilityFilter = null;
+    let currentParentCategory = null;
+
+    const FACILITY_MAPPING_RULES = {
+    "노인주거복지시설": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "양로시설",
+            "노인복지주택",
+            "노인복지시설"
+        ],
+        "level1": [
+            "노인주거복지",
+            "노인의료 및 주거복지"
+        ]
+    },
+    "양로시설": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "양로시설",
+            "노인복지시설"
+        ],
+        "level1": [
+            "노인주거복지"
+        ]
+    },
+    "노인공동생활가정": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "양로시설",
+            "노인복지시설"
+        ],
+        "level1": [
+            "노인주거복지"
+        ]
+    },
+    "노인복지주택": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "노인복지주택"
+        ],
+        "level1": [
+            "노인주거복지"
+        ]
+    },
+    "노인의료복지시설": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "노인요양시설",
+            "노인복지시설"
+        ],
+        "level1": [
+            "노인의료 및 주거복지"
+        ]
+    },
+    "노인요양시설": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "노인요양시설"
+        ],
+        "level1": [
+            "노인의료 및 주거복지"
+        ]
+    },
+    "노인요양공동생활가정": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "노인요양시설"
+        ],
+        "level1": [
+            "노인의료 및 주거복지"
+        ]
+    },
+    "학대피해노인전용쉼터": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "학대피해노인전용쉼터"
+        ],
+        "level1": [
+            "노인권익보호"
+        ]
+    },
+    "재가노인복지시설": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "재가노인복지시설(주야간보호·방문요양)"
+        ],
+        "level1": [
+            "재가·돌봄지원"
+        ]
+    },
+    "방문요양": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "재가노인복지시설(주야간보호·방문요양)"
+        ],
+        "level1": [
+            "재가·돌봄지원"
+        ]
+    },
+    "주야간보호": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "재가노인복지시설(주야간보호·방문요양)"
+        ],
+        "level1": [
+            "재가·돌봄지원"
+        ]
+    },
+    "단기보호": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "재가노인복지시설(주야간보호·방문요양)"
+        ],
+        "level1": [
+            "재가·돌봄지원"
+        ]
+    },
+    "노인여가복지시설": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "노인복지관",
+            "경로당",
+            "노인교실"
+        ],
+        "level1": [
+            "노인 여가 및 사회활동 지원"
+        ]
+    },
+    "노인복지관": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "노인복지관"
+        ],
+        "level1": [
+            "노인 여가 및 사회활동 지원"
+        ]
+    },
+    "경로당": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "경로당"
+        ],
+        "level1": [
+            "노인 여가 및 사회활동 지원"
+        ]
+    },
+    "노인교실": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "노인교실"
+        ],
+        "level1": [
+            "노인 여가 및 사회활동 지원"
+        ]
+    },
+    "노인보호전문기관": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "노인보호전문기관"
+        ],
+        "level1": [
+            "노인권익보호"
+        ]
+    },
+    "노인일자리지원기관": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "노인일자리지원기관(시니어클럽)",
+            "시니어클럽"
+        ],
+        "level1": [
+            "노인사회활동"
+        ]
+    },
+    "시니어클럽": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "노인일자리지원기관(시니어클럽)",
+            "시니어클럽"
+        ],
+        "level1": [
+            "노인사회활동"
+        ]
+    },
+    "지자체 통합지원 전담조직 · 읍면동 통합창구": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "시·군·구 긴급복지지원 전담부서",
+            "시·군·구청 복지정책과"
+        ],
+        "level1": [
+            "의료·요양통합돌봄",
+            "긴급위기지원 및 복합돌봄 (공공안전망)"
+        ]
+    },
+    "재택의료 · 퇴원환자 전환돌봄 · 일상생활돌봄 연계 거점기관": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "시·도 사회서비스원(종합재가센터)",
+            "보건소"
+        ],
+        "level1": [
+            "의료·요양통합돌봄",
+            "공공돌봄지원"
+        ]
+    },
+    "복합노인복지시설": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "노인복지관",
+            "노인요양시설",
+            "양로시설"
+        ],
+        "level1": [
+            "노인 여가 및 사회활동 지원",
+            "노인주거복지"
+        ]
+    },
+    "아동양육시설": {
+        "domainId": "04_아동돌봄복지",
+        "facilityTypes": [
+            "아동양육시설"
+        ],
+        "level1": [
+            "보호대상아동 시설양육 및 그룹홈"
+        ]
+    },
+    "아동일시보호시설": {
+        "domainId": "04_아동돌봄복지",
+        "facilityTypes": [
+            "아동일시보호시설"
+        ],
+        "level1": [
+            "보호대상아동 시설양육 및 그룹홈",
+            "아동보호체계"
+        ]
+    },
+    "아동보호치료시설": {
+        "domainId": "04_아동돌봄복지",
+        "facilityTypes": [
+            "아동양육시설",
+            "학대피해아동쉼터"
+        ],
+        "level1": [
+            "보호대상아동 시설양육 및 그룹홈",
+            "아동보호체계"
+        ]
+    },
+    "자립지원시설": {
+        "domainId": "04_아동돌봄복지",
+        "facilityTypes": [
+            "자립지원전담기관"
+        ],
+        "level1": [
+            "가정위탁 및 자립준비청년 지원"
+        ]
+    },
+    "공동생활가정": {
+        "domainId": "04_아동돌봄복지",
+        "facilityTypes": [
+            "공동생활가정"
+        ],
+        "level1": [
+            "보호대상아동 시설양육 및 그룹홈",
+            "그룹홈보호"
+        ]
+    },
+    "그룹홈": {
+        "domainId": "04_아동돌봄복지",
+        "facilityTypes": [
+            "공동생활가정"
+        ],
+        "level1": [
+            "보호대상아동 시설양육 및 그룹홈",
+            "그룹홈보호"
+        ]
+    },
+    "학대피해아동쉼터": {
+        "domainId": "04_아동돌봄복지",
+        "facilityTypes": [
+            "학대피해아동쉼터"
+        ],
+        "level1": [
+            "아동보호체계",
+            "아동학대 예방 및 아동권리보호"
+        ]
+    },
+    "아동상담소": {
+        "domainId": "04_아동돌봄복지",
+        "facilityTypes": [
+            "드림스타트",
+            "아동보호전문기관"
+        ],
+        "level1": [
+            "취약계층 아동통합사례관리 (드림스타트)",
+            "아동학대 예방 및 아동권리보호"
+        ]
+    },
+    "아동전용시설": {
+        "domainId": "04_아동돌봄복지",
+        "facilityTypes": [
+            "지역아동센터",
+            "다함께돌봄센터"
+        ],
+        "level1": [
+            "방과 후 온종일 마을돌봄",
+            "지역아동센터"
+        ]
+    },
+    "지역아동센터": {
+        "domainId": "04_아동돌봄복지",
+        "facilityTypes": [
+            "지역아동센터"
+        ],
+        "level1": [
+            "방과 후 온종일 마을돌봄",
+            "지역아동센터"
+        ]
+    },
+    "다함께돌봄센터": {
+        "domainId": "04_아동돌봄복지",
+        "facilityTypes": [
+            "다함께돌봄센터"
+        ],
+        "level1": [
+            "방과 후 온종일 마을돌봄",
+            "다함께돌봄"
+        ]
+    },
+    "아동보호전문기관": {
+        "domainId": "04_아동돌봄복지",
+        "facilityTypes": [
+            "아동보호전문기관"
+        ],
+        "level1": [
+            "아동학대 예방 및 아동권리보호"
+        ]
+    },
+    "가정위탁지원센터": {
+        "domainId": "04_아동돌봄복지",
+        "facilityTypes": [
+            "가정위탁지원센터"
+        ],
+        "level1": [
+            "가정위탁 및 자립준비청년 지원",
+            "가정위탁지원"
+        ]
+    },
+    "자립지원전담기관": {
+        "domainId": "04_아동돌봄복지",
+        "facilityTypes": [
+            "자립지원전담기관"
+        ],
+        "level1": [
+            "가정위탁 및 자립준비청년 지원"
+        ]
+    },
+    "장애유형별 거주시설": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "장애인복지시설"
+        ],
+        "level1": [
+            "장애인지역사회재활 및 자립생활"
+        ]
+    },
+    "중증장애인 거주시설": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "장애인복지시설"
+        ],
+        "level1": [
+            "장애인지역사회재활 및 자립생활"
+        ]
+    },
+    "장애영유아 거주시설": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "장애인복지시설"
+        ],
+        "level1": [
+            "장애인지역사회재활 및 자립생활"
+        ]
+    },
+    "장애인단기거주시설": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "장애인주간이용시설",
+            "장애인복지시설"
+        ],
+        "level1": [
+            "장애인지역사회재활 및 자립생활"
+        ]
+    },
+    "장애인공동생활가정": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "장애인자립생활지원센터(IL센터)",
+            "장애인복지시설"
+        ],
+        "level1": [
+            "장애인지역사회재활 및 자립생활"
+        ]
+    },
+    "피해장애인쉼터": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "피해장애인쉼터",
+            "장애인권익옹호기관"
+        ],
+        "level1": [
+            "장애인 인권 및 권익옹호"
+        ]
+    },
+    "피해장애아동쉼터": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "피해장애인쉼터",
+            "장애인권익옹호기관"
+        ],
+        "level1": [
+            "장애인 인권 및 권익옹호"
+        ]
+    },
+    "장애인지역사회재활시설": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "장애인복지관",
+            "장애인주간이용시설"
+        ],
+        "level1": [
+            "장애인지역사회재활 및 자립생활"
+        ]
+    },
+    "장애인복지관": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "장애인복지관"
+        ],
+        "level1": [
+            "장애인지역사회재활 및 자립생활"
+        ]
+    },
+    "주간이용시설": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "장애인주간이용시설"
+        ],
+        "level1": [
+            "장애인지역사회재활 및 자립생활"
+        ]
+    },
+    "장애인직업재활시설": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "장애인직업재활시설(보호작업장·근로사업장)"
+        ],
+        "level1": [
+            "장애인 직업재활 및 일자리지원"
+        ]
+    },
+    "보호작업장": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "장애인직업재활시설(보호작업장·근로사업장)"
+        ],
+        "level1": [
+            "장애인 직업재활 및 일자리지원"
+        ]
+    },
+    "근로사업장": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "장애인직업재활시설(보호작업장·근로사업장)"
+        ],
+        "level1": [
+            "장애인 직업재활 및 일자리지원"
+        ]
+    },
+    "장애인의료재활시설": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "장애인복지관"
+        ],
+        "level1": [
+            "장애인지역사회재활 및 자립생활"
+        ]
+    },
+    "장애인생산품판매시설": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "장애인직업재활시설(보호작업장·근로사업장)"
+        ],
+        "level1": [
+            "장애인 직업재활 및 일자리지원"
+        ]
+    },
+    "지역보조기기센터": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "장애인자립생활지원센터(IL센터)"
+        ],
+        "level1": [
+            "장애인지역사회재활 및 자립생활"
+        ]
+    },
+    "발달장애인지원센터": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "발달장애인지원센터"
+        ],
+        "level1": [
+            "발달장애인 맞춤형 평생지원"
+        ]
+    },
+    "장애인자립생활지원센터": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "장애인자립생활지원센터(IL센터)"
+        ],
+        "level1": [
+            "장애인지역사회재활 및 자립생활"
+        ]
+    },
+    "IL센터": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "장애인자립생활지원센터(IL센터)"
+        ],
+        "level1": [
+            "장애인지역사회재활 및 자립생활"
+        ]
+    },
+    "장애인활동지원기관": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "장애인활동지원기관"
+        ],
+        "level1": [
+            "장애인활동지원 및 돌봄안전망"
+        ]
+    },
+    "장애인권익옹호기관": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "장애인권익옹호기관"
+        ],
+        "level1": [
+            "장애인 인권 및 권익옹호"
+        ]
+    },
+    "정신건강복지센터": {
+        "domainId": "08_정신건강자살예방",
+        "facilityTypes": [
+            "기초·광역 정신건강복지센터",
+            "정신건강복지센터"
+        ],
+        "level1": [
+            "지역사회 정신건강증진 및 사례관리"
+        ]
+    },
+    "정신재활시설": {
+        "domainId": "08_정신건강자살예방",
+        "facilityTypes": [
+            "정신재활시설",
+            "정신재활시설(주간재활·공동생활가정·직업재활)"
+        ],
+        "level1": [
+            "중독관리 및 정신재활시설 운영",
+            "정신재활지원"
+        ]
+    },
+    "정신요양시설": {
+        "domainId": "08_정신건강자살예방",
+        "facilityTypes": [
+            "정신재활시설"
+        ],
+        "level1": [
+            "정신재활지원"
+        ]
+    },
+    "정신의료기관": {
+        "domainId": "08_정신건강자살예방",
+        "facilityTypes": [
+            "정신건강복지센터"
+        ],
+        "level1": [
+            "지역사회 정신건강증진 및 사례관리",
+            "정신응급대응"
+        ]
+    },
+    "중독관리통합지원센터": {
+        "domainId": "08_정신건강자살예방",
+        "facilityTypes": [
+            "중독관리통합지원센터"
+        ],
+        "level1": [
+            "중독관리 및 정신재활시설 운영"
+        ]
+    },
+    "자살예방센터": {
+        "domainId": "08_정신건강자살예방",
+        "facilityTypes": [
+            "자살예방센터"
+        ],
+        "level1": [
+            "자살예방 및 생명존중문화 조성",
+            "자살예방체계"
+        ]
+    },
+    "노숙인일시보호시설": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "노숙인일시보호시설",
+            "노숙인일시보호시설 및 자활·재활쉼터"
+        ],
+        "level1": [
+            "노숙인 복지 및 자립지원"
+        ]
+    },
+    "노숙인자활시설": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "노숙인일시보호시설 및 자활·재활쉼터"
+        ],
+        "level1": [
+            "노숙인 복지 및 자립지원"
+        ]
+    },
+    "노숙인재활시설": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "노숙인일시보호시설 및 자활·재활쉼터"
+        ],
+        "level1": [
+            "노숙인 복지 및 자립지원"
+        ]
+    },
+    "노숙인요양시설": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "노숙인종합지원센터"
+        ],
+        "level1": [
+            "노숙인 복지 및 자립지원"
+        ]
+    },
+    "노숙인종합지원센터": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "노숙인종합지원센터"
+        ],
+        "level1": [
+            "노숙인 복지 및 자립지원"
+        ]
+    },
+    "노숙인급식시설": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "푸드뱅크·푸드마켓",
+            "기초·광역 푸드뱅크 및 푸드마켓"
+        ],
+        "level1": [
+            "지역 물적나눔 및 식품지원"
+        ]
+    },
+    "노숙인진료시설": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "노숙인종합지원센터"
+        ],
+        "level1": [
+            "노숙인 복지 및 자립지원"
+        ]
+    },
+    "쪽방상담소": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "쪽방상담소"
+        ],
+        "level1": [
+            "취약주거민보호"
+        ]
+    },
+    "어린이집": {
+        "domainId": "05_영유아보육",
+        "facilityTypes": [
+            "어린이집",
+            "국공립어린이집"
+        ],
+        "level1": [
+            "표준보육과정 및 누리과정 운영",
+            "취약보육 및 맞춤형 보육서비스"
+        ]
+    },
+    "국공립어린이집": {
+        "domainId": "05_영유아보육",
+        "facilityTypes": [
+            "국공립어린이집"
+        ],
+        "level1": [
+            "표준보육과정 및 누리과정 운영"
+        ]
+    },
+    "육아종합지원센터": {
+        "domainId": "05_영유아보육",
+        "facilityTypes": [
+            "육아종합지원센터"
+        ],
+        "level1": [
+            "지역사회 육아지원 (육아종합지원센터)",
+            "보육품질관리"
+        ]
+    },
+    "가족센터": {
+        "domainId": "06_가족복지",
+        "facilityTypes": [
+            "가족센터"
+        ],
+        "level1": [
+            "보편적 가족지원 (가족센터)",
+            "다문화가족 특화지원"
+        ]
+    },
+    "공동육아나눔터": {
+        "domainId": "06_가족복지",
+        "facilityTypes": [
+            "공동육아나눔터"
+        ],
+        "level1": [
+            "보편적 가족지원 (가족센터)"
+        ]
+    },
+    "한부모가족복지시설": {
+        "domainId": "06_가족복지",
+        "facilityTypes": [
+            "한부모가족복지시설(출산·양육·일시지원시설)"
+        ],
+        "level1": [
+            "한부모가족 복지 및 자립지원"
+        ]
+    },
+    "출산지원시설": {
+        "domainId": "06_가족복지",
+        "facilityTypes": [
+            "한부모가족복지시설(출산·양육·일시지원시설)"
+        ],
+        "level1": [
+            "한부모가족 복지 및 자립지원"
+        ]
+    },
+    "양육지원시설": {
+        "domainId": "06_가족복지",
+        "facilityTypes": [
+            "한부모가족복지시설(출산·양육·일시지원시설)"
+        ],
+        "level1": [
+            "한부모가족 복지 및 자립지원"
+        ]
+    },
+    "생활지원시설": {
+        "domainId": "06_가족복지",
+        "facilityTypes": [
+            "한부모가족복지시설(출산·양육·일시지원시설)"
+        ],
+        "level1": [
+            "한부모가족 복지 및 자립지원"
+        ]
+    },
+    "한부모가족복지상담소": {
+        "domainId": "06_가족복지",
+        "facilityTypes": [
+            "한부모가족복지상담소"
+        ],
+        "level1": [
+            "한부모가족 복지 및 자립지원"
+        ]
+    },
+    "청소년쉼터": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "청소년쉼터(일시·단기·중장기)"
+        ],
+        "level1": [
+            "위기청소년 안전망 및 보호"
+        ]
+    },
+    "청소년자립지원관": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "학교밖청소년지원센터(꿈드림)"
+        ],
+        "level1": [
+            "위기청소년 안전망 및 보호"
+        ]
+    },
+    "청소년치료재활센터": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "청소년상담복지센터"
+        ],
+        "level1": [
+            "위기청소년 안전망 및 보호"
+        ]
+    },
+    "청소년회복지원시설": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "청소년회복지원시설"
+        ],
+        "level1": [
+            "위기청소년 안전망 및 보호"
+        ]
+    },
+    "청소년상담복지센터": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "청소년상담복지센터"
+        ],
+        "level1": [
+            "위기청소년 안전망 및 보호"
+        ]
+    },
+    "학교밖청소년지원센터": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "학교밖청소년지원센터(꿈드림)"
+        ],
+        "level1": [
+            "위기청소년 안전망 및 보호"
+        ]
+    },
+    "꿈드림": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "학교밖청소년지원센터(꿈드림)"
+        ],
+        "level1": [
+            "위기청소년 안전망 및 보호"
+        ]
+    },
+    "청소년수련시설": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "청소년수련관",
+            "청소년방과후아카데미"
+        ],
+        "level1": [
+            "청소년 활동 및 역량개발"
+        ]
+    },
+    "청소년수련관": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "청소년수련관"
+        ],
+        "level1": [
+            "청소년 활동 및 역량개발"
+        ]
+    },
+    "청소년방과후아카데미": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "청소년방과후아카데미"
+        ],
+        "level1": [
+            "청소년 활동 및 역량개발"
+        ]
+    },
+    "성폭력상담소": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "성폭력상담소",
+            "가정·성폭력피해상담소"
+        ],
+        "level1": [
+            "여성폭력피해자 긴급보호 및 권익증진"
+        ]
+    },
+    "가정폭력상담소": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "가정·성폭력피해상담소"
+        ],
+        "level1": [
+            "여성폭력피해자 긴급보호 및 권익증진"
+        ]
+    },
+    "성매매피해상담소": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "성매매피해상담소"
+        ],
+        "level1": [
+            "여성폭력피해자 긴급보호 및 권익증진"
+        ]
+    },
+    "여성긴급전화 1366": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "여성긴급전화1366"
+        ],
+        "level1": [
+            "여성폭력피해자 긴급보호 및 권익증진"
+        ]
+    },
+    "가정폭력피해자보호시설": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "가정폭력피해자보호시설",
+            "폭력피해자보호시설"
+        ],
+        "level1": [
+            "여성폭력피해자 긴급보호 및 권익증진"
+        ]
+    },
+    "스토킹피해자보호시설": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "폭력피해자보호시설",
+            "여성긴급전화1366"
+        ],
+        "level1": [
+            "여성폭력피해자 긴급보호 및 권익증진"
+        ]
+    },
+    "디지털성범죄피해자지원센터": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "성폭력상담소",
+            "여성긴급전화1366"
+        ],
+        "level1": [
+            "여성폭력피해자 긴급보호 및 권익증진"
+        ]
+    },
+    "폭력피해이주여성보호시설": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "폭력피해이주여성보호시설"
+        ],
+        "level1": [
+            "여성폭력피해자 긴급보호 및 권익증진"
+        ]
+    },
+    "일반지원시설": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "성매매피해상담소"
+        ],
+        "level1": [
+            "여성폭력피해자 긴급보호 및 권익증진"
+        ]
+    },
+    "청소년지원시설": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "청소년쉼터(일시·단기·중장기)"
+        ],
+        "level1": [
+            "위기청소년 안전망 및 보호"
+        ]
+    },
+    "외국인지원시설": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "폭력피해이주여성보호시설"
+        ],
+        "level1": [
+            "여성폭력피해자 긴급보호 및 권익증진"
+        ]
+    },
+    "자립지원공동생활시설": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "가정폭력피해자보호시설"
+        ],
+        "level1": [
+            "여성폭력피해자 긴급보호 및 권익증진"
+        ]
+    },
+    "자활지원센터": {
+        "domainId": "09_자활고용지원",
+        "facilityTypes": [
+            "지역자활센터"
+        ],
+        "level1": [
+            "자활지원 및 역량강화 (지역자활센터)"
+        ]
+    },
+    "지역자활센터": {
+        "domainId": "09_자활고용지원",
+        "facilityTypes": [
+            "지역자활센터"
+        ],
+        "level1": [
+            "자활지원 및 역량강화 (지역자활센터)"
+        ]
+    },
+    "광역자활센터": {
+        "domainId": "09_자활고용지원",
+        "facilityTypes": [
+            "광역자활센터"
+        ],
+        "level1": [
+            "자활지원 및 역량강화 (지역자활센터)"
+        ]
+    },
+    "고용복지플러스센터": {
+        "domainId": "09_자활고용지원",
+        "facilityTypes": [
+            "고용복지플러스센터",
+            "고용복지플러스센터(국민취업지원 위탁기관)"
+        ],
+        "level1": [
+            "취업취약계층 고용안전망 (국민취업지원제도)"
+        ]
+    },
+    "한국장애인고용공단": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "직업능력개발원",
+            "장애인직업재활시설(보호작업장·근로사업장)"
+        ],
+        "level1": [
+            "장애인 직업재활 및 일자리지원"
+        ]
+    },
+    "근로복지공단": {
+        "domainId": "09_자활고용지원",
+        "facilityTypes": [
+            "고용복지플러스센터"
+        ],
+        "level1": [
+            "취업취약계층 고용안전망 (국민취업지원제도)"
+        ]
+    },
+    "사회적기업": {
+        "domainId": "09_자활고용지원",
+        "facilityTypes": [
+            "광역자활센터",
+            "지역자활센터"
+        ],
+        "level1": [
+            "자활지원 및 역량강화 (지역자활센터)"
+        ]
+    },
+    "초·중·고교": {
+        "domainId": "10_학교사회복지",
+        "facilityTypes": [
+            "초·중·고등학교",
+            "교육복지우선지원사업 초·중·고등학교"
+        ],
+        "level1": [
+            "학생맞춤형 통합지원 및 사례관리"
+        ]
+    },
+    "교육복지실": {
+        "domainId": "10_학교사회복지",
+        "facilityTypes": [
+            "교육복지우선지원사업 초·중·고등학교"
+        ],
+        "level1": [
+            "학생맞춤형 통합지원 및 사례관리"
+        ]
+    },
+    "학교사회복지실": {
+        "domainId": "10_학교사회복지",
+        "facilityTypes": [
+            "초·중·고등학교"
+        ],
+        "level1": [
+            "학생맞춤형 통합지원 및 사례관리"
+        ]
+    },
+    "Wee센터": {
+        "domainId": "10_학교사회복지",
+        "facilityTypes": [
+            "초·중·고등학교"
+        ],
+        "level1": [
+            "학생맞춤형 통합지원 및 사례관리"
+        ]
+    },
+    "학생맞춤통합지원센터": {
+        "domainId": "10_학교사회복지",
+        "facilityTypes": [
+            "초·중·고등학교"
+        ],
+        "level1": [
+            "학생맞춤형 통합지원 및 사례관리"
+        ]
+    },
+    "행정복지센터": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "시·군·구 긴급복지지원 전담부서",
+            "시·군·구청 복지정책과"
+        ],
+        "level1": [
+            "긴급위기지원 및 복합돌봄 (공공안전망)"
+        ]
+    },
+    "희망복지지원단": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "시·군·구청 복지정책과"
+        ],
+        "level1": [
+            "긴급위기지원 및 복합돌봄 (공공안전망)"
+        ]
+    },
+    "지역사회보장협의체": {
+        "domainId": "01_사회복지관",
+        "facilityTypes": [
+            "종합사회복지관"
+        ],
+        "level1": [
+            "지역조직화기능"
+        ]
+    },
+    "사회서비스원": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "시·도 사회서비스원",
+            "시·도 사회서비스원(종합재가센터)"
+        ],
+        "level1": [
+            "공공돌봄지원",
+            "의료·요양통합돌봄"
+        ]
+    },
+    "푸드뱅크": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "푸드뱅크·푸드마켓",
+            "기초·광역 푸드뱅크 및 푸드마켓"
+        ],
+        "level1": [
+            "지역 물적나눔 및 식품지원"
+        ]
+    },
+    "푸드마켓": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "푸드뱅크·푸드마켓",
+            "기초·광역 푸드뱅크 및 푸드마켓"
+        ],
+        "level1": [
+            "지역 물적나눔 및 식품지원"
+        ]
+    },
+    "하나센터": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "하나센터",
+            "북한이탈주민지역적응센터(하나센터)"
+        ],
+        "level1": [
+            "북한이탈주민 지역사회 적응지원 (하나센터)"
+        ]
+    },
+    "사회복지공동모금회": {
+        "domainId": "12_배분모금국제",
+        "facilityTypes": [
+            "사회복지공동모금회",
+            "사회복지공동모금회(중앙회 및 17개 지회)"
+        ],
+        "level1": [
+            "민간자원 배분 및 복지공모 (사랑의열매)"
+        ]
+    },
+    "사랑의열매": {
+        "domainId": "12_배분모금국제",
+        "facilityTypes": [
+            "사회복지공동모금회"
+        ],
+        "level1": [
+            "민간자원 배분 및 복지공모 (사랑의열매)"
+        ]
+    },
+    "국제구호": {
+        "domainId": "12_배분모금국제",
+        "facilityTypes": [
+            "국제개발협력NGO",
+            "KOICA 시민사회협력 수행 NGO/재단"
+        ],
+        "level1": [
+            "국제개발협력 및 글로벌 시민사회 (KOICA)"
+        ]
+    },
+    "KOICA": {
+        "domainId": "12_배분모금국제",
+        "facilityTypes": [
+            "KOICA 시민사회협력 수행 NGO/재단"
+        ],
+        "level1": [
+            "국제개발협력 및 글로벌 시민사회 (KOICA)"
+        ]
+    },
+    "NGO": {
+        "domainId": "12_배분모금국제",
+        "facilityTypes": [
+            "국제개발협력NGO"
+        ],
+        "level1": [
+            "국제개발협력 및 글로벌 시민사회 (KOICA)"
+        ]
+    },
+    "종합사회복지관": {
+        "domainId": "01_사회복지관",
+        "facilityTypes": [
+            "종합사회복지관"
+        ],
+        "level1": [
+            "사례관리기능",
+            "서비스제공기능",
+            "지역조직화기능"
+        ]
+    },
+    "사회복지관": {
+        "domainId": "01_사회복지관",
+        "facilityTypes": [
+            "종합사회복지관"
+        ],
+        "level1": [
+            "사례관리기능",
+            "서비스제공기능",
+            "지역조직화기능"
+        ]
+    },
+    "요양병원 · 호스피스 입원형 기관": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "노인요양시설",
+            "재가노인복지시설(주야간보호·방문요양)"
+        ],
+        "level1": [
+            "노인의료 및 주거복지",
+            "재가·돌봄지원"
+        ]
+    },
+    "요양병원": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "노인요양시설"
+        ],
+        "level1": [
+            "노인의료 및 주거복지"
+        ]
+    },
+    "호스피스": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "노인요양시설"
+        ],
+        "level1": [
+            "노인의료 및 주거복지"
+        ]
+    },
+    "상급종합병원 · 종합병원 사회사업팀": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "시·도 사회서비스원(종합재가센터)",
+            "보건소"
+        ],
+        "level1": [
+            "의료·요양통합돌봄",
+            "공공돌봄지원"
+        ]
+    },
+    "종합병원 사회사업팀": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "시·도 사회서비스원(종합재가센터)",
+            "보건소"
+        ],
+        "level1": [
+            "의료·요양통합돌봄"
+        ]
+    },
+    "재활병원 · 공공의료원 공공보건의료사업실": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "시·도 사회서비스원(종합재가센터)",
+            "보건소"
+        ],
+        "level1": [
+            "의료·요양통합돌봄"
+        ]
+    },
+    "공공보건의료사업실": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "시·도 사회서비스원(종합재가센터)",
+            "보건소"
+        ],
+        "level1": [
+            "의료·요양통합돌봄"
+        ]
+    },
+    "결핵·한센시설": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "노인요양시설",
+            "양로시설"
+        ],
+        "level1": [
+            "노인의료 및 주거복지"
+        ]
+    },
+    "국립소록도병원": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "노인요양시설"
+        ],
+        "level1": [
+            "노인의료 및 주거복지"
+        ]
+    },
+    "산재요양시설": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "장애인직업재활시설(보호작업장·근로사업장)",
+            "장애인복지관"
+        ],
+        "level1": [
+            "장애인 직업재활 및 일자리지원"
+        ]
+    },
+    "입원형 산재지정기관": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": [
+            "장애인복지관"
+        ],
+        "level1": [
+            "장애인지역사회재활 및 자립생활"
+        ]
+    },
+    "근로복지공단 산재병원 의료사회사업실 · 직업복귀지원센터": {
+        "domainId": "09_자활고용지원",
+        "facilityTypes": [
+            "고용복지플러스센터"
+        ],
+        "level1": [
+            "취업취약계층 고용안전망 (국민취업지원제도)"
+        ]
+    },
+    "보훈요양원": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "노인요양시설"
+        ],
+        "level1": [
+            "보훈의료복지",
+            "노인의료 및 주거복지"
+        ]
+    },
+    "보훈복지타운": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "노인복지주택",
+            "양로시설"
+        ],
+        "level1": [
+            "보훈의료복지",
+            "노인주거복지"
+        ]
+    },
+    "주거형": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "노인복지주택",
+            "양로시설"
+        ],
+        "level1": [
+            "노인주거복지"
+        ]
+    },
+    "한국보훈복지의료공단 중앙보훈병원 및 권역별 보훈병원 사회사업팀": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "노인요양시설"
+        ],
+        "level1": [
+            "보훈의료복지"
+        ]
+    },
+    "보훈재가복지센터": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "재가노인복지시설(주야간보호·방문요양)"
+        ],
+        "level1": [
+            "보훈의료복지",
+            "재가·돌봄지원"
+        ]
+    },
+    "보훈섬김이": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "재가노인복지시설(주야간보호·방문요양)"
+        ],
+        "level1": [
+            "재가·돌봄지원"
+        ]
+    },
+    "보훈복지사 방문 돌봄": {
+        "domainId": "02_노인복지",
+        "facilityTypes": [
+            "재가노인복지시설(주야간보호·방문요양)"
+        ],
+        "level1": [
+            "재가·돌봄지원"
+        ]
+    },
+    "교정시설": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "청소년회복지원시설",
+            "청소년쉼터(일시·단기·중장기)"
+        ],
+        "level1": [
+            "위기청소년 안전망 및 보호"
+        ]
+    },
+    "교도소": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "청소년회복지원시설"
+        ],
+        "level1": [
+            "위기청소년 안전망 및 보호"
+        ]
+    },
+    "구치소 사회복귀과": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "청소년회복지원시설"
+        ],
+        "level1": [
+            "위기청소년 안전망 및 보호"
+        ]
+    },
+    "소년원": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "청소년회복지원시설"
+        ],
+        "level1": [
+            "위기청소년 안전망 및 보호"
+        ]
+    },
+    "치료감호소": {
+        "domainId": "08_정신건강자살예방",
+        "facilityTypes": [
+            "정신건강복지센터",
+            "정신재활시설"
+        ],
+        "level1": [
+            "정신재활지원",
+            "지역사회 정신건강증진 및 사례관리"
+        ]
+    },
+    "국립법무병원": {
+        "domainId": "08_정신건강자살예방",
+        "facilityTypes": [
+            "정신건강복지센터"
+        ],
+        "level1": [
+            "정신재활지원"
+        ]
+    },
+    "전국 준법지원센터": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "청소년회복지원시설",
+            "청소년상담복지센터"
+        ],
+        "level1": [
+            "위기청소년 안전망 및 보호"
+        ]
+    },
+    "보호관찰소": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "청소년회복지원시설",
+            "청소년상담복지센터"
+        ],
+        "level1": [
+            "위기청소년 안전망 및 보호"
+        ]
+    },
+    "한국법무보호복지공단": {
+        "domainId": "09_자활고용지원",
+        "facilityTypes": [
+            "지역자활센터",
+            "고용복지플러스센터"
+        ],
+        "level1": [
+            "자활지원 및 역량강화 (지역자활센터)"
+        ]
+    },
+    "출소자 갱생보호": {
+        "domainId": "09_자활고용지원",
+        "facilityTypes": [
+            "지역자활센터"
+        ],
+        "level1": [
+            "자활지원 및 역량강화 (지역자활센터)"
+        ]
+    },
+    "출소자 갱생보호·주거·취업지원": {
+        "domainId": "09_자활고용지원",
+        "facilityTypes": [
+            "지역자활센터"
+        ],
+        "level1": [
+            "자활지원 및 역량강화 (지역자활센터)"
+        ]
+    },
+    "범죄피해자지원센터": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "여성긴급전화1366",
+            "가정·성폭력피해상담소"
+        ],
+        "level1": [
+            "여성폭력피해자 긴급보호 및 권익증진"
+        ]
+    },
+    "스마일센터": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "여성긴급전화1366",
+            "폭력피해자보호시설"
+        ],
+        "level1": [
+            "여성폭력피해자 긴급보호 및 권익증진"
+        ]
+    },
+    "해바라기센터": {
+        "domainId": "07_청소년여성권익",
+        "facilityTypes": [
+            "성폭력상담소",
+            "여성긴급전화1366"
+        ],
+        "level1": [
+            "여성폭력피해자 긴급보호 및 권익증진"
+        ]
+    },
+    "읍면동 행정복지센터": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "시·군·구 긴급복지지원 전담부서",
+            "시·군·구청 복지정책과"
+        ],
+        "level1": [
+            "긴급위기지원 및 복합돌봄 (공공안전망)"
+        ]
+    },
+    "맞춤형복지팀": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "시·군·구청 복지정책과"
+        ],
+        "level1": [
+            "긴급위기지원 및 복합돌봄 (공공안전망)"
+        ]
+    },
+    "사회복지전담공무원": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "시·군·구 긴급복지지원 전담부서"
+        ],
+        "level1": [
+            "긴급위기지원 및 복합돌봄 (공공안전망)"
+        ]
+    },
+    "시·군·구 희망복지지원단": {
+        "domainId": "11_지역보호긴급돌봄",
+        "facilityTypes": [
+            "시·군·구청 복지정책과"
+        ],
+        "level1": [
+            "긴급위기지원 및 복합돌봄 (공공안전망)"
+        ]
+    }
+};
+
+    function matchHierarchyNodesForFacility(facilityTerm, parentCat, allNodes) {
+        if (!facilityTerm) return allNodes;
+        const term = String(facilityTerm).trim();
+        let clean = term.replace(/^[•\s]+/, '').replace(/\s*\(.*?\)\s*/g, '').trim();
+        clean = clean.replace(/(등|포함|연계|제공사업장)\s*$/g, '').trim();
+
+        // 1. Direct rule match
+        const rule = FACILITY_MAPPING_RULES[clean] || FACILITY_MAPPING_RULES[term];
+        if (rule) {
+            const did = rule.domainId;
+            const ftypes = rule.facilityTypes || [];
+            const l1s = rule.level1 || [];
+            const matched = allNodes.filter(n => n.domainId === did && (ftypes.includes(n.facilityType) || l1s.some(l => (n.level1 || '').includes(l))));
+            if (matched.length > 0) return matched;
+        }
+
+        // 2. Exact or substring match on facilityType
+        let m = allNodes.filter(n => (n.facilityType && (n.facilityType.includes(clean) || clean.includes(n.facilityType))));
+        if (m.length > 0) return m;
+
+        // 3. Match on level1, level2, or level3
+        m = allNodes.filter(n => (n.level1 && n.level1.includes(clean)) || (n.level2 && n.level2.includes(clean)) || (n.level3 && n.level3.includes(clean)));
+        if (m.length > 0) return m;
+
+        // 4. Token match
+        const tokens = clean.split(/[\s·/]+/).filter(t => t.length >= 2 && !['시설', '지원', '복지', '기관', '센터'].includes(t));
+        if (tokens.length > 0) {
+            m = allNodes.filter(n => tokens.some(t => (n.facilityType && n.facilityType.includes(t)) || (n.level1 && n.level1.includes(t)) || (n.level2 && n.level2.includes(t)) || (n.level3 && n.level3.includes(t))));
+            if (m.length > 0) return m;
+        }
+
+        // 5. Parent category fallback
+        if (parentCat && parentCat !== facilityTerm) {
+            return matchHierarchyNodesForFacility(parentCat, null, allNodes);
+        }
+
+        return allNodes;
+    }
+
+    function renderFacilityFilterBanner(facilityName, parentCategory, matchedNodes) {
+        const bannerEl = document.getElementById('facilityFilterBannerContainer');
+        if (!bannerEl) return;
+        if (!facilityName) {
+            bannerEl.innerHTML = '';
+            bannerEl.classList.add('hidden');
+            return;
+        }
+        const count = (matchedNodes || []).length;
+        const l1Set = new Set((matchedNodes || []).map(n => n.level1));
+        const l2Set = new Set((matchedNodes || []).map(n => n.level2));
+
+        bannerEl.classList.remove('hidden');
+        bannerEl.innerHTML = `
+            <div id="facility-filter-banner" class="mb-6 p-4 bg-gradient-to-r from-emerald-50 via-teal-50 to-sky-50 border border-emerald-300/80 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-xs animate-fadeIn">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-lg shadow-2xs shrink-0">🏛️</div>
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="text-xs font-bold text-emerald-800 uppercase tracking-wider">시설 맞춤 기능·사업 위계</span>
+                            <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900 font-extrabold border border-emerald-200">단위서비스 ${count}개</span>
+                            <span class="text-[11px] px-2 py-0.5 rounded-full bg-teal-100 text-teal-900 font-bold border border-teal-200">대분류(기능) ${l1Set.size}개 · 중분류(사업) ${l2Set.size}개</span>
+                            ${parentCategory ? `<span class="text-[11px] text-slate-500 font-medium">소속 범주: ${escapeHtml(parentCategory)}</span>` : ''}
+                        </div>
+                        <h3 class="text-base font-black text-slate-900 mt-1">
+                            <span class="text-emerald-700 font-black">${escapeHtml(facilityName)}</span>의 법정 기능(대분류) 및 사업(중분류) 체계도
+                        </h3>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 shrink-0 self-end md:self-auto">
+                    <button type="button" onclick="window.clearFacilityFilter()" class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-100 border border-slate-300 rounded-xl shadow-2xs transition cursor-pointer">
+                        <span>✕</span><span>전체 위계 보기</span>
+                    </button>
+                    <button type="button" onclick="showView('fields')" class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-2xs transition cursor-pointer">
+                        <span>🏛️</span><span>시설도감으로 복귀</span>
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    window.clearFacilityFilter = function() {
+        currentFacilityFilter = null;
+        currentParentCategory = null;
+        currentDomainFilter = 'all';
+        currentMinistryGroup = 'all';
+        currentSearchKeyword = '';
+        const searchInput = document.getElementById('matrixSearchInput') || document.getElementById('hierarchySearchInput');
+        if (searchInput) searchInput.value = '';
+        window.location.hash = '#hierarchy';
+        applyFilters();
+    };
 
     const DOMAIN_MAP = {
         '01_사회복지관': { key: 'community', icon: 'corporate_fare', short: '종합사회복지관', facilityId: 'law-welfare-center', badge: '3대 핵심기능 (22)', legal: '<span>「사회복지사업법」 제34조의5</span><span>동법 시행규칙 제21조의2</span><span class="text-secondary font-bold">보건복지부 사업안내 제2권</span>' },
@@ -5536,6 +7218,22 @@ if (typeof module !== 'undefined' && module.exports) {
             if (btn && typeof window.selectDomainFilter === 'function') {
                 window.selectDomainFilter(options.domainKey, btn);
             }
+        }
+
+        // 1-1. 특정 시설 맞춤 기능·사업 필터링 요청 처리 (options.facility)
+        if (options.facility) {
+            currentFacilityFilter = options.facility;
+            currentParentCategory = options.parentCategory || null;
+            currentDomainFilter = 'all';
+            currentMinistryGroup = 'all';
+            currentSearchKeyword = '';
+            const searchInput = document.getElementById('matrixSearchInput') || document.getElementById('hierarchySearchInput');
+            if (searchInput) searchInput.value = '';
+            applyFilters();
+            setTimeout(() => {
+                const banner = document.getElementById('facilityFilterBannerContainer');
+                if (banner) banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
         }
 
         // 2. 검색 키워드 필터 요청 처리 (options.search)
@@ -5596,6 +7294,7 @@ if (typeof module !== 'undefined' && module.exports) {
 
                 <!-- Administrative Header & Directive Notice -->
                 <section class="max-w-7xl mx-auto px-margin pt-space-lg w-full">
+                    <div id="facilityFilterBannerContainer" class="hidden mb-6"></div>
                     <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-lg">
                         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
                             <div class="flex flex-col gap-space-xs">
@@ -6115,9 +7814,13 @@ if (typeof module !== 'undefined' && module.exports) {
                                             <span class="w-2 h-2 rounded-full bg-primary"></span>
                                             ${node.level1}
                                         </span>
-                                        <span class="font-legal-code text-legal-code text-on-surface-variant font-normal">
-                                            ${node.facilityType || '법정 실천기준'}
-                                        </span>
+                                        <button type="button"
+                                                onclick="window.jumpToFacilityByTerm('${escapeHtml(node.facilityType || '')}'); return false;"
+                                                class="inline-flex items-center gap-1 px-2 py-0.5 mt-1 rounded bg-surface hover:bg-emerald-100 hover:text-emerald-800 text-on-surface-variant text-[11px] font-semibold transition cursor-pointer text-left w-fit border border-outline-variant/30"
+                                                title="'${escapeHtml(node.facilityType || '')}'의 법정 시설도감 행으로 이동">
+                                            <span>🏛️</span>
+                                            <span>${escapeHtml(node.facilityType || '법정 실천기준')}</span>
+                                        </button>
                                     </div>
                                 </td>
                             `;
@@ -6223,11 +7926,19 @@ if (typeof module !== 'undefined' && module.exports) {
                     </div>
                     <div class="flex flex-col gap-space-xs">
                         <div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-space-xs">
-                            <div class="flex items-center justify-between">
+                            <div class="flex items-center justify-between flex-wrap gap-1">
                                 <span class="font-label-md text-label-md font-bold text-primary flex items-center gap-1">
                                     <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
                                     ${node.level1} ➔ ${node.level2}
                                 </span>
+                                ${node.facilityType ? `
+                                    <button type="button"
+                                            onclick="window.jumpToFacilityByTerm('${escapeHtml(node.facilityType)}'); return false;"
+                                            class="px-2 py-0.5 rounded bg-surface-container hover:bg-emerald-100 text-on-surface-variant hover:text-emerald-800 text-[10px] font-bold border border-outline-variant/30 transition cursor-pointer"
+                                            title="'${escapeHtml(node.facilityType)}' 시설도감 행으로 이동">
+                                        🏛️ ${escapeHtml(node.facilityType)}
+                                    </button>
+                                ` : ''}
                             </div>
                             <div class="bg-surface-container-lowest p-space-xs rounded border border-surface-container flex flex-col gap-1">
                                 <span class="font-label-sm text-label-sm font-bold text-on-surface">${node.level3}</span>
@@ -6310,6 +8021,14 @@ if (typeof module !== 'undefined' && module.exports) {
 
     function applyFilters() {
         const allNodes = getDB().nodes;
+        let baseNodes = allNodes;
+
+        if (currentFacilityFilter) {
+            baseNodes = matchHierarchyNodesForFacility(currentFacilityFilter, currentParentCategory, allNodes);
+            renderFacilityFilterBanner(currentFacilityFilter, currentParentCategory, baseNodes);
+        } else {
+            renderFacilityFilterBanner(null);
+        }
 
         const matchNode = (node) => {
             const domainMeta = DOMAIN_MAP[node.domainId] || { key: 'misc', short: node.domainId };
@@ -6339,7 +8058,7 @@ if (typeof module !== 'undefined' && module.exports) {
             return minMatch && domMatch && kwMatch;
         };
 
-        const filteredNodes = allNodes.filter(matchNode);
+        const filteredNodes = baseNodes.filter(matchNode);
 
         // Re-render Section 1 table
         const tbody1 = document.querySelector('#hierarchicalMatrixTable tbody');
