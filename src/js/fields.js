@@ -3,16 +3,18 @@ function renderFacilityInteractiveText(raw_f) {
     const clean_f = String(raw_f).replace(/^[•\s]+/, '').trim();
     const match = clean_f.match(/^(.*?)\s*\((.*?)\)$/);
 
+    const btnBaseClass = "font-bold text-slate-900 hover:text-emerald-700 underline decoration-slate-300 decoration-dashed hover:decoration-emerald-500 underline-offset-4 cursor-pointer transition text-left";
+
     if (!match) {
         const mainName = clean_f;
-        return `<button type="button" onclick="window.jumpToFacilityHierarchy('${escapeHtml(mainName)}'); return false;" class="font-bold text-slate-800 hover:text-emerald-700 hover:underline cursor-pointer transition text-left" title="'${escapeHtml(mainName)}'의 법정 기능 및 사업 위계 탐색">${escapeHtml(mainName)}</button>`;
+        return `<button type="button" onclick="window.jumpToFacilityHierarchy('${escapeHtml(mainName)}'); return false;" class="${btnBaseClass}" title="'${escapeHtml(mainName)}'의 법정 기능 및 사업 위계 탐색">${escapeHtml(mainName)}</button>`;
     }
 
     const mainName = match[1].trim();
     const subRaw = match[2].trim();
     const rawSubs = subRaw.split(/[,·/]/).map(s => s.trim()).filter(Boolean);
 
-    const mainHtml = `<button type="button" onclick="window.jumpToFacilityHierarchy('${escapeHtml(mainName)}'); return false;" class="font-bold text-slate-900 hover:text-emerald-700 hover:underline cursor-pointer transition text-left" title="'${escapeHtml(mainName)}'의 법정 기능 및 사업 위계 탐색">${escapeHtml(mainName)}</button>`;
+    const mainHtml = `<button type="button" onclick="window.jumpToFacilityHierarchy('${escapeHtml(mainName)}'); return false;" class="${btnBaseClass}" title="'${escapeHtml(mainName)}'의 법정 기능 및 사업 위계 탐색">${escapeHtml(mainName)}</button>`;
 
     const subButtons = rawSubs.map(s => {
         const cleanTarget = s.replace(/(등|포함|연계|제공사업장)\s*$/g, '').trim() || s;
