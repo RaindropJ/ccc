@@ -12,3 +12,14 @@ __pycache__/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Official Welfare Guidelines Binary Archive (Large PDFs / Local backup only)
+Efficiency_DB/
+docs/Efficiency_DB/
+docs/지침서_공식_아카이브/
+*.pdf
+*.hwp
+*.hwpx
+
+# Temporary drive sync caches
+drive_*.json

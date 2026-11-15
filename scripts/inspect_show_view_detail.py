@@ -1,0 +1,9 @@
+# -*- coding: utf-8 -*-
+with open('src/js/app.js', 'r', encoding='utf-8') as f:
+    js = f.read()
+
+import re
+
+m = re.search(r'function showView[\s\S]*?\n\}', js)
+if m:
+    print(m.group(0))

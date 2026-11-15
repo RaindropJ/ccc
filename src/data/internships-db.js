@@ -475,7 +475,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
       {
         "platform": "공식포털",
         "badge": "공고 원문 ↗",
-        "url": "공공·행정"
+        "url": "https://job.alio.go.kr/recruit.do"
       }
     ],
     "allowance": "월 210만원 (주 40시간, 4대보험)",
@@ -490,7 +490,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
     "duty": "서울 마포구",
     "qualification": "사회복지 전공자 또는 사회복지사 자격 소지자 우대",
     "memo": "공공기관 알리오(ALIO) 공시 공식 채용. 공공기관 정규직 서류전형 가점 및 인턴 수료증 수여.",
-    "url": "공공·행정",
+    "url": "https://job.alio.go.kr/recruit.do",
     "verified": true
   },
   {
@@ -508,7 +508,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
       {
         "platform": "공식포털",
         "badge": "공고 원문 ↗",
-        "url": "공공·행정"
+        "url": "https://job.alio.go.kr/recruit.do"
       }
     ],
     "allowance": "월 208만원 + 취업지원교육",
@@ -523,7 +523,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
     "duty": "서울 송파구",
     "qualification": "사회복지 전공자 또는 사회복지사 자격 소지자 우대",
     "memo": "공공기관 알리오(ALIO) 공시 공식 채용. 공공기관 정규직 서류전형 가점 및 인턴 수료증 수여.",
-    "url": "공공·행정",
+    "url": "https://job.alio.go.kr/recruit.do",
     "verified": true
   },
   {
@@ -541,7 +541,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
       {
         "platform": "공식포털",
         "badge": "공고 원문 ↗",
-        "url": "공공·행정"
+        "url": "https://job.alio.go.kr/recruit.do"
       }
     ],
     "allowance": "월 212만원 + 공채서류 가산점",
@@ -556,7 +556,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
     "duty": "서울 영등포구",
     "qualification": "사회복지 전공자 또는 사회복지사 자격 소지자 우대",
     "memo": "공공기관 알리오(ALIO) 공시 공식 채용. 공공기관 정규직 서류전형 가점 및 인턴 수료증 수여.",
-    "url": "공공·행정",
+    "url": "https://job.alio.go.kr/recruit.do",
     "verified": true
   },
   {
@@ -574,7 +574,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
       {
         "platform": "공식포털",
         "badge": "공고 원문 ↗",
-        "url": "공공·행정"
+        "url": "https://job.alio.go.kr/recruit.do"
       }
     ],
     "allowance": "월 210만원 + 숙소지원 검토",
@@ -589,7 +589,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
     "duty": "충북 청주시",
     "qualification": "사회복지 전공자 또는 사회복지사 자격 소지자 우대",
     "memo": "공공기관 알리오(ALIO) 공시 공식 채용. 공공기관 정규직 서류전형 가점 및 인턴 수료증 수여.",
-    "url": "공공·행정",
+    "url": "https://job.alio.go.kr/recruit.do",
     "verified": true
   },
   {
@@ -607,7 +607,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
       {
         "platform": "공식포털",
         "badge": "공고 원문 ↗",
-        "url": "공공·행정"
+        "url": "https://job.alio.go.kr/recruit.do"
       }
     ],
     "allowance": "월 215만원 + AI/데이터 실무",
@@ -622,7 +622,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
     "duty": "서울 광진구",
     "qualification": "사회복지 전공자 또는 사회복지사 자격 소지자 우대",
     "memo": "공공기관 알리오(ALIO) 공시 공식 채용. 공공기관 정규직 서류전형 가점 및 인턴 수료증 수여.",
-    "url": "공공·행정",
+    "url": "https://job.alio.go.kr/recruit.do",
     "verified": true
   },
   {
@@ -640,7 +640,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
       {
         "platform": "공식포털",
         "badge": "공고 원문 ↗",
-        "url": "공공·행정"
+        "url": "https://job.alio.go.kr/recruit.do"
       }
     ],
     "allowance": "서울형 생활임금 적용 (월 약 242만원)",
@@ -655,7 +655,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
     "duty": "서울 종로구",
     "qualification": "사회복지 전공자 또는 사회복지사 자격 소지자 우대",
     "memo": "공공기관 알리오(ALIO) 공시 공식 채용. 공공기관 정규직 서류전형 가점 및 인턴 수료증 수여.",
-    "url": "공공·행정",
+    "url": "https://job.alio.go.kr/recruit.do",
     "verified": true
   },
   {
@@ -673,7 +673,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
       {
         "platform": "공식포털",
         "badge": "공고 원문 ↗",
-        "url": "공공·행정"
+        "url": "https://job.alio.go.kr/recruit.do"
       }
     ],
     "allowance": "경기 생활임금 적용 (월 약 238만원)",
@@ -688,7 +688,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
     "duty": "경기 수원시",
     "qualification": "사회복지 전공자 또는 사회복지사 자격 소지자 우대",
     "memo": "공공기관 알리오(ALIO) 공시 공식 채용. 공공기관 정규직 서류전형 가점 및 인턴 수료증 수여.",
-    "url": "공공·행정",
+    "url": "https://job.alio.go.kr/recruit.do",
     "verified": true
   },
   {
@@ -706,7 +706,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
       {
         "platform": "공식포털",
         "badge": "공고 원문 ↗",
-        "url": "공공·행정"
+        "url": "https://job.alio.go.kr/recruit.do"
       }
     ],
     "allowance": "인천 생활임금 적용 (월 약 235만원)",
@@ -721,7 +721,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
     "duty": "인천 남동구",
     "qualification": "사회복지 전공자 또는 사회복지사 자격 소지자 우대",
     "memo": "공공기관 알리오(ALIO) 공시 공식 채용. 공공기관 정규직 서류전형 가점 및 인턴 수료증 수여.",
-    "url": "공공·행정",
+    "url": "https://job.alio.go.kr/recruit.do",
     "verified": true
   },
   {
@@ -739,7 +739,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
       {
         "platform": "공식포털",
         "badge": "공고 원문 ↗",
-        "url": "공공·행정"
+        "url": "https://job.alio.go.kr/recruit.do"
       }
     ],
     "allowance": "월 210만원 + 공채 가산점 3%",
@@ -754,7 +754,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
     "duty": "서울 영등포구",
     "qualification": "사회복지 전공자 또는 사회복지사 자격 소지자 우대",
     "memo": "공공기관 알리오(ALIO) 공시 공식 채용. 공공기관 정규직 서류전형 가점 및 인턴 수료증 수여.",
-    "url": "공공·행정",
+    "url": "https://job.alio.go.kr/recruit.do",
     "verified": true
   },
   {
@@ -772,7 +772,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
       {
         "platform": "공식포털",
         "badge": "공고 원문 ↗",
-        "url": "공공·행정"
+        "url": "https://job.alio.go.kr/recruit.do"
       }
     ],
     "allowance": "월 209만원 + 취업활동휴가",
@@ -787,7 +787,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
     "duty": "경기 고양시",
     "qualification": "사회복지 전공자 또는 사회복지사 자격 소지자 우대",
     "memo": "공공기관 알리오(ALIO) 공시 공식 채용. 공공기관 정규직 서류전형 가점 및 인턴 수료증 수여.",
-    "url": "공공·행정",
+    "url": "https://job.alio.go.kr/recruit.do",
     "verified": true
   },
   {
@@ -805,7 +805,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
       {
         "platform": "공식포털",
         "badge": "공고 원문 ↗",
-        "url": "공공·행정"
+        "url": "https://job.alio.go.kr/recruit.do"
       }
     ],
     "allowance": "월 210만원 (주 40시간, 4대보험)",
@@ -820,7 +820,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
     "duty": "서울 마포구",
     "qualification": "사회복지 전공자 또는 사회복지사 자격 소지자 우대",
     "memo": "공공기관 알리오(ALIO) 공시 공식 채용. 공공기관 정규직 서류전형 가점 및 인턴 수료증 수여.",
-    "url": "공공·행정",
+    "url": "https://job.alio.go.kr/recruit.do",
     "verified": true
   },
   {
@@ -838,7 +838,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
       {
         "platform": "공식포털",
         "badge": "공고 원문 ↗",
-        "url": "공공·행정"
+        "url": "https://job.alio.go.kr/recruit.do"
       }
     ],
     "allowance": "월 212만원 + 공채서류 가산점",
@@ -853,7 +853,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
     "duty": "서울 영등포구",
     "qualification": "사회복지 전공자 또는 사회복지사 자격 소지자 우대",
     "memo": "공공기관 알리오(ALIO) 공시 공식 채용. 공공기관 정규직 서류전형 가점 및 인턴 수료증 수여.",
-    "url": "공공·행정",
+    "url": "https://job.alio.go.kr/recruit.do",
     "verified": true
   },
   {
@@ -871,7 +871,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
       {
         "platform": "공식포털",
         "badge": "공고 원문 ↗",
-        "url": "공공·행정"
+        "url": "https://job.alio.go.kr/recruit.do"
       }
     ],
     "allowance": "월 215만원 + AI/데이터 실무",
@@ -886,7 +886,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
     "duty": "서울 광진구",
     "qualification": "사회복지 전공자 또는 사회복지사 자격 소지자 우대",
     "memo": "공공기관 알리오(ALIO) 공시 공식 채용. 공공기관 정규직 서류전형 가점 및 인턴 수료증 수여.",
-    "url": "공공·행정",
+    "url": "https://job.alio.go.kr/recruit.do",
     "verified": true
   },
   {
@@ -904,7 +904,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
       {
         "platform": "공식포털",
         "badge": "공고 원문 ↗",
-        "url": "공공·행정"
+        "url": "https://job.alio.go.kr/recruit.do"
       }
     ],
     "allowance": "서울형 생활임금 적용 (월 약 242만원)",
@@ -919,7 +919,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
     "duty": "서울 종로구",
     "qualification": "사회복지 전공자 또는 사회복지사 자격 소지자 우대",
     "memo": "공공기관 알리오(ALIO) 공시 공식 채용. 공공기관 정규직 서류전형 가점 및 인턴 수료증 수여.",
-    "url": "공공·행정",
+    "url": "https://job.alio.go.kr/recruit.do",
     "verified": true
   },
   {
@@ -937,7 +937,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
       {
         "platform": "공식포털",
         "badge": "공고 원문 ↗",
-        "url": "공공·행정"
+        "url": "https://job.alio.go.kr/recruit.do"
       }
     ],
     "allowance": "경기 생활임금 적용 (월 약 238만원)",
@@ -952,7 +952,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
     "duty": "경기 수원시",
     "qualification": "사회복지 전공자 또는 사회복지사 자격 소지자 우대",
     "memo": "공공기관 알리오(ALIO) 공시 공식 채용. 공공기관 정규직 서류전형 가점 및 인턴 수료증 수여.",
-    "url": "공공·행정",
+    "url": "https://job.alio.go.kr/recruit.do",
     "verified": true
   },
   {
@@ -970,7 +970,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
       {
         "platform": "공식포털",
         "badge": "공고 원문 ↗",
-        "url": "공공·행정"
+        "url": "https://job.alio.go.kr/recruit.do"
       }
     ],
     "allowance": "월 210만원 + 공채 가산점 3%",
@@ -985,7 +985,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
     "duty": "서울 영등포구",
     "qualification": "사회복지 전공자 또는 사회복지사 자격 소지자 우대",
     "memo": "공공기관 알리오(ALIO) 공시 공식 채용. 공공기관 정규직 서류전형 가점 및 인턴 수료증 수여.",
-    "url": "공공·행정",
+    "url": "https://job.alio.go.kr/recruit.do",
     "verified": true
   },
   {
@@ -1003,7 +1003,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
       {
         "platform": "공식포털",
         "badge": "공고 원문 ↗",
-        "url": "공공·행정"
+        "url": "https://job.alio.go.kr/recruit.do"
       }
     ],
     "allowance": "월 209만원 + 취업활동휴가",
@@ -1018,7 +1018,7 @@ window.ALL_INTERNSHIP_POSTINGS = [
     "duty": "경기 고양시",
     "qualification": "사회복지 전공자 또는 사회복지사 자격 소지자 우대",
     "memo": "공공기관 알리오(ALIO) 공시 공식 채용. 공공기관 정규직 서류전형 가점 및 인턴 수료증 수여.",
-    "url": "공공·행정",
+    "url": "https://job.alio.go.kr/recruit.do",
     "verified": true
   },
   {

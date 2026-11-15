@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="src/data/sync-meta.js?v=20261112"></script>
     <script src="src/data/residency-284-db.js?v=20261112"></script>
@@ -20,16 +21,95 @@
     <script src="src/data/practicum-postings-db.js?v=20261112"></script>
     <script src="src/data/practicum-direct-db.js?v=20261112"></script>
     <script src="src/data/national-practicum-db.js?v=20261112" defer></script>
+    <script src="src/data/guidelines-archive-db.js?v=20261115"></script>
+    <script src="src/js/archive.js?v=20261115"></script>
+    <script src="src/data/welfare-hierarchy-db.js?v=20261115"></script>
+    <script src="src/js/hierarchy.js?v=20261115"></script>
+
+    <!-- file:// 프로토콜 (ES Module CORS 차단) 환경 대비 글로벌 안전 폴백 -->
+    <script>
+        if (typeof window.showView !== 'function') {
+            window.showView = function(viewId, options = {}) {
+                document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+                const target = document.getElementById(`view-${viewId}`);
+                if (target) target.classList.remove('hidden');
+
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenu) mobileMenu.classList.add('hidden');
+                const mobilePanel = document.getElementById('mobile-nav-panel');
+                if (mobilePanel) mobilePanel.classList.add('hidden');
+
+                if (viewId === 'hierarchy') {
+                    if (typeof window.renderHierarchyView === 'function') {
+                        window.renderHierarchyView(options);
+                    }
+                } else if (viewId === 'archive') {
+                    if (typeof window.renderArchiveView === 'function') {
+                        window.renderArchiveView(options);
+                    }
+                } else if (viewId === 'fields') {
+                    if (typeof window.renderFieldsView === 'function') {
+                        window.renderFieldsView();
+                    }
+                }
+                
+                // 서브 네비게이션 탭 액티브 상태 동적 갱신
+                document.querySelectorAll('.subnav-tab').forEach(tab => {
+                    const tv = tab.getAttribute('data-view');
+                    if (tv === viewId) {
+                        if (tv === 'hierarchy') {
+                            tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-bold text-emerald-800 bg-emerald-50/90 border border-emerald-200/80 flex items-center gap-1.5 whitespace-nowrap shadow-2xs cursor-pointer';
+                        } else if (tv === 'archive') {
+                            tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-bold text-blue-700 bg-blue-50/90 border border-blue-200/80 flex items-center gap-1.5 whitespace-nowrap shadow-2xs cursor-pointer';
+                        } else {
+                            tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-900 bg-white border border-slate-200/90 flex items-center gap-1.5 whitespace-nowrap shadow-2xs cursor-pointer';
+                        }
+                    } else {
+                        tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 flex items-center gap-1.5 whitespace-nowrap transition cursor-pointer';
+                    }
+                });
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+        }
+    </script>
 
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                    spacing: { "space-lg": "1.5rem", "gutter": "1.5rem", "space-xl": "2.5rem", "margin": "2rem", "space-md": "1rem", "space-sm": "0.5rem", "space-xs": "0.25rem" },
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', '"Noto Sans KR"', 'sans-serif'],
+                        "label-md": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"],
+                        "legal-code": ["Noto Sans KR", "Noto Sans", "sans-serif"],
+                        "body-md": ["Noto Sans KR", "Noto Sans", "sans-serif"],
+                        "label-sm": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"],
+                        "headline-sm": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"],
+                        "headline-md": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"],
+                        "body-sm": ["Noto Sans KR", "Noto Sans", "sans-serif"],
+                        "headline-lg": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"],
+                        "body-lg": ["Noto Sans KR", "Noto Sans", "sans-serif"],
+                        "display": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"],
+                        "display-mobile": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"]
                     },
-                    colors: {
+                    fontSize: {
+                        "label-md": ["0.875rem", { "lineHeight": "1.25rem", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "legal-code": ["0.75rem", { "lineHeight": "1rem", "letterSpacing": "0.015em", "fontWeight": "500" }],
+                        "body-md": ["0.875rem", { "lineHeight": "1.5rem", "fontWeight": "400" }],
+                        "label-sm": ["0.75rem", { "lineHeight": "1rem", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "headline-sm": ["1.125rem", { "lineHeight": "1.5rem", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-md": ["1.25rem", { "lineHeight": "1.75rem", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+                        "body-sm": ["0.8125rem", { "lineHeight": "1.25rem", "fontWeight": "400" }],
+                        "headline-lg": ["1.5rem", { "lineHeight": "2rem", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["1rem", { "lineHeight": "1.625rem", "fontWeight": "400" }],
+                        "display": ["2.25rem", { "lineHeight": "2.75rem", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+                        "display-mobile": ["1.75rem", { "lineHeight": "2.25rem", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    },colors: {
+                        // Stitch Material Design 3 Color Tokens
+                        "on-error":"#ffffff","surface-container-high":"#dce9ff","surface-container-lowest":"#ffffff","error-container":"#ffdad6","on-surface":"#0d1c2e","on-primary-fixed":"#00164e","on-primary":"#ffffff","surface":"#f8f9ff","outline-variant":"#c5c5d3","on-secondary":"#ffffff","tertiary":"#002d48","background":"#f8f9ff","secondary-fixed":"#85f8c4","surface-container-low":"#eff4ff","on-primary-container":"#90a8ff","primary-fixed":"#dce1ff","error":"#ba1a1a","on-error-container":"#93000a","inverse-primary":"#b6c4ff","primary":"#00236f","inverse-on-surface":"#eaf1ff","on-background":"#0d1c2e","on-tertiary-fixed":"#001d31","on-primary-fixed-variant":"#264191","tertiary-fixed-dim":"#93ccff","secondary-fixed-dim":"#68dba9","primary-fixed-dim":"#b6c4ff","tertiary-fixed":"#cce5ff","surface-variant":"#d5e3fc","on-tertiary":"#ffffff","tertiary-container":"#004469","on-secondary-container":"#00714e","on-secondary-fixed":"#002114","surface-bright":"#f8f9ff","surface-tint":"#4059aa","primary-container":"#1e3a8a","on-surface-variant":"#444651","surface-container-highest":"#d5e3fc","on-tertiary-container":"#56b3f9","on-tertiary-fixed-variant":"#004b73","secondary":"#006c4a","outline":"#757682","surface-dim":"#ccdbf3","on-secondary-fixed-variant":"#005137","inverse-surface":"#233144","surface-container":"#e6eeff","secondary-container":"#82f5c1",
                         brand: {
                             50: '#eff6ff',
                             100: '#dbeafe',
@@ -107,97 +187,127 @@
 <body class="antialiased bg-[#F8FAFC] text-[#0F172A] min-h-screen flex flex-col font-sans selection:bg-blue-600 selection:text-white">
 
     <!-- ==================== GNB: 스티치 원본 상단 헤더 & 네비게이션 ==================== -->
-    <header class="w-full bg-white border-b border-slate-200 sticky top-0 z-50 font-sans shadow-xs">
-        <!-- 1. 메인 GNB 영역 -->
+        <!-- ==================== GNB: 공통 2단 상단 헤더 & 서브 탭 ==================== -->
+    <header class="w-full bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs font-sans">
+        <!-- 1단: 메인 브랜딩 & 전역 액션 바 -->
         <div class="max-w-[1600px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-            
-            <!-- 좌측: 나침반 심볼 로고 + 동기화 인디케이터 + 기능 탭 -->
-            <div class="flex items-center gap-4 lg:gap-6 min-w-0">
-                <!-- 순수 나침반 로고 (텍스트 없음) -->
+            <!-- 좌측: 로고 + 타이틀 + 실시간 동기화 뱃지 -->
+            <div class="flex items-center gap-3 sm:gap-4">
                 <a href="#" onclick="showView('fields'); return false;" class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-sm hover:bg-blue-700 transition flex-shrink-0 cursor-pointer" title="현장 나침반 홈 (12대 분야·법령)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"></circle>
                         <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
                     </svg>
                 </a>
-
-                <!-- 실시간 동기화 정보 뱃지 -->
-                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100/90 text-xs text-slate-700 border border-slate-200/60 flex-shrink-0" title="매일 06:00 전수 수집 및 자동 갱신">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span class="text-slate-500 font-medium">동기화</span>
-                    <span class="font-semibold text-slate-800" id="sync-timestamp-display">06:00</span>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-extrabold text-slate-900 text-sm sm:text-base tracking-tight cursor-pointer" onclick="showView('fields')">사회복지 현장 나침반</span>
+                        <span class="hidden md:inline-block px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-semibold border border-slate-200">v2.4 국가법정기준</span>
+                    </div>
+                    <div class="text-[11px] text-slate-500 font-medium hidden sm:block">공식 실무 통합 포털 · 보건복지부 및 6개 중앙부처 공공데이터 연계</div>
                 </div>
-
-                <!-- 구분선 -->
-                <div class="h-4 w-[1px] bg-slate-200 hidden md:block"></div>
-
-                <!-- 메인 네비게이션 탭 리스트 -->
-                <nav class="hidden md:flex items-center gap-1.5 overflow-x-auto py-1" id="desktop-nav-tabs">
-                    <!-- 활성화 탭 (블루 포인트) -->
-                    <button type="button" data-view="fields" onclick="showView('fields')" class="nav-tab-btn px-3.5 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold whitespace-nowrap shadow-sm hover:bg-blue-700 transition flex items-center gap-1.5 cursor-pointer">
-                        <span>분야·법령 가이드</span>
-                    </button>
-
-                    <!-- 일반 탭 + 카운트 뱃지 -->
-                    <button type="button" data-view="practicum" onclick="showView('practicum')" class="nav-tab-btn flex items-center gap-1.5 px-3 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-sm font-medium transition whitespace-nowrap cursor-pointer">
-                        <span>실습처 탐색</span>
-                        <span class="nav-badge text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-semibold border border-slate-200/70">320</span>
-                    </button>
-
-                    <button type="button" data-view="residency" onclick="showView('residency')" class="nav-tab-btn flex items-center gap-1.5 px-3 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-sm font-medium transition whitespace-nowrap cursor-pointer">
-                        <span>수련처 탐색</span>
-                        <span class="nav-badge text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-semibold border border-slate-200/70">284</span>
-                    </button>
-
-                    <button type="button" data-view="internship" onclick="showView('internship')" class="nav-tab-btn flex items-center gap-1.5 px-3 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-sm font-medium transition whitespace-nowrap cursor-pointer">
-                        <span>청년인턴·일경험</span>
-                        <span id="nav-internship-badge" class="nav-badge text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-semibold border border-slate-200/70">39</span>
-                    </button>
-
-                    <button type="button" data-view="jobs" onclick="showView('jobs')" class="nav-tab-btn flex items-center gap-1.5 px-3 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-sm font-medium transition whitespace-nowrap cursor-pointer">
-                        <span>채용공고</span>
-                        <span id="nav-jobs-badge" class="nav-badge text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-semibold border border-slate-200/70">3,746</span>
-                    </button>
-
-                    <button type="button" data-view="useful-sites" onclick="showView('useful-sites')" class="nav-tab-btn flex items-center gap-1.5 px-3 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-sm font-medium transition whitespace-nowrap cursor-pointer">
-                        <span>🔗 유용한 사이트</span>
-                        <span id="nav-useful-badge" class="nav-badge text-xs px-2 py-0.5 rounded-md bg-blue-100 text-blue-700 font-semibold border border-blue-200/70">35</span>
-                    </button>
-
-                    <button type="button" data-view="news" onclick="showView('news')" class="nav-tab-btn flex items-center gap-1.5 px-3 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-sm font-medium transition whitespace-nowrap cursor-pointer">
-                        <span>복지 뉴스</span>
-                        <span class="nav-badge text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-semibold border border-slate-200/70">21</span>
-                    </button>
-                </nav>
+                <!-- 실시간 동기화 인디케이터 -->
+                <div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 text-[11px] font-bold border border-emerald-200/80 ml-2" title="매일 06:00 전수 수집 및 자동 갱신">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>동기화 06:00</span>
+                </div>
             </div>
 
-            <!-- 우측: 유틸리티 (내 준비함, 모바일 토글) -->
-            <div class="flex items-center gap-2 flex-shrink-0">
+            <!-- 우측: 드롭다운 퀵 메뉴 + 내 준비함 + 모바일 햄버거 -->
+            <div class="flex items-center gap-2">
+                <!-- 분야·법령 가이드 드롭다운 퀵 메뉴 -->
+                <div class="relative group" id="nav-dropdown-quick">
+                    <button type="button" class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold transition flex items-center gap-1 cursor-pointer">
+                        <span>분야·법령 가이드</span>
+                        <svg class="w-3.5 h-3.5 text-slate-400 group-hover:rotate-180 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <div class="absolute right-0 top-full pt-1.5 w-60 hidden group-hover:block z-50">
+                        <div class="bg-white rounded-xl shadow-xl border border-slate-200 py-1 overflow-hidden text-xs">
+                            <a href="#" onclick="showView('fields'); return false;" class="flex items-center gap-2 px-3.5 py-2.5 hover:bg-blue-50 text-slate-700 hover:text-blue-600 font-semibold cursor-pointer">
+                                <span>🏛️ 12대 분야·시설 도감</span>
+                            </a>
+                            <a href="#" onclick="showView('archive'); return false;" class="flex items-center justify-between px-3.5 py-2.5 hover:bg-blue-50 text-slate-700 hover:text-blue-600 font-semibold border-t border-slate-100 cursor-pointer">
+                                <span>📁 공식 지침서 아카이브</span>
+                                <span class="px-1.5 py-0.2 rounded-full bg-blue-100 text-blue-700 font-bold font-num text-[10px]">53</span>
+                            </a>
+                            <a href="#" onclick="showView('hierarchy'); return false;" class="flex items-center justify-between px-3.5 py-2.5 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 font-semibold border-t border-slate-100 cursor-pointer">
+                                <span>🌳 3단계 위계 도감</span>
+                                <span class="px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 font-bold font-num text-[10px]">90</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- 내 준비함 퀵 버튼 -->
-                <button type="button" onclick="toggleWorkspaceDrawer()" class="flex items-center gap-2 pl-3 pr-2.5 py-1.5 rounded-full border border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 text-slate-700 text-sm font-semibold transition ml-1 shadow-sm cursor-pointer">
-                    <svg class="text-blue-600 fill-blue-600" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <button type="button" onclick="if(typeof toggleWorkspaceDrawer === 'function') toggleWorkspaceDrawer();" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-2xs cursor-pointer">
+                    <svg class="text-blue-600 fill-blue-600 w-3.5 h-3.5" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                     </svg>
-                    <span class="hidden sm:inline">내 준비함</span>
-                    <span id="nav-bookmark-count" class="w-5 h-5 rounded-full bg-blue-100 text-blue-700 text-xs font-bold flex items-center justify-center font-num">6</span>
+                    <span>내 준비함</span>
+                    <span class="w-4 h-4 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold flex items-center justify-center font-num" id="nav-bookmark-count">6</span>
                 </button>
 
-                <!-- 모바일 메뉴 버튼 -->
-                <button type="button" onclick="toggleMobileMenu()" class="md:hidden p-1.5 text-slate-700 hover:bg-slate-100 rounded-lg text-xl" title="메뉴 열기">
+                <!-- 모바일 햄버거 토글 -->
+                <button type="button" onclick="const m=document.getElementById('mobile-subnav-menu'); if(m) m.classList.toggle('hidden');" class="md:hidden p-1.5 text-slate-700 hover:bg-slate-100 rounded-lg text-lg cursor-pointer" title="메뉴 열기">
                     ☰
                 </button>
             </div>
         </div>
 
+        <!-- 2단: 서브 네비게이션 가로 탭 바 (글자 세로 꺾임 방지 whitespace-nowrap) -->
+        <div class="border-t border-slate-100 bg-slate-50/70">
+            <div class="max-w-[1600px] mx-auto px-4 sm:px-6 flex items-center gap-1.5 overflow-x-auto flex-nowrap no-scrollbar py-1" id="sub-nav-tabs">
+                <a href="#" onclick="showView('fields'); return false;" data-view="fields" class="subnav-tab flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold text-slate-900 bg-white border border-slate-200/90 whitespace-nowrap shadow-2xs cursor-pointer transition">12대 분야·시설 도감</a>
+                
+                <a href="#" onclick="showView('archive'); return false;" data-view="archive" class="subnav-tab flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 flex items-center gap-1.5 whitespace-nowrap cursor-pointer transition">
+                    <span>공식 지침서 아카이브</span>
+                    <span class="px-1.5 py-0.2 rounded-full bg-blue-600 text-white text-[10px] font-num">53</span>
+                </a>
+
+                <a href="#" onclick="showView('hierarchy'); return false;" data-view="hierarchy" class="subnav-tab flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 flex items-center gap-1.5 whitespace-nowrap cursor-pointer transition">
+                    <span>3단계 위계 도감</span>
+                    <span class="px-1.5 py-0.2 rounded-full bg-emerald-600 text-white text-[10px] font-num">90</span>
+                </a>
+
+                <a href="#" onclick="showView('practicum'); return false;" data-view="practicum" class="subnav-tab flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 flex items-center gap-1 whitespace-nowrap cursor-pointer transition">
+                    <span>실습처</span><span class="text-[10px] text-slate-400 font-num">(320)</span>
+                </a>
+                <a href="#" onclick="showView('residency'); return false;" data-view="residency" class="subnav-tab flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 flex items-center gap-1 whitespace-nowrap cursor-pointer transition">
+                    <span>수련처</span><span class="text-[10px] text-slate-400 font-num">(284)</span>
+                </a>
+                <a href="#" onclick="showView('internship'); return false;" data-view="internship" class="subnav-tab flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 flex items-center gap-1 whitespace-nowrap cursor-pointer transition">
+                    <span>청년인턴</span><span class="text-[10px] text-slate-400 font-num">(39)</span>
+                </a>
+                <a href="#" onclick="showView('jobs'); return false;" data-view="jobs" class="subnav-tab flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 flex items-center gap-1 whitespace-nowrap cursor-pointer transition">
+                    <span>채용</span><span class="text-[10px] text-slate-400 font-num">(3,746)</span>
+                </a>
+                <a href="#" onclick="showView('useful-sites'); return false;" data-view="useful-sites" class="subnav-tab flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 flex items-center gap-1 whitespace-nowrap cursor-pointer transition">
+                    <span>유용한 사이트</span><span class="text-[10px] text-slate-400 font-num">(35)</span>
+                </a>
+                <a href="#" onclick="showView('news'); return false;" data-view="news" class="subnav-tab flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 flex items-center gap-1 whitespace-nowrap cursor-pointer transition">
+                    <span>복지 뉴스</span><span class="text-[10px] text-slate-400 font-num">(21)</span>
+                </a>
+            </div>
+        </div>
+
         <!-- 모바일 드롭다운 메뉴 -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-200 p-4 space-y-2 text-sm font-bold shadow-lg">
-            <button type="button" onclick="showView('fields')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-blue-50 text-blue-600">분야·법령 가이드</button>
-            <button type="button" onclick="showView('practicum')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">실습처 탐색 (320건)</button>
-            <button type="button" onclick="showView('residency')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">수련처 탐색 (284곳)</button>
-            <button type="button" onclick="showView('internship')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-emerald-50 text-emerald-800">청년인턴·일경험 (39건)</button>
-            <button type="button" onclick="showView('jobs')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">채용공고 (3,746건)</button>
-            <button type="button" onclick="showView('useful-sites')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-blue-50 text-blue-700">🔗 유용한 공식 사이트 (35곳)</button>
-            <button type="button" onclick="showView('news')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">복지 뉴스 (21건)</button>
+        <div id="mobile-subnav-menu" class="hidden md:hidden bg-white border-t border-slate-200 p-3 space-y-1.5 text-xs font-semibold shadow-lg">
+            <button type="button" onclick="showView('fields'); document.getElementById('mobile-subnav-menu').classList.add('hidden');" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-800 flex items-center justify-between">
+                <span>🏛️ 12대 분야·시설 도감</span>
+            </button>
+            <button type="button" onclick="showView('archive'); document.getElementById('mobile-subnav-menu').classList.add('hidden');" class="w-full text-left py-2 px-3 rounded-lg hover:bg-blue-50 text-blue-700 flex items-center justify-between">
+                <span>📁 공식 지침서 아카이브</span>
+                <span class="px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 font-bold font-num">53건</span>
+            </button>
+            <button type="button" onclick="showView('hierarchy'); document.getElementById('mobile-subnav-menu').classList.add('hidden');" class="w-full text-left py-2 px-3 rounded-lg hover:bg-emerald-50 text-emerald-800 flex items-center justify-between">
+                <span>🌳 3단계 위계 도감</span>
+                <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold font-num">90건</span>
+            </button>
+            <button type="button" onclick="showView('practicum'); document.getElementById('mobile-subnav-menu').classList.add('hidden');" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">실습처 탐색 (320건)</button>
+            <button type="button" onclick="showView('residency'); document.getElementById('mobile-subnav-menu').classList.add('hidden');" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">수련처 탐색 (284곳)</button>
+            <button type="button" onclick="showView('jobs'); document.getElementById('mobile-subnav-menu').classList.add('hidden');" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">채용공고 (3,746건)</button>
         </div>
     </header>
 
@@ -206,6 +316,14 @@
         <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="mobile-sticky-tabs">
             <button type="button" data-view="fields" onclick="showView('fields')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-blue-600 shadow-sm shadow-blue-200 flex items-center gap-1 transition cursor-pointer">
                 <span>분야·법령</span>
+            </button>
+            <button type="button" data-view="archive" onclick="showView('archive')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
+                <span>📁 아카이브</span>
+                <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-blue-100 text-blue-700 rounded-full font-bold">53</span>
+            </button>
+            <button type="button" data-view="hierarchy" onclick="showView('hierarchy')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
+                <span>🌳 3단계 위계</span>
+                <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-emerald-100 text-emerald-700 rounded-full font-bold">90</span>
             </button>
             <button type="button" data-view="practicum" onclick="showView('practicum')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
                 <span>실습처</span>
@@ -241,6 +359,16 @@
         <section id="view-fields" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- [구글 스티치 리디자인: 모바일 전용 뷰 (block md:hidden)] -->
             <div class="block md:hidden space-y-4 pt-1">
+                <!-- 모바일 퀵 액션 버튼 -->
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" onclick="showView('hierarchy')" class="p-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm tap-bounce cursor-pointer">
+                        <span>🌳 3단계 위계 도감 (90)</span>
+                    </button>
+                    <button type="button" onclick="showView('archive')" class="p-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm tap-bounce cursor-pointer">
+                        <span>📁 지침서 아카이브 (53)</span>
+                    </button>
+                </div>
+
                 <!-- 1. 히어로 배너: 모바일 정보 요약 카드 -->
                 <div class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-2xl p-4 text-white shadow-md relative overflow-hidden">
                     <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
@@ -397,6 +525,43 @@
                 <p class="text-xs sm:text-sm text-slate-500 max-w-2xl mx-auto leading-relaxed">
                     보건복지부·성평등가족부·교육부·통일부·질병관리청 등 현행 법령상 생활/이용시설 체계를 한눈에 비교하고 실습·수련·취업처로 바로 연결하세요.
                 </p>
+            </div>
+
+            <!-- 신규 추천: 3단계 위계 도감 & 공식 지침서 아카이브 추천 배너 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div onclick="showView('hierarchy')" class="bg-gradient-to-r from-emerald-900 to-teal-800 text-white p-5 rounded-2xl shadow-md hover:shadow-lg transition cursor-pointer flex items-center justify-between gap-4 border border-emerald-700/50 group">
+                    <div class="space-y-1">
+                        <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-extrabold">
+                            <span>🌳 NEW 신규 탑다운 지식 맵</span>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-black tracking-tight group-hover:text-emerald-200 transition">
+                            3단계 위계 도감 (숲에서 나무로) →
+                        </h3>
+                        <p class="text-xs text-emerald-100/90 leading-snug">
+                            12대 분야 90개 법정 단위 서비스 [대-중-소분류] 및 38종 공식 지침서 원문 매칭 바로가기
+                        </p>
+                    </div>
+                    <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-2xl flex-shrink-0 group-hover:scale-110 transition">
+                        🌳
+                    </div>
+                </div>
+
+                <div onclick="showView('archive')" class="bg-gradient-to-r from-slate-900 to-blue-900 text-white p-5 rounded-2xl shadow-md hover:shadow-lg transition cursor-pointer flex items-center justify-between gap-4 border border-blue-700/50 group">
+                    <div class="space-y-1">
+                        <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 text-[10px] font-extrabold">
+                            <span>📁 2026 정부 공인 정본</span>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-black tracking-tight group-hover:text-blue-200 transition">
+                            공식 지침서 마스터 아카이브 (53종) →
+                        </h3>
+                        <p class="text-xs text-blue-100/90 leading-snug">
+                            보건복지부·여가부·교육부 공식 사업안내서 450MB 풀패키지 일괄 다운로드 및 실시간 검색
+                        </p>
+                    </div>
+                    <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-2xl flex-shrink-0 group-hover:scale-110 transition">
+                        📁
+                    </div>
+                </div>
             </div>
 
             <!-- 빠른 안내 3대 배너 -->
@@ -590,6 +755,12 @@
             </div>
             </div>
         </section>
+
+        <!-- ==================== VIEW: 공식 지침서 마스터 아카이브 (Finder UI) ==================== -->
+        <section id="view-archive" class="view-section w-full hidden"></section>
+
+        <!-- ==================== VIEW: 대한민국 사회복지 3단계 위계 도감 (숲에서 나무로) ==================== -->
+        <section id="view-hierarchy" class="view-section w-full hidden"></section>
 
         <!-- ==================== VIEW 2: 실습처 탐색 (Stitch Full Design) ==================== -->
         <section id="view-practicum" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 hidden">
@@ -8000,6 +8171,34 @@
             }
         }
 
+        
+        function showToast(msg) {
+            let toast = document.getElementById('app-global-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'app-global-toast';
+                toast.className = 'fixed bottom-6 right-6 z-[9999] px-4 py-3 rounded-xl bg-slate-900/95 text-white text-xs font-semibold shadow-2xl backdrop-blur-md border border-slate-700/50 flex items-center gap-2 transform transition-all duration-300 translate-y-12 opacity-0 pointer-events-none';
+                document.body.appendChild(toast);
+            }
+            toast.innerText = msg;
+            toast.classList.remove('translate-y-12', 'opacity-0', 'pointer-events-none');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            
+            const badge = document.getElementById('nav-bookmark-count');
+            if (badge) {
+                badge.classList.add('scale-125', 'bg-emerald-500', 'text-white');
+                setTimeout(() => {
+                    badge.classList.remove('scale-125', 'bg-emerald-500', 'text-white');
+                }, 300);
+            }
+
+            clearTimeout(window.__toastTimer);
+            window.__toastTimer = setTimeout(() => {
+                toast.classList.add('translate-y-12', 'opacity-0', 'pointer-events-none');
+                toast.classList.remove('translate-y-0', 'opacity-100');
+            }, 2500);
+        }
+    
         function setWorkspaceItems(items) {
             localStorage.setItem('user_saved_workspace', JSON.stringify(items));
             updateWorkspaceBadge();
@@ -8015,18 +8214,30 @@
         }
 
         // 3. 뷰 전환 및 서랍 인터랙션 스크립트
-        function showView(viewId) {
-            const sections = ['fields', 'practicum', 'residency', 'internship', 'jobs', 'useful-sites', 'news'];
+        function showView(viewId, options = {}) {
+            const sections = ['fields', 'archive', 'hierarchy', 'practicum', 'residency', 'internship', 'jobs', 'useful-sites', 'news'];
             sections.forEach(id => {
                 const el = document.getElementById('view-' + id);
                 if (el) el.classList.toggle('hidden', id !== viewId);
             });
 
+            // 아카이브 뷰 렌더링 호출
+            if (viewId === 'archive') {
+                if (typeof renderArchiveView === 'function') {
+                    renderArchiveView(options);
+                }
+            } else if (viewId === 'hierarchy') {
+                if (typeof renderHierarchyView === 'function') {
+                    renderHierarchyView(options);
+                }
+            }
+
             // 탭 버튼 활성 스타일 업데이트 (스티치 GNB 데스크톱 및 모바일 스티치 바 일체화)
             document.querySelectorAll('.nav-tab-btn').forEach(btn => {
-                const isCurrent = btn.getAttribute('data-view') === viewId;
-                const badge = btn.querySelector('.nav-badge');
+                const btnView = btn.getAttribute('data-view');
                 const isMobile = btn.closest('#mobile-sticky-tabs') !== null;
+                const isCurrent = isMobile ? (btnView === viewId) : (btnView === viewId || (btnView === 'fields' && (viewId === 'fields' || viewId === 'archive' || viewId === 'hierarchy')));
+                const badge = btn.querySelector('.nav-badge');
 
                 if (isMobile) {
                     if (isCurrent) {
@@ -8049,8 +8260,26 @@
 
             const mobileMenu = document.getElementById('mobile-menu');
             if (mobileMenu) mobileMenu.classList.add('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+                // 서브 네비게이션 탭 액티브 상태 동적 갱신
+                document.querySelectorAll('.subnav-tab').forEach(tab => {
+                    const tv = tab.getAttribute('data-view');
+                    if (tv === viewId) {
+                        if (tv === 'hierarchy') {
+                            tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-bold text-emerald-800 bg-emerald-50/90 border border-emerald-200/80 flex items-center gap-1.5 whitespace-nowrap shadow-2xs cursor-pointer';
+                        } else if (tv === 'archive') {
+                            tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-bold text-blue-700 bg-blue-50/90 border border-blue-200/80 flex items-center gap-1.5 whitespace-nowrap shadow-2xs cursor-pointer';
+                        } else {
+                            tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-900 bg-white border border-slate-200/90 flex items-center gap-1.5 whitespace-nowrap shadow-2xs cursor-pointer';
+                        }
+                    } else {
+                        tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 flex items-center gap-1.5 whitespace-nowrap transition cursor-pointer';
+                    }
+                });
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+        window.showView = showView;
 
         // 스티치 헤더 유틸리티: 전역 검색 포커스
         function focusGlobalSearch() {
@@ -9436,8 +9665,16 @@
                         matchField = fType.includes('관공서') || fType.includes('공공') || fullText.includes('구청') || fullText.includes('시청') || fullText.includes('공단');
                     } else if (currentPracField === '기타') {
                         matchField = fType.includes('기타');
+                    } else if (currentPracField === '지역사회복지관' || currentPracField === '종합사회복지관') {
+                        matchField = fullText.includes('복지관') || fullText.includes('종합') || fullText.includes('지역사회') || fullText.includes('사례관리');
+                    } else if (currentPracField === '노인복지') {
+                        matchField = fullText.includes('노인') || fullText.includes('어르신') || fullText.includes('요양') || fullText.includes('데이케어') || fullText.includes('시니어');
+                    } else if (currentPracField === '아동·청소년') {
+                        matchField = fullText.includes('아동') || fullText.includes('청소년') || fullText.includes('지역아동') || fullText.includes('보육');
+                    } else if (currentPracField === '의료사회복지') {
+                        matchField = fullText.includes('의료') || fullText.includes('병원') || fullText.includes('정신건강') || fullText.includes('재활');
                     } else {
-                        matchField = fType.includes(currentPracField) || pField.includes(currentPracField);
+                        matchField = fType.includes(currentPracField) || pField.includes(currentPracField) || fullText.includes(currentPracField.toLowerCase());
                     }
                 }
                 if (!matchField) return false;
@@ -10353,9 +10590,14 @@
                 }
 
                 // Sources link buttons
-                const sourcesList = item.sources && item.sources.length > 0
+                const sourcesList = (item.sources && item.sources.length > 0
                     ? item.sources
-                    : [{ platform: item.sourcePlatform || '공식공고', badge: '공고 원문 ↗', url: item.url }];
+                    : [{ platform: item.sourcePlatform || '공식공고', badge: '공고 원문 ↗', url: item.url }])
+                    .map(s => {
+                        let finalUrl = s.url || 'https://job.alio.go.kr/recruit.do';
+                        if (!finalUrl.startsWith('http')) finalUrl = 'https://job.alio.go.kr/recruit.do';
+                        return { ...s, url: finalUrl };
+                    });
 
                 const sourceButtonsHtml = sourcesList.map(s => `
                     <a href="${s.url}" target="_blank" rel="noopener noreferrer"
@@ -10992,8 +11234,7 @@
             });
 
             setWorkspaceItems(items);
-            alert(`⭐ '${institution}' 준비함에 추가되었습니다!`);
-            toggleWorkspaceDrawer();
+            showToast(`⭐ '${institution}' 항목이 내 준비함에 저장되었습니다!`);
         }
 
         function removeWorkspaceItem(id) {

@@ -10,6 +10,12 @@ def collect_ngo_csr_jobs():
     jobs_db = os.path.join(os.path.dirname(__file__), '..', '..', 'src', 'data', 'jobs-db.js')
     with open(jobs_db, 'r', encoding='utf-8') as f:
         c = f.read()
+    s = c.find('const jobs = [')
+    if s != -1:
+        s += len('const jobs = ')
+        e = c.find('];', s)
+        all_jobs = json.loads(c[s:e+1])
+    else:
         s = c.find('[')
         e = c.rfind(']') + 1
         all_jobs = json.loads(c[s:e])

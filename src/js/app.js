@@ -136,6 +136,22 @@ export function showView(viewId, options = {}) {
         }
     });
 
+    // Update subnav tabs style (Stitch 2-tier subnav)
+    document.querySelectorAll('.subnav-tab').forEach((tab) => {
+        const tv = tab.getAttribute('data-view');
+        if (tv === viewId) {
+            if (tv === 'hierarchy') {
+                tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-bold text-emerald-800 bg-emerald-50/90 border border-emerald-200/80 flex items-center gap-1.5 whitespace-nowrap shadow-2xs cursor-pointer';
+            } else if (tv === 'archive') {
+                tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-bold text-blue-700 bg-blue-50/90 border border-blue-200/80 flex items-center gap-1.5 whitespace-nowrap shadow-2xs cursor-pointer';
+            } else {
+                tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-900 bg-white border border-slate-200/90 flex items-center gap-1.5 whitespace-nowrap shadow-2xs cursor-pointer';
+            }
+        } else {
+            tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 flex items-center gap-1.5 whitespace-nowrap transition cursor-pointer';
+        }
+    });
+
     if (viewId === 'fields') {
         renderFieldsView();
         if (options.fieldId) {
@@ -173,6 +189,14 @@ export function showView(viewId, options = {}) {
             setNewsFieldFilter(options.fieldId);
         }
         renderNews();
+    } else if (viewId === 'archive') {
+        if (typeof window.renderArchiveView === 'function') {
+            window.renderArchiveView(options);
+        }
+    } else if (viewId === 'hierarchy') {
+        if (typeof window.renderHierarchyView === 'function') {
+            window.renderHierarchyView(options);
+        }
     }
 
     window.scrollTo({ top: 0, behavior: 'smooth' });

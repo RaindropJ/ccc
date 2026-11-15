@@ -39,5 +39,6 @@ jobs:
             echo "No data changes detected. Skipping commit."
           else
             git commit -m "chore(sync): automated daily 06:00 welfare DB sync"
+            git pull --rebase
             git push
           fi
