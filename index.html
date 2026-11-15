@@ -22,9 +22,9 @@
     <script src="src/data/practicum-direct-db.js?v=20261112"></script>
     <script src="src/data/national-practicum-db.js?v=20261112" defer></script>
     <script src="src/data/guidelines-archive-db.js?v=20261115"></script>
-    <script src="src/js/archive.js?v=20261115"></script>
+    <script src="src/js/archive.js?v=20261115_v3"></script>
     <script src="src/data/welfare-hierarchy-db.js?v=20261115"></script>
-    <script src="src/js/hierarchy.js?v=20261115"></script>
+    <script src="src/js/hierarchy.js?v=20261115_v3"></script>
 
     <!-- file:// 프로토콜 (ES Module CORS 차단) 환경 대비 글로벌 안전 폴백 -->
     <script>
@@ -317,13 +317,13 @@
             <button type="button" data-view="fields" onclick="showView('fields')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-blue-600 shadow-sm shadow-blue-200 flex items-center gap-1 transition cursor-pointer">
                 <span>분야·법령</span>
             </button>
-            <button type="button" data-view="archive" onclick="showView('archive')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
-                <span>📁 아카이브</span>
-                <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-blue-100 text-blue-700 rounded-full font-bold">53</span>
-            </button>
             <button type="button" data-view="hierarchy" onclick="showView('hierarchy')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
                 <span>🌳 3단계 위계</span>
                 <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-emerald-100 text-emerald-700 rounded-full font-bold">167</span>
+            </button>
+            <button type="button" data-view="archive" onclick="showView('archive')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
+                <span>📁 아카이브</span>
+                <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-blue-100 text-blue-700 rounded-full font-bold">53</span>
             </button>
             <button type="button" data-view="practicum" onclick="showView('practicum')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
                 <span>실습처</span>

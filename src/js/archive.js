@@ -5,7 +5,7 @@
  * - 53종 정본 전종 (총 24,180면, 450.95MB)
  * - 섹션 Ⅰ: 중앙 정부부처 핵심 법정지침서 (보건복지부 34종, 337.25MB)
  * - 섹션 Ⅱ: 범부처 및 특화·전문 실천지침서 (관계부처 및 공익법인 19종, 113.70MB)
- * - 3단계 위계도감 (SCREEN_9) 90개 단위서비스 1:1 양방향 딥링킹(Deep-linking)
+ * - 3단계 위계도감 (SCREEN_9) 167개 단위서비스 1:1 양방향 딥링킹(Deep-linking)
  * - 실시간 텍스트 검색 (제목, 부처, 과명, 근거법령, 챕터) + 7개 소관부처 필터
  * - 데스크톱(매트릭스 테이블) + 모바일(반응형 스마트 카드) 완전 지원
  * - Excel (.csv) 전종 내보내기 & Google Drive 원클릭 일괄 다운로드
@@ -100,7 +100,7 @@
                         <a class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container-highest text-primary hover:bg-primary hover:text-on-primary transition-colors font-label-sm text-label-sm"
                            href="#" onclick="showView('hierarchy'); return false;">
                             <span class="material-symbols-outlined text-[14px]">account_tree</span>
-                            <span>3단계 위계도감 90개 단위서비스 실시간 상호연동 중</span>
+                            <span>3단계 위계도감 167개 단위서비스 실시간 상호연동 중</span>
                         </a>
                         <span class="text-on-surface-variant font-medium hidden md:inline">색인 문서: 24,180면</span>
                     </div>
@@ -152,7 +152,7 @@
                                    href="#" onclick="showView('hierarchy'); return false;">
                                     <span class="material-symbols-outlined text-[18px] text-secondary">account_tree</span>
                                     <span>3단계 위계 도감</span>
-                                    <span class="px-1.5 py-0.2 rounded-full font-label-sm text-label-sm bg-secondary-container text-on-secondary-container font-semibold">90단위</span>
+                                    <span class="px-1.5 py-0.2 rounded-full font-label-sm text-label-sm bg-secondary-container text-on-secondary-container font-semibold">167단위</span>
                                 </a>
                             </div>
 
@@ -518,7 +518,7 @@
                             <a class="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-surface-container-high hover:bg-surface-container-highest border border-outline-variant/40 text-primary font-label-md text-label-md transition-all text-center shadow-xs"
                                href="#" onclick="showView('hierarchy'); return false;">
                                 <span class="material-symbols-outlined text-[20px] text-secondary">account_tree</span>
-                                <span>3단계 위계도감 90단위 연동조회</span>
+                                <span>3단계 위계도감 167단위 연동조회</span>
                                 <span class="px-1.5 py-0.2 rounded-full font-label-sm text-label-sm bg-secondary-container text-on-secondary-container font-semibold">SCREEN_9</span>
                             </a>
                         </div>
