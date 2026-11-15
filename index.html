@@ -26,11 +26,48 @@
     <script src="src/data/welfare-hierarchy-db.js?v=20261115_optA2"></script>
     <script src="src/js/hierarchy.js?v=20261115_v8"></script>
 
-    <!-- file:// 프로토콜 (ES Module CORS 차단) 환경 대비 글로벌 안전 폴백 -->
+    <!-- file:// 프로토콜 및 SPA 단일 페이지 브라우저 히스토리(popstate/pushState) 라우팅 엔진 -->
     <script>
+        // 전역 해시 빌더 (9대 뷰 + 딥링크 쿼리 파라미터 매핑)
+        function getHashForView(viewId, options = {}) {
+            const validViews = ['fields', 'archive', 'hierarchy', 'practicum', 'residency', 'internship', 'jobs', 'useful-sites', 'news'];
+            const v = validViews.includes(viewId) ? viewId : 'fields';
+            const params = new URLSearchParams();
+            if (options.facility) params.set('facility', options.facility);
+            if (options.facilityId) params.set('facilityId', options.facilityId);
+            if (options.search) params.set('search', options.search);
+            if (options.category) params.set('category', options.category);
+            if (options.parentCategory) params.set('parentCategory', options.parentCategory);
+            const qs = params.toString();
+            return '#' + v + (qs ? '?' + qs : '');
+        }
+        window.getHashForView = getHashForView;
+
         if (typeof window.showView !== 'function') {
             window.showView = function(viewId, options = {}) {
                 if (viewId === 'encyclopedia') viewId = 'fields';
+                const sections = ['fields', 'archive', 'hierarchy', 'practicum', 'residency', 'internship', 'jobs', 'useful-sites', 'news'];
+                if (!sections.includes(viewId)) viewId = 'fields';
+
+                // URL Hash & History 동기화
+                const targetHash = getHashForView(viewId, options);
+                const currentHash = window.location.hash || '';
+
+                if (!options.skipHistory) {
+                    if (currentHash !== targetHash) {
+                        window.__isRoutingInternally = true;
+                        try {
+                            window.history.pushState({ viewId, options }, '', targetHash);
+                        } catch (e) {
+                            window.location.hash = targetHash;
+                        }
+                        window.__lastRoutedHash = targetHash;
+                        setTimeout(() => { window.__isRoutingInternally = false; }, 80);
+                    }
+                } else {
+                    window.__lastRoutedHash = targetHash;
+                }
+
                 document.querySelectorAll('section[id^="view-"], .view-section').forEach(el => el.classList.add('hidden'));
                 const target = document.getElementById(`view-${viewId}`);
                 if (target) target.classList.remove('hidden');
@@ -81,11 +118,12 @@
                     }
                 });
 
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (!options.preventScroll) {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
             };
         }
 
-        
         // Modern Web Standard: Global ESC key modal dismissal (WCAG 2.1)
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
@@ -101,12 +139,10 @@
             }
         });
 
+        // 3단계 위계도감 단일 진입점: showView 직접 호출로 히스토리 자동 적재
         window.jumpToFacilityHierarchy = function(facilityName, parentCategory) {
             if (!facilityName) return;
-            window.__isRoutingInternally = true;
-            window.location.hash = '#hierarchy?facility=' + encodeURIComponent(facilityName);
             showView('hierarchy', { facility: facilityName, parentCategory: parentCategory });
-            setTimeout(() => { window.__isRoutingInternally = false; }, 350);
         };
 
         window.jumpToFacilityByTerm = function(term) {
@@ -126,40 +162,72 @@
             }
         };
 
-        function handleUrlRouting() {
+        // 브라우저 뒤로가기/앞으로가기 및 URL 직접 진입 전역 라우팅 핸들러
+        function handleUrlRouting(isPopState = false) {
             if (window.__isRoutingInternally) return;
             const hash = window.location.hash || '';
-            if (!hash || hash === '#') return;
+            if (isPopState && window.__lastRoutedHash === hash) return;
+            window.__lastRoutedHash = hash;
 
-            if (hash.startsWith('#hierarchy')) {
-                const queryIdx = hash.indexOf('?');
-                if (queryIdx !== -1) {
-                    const params = new URLSearchParams(hash.slice(queryIdx + 1));
-                    const facility = params.get('facility');
-                    if (facility) {
-                        showView('hierarchy', { facility: decodeURIComponent(facility) });
-                        return;
+            if (!hash || hash === '#' || hash === '#/') {
+                showView('fields', { skipHistory: true });
+                return;
+            }
+
+            let hashPart = hash.startsWith('#') ? hash.slice(1) : hash;
+            let viewId = hashPart;
+            let params = new URLSearchParams();
+
+            const queryIdx = hashPart.indexOf('?');
+            if (queryIdx !== -1) {
+                viewId = hashPart.slice(0, queryIdx);
+                params = new URLSearchParams(hashPart.slice(queryIdx + 1));
+            }
+
+            const validViews = ['fields', 'archive', 'hierarchy', 'practicum', 'residency', 'internship', 'jobs', 'useful-sites', 'news'];
+            if (!validViews.includes(viewId)) {
+                viewId = 'fields';
+            }
+
+            const options = { skipHistory: true };
+            if (params.get('facility')) options.facility = decodeURIComponent(params.get('facility'));
+            if (params.get('facilityId')) options.facilityId = decodeURIComponent(params.get('facilityId'));
+            if (params.get('search')) options.search = decodeURIComponent(params.get('search'));
+            if (params.get('category')) options.category = decodeURIComponent(params.get('category'));
+            if (params.get('parentCategory')) options.parentCategory = decodeURIComponent(params.get('parentCategory'));
+
+            showView(viewId, options);
+
+            if (viewId === 'fields' && options.facilityId) {
+                setTimeout(() => {
+                    const targetRow = document.getElementById(`facility-row-${options.facilityId}`);
+                    const targetCard = document.getElementById(`facility-card-${options.facilityId}`);
+                    const targetEl = (window.innerWidth >= 768) ? (targetRow || targetCard) : (targetCard || targetRow);
+                    if (targetEl) {
+                        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        if (typeof window.triggerMatchHighlight === 'function') {
+                            window.triggerMatchHighlight(targetEl);
+                        }
                     }
-                }
-                showView('hierarchy');
-            } else if (hash.startsWith('#archive')) {
-                const queryIdx = hash.indexOf('?');
-                if (queryIdx !== -1) {
-                    const params = new URLSearchParams(hash.slice(queryIdx + 1));
-                    const search = params.get('search');
-                    if (search) {
-                        showView('archive', { search: decodeURIComponent(search) });
-                        return;
-                    }
-                }
-                showView('archive');
-            } else if (hash.startsWith('#fields')) {
-                showView('fields');
+                }, 250);
             }
         }
-        window.addEventListener('hashchange', handleUrlRouting);
+        window.handleUrlRouting = handleUrlRouting;
+        window.addEventListener('popstate', () => handleUrlRouting(true));
+        window.addEventListener('hashchange', () => {
+            if (window.__isRoutingInternally) return;
+            handleUrlRouting(true);
+        });
         window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(handleUrlRouting, 150);
+            const curHash = window.location.hash || '';
+            if (!curHash || curHash === '#' || curHash === '#/') {
+                try {
+                    window.history.replaceState({ viewId: 'fields', options: {} }, '', '#fields');
+                    window.__lastRoutedHash = '#fields';
+                } catch (e) {}
+            } else {
+                handleUrlRouting(false);
+            }
         });
 
         // 1:1 매칭 초록 테두리 강조 헬퍼 함수
@@ -180,7 +248,7 @@
 
         window.jumpToFacility = function(facilityId) {
             if (!facilityId) return;
-            window.showView('fields');
+            window.showView('fields', { facilityId: facilityId, preventScroll: true });
 
             const searchInput = document.getElementById('fields-search-input');
             if (searchInput && searchInput.value) {
@@ -8376,15 +8444,36 @@
             if (mBadge) mBadge.innerText = String(items.length);
         }
 
-        // 3. 뷰 전환 및 서랍 인터랙션 스크립트
+        // 3. 뷰 전환 및 서랍 인터랙션 스크립트 (SPA 브라우저 히스토리 완벽 연동)
         function showView(viewId, options = {}) {
             const sections = ['fields', 'archive', 'hierarchy', 'practicum', 'residency', 'internship', 'jobs', 'useful-sites', 'news'];
+            if (!sections.includes(viewId)) viewId = 'fields';
+
+            // URL Hash & History 라우팅 동기화
+            const targetHash = (typeof getHashForView === 'function') ? getHashForView(viewId, options) : ('#' + viewId);
+            const currentHash = window.location.hash || '';
+
+            if (!options.skipHistory) {
+                if (currentHash !== targetHash) {
+                    window.__isRoutingInternally = true;
+                    try {
+                        window.history.pushState({ viewId, options }, '', targetHash);
+                    } catch (e) {
+                        window.location.hash = targetHash;
+                    }
+                    window.__lastRoutedHash = targetHash;
+                    setTimeout(() => { window.__isRoutingInternally = false; }, 80);
+                }
+            } else {
+                window.__lastRoutedHash = targetHash;
+            }
+
             sections.forEach(id => {
                 const el = document.getElementById('view-' + id);
                 if (el) el.classList.toggle('hidden', id !== viewId);
             });
 
-            // 아카이브 뷰 렌더링 호출
+            // 뷰별 렌더링 호출
             if (viewId === 'archive') {
                 if (typeof renderArchiveView === 'function') {
                     renderArchiveView(options);
@@ -8392,6 +8481,19 @@
             } else if (viewId === 'hierarchy') {
                 if (typeof renderHierarchyView === 'function') {
                     renderHierarchyView(options);
+                }
+            } else if (viewId === 'fields') {
+                if (typeof renderFieldsView === 'function') {
+                    renderFieldsView(options);
+                }
+                if (options.search) {
+                    const searchInput = document.getElementById('fields-search-input');
+                    if (searchInput) {
+                        searchInput.value = options.search;
+                        if (typeof filterFieldsTable === 'function') {
+                            filterFieldsTable(options.search);
+                        }
+                    }
                 }
             }
 
