@@ -23,3 +23,6 @@ docs/지침서_공식_아카이브/
 
 # Temporary drive sync caches
 drive_*.json
+
+# Standalone 3-pillar core platform repository
+core_platform/
