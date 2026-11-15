@@ -25,6 +25,7 @@
     <script src="src/js/archive.js?v=20261115_v10"></script>
     <script src="src/data/welfare-hierarchy-db.js?v=20261115_optA2"></script>
     <script src="src/js/hierarchy.js?v=20261115_v8"></script>
+    <script src="src/js/demo-tour.js?v=20261116"></script>
 
     <!-- file:// 프로토콜 및 SPA 단일 페이지 브라우저 히스토리(popstate/pushState) 라우팅 엔진 -->
     <script>
@@ -474,6 +475,12 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- 75초 3대 플랫폼 자동 시연 모드 퀵 버튼 -->
+                <button type="button" onclick="if(typeof startAutoDemoTour==='function') startAutoDemoTour();" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-blue-300/80 bg-gradient-to-r from-blue-50 to-emerald-50 hover:from-blue-100 hover:to-emerald-100 text-blue-900 text-xs font-bold shadow-2xs transition cursor-pointer group" title="화면 캡처 녹화 및 3대 핵심 체계 75초 자동 시연 투어">
+                    <span class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+                    <span>🎬 75초 시연 투어</span>
+                </button>
 
                 <!-- 내 준비함 퀵 버튼 -->
                 <button type="button" onclick="if(typeof toggleWorkspaceDrawer === 'function') toggleWorkspaceDrawer();" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-2xs cursor-pointer">
@@ -12021,5 +12028,17 @@
             updateWorkspaceBadge();
         });
     </script>
+
+    <!-- 75초 3대 핵심 체계 자동 시연 모드 플로팅 퀵 버튼 -->
+    <aside aria-label="자동 시연 모드 컨트롤" class="fixed bottom-6 right-6 z-40">
+        <button type="button" 
+                onclick="if(typeof startAutoDemoTour==='function') startAutoDemoTour();" 
+                class="bg-gradient-to-r from-blue-700 via-indigo-700 to-emerald-700 hover:from-blue-600 hover:to-emerald-600 text-white px-4 py-3 rounded-full shadow-2xl hover:shadow-emerald-500/30 hover:scale-105 transition-all flex items-center gap-2.5 font-black text-xs ring-4 ring-white/90 cursor-pointer group"
+                title="클릭 시 마우스가 자동으로 움직이며 75초 동안 3대 핵심 체계를 완벽 시연합니다 (화면 캡처용)">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+            <span>🎬 3대 플랫폼 75초 자동 시연</span>
+            <span class="px-1.5 py-0.5 rounded-full bg-white/20 text-[10px] font-bold font-num group-hover:bg-white group-hover:text-slate-900 transition-colors">REC</span>
+        </button>
+    </aside>
 </body>
 </html>
