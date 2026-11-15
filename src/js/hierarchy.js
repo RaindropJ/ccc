@@ -1,5 +1,5 @@
 /**
- * 대한민국 사회복지 현장 나침반: 3단계 위계 도감 (90개 법정단위서비스 전수 매트릭스)
+ * 대한민국 사회복지 현장 나침반: 3단계 위계 도감 (167개 법정단위서비스 전수 매트릭스)
  * Google Stitch Material Design 3 리디자인 반영 컨트롤러
  */
 
@@ -9,20 +9,20 @@
     let currentSearchKeyword = '';
 
     const DOMAIN_MAP = {
-        '01_사회복지관': { key: 'community', icon: 'corporate_fare', short: '종합사회복지관', badge: '3대 핵심기능 (16)', legal: '<span>「사회복지사업법」 제34조의5</span><span>동법 시행규칙 제21조의2</span><span class="text-secondary font-bold">보건복지부 사업안내 제2권</span>' },
-        '02_노인복지': { key: 'elder', icon: 'elderly', short: '노인복지·맞춤돌봄', badge: '맞춤돌봄·여가 (11)', legal: '<span>「노인복지법」 제27조의2·제36조</span><span>「노인장기요양보험법」</span><span class="text-secondary font-bold">노인맞춤돌봄 사업안내</span>' },
-        '03_장애인복지': { key: 'disabled', icon: 'accessible_forward', short: '장애인자립·재활', badge: '자립·활동지원 (10)', legal: '<span>「장애인복지법」 제58조·제59조의9</span><span>「발달장애인법」 제33조</span><span class="text-secondary font-bold">장애인복지시설 사업안내</span>' },
-        '04_아동돌봄복지': { key: 'child', icon: 'child_care', short: '아동보호·돌봄', badge: '학대보호·돌봄 (8)', legal: '<span>「아동복지법」 제37조·제45조</span><span>「아동학대처벌법」 제11조</span><span class="text-secondary font-bold">아동분야 사업안내 1~2권</span>' },
-        '05_영유아보육': { key: 'infant', icon: 'child_friendly', short: '영유아·보육지원', badge: '표준보육·누리 (5)', legal: '<span>「영유아보육법」 제10조·제24조</span><span>유보통합 표준보육과정</span><span class="text-secondary font-bold">보육사업안내</span>' },
-        '08_정신건강자살예방': { key: 'mental', icon: 'psychology', short: '정신건강·자살예방', badge: '정신의료재활 (6)', legal: '<span>「정신건강복지법」 제15조</span><span>「자살예방법」 제12조</span><span class="text-secondary font-bold">국가정신건강사업안내</span>' },
-        '11_지역보호긴급돌봄': { key: 'crisis', icon: 'shield_person', short: '긴급복지·위기개입', badge: '신속개입망 (6)', legal: '<span>「긴급복지지원법」 제5조·제8조</span><span>「사회서비스원법」 제10조</span><span class="text-secondary font-bold">긴급지원사업안내</span>' },
+        '01_사회복지관': { key: 'community', icon: 'corporate_fare', short: '종합사회복지관', badge: '3대 핵심기능 (22)', legal: '<span>「사회복지사업법」 제34조의5</span><span>동법 시행규칙 제21조의2</span><span class="text-secondary font-bold">보건복지부 사업안내 제2권</span>' },
+        '02_노인복지': { key: 'elder', icon: 'elderly', short: '노인복지·맞춤돌봄', badge: '맞춤돌봄·여가 (20)', legal: '<span>「노인복지법」 제27조의2·제36조</span><span>「노인장기요양보험법」</span><span class="text-secondary font-bold">노인맞춤돌봄 사업안내</span>' },
+        '03_장애인복지': { key: 'disabled', icon: 'accessible_forward', short: '장애인자립·재활', badge: '자립·활동지원 (19)', legal: '<span>「장애인복지법」 제58조·제59조의9</span><span>「발달장애인법」 제33조</span><span class="text-secondary font-bold">장애인복지시설 사업안내</span>' },
+        '04_아동돌봄복지': { key: 'child', icon: 'child_care', short: '아동보호·돌봄', badge: '학대보호·돌봄 (16)', legal: '<span>「아동복지법」 제37조·제45조</span><span>「아동학대처벌법」 제11조</span><span class="text-secondary font-bold">아동분야 사업안내 1~2권</span>' },
+        '05_영유아보육': { key: 'infant', icon: 'child_friendly', short: '영유아·보육지원', badge: '표준보육·누리 (10)', legal: '<span>「영유아보육법」 제10조·제24조</span><span>유보통합 표준보육과정</span><span class="text-secondary font-bold">보육사업안내</span>' },
+        '08_정신건강자살예방': { key: 'mental', icon: 'psychology', short: '정신건강·자살예방', badge: '정신의료재활 (12)', legal: '<span>「정신건강복지법」 제15조</span><span>「자살예방법」 제12조</span><span class="text-secondary font-bold">국가정신건강사업안내</span>' },
+        '11_지역보호긴급돌봄': { key: 'crisis', icon: 'shield_person', short: '긴급복지·위기개입', badge: '신속개입망 (13)', legal: '<span>「긴급복지지원법」 제5조·제8조</span><span>「사회서비스원법」 제10조</span><span class="text-secondary font-bold">긴급지원사업안내</span>' },
         
         // Section II
-        '06_가족복지': { key: 'family', icon: 'diversity_1', short: '가족·다문화', badge: '통합가족 (7)', legal: '<span>「건강가정기본법」 제35조</span><span>「다문화가족지원법」 제12조</span><span class="text-secondary font-bold">여성가족부 가족사업안내</span>' },
-        '07_청소년여성권익': { key: 'youth', icon: 'backpack', short: '청소년·여성권익', badge: '상담·보호쉼터 (8)', legal: '<span>「청소년기본법」 제18조</span><span>「가정폭력방지법」 제5조</span><span class="text-secondary font-bold">여성가족부 청소년사업안내</span>' },
-        '10_학교사회복지': { key: 'school', icon: 'school', short: '학교사회복지', badge: '교육복지우선 (4)', legal: '<span>「초·중등교육법」 제54조</span><span>교육복지우선지원사업 훈령</span><span class="text-secondary font-bold">교육부 운영매뉴얼</span>' },
-        '09_자활고용지원': { key: 'selfhelp', icon: 'work_history', short: '자활·일자리', badge: '고용·복지 (5)', legal: '<span>「국민기초생활보장법」 제15조</span><span>구직자 취업촉진법 제6조</span><span class="text-secondary font-bold">고용노동부·복지부 사업안내</span>' },
-        '12_배분모금국제': { key: 'donation', icon: 'volunteer_activism', short: '모금·나눔배분', badge: '나눔배분·ODA (4)', legal: '<span>「사회복지공동모금회법」 제20조</span><span>「한국국제협력단법」 제7조</span><span class="text-secondary font-bold">공동모금회 배분사업지침</span>' }
+        '06_가족복지': { key: 'family', icon: 'diversity_1', short: '가족·다문화', badge: '통합가족 (13)', legal: '<span>「건강가정기본법」 제35조</span><span>「다문화가족지원법」 제12조</span><span class="text-secondary font-bold">여성가족부 가족사업안내</span>' },
+        '07_청소년여성권익': { key: 'youth', icon: 'backpack', short: '청소년·여성권익', badge: '상담·보호쉼터 (15)', legal: '<span>「청소년기본법」 제18조</span><span>「가정폭력방지법」 제5조</span><span class="text-secondary font-bold">여성가족부 청소년사업안내</span>' },
+        '10_학교사회복지': { key: 'school', icon: 'school', short: '학교사회복지', badge: '교육복지우선 (8)', legal: '<span>「초·중등교육법」 제54조</span><span>교육복지우선지원사업 훈령</span><span class="text-secondary font-bold">교육부 운영매뉴얼</span>' },
+        '09_자활고용지원': { key: 'selfhelp', icon: 'work_history', short: '자활·일자리', badge: '고용·복지 (10)', legal: '<span>「국민기초생활보장법」 제15조</span><span>구직자 취업촉진법 제6조</span><span class="text-secondary font-bold">고용노동부·복지부 사업안내</span>' },
+        '12_배분모금국제': { key: 'donation', icon: 'volunteer_activism', short: '모금·나눔배분', badge: '나눔배분·ODA (9)', legal: '<span>「사회복지공동모금회법」 제20조</span><span>「한국국제협력단법」 제7조</span><span class="text-secondary font-bold">공동모금회 배분사업지침</span>' }
     };
 
     const SECTION_1_KEYS = ['01_사회복지관', '02_노인복지', '03_장애인복지', '04_아동돌봄복지', '05_영유아보육', '08_정신건강자살예방', '11_지역보호긴급돌봄'];
@@ -67,7 +67,7 @@
                                 <span class="text-outline-variant">/</span>
                                 <span class="text-on-surface-variant">사회복지사업법 제34조의5 및 각 개별법령</span>
                                 <span class="text-outline-variant">/</span>
-                                <span class="text-on-surface font-semibold">12대 분야 90개 법정단위서비스 위계 매트릭스</span>
+                                <span class="text-on-surface font-semibold">12대 분야 167개 법정단위서비스 위계 매트릭스</span>
                             </div>
                         </div>
                         <div class="flex flex-wrap items-center gap-space-sm font-legal-code text-legal-code">
@@ -93,7 +93,7 @@
                                     <span class="px-space-sm py-0.5 rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold uppercase tracking-wider">Statutory Matrix v2.4</span>
                                     <span class="text-on-surface-variant font-label-sm text-label-sm">보건복지부 · 여성가족부 · 교육부 소관 38종 업무처리지침 연계</span>
                                 </div>
-                                <h1 class="font-headline-lg text-headline-lg text-primary font-extrabold tracking-tight">사회복지 3단계 위계 도감 (90개 법정단위서비스 전수 매트릭스)</h1>
+                                <h1 class="font-headline-lg text-headline-lg text-primary font-extrabold tracking-tight">사회복지 3단계 위계 도감 (167개 법정단위서비스 전수 매트릭스)</h1>
                                 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
                                     기관명의 반복 나열을 배제하고, <strong class="text-on-surface font-semibold">[실천분야] → [대분류(법정기능)] → [중분류(사업체계)] → [소분류(단위서비스/실천내용)]</strong>의 공공 행정 계층 구조로 체계화한 대한민국 표준 복지행정 분류표입니다.
                                 </p>
@@ -124,7 +124,7 @@
                                     <span class="material-symbols-outlined text-primary text-[20px]">dataset</span>
                                 </div>
                                 <div class="flex items-baseline gap-1">
-                                    <span class="font-headline-lg text-headline-lg font-extrabold text-primary">90</span>
+                                    <span class="font-headline-lg text-headline-lg font-extrabold text-primary">167</span>
                                     <span class="font-label-md text-label-md text-on-surface-variant font-semibold">개 단위</span>
                                 </div>
                                 <span class="font-legal-code text-legal-code text-secondary font-semibold">● 12개 실천분야 전수 등재</span>
@@ -199,7 +199,7 @@
                             </div>
                             <div class="flex items-center gap-space-sm font-legal-code text-legal-code text-on-surface-variant">
                                 <span class="px-space-sm py-1 rounded bg-surface-container font-bold text-primary" id="displayCountTag">
-                                    전체 12개 실천분야 / 90개 법정단위서비스 수록
+                                    전체 12개 실천분야 / 167개 법정단위서비스 수록
                                 </span>
                                 <span class="hidden sm:inline text-outline-variant">|</span>
                                 <button type="button" class="text-secondary hover:underline flex items-center gap-0.5 font-semibold cursor-pointer" onclick="window.resetHierarchyFilters()">
@@ -226,11 +226,11 @@
                             <div class="flex items-center gap-1.5 pb-space-xs border-b border-surface-container-low overflow-x-auto whitespace-nowrap no-scrollbar" id="ministryGroupTabs">
                                 <button type="button" class="ministry-btn active px-space-md py-space-xs rounded-lg font-label-sm text-label-sm font-bold transition-all bg-primary text-on-primary shadow-sm flex items-center gap-1 cursor-pointer" onclick="window.selectMinistryGroup('all', this)">
                                     <span class="material-symbols-outlined text-[16px]">apps</span>
-                                    <span>전체 부처 (12대 분야 · 90개 단위)</span>
+                                    <span>전체 부처 (12대 분야 · 167개 단위)</span>
                                 </button>
                                 <button type="button" class="ministry-btn px-space-md py-space-xs rounded-lg font-label-sm text-label-sm font-medium transition-all bg-surface-container text-on-surface-variant hover:bg-surface-container-high flex items-center gap-1 cursor-pointer" onclick="window.selectMinistryGroup('mohw', this)">
                                     <span class="material-symbols-outlined text-[16px]">health_and_safety</span>
-                                    <span>보건복지부 (7대 분야 · 62개)</span>
+                                    <span>보건복지부 (7대 분야 · 112개)</span>
                                 </button>
                                 <button type="button" class="ministry-btn px-space-md py-space-xs rounded-lg font-label-sm text-label-sm font-medium transition-all bg-surface-container text-on-surface-variant hover:bg-surface-container-high flex items-center gap-1 cursor-pointer" onclick="window.selectMinistryGroup('mogef', this)">
                                     <span class="material-symbols-outlined text-[16px]">family_restroom</span>
@@ -259,13 +259,13 @@
                                     </div>
                                     <div class="flex flex-wrap items-center gap-1.5 flex-1">
                                         <button type="button" class="domain-tab-btn active px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-bold bg-primary text-on-primary transition-all shadow-sm cursor-pointer" onclick="window.selectDomainFilter('all', this)">보건복지부 전체</button>
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('community', this)">🏢 종합사회복지관 (16)</button>
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('elder', this)">👴 노인복지·맞춤돌봄 (11)</button>
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('disabled', this)">♿ 장애인자립·재활 (10)</button>
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('child', this)">🧒 아동보호·돌봄 (8)</button>
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('infant', this)">🍼 영유아·보육지원 (5)</button>
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('mental', this)">🧠 정신건강·자살예방 (6)</button>
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('crisis', this)">🛡️ 긴급복지·위기개입 (6)</button>
+                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('community', this)">🏢 종합사회복지관 (22)</button>
+                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('elder', this)">👴 노인복지·맞춤돌봄 (20)</button>
+                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('disabled', this)">♿ 장애인자립·재활 (19)</button>
+                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('child', this)">🧒 아동보호·돌봄 (16)</button>
+                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('infant', this)">🍼 영유아·보육지원 (10)</button>
+                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('mental', this)">🧠 정신건강·자살예방 (12)</button>
+                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('crisis', this)">🛡️ 긴급복지·위기개입 (13)</button>
                                     </div>
                                 </div>
                                 <div class="ministry-subgroup flex flex-col md:flex-row md:items-center gap-space-sm p-space-sm rounded-lg bg-surface-container-low transition-colors" data-ministry="mogef">
@@ -274,8 +274,8 @@
                                         <span class="font-legal-code text-legal-code text-on-surface-variant font-medium">2개 분야</span>
                                     </div>
                                     <div class="flex flex-wrap items-center gap-1.5 flex-1">
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('family', this)">🏠 가족·다문화 (7)</button>
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('youth', this)">🎒 청소년·여성권익 (8)</button>
+                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('family', this)">🏠 가족·다문화 (13)</button>
+                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('youth', this)">🎒 청소년·여성권익 (15)</button>
                                     </div>
                                 </div>
                                 <div class="ministry-subgroup flex flex-col md:flex-row md:items-center gap-space-sm p-space-sm rounded-lg bg-surface-container-low transition-colors" data-ministry="moe">
@@ -284,7 +284,7 @@
                                         <span class="font-legal-code text-legal-code text-on-surface-variant font-medium">1개 분야</span>
                                     </div>
                                     <div class="flex flex-wrap items-center gap-1.5 flex-1">
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('school', this)">🏫 학교사회복지 (4)</button>
+                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('school', this)">🏫 학교사회복지 (8)</button>
                                     </div>
                                 </div>
                                 <div class="ministry-subgroup flex flex-col md:flex-row md:items-center gap-space-sm p-space-sm rounded-lg bg-surface-container-low transition-colors" data-ministry="moel">
@@ -293,7 +293,7 @@
                                         <span class="font-legal-code text-legal-code text-on-surface-variant font-medium">1개 분야</span>
                                     </div>
                                     <div class="flex flex-wrap items-center gap-1.5 flex-1">
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('selfhelp', this)">💼 자활·일자리 (5)</button>
+                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('selfhelp', this)">💼 자활·일자리 (10)</button>
                                     </div>
                                 </div>
                                 <div class="ministry-subgroup flex flex-col md:flex-row md:items-center gap-space-sm p-space-sm rounded-lg bg-surface-container-low transition-colors" data-ministry="civic">
@@ -302,7 +302,7 @@
                                         <span class="font-legal-code text-legal-code text-on-surface-variant font-medium">1개 분야</span>
                                     </div>
                                     <div class="flex flex-wrap items-center gap-1.5 flex-1">
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('donation', this)">🤝 모금·나눔배분 (4)</button>
+                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('donation', this)">🤝 모금·나눔배분 (9)</button>
                                     </div>
                                 </div>
                             </div>
@@ -319,7 +319,7 @@
                                 <span class="material-symbols-outlined text-[20px]">phone_android</span>
                                 <div class="flex flex-col">
                                     <span class="font-label-sm text-label-sm font-bold">모바일 최적화 위계 탐색 모드</span>
-                                    <span class="font-legal-code text-legal-code text-on-primary-container">90개 단위서비스 스마트 카드 뷰</span>
+                                    <span class="font-legal-code text-legal-code text-on-primary-container">167개 단위서비스 스마트 카드 뷰</span>
                                 </div>
                             </div>
                             <a class="px-space-sm py-1 rounded bg-secondary text-on-secondary font-label-sm text-label-sm font-bold flex items-center gap-0.5 cursor-pointer" onclick="showView('archive'); return false;">
@@ -329,7 +329,7 @@
                         </div>
                         <div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm px-1">
                             <span>※ 터치하여 세부 사업내용과 매핑 서식을 확인하세요</span>
-                            <span class="text-primary font-bold">총 90개 전수</span>
+                            <span class="text-primary font-bold">총 167개 전수</span>
                         </div>
                     </div>
 
@@ -434,7 +434,7 @@
                             </div>
                             <div class="flex flex-col gap-0.5">
                                 <span class="font-headline-sm text-headline-sm font-bold text-primary">3단계 위계도감 및 업무처리지침 일체 패키지</span>
-                                <p class="font-body-sm text-body-sm text-on-surface-variant">2026년 기준 전국 90개 법정단위서비스 분류체계와 연결된 지침서 53종 연계표(PDF·CSV·JSON)를 일괄 다운로드할 수 있습니다.</p>
+                                <p class="font-body-sm text-body-sm text-on-surface-variant">2026년 기준 전국 167개 법정단위서비스 분류체계와 연결된 지침서 53종 연계표(PDF·CSV·JSON)를 일괄 다운로드할 수 있습니다.</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-space-sm shrink-0">
@@ -827,7 +827,7 @@
             } else if (currentDomainFilter !== 'all' || currentMinistryGroup !== 'all') {
                 tag.textContent = `필터링 표시 중 (${matchedCount}개 단위서비스)`;
             } else {
-                tag.textContent = '전체 12개 실천분야 / 90개 법정단위서비스 수록';
+                tag.textContent = '전체 12개 실천분야 / 167개 법정단위서비스 수록';
             }
         }
     }
