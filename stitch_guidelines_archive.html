@@ -1781,6 +1781,57 @@ if (typeof module !== 'undefined' && module.exports) {
     let mobileActiveSection = 'SECTION_1';
     let activeFilterGuidelines = null;
 
+    const FACILITY_PATTERNS = [
+        { pattern: /통합돌봄|통합지원/, id: 'law-integrated-care', name: '지역 통합돌봄' },
+        { pattern: /어린이집|육아종합지원|영유아/, id: 'law-childcare', name: '어린이집' },
+        { pattern: /초·중·고|초등|중학교|고등학교|교육복지|학교/, id: 'law-school', name: '학교사회복지' },
+        { pattern: /장애인고용|직업능력/, id: 'law-labor-disability', name: '장애인 고용·산재' },
+        { pattern: /노인|시니어클럽|경로당|양로|독거노인/, id: 'law-elderly', name: '노인복지시설' },
+        { pattern: /발달장애|장애인/, id: 'law-disability', name: '장애인복지시설' },
+        { pattern: /아동|드림스타트|가정위탁|자립전담|다함께돌봄|지역아동/, id: 'law-child', name: '아동복지시설' },
+        { pattern: /정신|자살|중독/, id: 'law-mental', name: '정신건강증진시설' },
+        { pattern: /노숙인/, id: 'law-homeless', name: '노숙인시설' },
+        { pattern: /자활|고용센터/, id: 'law-selfreliance', name: '지역자활센터' },
+        { pattern: /가족센터|건강가정|다문화/, id: 'law-family-center', name: '가족센터' },
+        { pattern: /청소년|꿈드림|수련관|문화의집|쉼터/, id: 'law-youth', name: '청소년복지시설' },
+        { pattern: /한부모/, id: 'law-single-parent', name: '한부모가족시설' },
+        { pattern: /성매매/, id: 'law-prostitution', name: '성매매피해지원시설' },
+        { pattern: /성폭력|스토킹|해바라기/, id: 'law-sexual-violence', name: '성폭력·스토킹보호시설' },
+        { pattern: /가정폭력|1366/, id: 'law-domestic-violence', name: '가정폭력보호시설' },
+        { pattern: /하나센터|북한이탈주민/, id: 'law-unification', name: '북한이탈주민지원시설' },
+        { pattern: /보훈|국가유공자/, id: 'law-veterans', name: '보훈요양시설' },
+        { pattern: /의료사회복지|의료급여|병원/, id: 'law-medical', name: '의료사회복지' },
+        { pattern: /결핵|한센/, id: 'law-kdca', name: '결핵·한센시설' },
+        { pattern: /보호관찰|소년원|치료감호|교정/, id: 'law-justice', name: '사법·교정보호시설' },
+        { pattern: /사회서비스원|행정복지센터|긴급복지|국정과제|전달체계|복지정책과/, id: 'law-public-admin', name: '공공복지전달체계' },
+        { pattern: /사회복지관|푸드뱅크|푸드마켓|모금회|사랑의열매|KOICA|NGO|사회복지시설|사회복지법인/, id: 'law-welfare-center', name: '사회복지관' }
+    ];
+
+    function resolveFacilityTarget(targetStr, file) {
+        const fullStr = `${targetStr} ${file ? (file.title + ' ' + (file.legalTarget || '')) : ''}`;
+        for (const item of FACILITY_PATTERNS) {
+            if (item.pattern.test(targetStr) || item.pattern.test(fullStr)) {
+                return item;
+            }
+        }
+        return { id: 'law-welfare-center', name: '사회복지시설' };
+    }
+
+    function renderTargetFacilityChips(targetFacilities, file) {
+        if (!targetFacilities) return '';
+        const match = resolveFacilityTarget(targetFacilities, file);
+        return `
+            <button type="button"
+                    onclick="window.jumpToFacility('${match.id}'); return false;"
+                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 hover:bg-amber-500 hover:text-white text-amber-900 border border-amber-200 text-[11px] font-bold transition shadow-2xs cursor-pointer group"
+                    title="${match.name} 법정시설 규정 도감으로 직결">
+                <span class="material-symbols-outlined text-[13px] text-amber-700 group-hover:text-white">account_balance</span>
+                <span>${targetFacilities}</span>
+                <span class="material-symbols-outlined text-[11px]">arrow_forward</span>
+            </button>
+        `;
+    }
+
     function getArchiveDB() {
         return (typeof window !== 'undefined' && window.GUIDELINES_ARCHIVE_DB) ? window.GUIDELINES_ARCHIVE_DB : [];
     }
@@ -1862,8 +1913,7 @@ if (typeof module !== 'undefined' && module.exports) {
                             <span class="h-1.5 w-1.5 rounded-full bg-secondary"></span>
                             53개 전종 2026 개정판 대조 완료
                         </span>
-                        <a class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container-highest text-primary hover:bg-primary hover:text-on-primary transition-colors font-label-sm text-label-sm"
-                           href="#" onclick="showView('hierarchy'); return false;">
+                        <button type="button" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container-highest text-primary hover:bg-primary hover:text-on-primary transition-colors font-label-sm text-label-sm cursor-pointer" onclick="showView(\'hierarchy\')">
                             <span class="material-symbols-outlined text-[14px]">account_tree</span>
                             <span>3단계 위계도감 167개 단위서비스 실시간 상호연동 중</span>
                         </a>
@@ -1901,20 +1951,19 @@ if (typeof module !== 'undefined' && module.exports) {
                         <!-- Linked Action Toolbar -->
                         <div class="flex flex-wrap items-center gap-2">
                             <div class="flex items-center p-1 rounded-xl bg-surface-container-low border border-outline-variant/30">
-                                <a class="px-3 py-1.5 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1.5"
-                                   href="#" onclick="showView('fields'); return false;">
+                                <button type="button" class="px-3 py-1.5 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1.5 cursor-pointer"
+                                   onclick="showView('fields')">
                                     <span class="material-symbols-outlined text-[18px]">account_balance</span>
                                     <span>12대 분야·시설</span>
                                     <span class="px-1.5 py-0.2 rounded-full font-label-sm text-label-sm bg-surface-container text-on-surface-variant">24개</span>
                                 </a>
-                                <a class="px-3 py-1.5 rounded-lg font-label-md text-label-md bg-primary text-on-primary shadow-xs flex items-center gap-1.5 font-semibold"
-                                   href="#" onclick="showView('archive'); return false;">
+                                <button type="button" class="px-3 py-1.5 rounded-lg font-label-md text-label-md bg-primary text-on-primary shadow-xs flex items-center gap-1.5 font-semibold cursor-pointer" onclick="showView(\'archive\')">
                                     <span class="material-symbols-outlined text-[18px]">folder_open</span>
                                     <span>지침서 아카이브</span>
                                     <span class="px-1.5 py-0.2 rounded-full font-label-sm text-label-sm bg-surface-container-lowest text-primary">53종</span>
                                 </a>
-                                <a class="px-3 py-1.5 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1.5"
-                                   href="#" onclick="showView('hierarchy'); return false;">
+                                <button type="button" class="px-3 py-1.5 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1.5 cursor-pointer"
+                                   onclick="showView('hierarchy')">
                                     <span class="material-symbols-outlined text-[18px] text-secondary">account_tree</span>
                                     <span>3단계 위계 도감</span>
                                     <span class="px-1.5 py-0.2 rounded-full font-label-sm text-label-sm bg-secondary-container text-on-secondary-container font-semibold">167단위</span>
@@ -1922,12 +1971,12 @@ if (typeof module !== 'undefined' && module.exports) {
                             </div>
 
                             <div class="flex items-center gap-1.5">
-                                <button class="flex items-center gap-1 px-3 py-2 rounded-xl bg-surface-container-low hover:bg-surface-container-high border border-outline-variant/40 text-on-surface font-label-sm text-label-sm transition-all"
+                                <button type="button" class="flex items-center gap-1 px-3 py-2 rounded-xl bg-surface-container-low hover:bg-surface-container-high border border-outline-variant/40 text-on-surface font-label-sm text-label-sm transition-all"
                                         onclick="window.print()" title="지침서 총람 인쇄 및 PDF 저장">
                                     <span class="material-symbols-outlined text-[18px] text-primary">print</span>
                                     <span>인쇄 / PDF</span>
                                 </button>
-                                <button class="flex items-center gap-1 px-3 py-2 rounded-xl bg-surface-container-low hover:bg-surface-container-high border border-outline-variant/40 text-on-surface font-label-sm text-label-sm transition-all"
+                                <button type="button" class="flex items-center gap-1 px-3 py-2 rounded-xl bg-surface-container-low hover:bg-surface-container-high border border-outline-variant/40 text-on-surface font-label-sm text-label-sm transition-all"
                                         id="exportCsvBtn" title="53종 지침서 목록 CSV 다운로드">
                                     <span class="material-symbols-outlined text-[18px] text-secondary">table_chart</span>
                                     <span>Excel (.csv) 저장</span>
@@ -2014,7 +2063,7 @@ if (typeof module !== 'undefined' && module.exports) {
                                 <span class="material-symbols-outlined text-[20px]">search</span>
                             </span>
                             <input type="text"
-                                   id="guidelineSearchInput"
+                                   id="guidelineSearchInput" type="search" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="53종 공식 지침서명, 소관부처, 담당과, 근거법령 검색"
                                    class="w-full pl-10 pr-28 py-2 bg-surface-container-low rounded-lg text-body-md font-body-md text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all"
                                    placeholder="지침서명, 소관부처, 과명칭, 근거 법령, 대상 시설(예: 종합사회복지관, 지역아동센터, 노인복지법)...">
                             <div class="absolute inset-y-0 right-0 pr-2 flex items-center gap-1.5">
@@ -2122,6 +2171,8 @@ if (typeof module !== 'undefined' && module.exports) {
 
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
+                        <caption class="sr-only">공식 지침서 마스터 아카이브 (섹션 Ⅱ: 범부처 및 특화·전문 실천지침서)</caption>
+                        <caption class="sr-only">공식 지침서 마스터 아카이브 (섹션 Ⅰ: 중앙 정부부처 핵심 법정지침서)</caption>
                             <thead class="bg-surface-container-low/60 text-on-surface-variant font-label-sm text-label-sm border-b border-surface-container">
                                 <tr class="h-10">
                                     <th scope="col" class="py-2.5 px-3 w-32 font-semibold border-r border-surface-container text-center">소관 부처</th>
@@ -2282,8 +2333,7 @@ if (typeof module !== 'undefined' && module.exports) {
                                 <span class="material-symbols-outlined text-[20px]">download</span>
                                 <span>전종 일괄 다운로드 (ZIP, 450MB)</span>
                             </a>
-                            <a class="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-surface-container-high hover:bg-surface-container-highest border border-outline-variant/40 text-primary font-label-md text-label-md transition-all text-center shadow-xs"
-                               href="#" onclick="showView('hierarchy'); return false;">
+                            <button type="button" class="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-surface-container-high hover:bg-surface-container-highest border border-outline-variant/40 text-primary font-label-md text-label-md transition-all text-center shadow-xs cursor-pointer" onclick="showView(\'hierarchy\')">
                                 <span class="material-symbols-outlined text-[20px] text-secondary">account_tree</span>
                                 <span>3단계 위계도감 167단위 연동조회</span>
                                 <span class="px-1.5 py-0.2 rounded-full font-label-sm text-label-sm bg-secondary-container text-on-secondary-container font-semibold">SCREEN_9</span>
@@ -2445,11 +2495,14 @@ if (typeof module !== 'undefined' && module.exports) {
                         </div>
                     </td>
 
-                    <!-- 4열: 핵심 관할 법령 & 대상 시설 -->
+                    <!-- 4열: 핵심 관할 법령 & 대상 시설 (스마트 시설 직결 칩) -->
                     <td class="py-3.5 px-4 align-top border-r border-surface-container">
-                        <div class="flex flex-col gap-1">
+                        <div class="flex flex-col gap-1.5">
                             <span class="font-label-sm text-label-sm text-primary font-medium">${legalBasis}</span>
-                            <p class="font-legal-code text-legal-code text-on-surface-variant">${targetFacilities}</p>
+                            <div class="flex flex-wrap items-center gap-1">
+                                <span class="text-[11px] text-on-surface-variant font-medium">대상:</span>
+                                ${renderTargetFacilityChips(targetFacilities, f)}
+                            </div>
                         </div>
                     </td>
 
@@ -2468,19 +2521,19 @@ if (typeof module !== 'undefined' && module.exports) {
                     <!-- 6열: 연계 위계 & 원문 열람 -->
                     <td class="py-3.5 px-4 align-top text-right">
                         <div class="flex flex-col items-end gap-1.5">
-                            <a class="inline-flex items-center gap-1 font-legal-code text-legal-code text-secondary hover:text-primary hover:underline font-semibold bg-surface-container px-2 py-0.5 rounded transition-colors"
-                               href="#" onclick="showView('hierarchy', { targetNodeId: '${hl.targetId}' }); return false;"
+                            <button type="button" class="inline-flex items-center gap-1 font-legal-code text-legal-code text-secondary hover:text-primary hover:underline font-semibold bg-surface-container px-2 py-0.5 rounded transition-colors cursor-pointer"
+                               onclick="showView('hierarchy', { targetNodeId: '${hl.targetId}' })"
                                title="3단계 위계도감(${hl.label})으로 연계 이동">
                                 <span class="material-symbols-outlined text-[14px]">account_tree</span>
                                 <span>${hl.label}</span>
                                 <span class="material-symbols-outlined text-[12px]">arrow_forward</span>
                             </a>
                             <div class="flex items-center gap-1">
-                                <button class="px-2.5 py-1 rounded bg-surface-container-high hover:bg-primary hover:text-on-primary text-primary font-label-sm text-label-sm transition-colors cursor-pointer"
+                                <button type="button" class="px-2.5 py-1 rounded bg-surface-container-high hover:bg-primary hover:text-on-primary text-primary font-label-sm text-label-sm transition-colors cursor-pointer"
                                         onclick="window.viewGuidelineModal('${f.id}'); return false;">
                                     즉시열람
                                 </button>
-                                <button class="px-2 py-1 rounded bg-surface-container text-on-surface-variant hover:bg-surface-container-highest transition-colors cursor-pointer"
+                                <button type="button" class="px-2 py-1 rounded bg-surface-container text-on-surface-variant hover:bg-surface-container-highest transition-colors cursor-pointer"
                                         onclick="window.downloadGuidelineDirect('${f.id}'); return false;"
                                         title="지침서 다운로드">
                                     <span class="material-symbols-outlined text-[16px]">download</span>
@@ -2535,22 +2588,24 @@ if (typeof module !== 'undefined' && module.exports) {
                 </div>
                 <h4 class="font-headline-sm text-headline-sm text-on-surface font-bold leading-snug">${f.title}</h4>
                 <div class="text-legal-code font-legal-code text-primary font-medium">${legalBasis}</div>
-                <p class="font-legal-code text-legal-code text-on-surface-variant">${targetFacilities}</p>
+                <div class="flex flex-wrap items-center gap-1">
+                    <span class="text-[11px] text-on-surface-variant font-medium">대상:</span>
+                    ${renderTargetFacilityChips(targetFacilities, f)}
+                </div>
                 <div class="flex flex-wrap gap-1">
                     ${tagsHtml}
                 </div>
                 <div class="pt-2 border-t border-surface-container flex items-center justify-between gap-2 mt-1">
-                    <a class="inline-flex items-center gap-1 font-legal-code text-legal-code text-secondary hover:text-primary font-semibold bg-surface-container px-2 py-1 rounded transition-colors"
-                       href="#" onclick="showView('hierarchy', { targetNodeId: '${hl.targetId}' }); return false;">
+                    <button type="button" class="inline-flex items-center gap-1 font-legal-code text-legal-code text-secondary hover:text-primary font-semibold bg-surface-container px-2 py-1 rounded transition-colors cursor-pointer" onclick="showView(\'hierarchy\', { targetNodeId: \'${hl.targetId}\' })">
                         <span class="material-symbols-outlined text-[14px]">account_tree</span>
                         ${hl.label}
                     </a>
                     <div class="flex items-center gap-1.5">
-                        <button class="px-3 py-1 rounded bg-surface-container-high hover:bg-primary hover:text-on-primary text-primary font-label-sm text-label-sm font-semibold transition-colors"
+                        <button type="button" class="px-3 py-1 rounded bg-surface-container-high hover:bg-primary hover:text-on-primary text-primary font-label-sm text-label-sm font-semibold transition-colors"
                                 onclick="window.viewGuidelineModal('${f.id}'); return false;">
                             즉시열람
                         </button>
-                        <button class="p-1 rounded bg-surface-container text-on-surface-variant hover:bg-surface-container-highest transition-colors"
+                        <button type="button" class="p-1 rounded bg-surface-container text-on-surface-variant hover:bg-surface-container-highest transition-colors"
                                 onclick="window.downloadGuidelineDirect('${f.id}'); return false;"
                                 title="다운로드">
                             <span class="material-symbols-outlined text-[18px]">download</span>
@@ -2863,8 +2918,8 @@ if (typeof module !== 'undefined' && module.exports) {
 
             <!-- Actions -->
             <div class="flex items-center justify-between pt-2 border-t border-surface-container flex-wrap gap-2">
-                <a href="#" onclick="document.getElementById('guidelineDetailModal').remove(); showView('hierarchy', { targetNodeId: '${f.hierarchyLink ? f.hierarchyLink.targetId : ''}' }); return false;"
-                   class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface-container text-primary hover:bg-surface-container-high font-label-md text-label-md font-semibold transition">
+                <button type="button" onclick="document.getElementById('guidelineDetailModal').remove(); showView('hierarchy', { targetNodeId: '${f.hierarchyLink ? f.hierarchyLink.targetId : ''}' });"
+                   class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface-container text-primary hover:bg-surface-container-high font-label-md text-label-md font-semibold transition cursor-pointer">
                     <span class="material-symbols-outlined text-[18px]">account_tree</span>
                     <span>위계도감 해당 노드로 이동</span>
                 </a>

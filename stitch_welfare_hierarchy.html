@@ -3787,20 +3787,20 @@ if (typeof module !== 'undefined' && module.exports) {
     let currentSearchKeyword = '';
 
     const DOMAIN_MAP = {
-        '01_사회복지관': { key: 'community', icon: 'corporate_fare', short: '종합사회복지관', badge: '3대 핵심기능 (22)', legal: '<span>「사회복지사업법」 제34조의5</span><span>동법 시행규칙 제21조의2</span><span class="text-secondary font-bold">보건복지부 사업안내 제2권</span>' },
-        '02_노인복지': { key: 'elder', icon: 'elderly', short: '노인복지·맞춤돌봄', badge: '맞춤돌봄·여가 (20)', legal: '<span>「노인복지법」 제27조의2·제36조</span><span>「노인장기요양보험법」</span><span class="text-secondary font-bold">노인맞춤돌봄 사업안내</span>' },
-        '03_장애인복지': { key: 'disabled', icon: 'accessible_forward', short: '장애인자립·재활', badge: '자립·활동지원 (19)', legal: '<span>「장애인복지법」 제58조·제59조의9</span><span>「발달장애인법」 제33조</span><span class="text-secondary font-bold">장애인복지시설 사업안내</span>' },
-        '04_아동돌봄복지': { key: 'child', icon: 'child_care', short: '아동보호·돌봄', badge: '학대보호·돌봄 (16)', legal: '<span>「아동복지법」 제37조·제45조</span><span>「아동학대처벌법」 제11조</span><span class="text-secondary font-bold">아동분야 사업안내 1~2권</span>' },
-        '05_영유아보육': { key: 'infant', icon: 'child_friendly', short: '영유아·보육지원', badge: '표준보육·누리 (10)', legal: '<span>「영유아보육법」 제10조·제24조</span><span>유보통합 표준보육과정</span><span class="text-secondary font-bold">보육사업안내</span>' },
-        '08_정신건강자살예방': { key: 'mental', icon: 'psychology', short: '정신건강·자살예방', badge: '정신의료재활 (12)', legal: '<span>「정신건강복지법」 제15조</span><span>「자살예방법」 제12조</span><span class="text-secondary font-bold">국가정신건강사업안내</span>' },
-        '11_지역보호긴급돌봄': { key: 'crisis', icon: 'shield_person', short: '긴급복지·위기개입', badge: '신속개입망 (13)', legal: '<span>「긴급복지지원법」 제5조·제8조</span><span>「사회서비스원법」 제10조</span><span class="text-secondary font-bold">긴급지원사업안내</span>' },
+        '01_사회복지관': { key: 'community', icon: 'corporate_fare', short: '종합사회복지관', facilityId: 'law-welfare-center', badge: '3대 핵심기능 (22)', legal: '<span>「사회복지사업법」 제34조의5</span><span>동법 시행규칙 제21조의2</span><span class="text-secondary font-bold">보건복지부 사업안내 제2권</span>' },
+        '02_노인복지': { key: 'elder', icon: 'elderly', short: '노인복지·맞춤돌봄', facilityId: 'law-elderly', badge: '맞춤돌봄·여가 (20)', legal: '<span>「노인복지법」 제27조의2·제36조</span><span>「노인장기요양보험법」</span><span class="text-secondary font-bold">노인맞춤돌봄 사업안내</span>' },
+        '03_장애인복지': { key: 'disabled', icon: 'accessible_forward', short: '장애인자립·재활', facilityId: 'law-disability', badge: '자립·활동지원 (19)', legal: '<span>「장애인복지법」 제58조·제59조의9</span><span>「발달장애인법」 제33조</span><span class="text-secondary font-bold">장애인복지시설 사업안내</span>' },
+        '04_아동돌봄복지': { key: 'child', icon: 'child_care', short: '아동보호·돌봄', facilityId: 'law-child', badge: '학대보호·돌봄 (16)', legal: '<span>「아동복지법」 제37조·제45조</span><span>「아동학대처벌법」 제11조</span><span class="text-secondary font-bold">아동분야 사업안내 1~2권</span>' },
+        '05_영유아보육': { key: 'infant', icon: 'child_friendly', short: '영유아·보육지원', facilityId: 'law-childcare', badge: '표준보육·누리 (10)', legal: '<span>「영유아보육법」 제10조·제24조</span><span>유보통합 표준보육과정</span><span class="text-secondary font-bold">보육사업안내</span>' },
+        '08_정신건강자살예방': { key: 'mental', icon: 'psychology', short: '정신건강·자살예방', facilityId: 'law-mental', badge: '정신의료재활 (12)', legal: '<span>「정신건강복지법」 제15조</span><span>「자살예방법」 제12조</span><span class="text-secondary font-bold">국가정신건강사업안내</span>' },
+        '11_지역보호긴급돌봄': { key: 'crisis', icon: 'shield_person', short: '긴급복지·위기개입', facilityId: 'law-homeless', badge: '신속개입망 (13)', legal: '<span>「긴급복지지원법」 제5조·제8조</span><span>「사회서비스원법」 제10조</span><span class="text-secondary font-bold">긴급지원사업안내</span>' },
         
         // Section II
-        '06_가족복지': { key: 'family', icon: 'diversity_1', short: '가족·다문화', badge: '통합가족 (13)', legal: '<span>「건강가정기본법」 제35조</span><span>「다문화가족지원법」 제12조</span><span class="text-secondary font-bold">여성가족부 가족사업안내</span>' },
-        '07_청소년여성권익': { key: 'youth', icon: 'backpack', short: '청소년·여성권익', badge: '상담·보호쉼터 (15)', legal: '<span>「청소년기본법」 제18조</span><span>「가정폭력방지법」 제5조</span><span class="text-secondary font-bold">여성가족부 청소년사업안내</span>' },
-        '10_학교사회복지': { key: 'school', icon: 'school', short: '학교사회복지', badge: '교육복지우선 (8)', legal: '<span>「초·중등교육법」 제54조</span><span>교육복지우선지원사업 훈령</span><span class="text-secondary font-bold">교육부 운영매뉴얼</span>' },
-        '09_자활고용지원': { key: 'selfhelp', icon: 'work_history', short: '자활·일자리', badge: '고용·복지 (10)', legal: '<span>「국민기초생활보장법」 제15조</span><span>구직자 취업촉진법 제6조</span><span class="text-secondary font-bold">고용노동부·복지부 사업안내</span>' },
-        '12_배분모금국제': { key: 'donation', icon: 'volunteer_activism', short: '모금·나눔배분', badge: '나눔배분·ODA (9)', legal: '<span>「사회복지공동모금회법」 제20조</span><span>「한국국제협력단법」 제7조</span><span class="text-secondary font-bold">공동모금회 배분사업지침</span>' }
+        '06_가족복지': { key: 'family', icon: 'diversity_1', short: '가족·다문화', facilityId: 'law-family-center', badge: '통합가족 (13)', legal: '<span>「건강가정기본법」 제35조</span><span>「다문화가족지원법」 제12조</span><span class="text-secondary font-bold">여성가족부 가족사업안내</span>' },
+        '07_청소년여성권익': { key: 'youth', icon: 'backpack', short: '청소년·여성권익', facilityId: 'law-youth', badge: '상담·보호쉼터 (15)', legal: '<span>「청소년기본법」 제18조</span><span>「가정폭력방지법」 제5조</span><span class="text-secondary font-bold">여성가족부 청소년사업안내</span>' },
+        '10_학교사회복지': { key: 'school', icon: 'school', short: '학교사회복지', facilityId: 'law-school', badge: '교육복지우선 (8)', legal: '<span>「초·중등교육법」 제54조</span><span>교육복지우선지원사업 훈령</span><span class="text-secondary font-bold">교육부 운영매뉴얼</span>' },
+        '09_자활고용지원': { key: 'selfhelp', icon: 'work_history', short: '자활·일자리', facilityId: 'law-selfreliance', badge: '고용·복지 (10)', legal: '<span>「국민기초생활보장법」 제15조</span><span>구직자 취업촉진법 제6조</span><span class="text-secondary font-bold">고용노동부·복지부 사업안내</span>' },
+        '12_배분모금국제': { key: 'donation', icon: 'volunteer_activism', short: '모금·나눔배분', facilityId: 'law-welfare-center', badge: '나눔배분·ODA (9)', legal: '<span>「사회복지공동모금회법」 제20조</span><span>「한국국제협력단법」 제7조</span><span class="text-secondary font-bold">공동모금회 배분사업지침</span>' }
     };
 
     const SECTION_1_KEYS = ['01_사회복지관', '02_노인복지', '03_장애인복지', '04_아동돌봄복지', '05_영유아보육', '08_정신건강자살예방', '11_지역보호긴급돌봄'];
@@ -3829,10 +3829,12 @@ if (typeof module !== 'undefined' && module.exports) {
 
         // 2. 검색 키워드 필터 요청 처리 (options.search)
         if (options.search) {
-            const searchInput = document.getElementById('hierarchySearchInput');
+            const searchInput = document.getElementById('matrixSearchInput') || document.getElementById('hierarchySearchInput');
             if (searchInput) {
                 searchInput.value = options.search;
                 currentSearchKeyword = options.search.toLowerCase();
+                currentDomainFilter = 'all';
+                currentMinistryGroup = 'all';
                 applyFilters();
             }
         }
@@ -3989,7 +3991,7 @@ if (typeof module !== 'undefined' && module.exports) {
                                 <span class="absolute left-space-md top-1/2 -translate-y-1/2 material-symbols-outlined text-outline text-[20px]">search</span>
                                 <input 
                                     type="text" 
-                                    id="matrixSearchInput" 
+                                    id="matrixSearchInput" type="search" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="실천분야, 법정기능, 세부사업명, 단위서비스 키워드 검색" 
                                     class="w-full h-10 pl-11 pr-space-md bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:bg-surface focus:shadow-inner" 
                                     placeholder="실천분야, 법정기능, 세부사업명, 단위서비스 키워드 검색 (예: Intake, 주간보호, 사례관리, 돌봄)"
                                 />
@@ -4156,6 +4158,7 @@ if (typeof module !== 'undefined' && module.exports) {
                         </div>
                         <div class="overflow-x-auto w-full">
                             <table class="w-full text-left border-collapse table-fixed min-w-[1080px]" id="hierarchicalMatrixTable">
+                                <caption class="sr-only">사회복지 3단계 위계 도감 (중앙정부부처 핵심 법정단위 서비스)</caption>
                                 <colgroup>
                                     <col class="w-[18%]">
                                     <col class="w-[18%]">
@@ -4200,6 +4203,7 @@ if (typeof module !== 'undefined' && module.exports) {
                         </div>
                         <div class="overflow-x-auto w-full">
                             <table class="w-full text-left border-collapse table-fixed min-w-[1080px]" id="hierarchicalMatrixTable2">
+                                <caption class="sr-only">사회복지 3단계 위계 도감 (범부처 및 특화·전문 실천단위 서비스)</caption>
                                 <colgroup>
                                     <col class="w-[18%]">
                                     <col class="w-[18%]">
@@ -4374,15 +4378,13 @@ if (typeof module !== 'undefined' && module.exports) {
                                         </div>
                                         <!-- 3대 영역 순환 딥링크 바 -->
                                         <div class="mt-2.5 pt-2 border-t border-outline-variant/20 flex flex-col gap-1">
-                                            <a href="#" onclick="showView('fields', { search: '${domainMeta.short}' }); return false;"
-                                               class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container hover:bg-primary hover:text-on-primary text-on-surface-variant text-[11px] font-bold transition shadow-2xs group cursor-pointer"
-                                               title="${domainMeta.short} 관련 법정시설 도감으로 이동">
-                                                <span class="material-symbols-outlined text-[13px] text-primary group-hover:text-on-primary">account_balance</span>
+                                            <button type="button" onclick="window.jumpToFacility('${domainMeta.facilityId || 'law-welfare-center'}')"
+                                               class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-50 hover:bg-amber-500 hover:text-white text-amber-900 border border-amber-200/80 text-[11px] font-bold transition shadow-2xs group cursor-pointer"
+                                               title="${domainMeta.short} 법정시설 규정 도감으로 직결">
+                                                <span class="material-symbols-outlined text-[13px] text-amber-700 group-hover:text-white">account_balance</span>
                                                 <span>법정시설 도감 ➔</span>
-                                            </a>
-                                            <a href="#" onclick="showView('archive', { search: '${domainMeta.short}' }); return false;"
-                                               class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container hover:bg-secondary hover:text-on-secondary text-on-surface-variant text-[11px] font-bold transition shadow-2xs group cursor-pointer"
-                                               title="${domainMeta.short} 관련 공식 정본 지침서로 이동">
+                                            </button>
+                                            <button type="button" onclick="showView(\'archive\', { search: \'${domainMeta.short}\' })" class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container hover:bg-secondary hover:text-on-secondary text-on-surface-variant text-[11px] font-bold transition shadow-2xs group cursor-pointer" title="${domainMeta.short} 관련 공식 정본 지침서로 이동">
                                                 <span class="material-symbols-outlined text-[13px] text-secondary group-hover:text-on-secondary">menu_book</span>
                                                 <span>관련 지침서 총람 ➔</span>
                                             </a>

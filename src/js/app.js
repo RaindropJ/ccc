@@ -376,6 +376,21 @@ async function initApp() {
 
     await ensureAnonymousAuth();
     subscribePublicFeedData();
+
+    // Modern Web: Global ESC key modal dismissal (WCAG 2.1)
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const gModal = document.getElementById('guidelineDetailModal');
+            if (gModal) {
+                gModal.remove();
+                return;
+            }
+            document.querySelectorAll('.modal-backdrop:not(.hidden), [id$="-modal"]:not(.hidden), [id^="modal-"]:not(.hidden)').forEach(m => {
+                if (typeof m.close === 'function') m.close();
+                else m.classList.add('hidden');
+            });
+        }
+    });
 }
 
 if (document.readyState === 'loading') {
