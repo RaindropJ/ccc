@@ -38,6 +38,9 @@
             if (options.search) params.set('search', options.search);
             if (options.category) params.set('category', options.category);
             if (options.parentCategory) params.set('parentCategory', options.parentCategory);
+            if (options.targetNodeId) params.set('targetNodeId', options.targetNodeId);
+            if (options.highlightId) params.set('highlightId', options.highlightId);
+            if (options.domainKey) params.set('domainKey', options.domainKey);
             const qs = params.toString();
             return '#' + v + (qs ? '?' + qs : '');
         }
@@ -195,6 +198,9 @@
             if (params.get('search')) options.search = decodeURIComponent(params.get('search'));
             if (params.get('category')) options.category = decodeURIComponent(params.get('category'));
             if (params.get('parentCategory')) options.parentCategory = decodeURIComponent(params.get('parentCategory'));
+            if (params.get('targetNodeId')) options.targetNodeId = decodeURIComponent(params.get('targetNodeId'));
+            if (params.get('highlightId')) options.highlightId = decodeURIComponent(params.get('highlightId'));
+            if (params.get('domainKey')) options.domainKey = decodeURIComponent(params.get('domainKey'));
 
             showView(viewId, options);
 
@@ -632,7 +638,7 @@
                     <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="mobile-ministry-pills">
                         <button type="button" onclick="filterByMinistry('전체')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-extrabold bg-slate-900 text-white flex-shrink-0 transition shadow-2xs">전체 (24)</button>
                         <button type="button" onclick="filterByMinistry('보건복지부')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition">🏥 복지부 (10)</button>
-                        <button type="button" onclick="filterByMinistry('성평등가족부')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition">👨👩👧 성평등가족부 (6)</button>
+                        <button type="button" onclick="filterByMinistry('여성가족부')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition">👨‍👩‍👧 여성가족부 (6)</button>
                         <button type="button" onclick="filterByMinistry('교육부')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition">🎓 교육부 (2)</button>
                         <button type="button" onclick="filterByMinistry('고용노동부')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition">💼 고용노동부</button>
                         <button type="button" onclick="filterByMinistry('법무부')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition">⚖️ 법무부</button>
@@ -818,7 +824,7 @@
                 <div id="fields-ministry-filters" class="flex flex-wrap gap-1.5">
                     <button type="button" data-ministry="전체" onclick="setMinistryFilter('전체')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-extrabold bg-blue-600 text-white shadow-2xs transition cursor-pointer">전체 (24개 분야)</button>
                     <button type="button" data-ministry="보건복지부" onclick="setMinistryFilter('보건복지부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">보건복지부 (10)</button>
-                    <button type="button" data-ministry="성평등가족부" onclick="setMinistryFilter('성평등가족부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">성평등가족부 (6)</button>
+                    <button type="button" data-ministry="여성가족부" onclick="setMinistryFilter('여성가족부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">여성가족부 (6)</button>
                     <button type="button" data-ministry="교육부" onclick="setMinistryFilter('교육부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">교육부 (2)</button>
                     <button type="button" data-ministry="고용노동부" onclick="setMinistryFilter('고용노동부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">고용노동부</button>
                     <button type="button" data-ministry="법무부" onclick="setMinistryFilter('법무부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">법무부</button>
@@ -9128,12 +9134,12 @@
                             <!-- 5. 하단 퀵 액션 바 -->
                             <div class="pt-2 flex items-center justify-between gap-2 border-t border-slate-200/70">
                                 <span class="text-[10px] text-slate-400">소관부처: ${item.ministry}</span>
-                                <div class="flex items-center gap-1.5">
-                                    <button type="button" onclick="showView('practicum'); if(typeof setPracticumField==='function') setPracticumField('${item.tag || item.fieldId || '전체'}');" class="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-[10px] border border-blue-200 transition cursor-pointer">
-                                        이 분야 실습처 ↗
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <button type="button" onclick="showView('hierarchy', { facility: '${escapeHtml(item.facilityCategory.replace(/\s*\(.*?\)/g, ''))}' });" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-800 font-bold text-[10px] border border-emerald-200 transition cursor-pointer">
+                                        🌳 위계 ➔
                                     </button>
-                                    <button type="button" onclick="showView('jobs');" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-bold text-[10px] transition cursor-pointer">
-                                        채용공고 ↗
+                                    <button type="button" onclick="showView('archive', { search: '${escapeHtml(item.facilityCategory.replace(/\s*\(.*?\)/g, ''))}' });" class="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-800 font-bold text-[10px] border border-blue-200 transition cursor-pointer">
+                                        📁 지침서 ➔
                                     </button>
                                 </div>
                             </div>
@@ -9335,7 +9341,7 @@
                             <!-- 3대 영역 순환 탐색 직결 버튼 (위계도감 & 지침서) -->
                             <div class="pt-1.5 border-t border-slate-100 flex flex-col sm:flex-row items-center gap-1.5">
                                 <button type="button"
-                                        onclick="showView('hierarchy', { search: '${escapeHtml(r.facilityCategory.replace(/\s*\(.*?\)/g, ''))}' }); return false;"
+                                        onclick="showView('hierarchy', { facility: '${escapeHtml(r.facilityCategory.replace(/\s*\(.*?\)/g, ''))}' }); return false;"
                                         class="w-full sm:flex-1 inline-flex items-center justify-center gap-1 px-2 py-1 rounded-md bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-800 border border-emerald-200 text-[10px] font-bold transition shadow-2xs cursor-pointer"
                                         title="${escapeHtml(r.facilityCategory)}의 3단계 위계도감 단위서비스로 직결">
                                     <span>🌳 위계도감 ➔</span>
@@ -9385,24 +9391,42 @@
 
             let filtered = STATUTORY_MATRIX;
             if (currentMinistryFilter !== '전체') {
-                filtered = filtered.filter(r => r.ministry && r.ministry.includes(currentMinistryFilter.replace(' (구 여가부)', '')));
+                const cleanMin = currentMinistryFilter.replace(/\s*\(.*?\)/g, '').trim();
+                const isFamily = (cleanMin === '여성가족부' || cleanMin === '성평등가족부');
+                filtered = filtered.filter(r => {
+                    if (!r.ministry) return false;
+                    if (isFamily) return r.ministry.includes('성평등가족부') || r.ministry.includes('여성가족부') || r.ministry.includes('가족부');
+                    return r.ministry.includes(cleanMin);
+                });
             }
             if (currentFieldsQuery) {
+                const q = currentFieldsQuery.toLowerCase();
+                const isFamQ = (q.includes('여가부') || q.includes('여성가족부') || q.includes('성평등가족부'));
                 filtered = filtered.filter(r => {
+                    if (isFamQ && (r.ministry.includes('성평등가족부') || r.ministry.includes('여성가족부'))) return true;
                     const hay = `${r.ministry} ${r.facilityCategory} ${(r.livingFacilities||[]).join(' ')} ${(r.usingFacilities||[]).join(' ')} ${(r.laws||[]).join(' ')}`.toLowerCase();
-                    return hay.includes(currentFieldsQuery);
+                    return hay.includes(q);
                 });
             }
             renderFieldsTable(filtered);
             // Filter mobile STATUTORY_DATA in sync
             let filteredMobile = STATUTORY_DATA;
             if (currentMinistryFilter !== '전체') {
-                filteredMobile = filteredMobile.filter(r => r.ministry && r.ministry.includes(currentMinistryFilter.replace(' (구 여가부)', '')));
+                const cleanMin = currentMinistryFilter.replace(/\s*\(.*?\)/g, '').trim();
+                const isFamily = (cleanMin === '여성가족부' || cleanMin === '성평등가족부');
+                filteredMobile = filteredMobile.filter(r => {
+                    if (!r.ministry) return false;
+                    if (isFamily) return r.ministry.includes('성평등가족부') || r.ministry.includes('여성가족부') || r.ministry.includes('가족부');
+                    return r.ministry.includes(cleanMin);
+                });
             }
             if (currentFieldsQuery) {
+                const q = currentFieldsQuery.toLowerCase();
+                const isFamQ = (q.includes('여가부') || q.includes('여성가족부') || q.includes('성평등가족부'));
                 filteredMobile = filteredMobile.filter(r => {
+                    if (isFamQ && (r.ministry.includes('성평등가족부') || r.ministry.includes('여성가족부'))) return true;
                     const hay = `${r.ministry} ${r.facilityCategory} ${(r.livingFacilities||[]).join(' ')} ${(r.usingFacilities||[]).join(' ')} ${(r.laws||[]).join(' ')}`.toLowerCase();
-                    return hay.includes(currentFieldsQuery);
+                    return hay.includes(q);
                 });
             }
             currentFilteredMobileData = filteredMobile;
@@ -9429,12 +9453,17 @@
 
         function setMinistryFilter(ministry) {
             currentMinistryFilter = ministry;
+            const cleanMin = (ministry || '').replace(/\s*\(.*?\)/g, '').trim();
+            const isFamily = (cleanMin === '여성가족부' || cleanMin === '성평등가족부');
+
             document.querySelectorAll('.ministry-btn').forEach(btn => {
-                const targetM = btn.getAttribute('data-ministry') || btn.innerText;
-                const isMatch = (targetM === ministry) || (ministry === '전체' && targetM.includes('전체'));
+                const targetM = (btn.getAttribute('data-ministry') || btn.innerText).replace(/\s*\(.*?\)/g, '').trim();
+                const isMatch = (targetM === cleanMin) || 
+                                (cleanMin === '전체' && targetM.includes('전체')) ||
+                                (isFamily && (targetM === '여성가족부' || targetM === '성평등가족부'));
                 
                 if (isMatch) {
-                    if (ministry === '민간제3섹터') {
+                    if (cleanMin === '민간제3섹터') {
                         btn.className = 'ministry-btn px-3 py-1.5 rounded-full text-xs font-extrabold bg-amber-600 text-white border border-amber-600 shadow-2xs transition cursor-pointer flex items-center gap-1 ml-auto';
                     } else {
                         btn.className = 'ministry-btn px-3 py-1.5 rounded-full text-xs font-extrabold bg-blue-600 text-white shadow-2xs transition cursor-pointer';
@@ -9450,7 +9479,9 @@
             // Sync mobile pills
             document.querySelectorAll('.ministry-pill').forEach(pill => {
                 const text = pill.innerText;
-                const isMatch = (ministry === '전체' && text.includes('전체')) || text.includes(ministry);
+                const isMatch = (cleanMin === '전체' && text.includes('전체')) || 
+                                text.includes(cleanMin) || 
+                                (isFamily && (text.includes('여성가족부') || text.includes('성평등가족부')));
                 if (isMatch) {
                     pill.className = 'ministry-pill px-3 py-1.5 rounded-xl text-xs font-extrabold bg-slate-900 text-white flex-shrink-0 transition shadow-2xs';
                 } else {

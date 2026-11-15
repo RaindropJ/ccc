@@ -776,7 +776,7 @@
                                 <span class="material-symbols-outlined text-[14px]">account_tree</span>
                                 <span>${hl.label}</span>
                                 <span class="material-symbols-outlined text-[12px]">arrow_forward</span>
-                            </a>
+                            </button>
                             <div class="flex items-center gap-1">
                                 <button type="button" class="px-2.5 py-1 rounded bg-surface-container-high hover:bg-primary hover:text-on-primary text-primary font-label-sm text-label-sm transition-colors cursor-pointer"
                                         onclick="window.viewGuidelineModal('${f.id}'); return false;">
@@ -845,10 +845,10 @@
                     ${tagsHtml}
                 </div>
                 <div class="pt-2 border-t border-surface-container flex items-center justify-between gap-2 mt-1">
-                    <button type="button" class="inline-flex items-center gap-1 font-legal-code text-legal-code text-secondary hover:text-primary font-semibold bg-surface-container px-2 py-1 rounded transition-colors cursor-pointer" onclick="showView(\'hierarchy\', { targetNodeId: \'${hl.targetId}\' })">
+                    <button type="button" class="inline-flex items-center gap-1 font-legal-code text-legal-code text-secondary hover:text-primary font-semibold bg-surface-container px-2 py-1 rounded transition-colors cursor-pointer" onclick="showView('hierarchy', { targetNodeId: '${hl.targetId}' })">
                         <span class="material-symbols-outlined text-[14px]">account_tree</span>
                         ${hl.label}
-                    </a>
+                    </button>
                     <div class="flex items-center gap-1.5">
                         <button type="button" class="px-3 py-1 rounded bg-surface-container-high hover:bg-primary hover:text-on-primary text-primary font-label-sm text-label-sm font-semibold transition-colors"
                                 onclick="window.viewGuidelineModal('${f.id}'); return false;">
@@ -888,6 +888,7 @@
             let sec1Count = 0;
             let sec2Count = 0;
             const q = searchQuery.trim().toLowerCase();
+            const normQ = q.replace(/성평등가족부/g, '여성가족부');
 
             // Rowspan 계층 구조 완결성을 위한 데이터 기반 필터링 및 동적 렌더링
             const filteredFiles = allFiles.filter(f => {
@@ -901,7 +902,7 @@
                 ].filter(Boolean).join(' ').toLowerCase();
 
                 let ministryMatch = checkMinistryMatch(f.ministry || '', keywords, currentMinistry);
-                let queryMatch = (q.length === 0) || keywords.includes(q) || (f.title || '').toLowerCase().includes(q) || (f.department || '').toLowerCase().includes(q);
+                let queryMatch = (q.length === 0) || keywords.includes(q) || (normQ && keywords.includes(normQ)) || (f.title || '').toLowerCase().includes(q) || (f.department || '').toLowerCase().includes(q);
 
                 return ministryMatch && queryMatch;
             });
@@ -926,7 +927,7 @@
                 const textContent = card.textContent.toLowerCase();
 
                 let ministryMatch = checkMinistryMatch(cardMinistry, keywords, currentMinistry);
-                let queryMatch = (q.length === 0) || textContent.includes(q) || keywords.includes(q);
+                let queryMatch = (q.length === 0) || textContent.includes(q) || (normQ && textContent.includes(normQ)) || keywords.includes(q) || (normQ && keywords.includes(normQ));
                 let sectionMatch = (mobileActiveSection === 'ALL') || (cardSection === mobileActiveSection);
 
                 if (ministryMatch && queryMatch && sectionMatch) {
@@ -1171,7 +1172,7 @@
                    class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface-container text-primary hover:bg-surface-container-high font-label-md text-label-md font-semibold transition cursor-pointer">
                     <span class="material-symbols-outlined text-[18px]">account_tree</span>
                     <span>위계도감 해당 노드로 이동</span>
-                </a>
+                </button>
                 <div class="flex items-center gap-2">
                     <button type="button" onclick="document.getElementById('guidelineDetailModal').remove()"
                             class="px-4 py-2 rounded-xl bg-surface-container text-on-surface-variant font-label-md text-label-md font-medium hover:bg-surface-container-high transition">

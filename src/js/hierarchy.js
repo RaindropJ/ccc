@@ -2075,6 +2075,21 @@
                         </div>
                     </div>
 
+                    <!-- 검색 결과 0건 안내 (Empty State) -->
+                    <div id="hierarchyEmptyStateContainer" class="hidden w-full py-16 px-6 text-center bg-surface-container-lowest rounded-2xl border-2 border-dashed border-outline-variant/50 shadow-sm animate-fadeIn">
+                        <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-surface-container flex items-center justify-center text-3xl shadow-2xs">
+                            🔍
+                        </div>
+                        <h3 class="text-base font-extrabold text-on-surface mb-1.5">일치하는 법정단위서비스가 없습니다</h3>
+                        <p class="text-xs text-on-surface-variant max-w-md mx-auto leading-relaxed mb-4">
+                            입력하신 검색어 또는 선택한 부처·분야 필터 조건에 해당하는 단위서비스를 찾을 수 없습니다. 검색어를 변경하거나 필터를 초기화해 보세요.
+                        </p>
+                        <button type="button" onclick="window.resetHierarchyFilters()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md font-bold transition shadow-xs cursor-pointer">
+                            <span class="material-symbols-outlined text-[16px]">refresh</span>
+                            <span>필터 조건 초기화</span>
+                        </button>
+                    </div>
+
                     <!-- 모바일 카드 목록 컨테이너 -->
                     <div class="block md:hidden flex flex-col gap-space-sm w-full" id="mobileCardsContainer">
                         ${renderMobileCards(nodes)}
@@ -2301,13 +2316,16 @@
                     l2Nodes.forEach(node => {
                         const rowId = `hierarchy-node-${node.id}`;
                         const searchKeywords = `${domainMeta.short} ${node.level1} ${node.level2} ${node.level3} ${(node.details || []).join(' ')} ${(node.guidelineRef && node.guidelineRef.file) || ''}`.toLowerCase();
+                        const dScope = domainMeta.key;
+                        const l1Scope = `${domainMeta.key}___${encodeURIComponent(l1Key)}`;
+                        const l2Scope = `${domainMeta.key}___${encodeURIComponent(l1Key)}___${encodeURIComponent(l2Key)}`;
 
-                        html += `<tr id="${rowId}" class="domain-row group hover:bg-surface-container-low transition-colors" data-domain="${domainMeta.key}" data-keywords="${searchKeywords}">`;
+                        html += `<tr id="${rowId}" class="domain-row group hover:bg-emerald-50/50 transition-colors" data-domain="${domainMeta.key}" data-domain-scope="${dScope}" data-l1-scope="${l1Scope}" data-l2-scope="${l2Scope}" data-keywords="${searchKeywords}">`;
 
                         // 1열: 실천분야 및 법적근거 (Rowspan)
                         if (isFirstRowOfDomain) {
                             html += `
-                                <td class="align-top p-space-md bg-surface-container-lowest font-headline-sm text-headline-sm text-primary font-bold border-r border-outline-variant/30" rowspan="${domainRowspan}">
+                                <td class="align-top p-space-md bg-surface-container-lowest font-headline-sm text-headline-sm text-primary font-bold border-r border-outline-variant/30 transition-all duration-150" rowspan="${domainRowspan}" data-breadcrumb-target="domain" data-domain-id="${dScope}">
                                     <div class="sticky top-36 flex flex-col gap-space-xs">
                                         <div class="inline-flex items-center gap-space-xs text-primary">
                                             <span class="material-symbols-outlined text-[22px]">${domainMeta.icon}</span>
@@ -2327,10 +2345,10 @@
                                                 <span class="material-symbols-outlined text-[13px] text-amber-700 group-hover:text-white">account_balance</span>
                                                 <span>법정시설 도감 ➔</span>
                                             </button>
-                                            <button type="button" onclick="showView(\'archive\', { search: \'${domainMeta.short}\' })" class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container hover:bg-secondary hover:text-on-secondary text-on-surface-variant text-[11px] font-bold transition shadow-2xs group cursor-pointer" title="${domainMeta.short} 관련 공식 정본 지침서로 이동">
+                                            <button type="button" onclick="showView('archive', { search: '${domainMeta.short}' })" class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container hover:bg-secondary hover:text-on-secondary text-on-surface-variant text-[11px] font-bold transition shadow-2xs group cursor-pointer" title="${domainMeta.short} 관련 공식 정본 지침서로 이동">
                                                 <span class="material-symbols-outlined text-[13px] text-secondary group-hover:text-on-secondary">menu_book</span>
                                                 <span>관련 지침서 총람 ➔</span>
-                                            </a>
+                                            </button>
                                         </div>
                                     </div>
                                 </td>
@@ -2341,7 +2359,7 @@
                         // 2열: 2단계 대분류 (기능) (Rowspan)
                         if (isFirstRowOfL1) {
                             html += `
-                                <td class="align-top p-space-md bg-surface-container-low font-headline-sm text-headline-sm text-on-surface font-bold border-r border-outline-variant/30" rowspan="${level1Rowspan}">
+                                <td class="align-top p-space-md bg-surface-container-low font-headline-sm text-headline-sm text-on-surface font-bold border-r border-outline-variant/30 transition-all duration-150" rowspan="${level1Rowspan}" data-breadcrumb-target="l1" data-l1-id="${l1Scope}">
                                     <div class="flex flex-col gap-space-xs">
                                         <span class="text-primary font-extrabold flex items-center gap-1">
                                             <span class="w-2 h-2 rounded-full bg-primary"></span>
@@ -2363,7 +2381,7 @@
                         // 3열: 3단계 중분류 (사업분야) (Rowspan 계층 병합)
                         if (isFirstRowOfL2) {
                             html += `
-                                <td class="align-top p-space-md font-label-md text-label-md text-on-surface font-semibold bg-surface-container-lowest border-r border-outline-variant/30" rowspan="${level2Rowspan}">
+                                <td class="align-top p-space-md font-label-md text-label-md text-on-surface font-semibold bg-surface-container-lowest border-r border-outline-variant/30 transition-all duration-150" rowspan="${level2Rowspan}" data-breadcrumb-target="l2" data-l2-id="${l2Scope}">
                                     <div class="flex flex-col gap-1.5">
                                         <span class="text-on-surface font-bold text-[14px] leading-snug">${node.level2}</span>
                                         ${level2Rowspan > 1 ? `<span class="inline-flex items-center gap-1 w-fit text-[11px] px-2 py-0.5 rounded-full bg-surface-container-high text-primary font-bold font-num"><span class="w-1.5 h-1.5 rounded-full bg-primary"></span>${level2Rowspan}개 세부사업</span>` : ''}
@@ -2504,6 +2522,42 @@
         if (input) {
             input.addEventListener('keyup', filterMatrixTable);
         }
+
+        // Rowspan Breadcrumb Hover Effect (위계 상위 계층 실시간 연동 하이라이트)
+        const tables = document.querySelectorAll('#hierarchicalMatrixTable, #hierarchicalMatrixTable2');
+        tables.forEach(table => {
+            table.addEventListener('mouseover', function (e) {
+                const tr = e.target.closest('tr.domain-row');
+                if (!tr || !table.contains(tr)) return;
+
+                const dScope = tr.getAttribute('data-domain-scope');
+                const l1Scope = tr.getAttribute('data-l1-scope');
+                const l2Scope = tr.getAttribute('data-l2-scope');
+
+                table.querySelectorAll('.rowspan-breadcrumb-active').forEach(el => {
+                    el.classList.remove('rowspan-breadcrumb-active', 'bg-emerald-50/90', 'ring-2', 'ring-emerald-400/80');
+                });
+
+                if (dScope) {
+                    const dCell = table.querySelector(`td[data-breadcrumb-target="domain"][data-domain-id="${dScope}"]`);
+                    if (dCell) dCell.classList.add('rowspan-breadcrumb-active', 'bg-emerald-50/90', 'ring-2', 'ring-emerald-400/80');
+                }
+                if (l1Scope) {
+                    const l1Cell = table.querySelector(`td[data-breadcrumb-target="l1"][data-l1-id="${l1Scope}"]`);
+                    if (l1Cell) l1Cell.classList.add('rowspan-breadcrumb-active', 'bg-emerald-50/90', 'ring-2', 'ring-emerald-400/80');
+                }
+                if (l2Scope) {
+                    const l2Cell = table.querySelector(`td[data-breadcrumb-target="l2"][data-l2-id="${l2Scope}"]`);
+                    if (l2Cell) l2Cell.classList.add('rowspan-breadcrumb-active', 'bg-emerald-50/90', 'ring-2', 'ring-emerald-400/80');
+                }
+            });
+
+            table.addEventListener('mouseleave', function () {
+                table.querySelectorAll('.rowspan-breadcrumb-active').forEach(el => {
+                    el.classList.remove('rowspan-breadcrumb-active', 'bg-emerald-50/90', 'ring-2', 'ring-emerald-400/80');
+                });
+            });
+        });
     }
 
     // 필터링 인터랙션 로직
@@ -2584,14 +2638,21 @@
             // Domain match
             let domMatch = (currentDomainFilter === 'all') || (d === currentDomainFilter);
 
-            // Search keyword match
+            // Search keyword match (성평등가족부 ↔ 여성가족부 상호 정규화 포함)
             const k = `${domainMeta.short} ${node.level1} ${node.level2} ${node.level3} ${(node.details || []).join(' ')} ${(node.guidelineRef && node.guidelineRef.file) || ''}`.toLowerCase();
-            let kwMatch = !currentSearchKeyword || k.includes(currentSearchKeyword);
+            const normKeyword = currentSearchKeyword ? currentSearchKeyword.replace(/성평등가족부/g, '여성가족부') : '';
+            let kwMatch = !currentSearchKeyword || k.includes(currentSearchKeyword) || (normKeyword && k.includes(normKeyword));
 
             return minMatch && domMatch && kwMatch;
         };
 
         const filteredNodes = baseNodes.filter(matchNode);
+
+        // Empty state 제어
+        const emptyEl = document.getElementById('hierarchyEmptyStateContainer');
+        if (emptyEl) {
+            emptyEl.classList.toggle('hidden', filteredNodes.length > 0);
+        }
 
         // Re-render Section 1 table
         const tbody1 = document.querySelector('#hierarchicalMatrixTable tbody');
@@ -2714,7 +2775,7 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `대한민국_사회복지_90개_법정단위서비스_위계매트릭스_${new Date().toISOString().slice(0, 10)}.csv`;
+        a.download = `대한민국_사회복지_167개_법정단위서비스_위계매트릭스_${new Date().toISOString().slice(0, 10)}.csv`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
