@@ -188,12 +188,12 @@
       <div class="grid grid-cols-2 gap-2 pt-1">
         <button type="button" onclick="showView('archive', {search: '${escapeHtml(cleanSearchName)}'})" 
                 class="p-2.5 rounded-xl bg-blue-50 border border-blue-200 text-center hover:bg-blue-100 transition cursor-pointer">
-          <div class="text-[10px] text-blue-600 font-bold">53종 정본 아카이브</div>
+          <div class="text-[10px] text-blue-600 font-bold">70종 정본 아카이브</div>
           <div class="text-[11px] text-blue-900 font-extrabold">공식 지침서 열람 ➔</div>
         </button>
         <button type="button" onclick="showView('fields', {search: '${escapeHtml(cleanSearchName)}'})" 
                 class="p-2.5 rounded-xl bg-indigo-50 border border-indigo-200 text-center hover:bg-indigo-100 transition cursor-pointer">
-          <div class="text-[10px] text-indigo-600 font-bold">24개 법정 시설분류</div>
+          <div class="text-[10px] text-indigo-600 font-bold">34개 법정 시설분류</div>
           <div class="text-[11px] text-indigo-900 font-extrabold">12대 분야도감 대조 ➔</div>
         </button>
       </div>

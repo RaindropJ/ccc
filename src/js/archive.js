@@ -255,7 +255,7 @@
                                 공식 지침서 마스터 아카이브 (70종)
                             </h1>
                             <p class="font-body-md text-body-md text-on-surface-variant mt-1">
-                                대한민국 사회복지 12대 분야 및 Track 2 범부처 안전망 6대 영역 공식 사업안내·표준 매뉴얼 총람 (전문 24,384면 OCR 검색 지원)
+                                대한민국 사회복지 12대 핵심 분야 및 6대 범부처·사회혁신 안전망 공식 사업안내·표준 매뉴얼 총람 (전문 24,384면 OCR 검색 지원)
                             </p>
                         </div>
 
@@ -266,7 +266,7 @@
                                    onclick="showView('fields')">
                                     <span class="material-symbols-outlined text-[18px]">account_balance</span>
                                     <span>분야·시설 도감</span>
-                                    <span class="px-1.5 py-0.2 rounded-full font-label-sm text-label-sm bg-surface-container text-on-surface-variant">41개</span>
+                                    <span class="px-1.5 py-0.2 rounded-full font-label-sm text-label-sm bg-surface-container text-on-surface-variant">40개</span>
                                 </a>
                                 <button type="button" class="px-3 py-1.5 rounded-lg font-label-md text-label-md bg-primary text-on-primary shadow-xs flex items-center gap-1.5 font-semibold cursor-pointer" onclick="showView(\'archive\')">
                                     <span class="material-symbols-outlined text-[18px]">folder_open</span>
@@ -310,7 +310,7 @@
                                 <span class="font-headline-md text-headline-md text-primary mt-0.5 font-bold">
                                     70<span class="font-label-md text-label-md font-normal text-on-surface">종 정본</span>
                                 </span>
-                                <span class="font-legal-code text-legal-code text-secondary mt-1 font-medium">Track 1 (53) + Track 2 (17)</span>
+                                <span class="font-legal-code text-legal-code text-secondary mt-1 font-medium">핵심 법정 (53) + 범부처·사회혁신 (17)</span>
                             </div>
                             <div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-primary shadow-xs">
                                 <span class="material-symbols-outlined text-[20px]">library_books</span>
@@ -352,7 +352,7 @@
                                 <span class="font-headline-md text-headline-md text-on-primary mt-0.5 font-bold">
                                     450<span class="font-label-md text-label-md font-normal text-inverse-on-surface">MB ZIP</span>
                                 </span>
-                                <span class="font-legal-code text-legal-code text-secondary-container mt-1 font-semibold">53종 무결성 검증 패키지</span>
+                                <span class="font-legal-code text-legal-code text-secondary-container mt-1 font-semibold">70종 무결성 검증 패키지</span>
                             </div>
                             <a href="${config.driveDownloadUrl}" target="_blank"
                                class="w-9 h-9 rounded-lg bg-surface-container-lowest text-primary hover:bg-surface-container-high transition-colors flex items-center justify-center shadow-sm"
@@ -427,7 +427,7 @@
                         </button>
                         <button type="button" class="ministry-pill px-3 py-1 rounded-full text-label-sm font-label-sm font-medium bg-emerald-50 text-emerald-800 border border-emerald-200/70 hover:bg-emerald-100 transition-all"
                                 data-ministry="TRACK2">
-                            🌐 Track 2 범부처 확장 (${countSec3})
+                            🌐 범부처·사회혁신 안전망 (${countSec3})
                         </button>
                     </div>
                 </div>
@@ -571,13 +571,13 @@
                             <div>
                                 <div class="flex items-center gap-2 flex-wrap">
                                     <h2 class="font-headline-sm text-headline-sm text-emerald-950 font-bold">
-                                        섹션 Ⅲ: Track 2 범부처·확장 안전망 실천지침서
+                                        섹션 Ⅲ: 범부처·사회혁신 안전망 실천지침서
                                     </h2>
                                     <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-900 font-label-sm text-label-sm font-semibold">
                                         6대 확장영역 · 17종
                                     </span>
                                     <span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-emerald-900 font-label-sm text-label-sm font-semibold">
-                                        Track 2 1:1 딥링킹
+                                        범부처·사회혁신 1:1 딥링킹
                                     </span>
                                 </div>
                                 <p class="text-legal-code font-legal-code text-emerald-900/80 mt-0.5">
@@ -587,10 +587,10 @@
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="text-legal-code font-legal-code text-emerald-900/70 hidden md:inline">수록 분량: 204면 (17종 핵심요강)</span>
-                            <button type="button" onclick="window.showView('fields', { track: 'extended' })"
+                            <button type="button" onclick="window.showView('fields')"
                                class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-emerald-100/70 text-emerald-900 font-label-sm text-label-sm transition-colors border border-emerald-200 shadow-xs cursor-pointer">
                                 <span class="material-symbols-outlined text-[16px]">domain</span>
-                                <span>Track 2 도감 보기</span>
+                                <span>분야·시설 도감 보기</span>
                             </button>
                         </div>
                     </div>
@@ -1390,7 +1390,7 @@
         const link = document.createElement("a");
         const url = URL.createObjectURL(blob);
         link.setAttribute("href", url);
-        link.setAttribute("download", `2026_대한민국_사회복지_공식지침서_53종_목록_${new Date().toISOString().slice(0, 10)}.csv`);
+        link.setAttribute("download", `2026_대한민국_사회복지_공식지침서_70종_목록_${new Date().toISOString().slice(0, 10)}.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

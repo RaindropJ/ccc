@@ -4450,7 +4450,7 @@
                             <div class="flex flex-col gap-space-xs">
                                 <div class="flex items-center gap-space-sm">
                                     <span class="px-space-sm py-0.5 rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold uppercase tracking-wider">Statutory Matrix v3.0</span>
-                                    <span class="text-on-surface-variant font-label-sm text-label-sm">Track 1(12대 분야) + Track 2(6대 범부처 안전망) 70종 공식 지침 연계</span>
+                                    <span class="text-on-surface-variant font-label-sm text-label-sm">12대 핵심 분야 + 6대 범부처·사회혁신 안전망 (총 18대 분야 · 70종 지침 연계)</span>
                                 </div>
                                 <h1 class="font-headline-lg text-headline-lg text-primary font-extrabold tracking-tight">사회복지 3단계 위계 도감 (218개 법정·실천단위서비스 전수 매트릭스)</h1>
                                 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
@@ -4572,7 +4572,7 @@
                             <div class="flex flex-col md:flex-row md:items-center justify-between pb-space-xs border-b border-surface-container gap-space-xs">
                                 <div class="flex items-center gap-space-xs font-label-md text-label-md text-primary font-bold">
                                     <span class="material-symbols-outlined text-[20px]">account_balance</span>
-                                    <span>소관 중앙부처 및 주관 주체별 18대 실천분야 필터 (Track 1·Track 2 통합)</span>
+                                    <span>소관 중앙부처 및 주관 주체별 18대 실천분야 통합 필터</span>
                                 </div>
                                 <div class="flex items-center gap-space-sm font-legal-code text-legal-code text-on-surface-variant">
                                     <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary"></span>부처별 일괄 조회</span>
@@ -4609,7 +4609,7 @@
                                 </button>
                                 <button type="button" class="ministry-btn px-3 py-1.5 rounded-lg font-label-sm text-label-sm font-semibold transition-all bg-emerald-50 text-emerald-900 border border-emerald-200 hover:bg-emerald-100 flex items-center gap-1 cursor-pointer" onclick="window.selectMinistryGroup('track2', this)">
                                     <span class="material-symbols-outlined text-[16px]">hub</span>
-                                    <span>🌐 Track 2 범부처 확장 (6대 분야 · 51개)</span>
+                                    <span>🌐 범부처·사회혁신 안전망 (6대 분야 · 51개)</span>
                                 </button>
                             </div>
 
@@ -4670,7 +4670,7 @@
                                 </div>
                                 <div class="ministry-subgroup flex flex-col md:flex-row md:items-center gap-space-sm p-space-sm rounded-lg bg-emerald-50/70 border border-emerald-200/70 transition-colors" data-ministry="track2">
                                     <div class="flex items-center gap-space-xs shrink-0 w-[140px]">
-                                        <span class="px-space-xs py-0.5 rounded bg-emerald-700 text-white font-legal-code text-legal-code font-bold">Track 2 확장</span>
+                                        <span class="px-space-xs py-0.5 rounded bg-emerald-700 text-white font-legal-code text-legal-code font-bold">범부처·사회혁신</span>
                                         <span class="font-legal-code text-legal-code text-emerald-900 font-medium">6개 분야</span>
                                     </div>
                                     <div class="flex flex-wrap items-center gap-1.5 flex-1">
@@ -4706,7 +4706,7 @@
                         </div>
                         <div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm px-1">
                             <span>※ 터치하여 세부 사업내용과 매핑 서식을 확인하세요</span>
-                            <span class="text-primary font-bold">총 167개 전수</span>
+                            <span class="text-primary font-bold">총 218개 전수</span>
                         </div>
                     </div>
 
@@ -4735,7 +4735,7 @@
                               <span class="px-2 py-0.5 rounded-full bg-white/20 text-[10px] font-extrabold text-emerald-100">사회복지사업법 제2조 법정체계</span>
                               <span class="text-[10px] text-emerald-200">2026 개정판 반영</span>
                             </div>
-                            <h2 class="text-base font-extrabold tracking-tight">3단계 위계 도감 (12대 분야 · 167개 단위시설)</h2>
+                            <h2 class="text-base font-extrabold tracking-tight">3단계 위계 도감 (18대 분야 · 218개 단위서비스)</h2>
                             <p class="text-xs text-emerald-100/90 mt-0.5">대분류 ➔ 중분류 ➔ 소분류 법정시설 연계망</p>
 
                             <div class="grid grid-cols-4 gap-2 pt-3 text-center">
@@ -4952,14 +4952,14 @@
                     <div class="bg-surface-container-lowest rounded-xl shadow-md overflow-hidden border border-emerald-200/80 hidden md:block" id="section3Container">
                         <div class="px-space-lg py-space-md bg-emerald-50/80 flex flex-wrap items-center justify-between gap-space-sm border-b border-emerald-200/70">
                             <div class="flex flex-wrap items-center gap-space-sm">
-                                <span class="px-space-sm py-0.5 rounded bg-emerald-700 text-white font-label-sm text-label-sm font-bold">섹션 Ⅲ (Track 2)</span>
+                                <span class="px-space-sm py-0.5 rounded bg-emerald-700 text-white font-label-sm text-label-sm font-bold">섹션 Ⅲ (범부처·사회혁신)</span>
                                 <h2 class="font-headline-sm text-headline-sm text-emerald-950 font-extrabold">범부처·확장 실무 안전망 단위 서비스 (사회적경제·사법교정·보건의료·교육·주거금융·종교복지 6대 분야)</h2>
                                 <span class="px-space-xs py-0.5 rounded bg-white font-semibold text-emerald-800 border border-emerald-200 font-legal-code text-legal-code font-num">${sec3Nodes.length}개 단위서비스 직결</span>
                             </div>
                             <div class="flex items-center gap-space-xs">
-                                <button type="button" class="inline-flex items-center gap-0.5 px-space-sm py-1 rounded bg-white text-emerald-900 hover:bg-emerald-100 transition-colors font-label-sm text-label-sm font-semibold border border-emerald-200 cursor-pointer" onclick="window.showView('fields', { track: 'extended' })">
+                                <button type="button" class="inline-flex items-center gap-0.5 px-space-sm py-1 rounded bg-white text-emerald-900 hover:bg-emerald-100 transition-colors font-label-sm text-label-sm font-semibold border border-emerald-200 cursor-pointer" onclick="window.showView('fields')">
                                     <span class="material-symbols-outlined text-[16px]">domain</span>
-                                    <span>Track 2 도감</span>
+                                    <span>시설도감 보기</span>
                                 </button>
                                 <button type="button" class="inline-flex items-center gap-0.5 px-space-sm py-1 rounded bg-surface text-on-surface hover:bg-surface-container transition-colors font-label-sm text-label-sm font-semibold cursor-pointer" onclick="window.exportHierarchyCSV()">
                                     <span class="material-symbols-outlined text-[16px]">download</span>

@@ -22,9 +22,9 @@
     <script src="src/data/practicum-direct-db.js?v=20261112"></script>
     <script src="src/data/national-practicum-db.js?v=20261112" defer></script>
     <script src="src/data/guidelines-archive-db.js?v=20261116"></script>
-    <script src="src/js/archive.js?v=20261116_v3"></script>
+    <script src="src/js/archive.js?v=20261116_v4"></script>
     <script src="src/data/welfare-hierarchy-db.js?v=20261116"></script>
-    <script src="src/js/hierarchy.js?v=20261116_v3"></script>
+    <script src="src/js/hierarchy.js?v=20261116_v4"></script>
     <script src="src/js/mobile-stitch-controller.js?v=20261116"></script>
     <script src="src/js/demo-tour.js?v=20261116"></script>
 
@@ -207,6 +207,40 @@
                     });
                 }
             }
+            // 6. Compound Korean facility keyword mapping fallback
+            if (!targetRow) {
+                const semanticRules = [
+                    [/어린이집|육아종합지원센터|보육/, 'law-childcare'],
+                    [/노인맞춤돌봄|재가노인|경로당|양로|요양원/, 'law-elderly'],
+                    [/장애인활동지원|장애인권익옹호|장애인자립생활|장애인주간/, 'law-disability'],
+                    [/드림스타트|아동보호|지역아동|다함께돌봄|자립준비/, 'law-child'],
+                    [/긴급복지지원|복지정책과|희망복지지원단|행정복지센터|사회서비스원/, 'law-public-admin'],
+                    [/청소년수련|청소년문화|청소년방과후|청소년상담|꿈드림|청소년쉼터/, 'law-youth'],
+                    [/성폭력|해바라기센터|스토킹/, 'law-sexual-violence'],
+                    [/가정폭력|1366/, 'law-domestic-violence'],
+                    [/성매매/, 'law-prostitution'],
+                    [/한부모/, 'law-single-parent'],
+                    [/가족센터|다문화|건강가정/, 'law-family-center'],
+                    [/정신건강|자살예방|중독관리/, 'law-mental'],
+                    [/노숙인|쪽방/, 'law-homeless'],
+                    [/푸드뱅크|푸드마켓|종합사회복지관|사회복지관/, 'law-welfare-center'],
+                    [/지역자활|자활근로/, 'law-selfreliance'],
+                    [/KOICA|국제개발|공동모금회|사랑의열매|공익재단|CSR/, 'law-ngo-csr'],
+                    [/교육복지우선|학교사회복지/, 'law-school'],
+                    [/늘봄|Wee|학생맞춤/, 'ext-edu-k12'],
+                    [/특수학교|특수학급|특수교육/, 'ext-edu-special'],
+                    [/평생교육|대학\s*장애학생/, 'ext-edu-univ-lifelong'],
+                    [/보호관찰|스마일센터|법무보호|범죄피해/, 'ext-jus-probation'],
+                    [/교도소|소년원|치료감호|교정시설/, 'ext-jus-correction'],
+                    [/외국인보호|난민/, 'ext-jus-foreign']
+                ];
+                for (const [rx, fid] of semanticRules) {
+                    if (rx.test(rawTerm)) {
+                        targetRow = pool.find(r => r.id === fid);
+                        if (targetRow) break;
+                    }
+                }
+            }
             if (targetRow) {
                 window.jumpToFacility(targetRow.id);
             } else {
@@ -306,6 +340,7 @@
                 window.jumpToFacility = function(facilityId) {
             if (!facilityId) return;
             if (facilityId === 'law-justice') facilityId = 'ext-jus-probation';
+            if (facilityId === 'law-rural-elderly') facilityId = 'law-elderly';
             window.showView('fields', { facilityId: facilityId, preventScroll: true });
 
             const searchInput = document.getElementById('fields-search-input');
@@ -797,7 +832,7 @@
                             공식 지침서 마스터 아카이브 (70종) →
                         </h3>
                         <p class="text-xs text-blue-100/90 leading-snug">
-                            Track 1(53종) + Track 2 범부처 안전망(17종) 공식 사업안내서 454MB 풀패키지 및 실시간 검색
+                            중앙부처 핵심 법정지침(53종) + 범부처·사회혁신 안전망(17종) 총 70종 공식 사업안내서 실시간 검색
                         </p>
                     </div>
                     <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-2xl flex-shrink-0 group-hover:scale-110 transition">
@@ -954,7 +989,7 @@
                   <div class="bg-gradient-to-br from-blue-700 via-indigo-800 to-slate-900 rounded-2xl p-4 text-white shadow-md relative overflow-hidden">
                     <div class="flex items-center justify-between mb-2">
                       <span class="px-2 py-0.5 rounded-full bg-blue-500/30 text-blue-200 text-[10px] font-bold">2026 정부 공인 정본</span>
-                      <span class="text-[10px] text-blue-300">총 53종 450MB</span>
+                      <span class="text-[10px] text-blue-300">총 70종 454MB</span>
                     </div>
                     <h2 class="text-base font-extrabold tracking-tight">공식 지침서 아카이브</h2>
                     <p class="text-xs text-blue-100/90 mt-0.5">보건복지부 및 중앙부처 공식 사업안내서 PDF 전수 보관</p>
@@ -962,7 +997,7 @@
                     <div class="grid grid-cols-3 gap-2 pt-3 text-center">
                       <div class="bg-white/10 rounded-xl py-2">
                         <div class="text-[10px] text-blue-200">지침서 확보</div>
-                        <div class="text-sm font-black text-white font-num">53종 전수</div>
+                        <div class="text-sm font-black text-white font-num">70종 전수</div>
                       </div>
                       <div class="bg-white/10 rounded-xl py-2">
                         <div class="text-[10px] text-blue-200">중앙부처</div>
@@ -1025,7 +1060,7 @@
                       <span class="px-2 py-0.5 rounded-full bg-white/20 text-[10px] font-extrabold text-emerald-100">사회복지사업법 제2조 법정체계</span>
                       <span class="text-[10px] text-emerald-200">2026 개정판 반영</span>
                     </div>
-                    <h2 class="text-base font-extrabold tracking-tight">3단계 위계 도감 (12대 분야 · 167개 단위시설)</h2>
+                    <h2 class="text-base font-extrabold tracking-tight">3단계 위계 도감 (18대 분야 · 218개 단위서비스)</h2>
                     <p class="text-xs text-emerald-100/90 mt-0.5">대분류 ➔ 중분류 ➔ 소분류 법정시설 연계망</p>
 
                     <div class="grid grid-cols-4 gap-2 pt-3 text-center">
@@ -9602,7 +9637,7 @@
 
             const tsvText = lines.join('\n');
             navigator.clipboard.writeText(tsvText).then(() => {
-                alert(`📋 ${isExtended ? 'Track 2 (범부처 확장 도감)' : 'Track 1 (핵심 법정시설 도감)'} ${rows.length}개 항목이 엑셀·스프레드시트 붙여넣기용(TSV)으로 복사되었습니다!`);
+                alert(`📋 중앙부처 법정시설·안전망 도감 ${rows.length}개 항목이 엑셀·스프레드시트 붙여넣기용(TSV)으로 복사되었습니다!`);
             }).catch(() => {
                 alert('클립보드 복사 권한을 허용해 주세요.');
             });
@@ -9726,7 +9761,7 @@
                     return hay.includes(q);
                 });
             }
-            renderCivilImpactCards(filteredCivil.length > 0 ? filteredCivil : CIVIL_IMPACT_ECOSYSTEM);
+            renderCivilImpactCards(currentFieldsQuery ? filteredCivil : CIVIL_IMPACT_ECOSYSTEM);
 
             if (currentMinistryFilter === '민간제3섹터') {
                 if (tableContainer) tableContainer.classList.add('hidden');
