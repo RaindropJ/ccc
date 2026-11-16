@@ -4069,6 +4069,81 @@
             "학교 늘봄·학생맞춤통합지원"
         ]
     },
+    "국제구호 NGO · 공익재단 · 기업 CSR": {
+        "domainId": "12_배분모금국제",
+        "facilityTypes": [
+            "사회복지공동모금회",
+            "국제개발협력 NGO"
+        ],
+        "level1": [
+            "민간 배분·모금 및 공익재단 사업",
+            "국제개발협력 및 인도적 지원"
+        ]
+    },
+    "국제구호·개발협력 NGO": {
+        "domainId": "12_배분모금국제",
+        "facilityTypes": [
+            "국제개발협력 NGO"
+        ],
+        "level1": [
+            "국제개발협력 및 인도적 지원"
+        ]
+    },
+    "모금·배분 공익재단": {
+        "domainId": "12_배분모금국제",
+        "facilityTypes": [
+            "사회복지공동모금회"
+        ],
+        "level1": [
+            "민간 배분·모금 및 공익재단 사업"
+        ]
+    },
+    "기업 사회공헌(CSR/ESG)팀": {
+        "domainId": "12_배분모금국제",
+        "facilityTypes": [
+            "사회복지공동모금회"
+        ],
+        "level1": [
+            "민간 배분·모금 및 공익재단 사업"
+        ]
+    },
+    "의료사회복지 · 병원 사회사업팀 · 의료급여": {
+        "domainId": "15_보건의료전문케어",
+        "facilityTypes": [
+            "상급종합병원·요양병원·호스피스·응급의료센터"
+        ],
+        "level1": [
+            "의료사회복지·호스피스 완화돌봄"
+        ]
+    },
+    "호스피스·완화의료 · 요양병원 · 응급의료센터": {
+        "domainId": "15_보건의료전문케어",
+        "facilityTypes": [
+            "상급종합병원·요양병원·호스피스·응급의료센터"
+        ],
+        "level1": [
+            "의료사회복지·호스피스 완화돌봄"
+        ]
+    },
+    "학교사회복지 · 교육복지우선지원": {
+        "domainId": "10_학교사회복지",
+        "facilityTypes": [
+            "초·중·고등학교",
+            "교육복지우선지원사업 초·중·고등학교"
+        ],
+        "level1": [
+            "학생맞춤형 통합지원 및 사례관리"
+        ]
+    },
+    "초·중·고교 늘봄학교 · Wee 프로젝트 · 대안교육": {
+        "domainId": "16_정규특수평생교육",
+        "facilityTypes": [
+            "초·중·고교(늘봄·교육복지·Wee)"
+        ],
+        "level1": [
+            "학교 늘봄·학생맞춤통합지원"
+        ]
+    },
     "보건소 · 보건지소 · 건강생활지원센터 · 보건진료소": {
         "domainId": "15_보건의료전문케어",
         "facilityTypes": [
@@ -4773,7 +4848,7 @@
                                   <div class="text-[11px] text-blue-900 font-extrabold">지침서 아카이브 열람 ➔</div>
                                 </button>
                                 <button type="button" onclick="showView('fields', {search: '노인복지'})" class="p-2.5 rounded-xl bg-indigo-50 border border-indigo-200 text-center hover:bg-indigo-100 transition cursor-pointer">
-                                  <div class="text-[10px] text-indigo-600 font-bold">23개 법정 시설분류</div>
+                                  <div class="text-[10px] text-indigo-600 font-bold">34개 법정 시설분류</div>
                                   <div class="text-[11px] text-indigo-900 font-extrabold">시설도감 상세대조 ➔</div>
                                 </button>
                               </div>

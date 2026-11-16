@@ -614,11 +614,13 @@ export const WELFARE_FIELDS = [
  * wel4u.or.kr/bbs/content.php?co_id=data01 구조를 2026 최신 법령·부처 기준으로 확장한 법령별 기관 분류표
  */
 export const STATUTORY_MATRIX = [
-    // --- 보건복지부 ---
+    // --- 1. 보건복지부 (12개 법정분류) ---
     {
         id: 'law-elderly',
         ministry: '보건복지부',
         ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
+        ministryIcon: '🏥',
+        tag: '노인',
         facilityCategory: '노인복지시설',
         fieldId: 'elderly',
         livingFacilities: ['노인주거복지시설 (양로시설·노인공동생활가정·노인복지주택)', '노인의료복지시설 (노인요양시설·노인요양공동생활가정)', '학대피해노인전용쉼터'],
@@ -631,6 +633,8 @@ export const STATUTORY_MATRIX = [
         id: 'law-integrated-care',
         ministry: '보건복지부',
         ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
+        ministryIcon: '🏥',
+        tag: '통합돌봄',
         facilityCategory: '지역 통합돌봄 지원체계 (2026 시행)',
         fieldId: 'elderly',
         livingFacilities: [],
@@ -643,6 +647,8 @@ export const STATUTORY_MATRIX = [
         id: 'law-child',
         ministry: '보건복지부',
         ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
+        ministryIcon: '🏥',
+        tag: '아동',
         facilityCategory: '아동복지시설',
         fieldId: 'child',
         livingFacilities: ['아동양육시설', '아동일시보호시설', '아동보호치료시설', '자립지원시설', '공동생활가정 (그룹홈)', '학대피해아동쉼터'],
@@ -655,6 +661,8 @@ export const STATUTORY_MATRIX = [
         id: 'law-disability',
         ministry: '보건복지부',
         ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
+        ministryIcon: '🏥',
+        tag: '장애인',
         facilityCategory: '장애인복지시설',
         fieldId: 'disability',
         livingFacilities: ['장애유형별 거주시설', '중증장애인 거주시설', '장애영유아 거주시설', '장애인단기거주시설', '장애인공동생활가정', '피해장애인쉼터', '피해장애아동쉼터'],
@@ -667,6 +675,8 @@ export const STATUTORY_MATRIX = [
         id: 'law-mental',
         ministry: '보건복지부',
         ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
+        ministryIcon: '🏥',
+        tag: '정신건강',
         facilityCategory: '정신건강증진시설 · 센터',
         fieldId: 'mental-health',
         livingFacilities: ['정신요양시설', '정신재활시설 (생활시설형)'],
@@ -679,6 +689,8 @@ export const STATUTORY_MATRIX = [
         id: 'law-homeless',
         ministry: '보건복지부',
         ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
+        ministryIcon: '🏥',
+        tag: '노숙인·주거',
         facilityCategory: '노숙인시설',
         fieldId: 'community-selfreliance',
         livingFacilities: ['노숙인자활시설', '노숙인재활시설', '노숙인요양시설'],
@@ -691,6 +703,8 @@ export const STATUTORY_MATRIX = [
         id: 'law-welfare-center',
         ministry: '보건복지부',
         ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
+        ministryIcon: '🏥',
+        tag: '지역복지',
         facilityCategory: '사회복지관 · 모금/기부',
         fieldId: 'community-selfreliance',
         livingFacilities: [],
@@ -703,6 +717,8 @@ export const STATUTORY_MATRIX = [
         id: 'law-selfreliance',
         ministry: '보건복지부',
         ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
+        ministryIcon: '🏥',
+        tag: '자활복지',
         facilityCategory: '지역자활센터',
         fieldId: 'community-selfreliance',
         livingFacilities: [],
@@ -715,19 +731,72 @@ export const STATUTORY_MATRIX = [
         id: 'law-medical',
         ministry: '보건복지부',
         ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
-        facilityCategory: '의료사회복지 · 병원 사회사업팀',
+        ministryIcon: '🏥',
+        tag: '의료사회복지',
+        facilityCategory: '의료사회복지 · 병원 사회사업팀 · 의료급여',
+        hierarchyFacility: '의료사회복지 · 병원 사회사업팀',
         fieldId: 'medical',
         livingFacilities: [],
         usingFacilities: ['상급종합병원 · 종합병원 의료사회복지실', '공공의료원 공공보건의료사업실 (301네트워크)', '시·군·구 의료급여관리사 (의료급여 사례관리)'],
         laws: ['「사회복지사업법」', '「의료법」', '「재난적의료비 지원에 관한 법률」'],
         articles: '사회복지사업법 제11조(의료사회복지사); 의료법 시행규칙 제38조',
-        note: '의료사회복지사(법정 국가자격) 수련병원 및 퇴원환자 지역사회 연계 수행'
+        note: '법정 「의료사회복지사」 수련병원 및 퇴원환자 지역사회 연계·의료급여 사례관리 수행'
     },
-    // --- 질병관리청 ---
+    {
+        id: 'ext-med-hospital',
+        ministry: '보건복지부',
+        ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
+        ministryIcon: '🏥',
+        tag: '호스피스·요양·응급',
+        facilityCategory: '호스피스·완화의료 · 요양병원 · 응급의료센터',
+        hierarchyFacility: '상급종합·종합병원 · 호스피스 · 요양병원',
+        archiveDocId: 'doc-060',
+        fieldId: 'medical',
+        livingFacilities: ['요양병원 장기입원병동', '입원형 호스피스 병동', '권역응급의료센터 (응급병동)'],
+        usingFacilities: ['상급종합병원 / 종합병원 (공공의료사업단·퇴원연계팀)', '가정형·자문형 호스피스 전문기관', '요양병원 낮병동 · 외래재활실'],
+        laws: ['「의료법」', '「호스피스·완화의료 및 임종과정에 있는 환자의 연명의료결정에 관한 법률」', '「암관리법」'],
+        articles: '의료법 시행규칙 제38조; 연명의료결정법 제25조; 암관리법 제20조',
+        note: ''
+    },
+    {
+        id: 'ext-med-rehab',
+        ministry: '보건복지부',
+        ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
+        ministryIcon: '🩺',
+        tag: '재활·공공의료',
+        facilityCategory: '재활의료 · 지방의료원 · 정신의료 · 산후조리원',
+        hierarchyFacility: '재활의료 · 지방의료원 · 정신의료 · 산후조리원',
+        archiveDocId: 'doc-061',
+        fieldId: 'medical',
+        livingFacilities: ['국립재활원 · 회복기 재활병동', '정신의료기관 입원병동 (폐쇄·개방병동)', '지방의료원 · 국립중앙의료원 · 국립암센터 · 적십자병원 입원진료', '산후조리원 (산모·신생아 거주 요양)'],
+        usingFacilities: ['권역재활병원 외래 · 지역사회중심재활센터(CBR)', '정신건강의학과 외래 · 낮병원 (Day Hospital)', '공공의료 301네트워크 · 취약계층 의료지원팀'],
+        laws: ['「장애인복지법」', '「정신건강증진 및 정신질환자 복지서비스 지원에 관한 법률」', '「지방의료원의 설립 및 운영에 관한 법률」', '「모자보건법」'],
+        articles: '정신건강복지법 제19조; 지방의료원법 제4조; 모자보건법 제15조의2',
+        note: ''
+    },
+    {
+        id: 'ext-med-public-health',
+        ministry: '보건복지부',
+        ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
+        ministryIcon: '🧬',
+        tag: '지역보건·치매',
+        facilityCategory: '지역보건의료기관 · 치매안심센터',
+        hierarchyFacility: '지역보건의료기관 · 치매안심센터',
+        archiveDocId: 'doc-062',
+        fieldId: 'elderly',
+        livingFacilities: [],
+        usingFacilities: ['보건소 · 보건지소 · 건강생활지원센터 · 보건진료소', '치매안심센터 (보건소 연계 치매조기검진·맞춤형 사례관리)'],
+        laws: ['「지역보건법」', '「치매관리법」'],
+        articles: '지역보건법 제10조·제13조·제14조; 치매관리법 제17조',
+        note: ''
+    },
+    // --- 2. 질병관리청 (1개 법정분류) ---
     {
         id: 'law-kdca',
         ministry: '질병관리청',
         ministryBadge: 'bg-teal-50 text-teal-800 border-teal-200',
+        ministryIcon: '🔬',
+        tag: '감염병복지',
         facilityCategory: '결핵·한센시설',
         fieldId: 'community-selfreliance',
         livingFacilities: ['결핵·한센시설 (국립소록도병원·한센인 정착촌 복지시설 등)'],
@@ -736,23 +805,27 @@ export const STATUTORY_MATRIX = [
         articles: '사회복지사업법 제2조·제34조 (특수감염병 복지시설)',
         note: ''
     },
-    // --- 성평등가족부 (구 여성가족부 확대 개편) ---
+    // --- 3. 성평등가족부 (6개 법정분류) ---
     {
         id: 'law-prostitution',
         ministry: '성평등가족부',
         ministryBadge: 'bg-pink-50 text-pink-800 border-pink-200',
+        ministryIcon: '👨‍👩‍👧',
+        tag: '인권보호',
         facilityCategory: '성매매피해지원시설',
         fieldId: 'family-gender',
         livingFacilities: ['일반지원시설', '청소년지원시설', '외국인지원시설', '자립지원공동생활시설'],
         usingFacilities: ['자활지원센터', '성매매피해상담소'],
         laws: ['「성매매방지 및 피해자보호 등에 관한 법률」'],
         articles: '성매매피해자보호법 제5조·제6조·제10조',
-        note: '2025년 하반기 정부조직 개편에 따라 기존 여성가족부에서 성평등가족부로 확대 개편'
+        note: '정부조직 개편에 따라 기존 여성가족부에서 성평등가족부로 확대 개편'
     },
     {
         id: 'law-sexual-violence',
         ministry: '성평등가족부',
         ministryBadge: 'bg-pink-50 text-pink-800 border-pink-200',
+        ministryIcon: '👨‍👩‍👧',
+        tag: '성폭력·스토킹',
         facilityCategory: '성폭력 · 스토킹피해보호시설',
         fieldId: 'family-gender',
         livingFacilities: ['성폭력피해자보호시설', '스토킹피해자보호시설'],
@@ -765,6 +838,8 @@ export const STATUTORY_MATRIX = [
         id: 'law-domestic-violence',
         ministry: '성평등가족부',
         ministryBadge: 'bg-pink-50 text-pink-800 border-pink-200',
+        ministryIcon: '👨‍👩‍👧',
+        tag: '가정폭력보호',
         facilityCategory: '가정폭력보호시설',
         fieldId: 'family-gender',
         livingFacilities: ['가정폭력피해자보호시설'],
@@ -777,6 +852,8 @@ export const STATUTORY_MATRIX = [
         id: 'law-single-parent',
         ministry: '성평등가족부',
         ministryBadge: 'bg-pink-50 text-pink-800 border-pink-200',
+        ministryIcon: '👨‍👩‍👧',
+        tag: '한부모가족',
         facilityCategory: '한부모가족복지시설',
         fieldId: 'family-gender',
         livingFacilities: ['출산지원시설', '양육지원시설', '생활지원시설', '일시지원시설'],
@@ -789,6 +866,8 @@ export const STATUTORY_MATRIX = [
         id: 'law-family-center',
         ministry: '성평등가족부',
         ministryBadge: 'bg-pink-50 text-pink-800 border-pink-200',
+        ministryIcon: '👨‍👩‍👧',
+        tag: '가족다문화',
         facilityCategory: '가족센터 (다문화·건강가정 통합)',
         fieldId: 'family-gender',
         livingFacilities: [],
@@ -801,6 +880,8 @@ export const STATUTORY_MATRIX = [
         id: 'law-youth',
         ministry: '성평등가족부',
         ministryBadge: 'bg-pink-50 text-pink-800 border-pink-200',
+        ministryIcon: '👨‍👩‍👧',
+        tag: '청소년',
         facilityCategory: '청소년복지·상담시설',
         fieldId: 'youth',
         livingFacilities: ['청소년쉼터 (일시·단기·중장기)', '청소년자립지원관', '청소년치료재활센터', '청소년회복지원시설'],
@@ -809,11 +890,13 @@ export const STATUTORY_MATRIX = [
         articles: '청소년복지 지원법 제16조·제31조; 학교밖청소년법 제12조',
         note: ''
     },
-    // --- 통일부 ---
+    // --- 4. 통일부 (1개 법정분류) ---
     {
         id: 'law-unification',
         ministry: '통일부',
         ministryBadge: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+        ministryIcon: '🕊️',
+        tag: '북한이탈',
         facilityCategory: '북한이탈주민지원시설',
         fieldId: 'family-gender',
         livingFacilities: [],
@@ -822,11 +905,13 @@ export const STATUTORY_MATRIX = [
         articles: '북한이탈주민법 제15조·제15조의2',
         note: ''
     },
-    // --- 교육부 ---
+    // --- 5. 교육부 (5개 법정분류) ---
     {
         id: 'law-childcare',
         ministry: '교육부',
         ministryBadge: 'bg-indigo-50 text-indigo-800 border-indigo-200',
+        ministryIcon: '🎓',
+        tag: '보육',
         facilityCategory: '어린이집 (유보통합 이관)',
         fieldId: 'child',
         livingFacilities: [],
@@ -839,19 +924,121 @@ export const STATUTORY_MATRIX = [
         id: 'law-school',
         ministry: '교육부',
         ministryBadge: 'bg-indigo-50 text-indigo-800 border-indigo-200',
-        facilityCategory: '학교사회복지 · 교육복지',
+        ministryIcon: '🎓',
+        tag: '학교사회복지',
+        facilityCategory: '학교사회복지 · 교육복지우선지원',
+        hierarchyFacility: '학교사회복지 · 교육복지',
         fieldId: 'school',
         livingFacilities: [],
         usingFacilities: ['초·중·고교 내 교육복지실 · 학교사회복지실', '교육지원청 학교사회복지 전담팀'],
-        laws: ['「초·중등교육법」', '「사회복지사업법」', '「학생맞춤통합지원법」'],
+        laws: ['「사회복지사업법」', '「초·중등교육법」', '「학생맞춤통합지원법」'],
         articles: '사회복지사업법 제11조(학교사회복지사); 초·중등교육법 제28조',
-        note: '학교사회복지사(법정 국가자격) 수련 및 시·도 교육청 학교사회복지 전담 영역'
+        note: '법정 「학교사회복지사」 수련 및 시·도 교육청 학교사회복지·교육복지우선지원 전담 영역'
     },
-    // --- 고용노동부 ---
+    {
+        id: 'ext-edu-k12',
+        ministry: '교육부',
+        ministryBadge: 'bg-indigo-50 text-indigo-800 border-indigo-200',
+        ministryIcon: '🎓',
+        tag: '늘봄·Wee·대안교육',
+        facilityCategory: '초·중·고교 늘봄학교 · Wee 프로젝트 · 대안교육',
+        hierarchyFacility: '초·중·고교 (늘봄학교 · 교육복지 · Wee)',
+        archiveDocId: 'doc-064',
+        fieldId: 'school',
+        livingFacilities: ['기숙형 공립고 기숙사', '기숙형 대안학교 · Wee 스쿨'],
+        usingFacilities: ['초·중·고등학교 (늘봄학교, 방과후학교, 학교돌봄터)', '교육복지우선지원사업 학교 (교육복지사 배치)', 'Wee 클래스 (학교 단위) · Wee 센터 (교육지원청 학생위기상담) · 학생맞춤통합지원센터', '대안학교 · 대안교육위탁교육기관'],
+        laws: ['「초·중등교육법」', '「학생맞춤통합지원법」'],
+        articles: '초·중등교육법 제28조·제60조의3; 시행령 제54조',
+        note: ''
+    },
+    {
+        id: 'ext-edu-special',
+        ministry: '교육부',
+        ministryBadge: 'bg-indigo-50 text-indigo-800 border-indigo-200',
+        ministryIcon: '🧩',
+        tag: '특수교육',
+        facilityCategory: '특수학교 · 특수학급 · 특수교육지원센터',
+        hierarchyFacility: '특수학교 · 특수학급 · 특수교육지원센터',
+        archiveDocId: 'doc-065',
+        fieldId: 'disability',
+        livingFacilities: ['특수학교 기숙생활관'],
+        usingFacilities: ['특수학교 · 일반학교 특수학급', '교육지원청 특수교육지원센터 (순회교육·치료지원·진로직업지원)'],
+        laws: ['「장애인 등에 대한 특수교육법」'],
+        articles: '특수교육법 제5조, 제11조(지원센터), 제27조(특수학교)',
+        note: ''
+    },
+    {
+        id: 'ext-edu-univ-lifelong',
+        ministry: '교육부',
+        ministryBadge: 'bg-indigo-50 text-indigo-800 border-indigo-200',
+        ministryIcon: '🏫',
+        tag: '대학·평생교육',
+        facilityCategory: '대학 장애학생·상담센터 · 평생교육기관',
+        hierarchyFacility: '대학 장애학생·상담센터 · 평생교육기관',
+        archiveDocId: 'doc-066',
+        fieldId: 'school',
+        livingFacilities: ['대학교 학생생활관 (기숙사 - 장애인편의시설 설치)'],
+        usingFacilities: ['대학교 장애학생지원센터 · 학생생활상담센터 · 인권센터', '평생학습관 · 시·도평생교육진흥원 · 장애인평생교육시설 · 문해교육센터'],
+        laws: ['「고등교육법」', '「평생교육법」'],
+        articles: '고등교육법 제19조의2·제19조의3; 평생교육법 제20조의2·제31조',
+        note: ''
+    },
+    // --- 6. 법무부 (3개 법정분류 - 구 law-justice 통합) ---
+    {
+        id: 'ext-jus-correction',
+        ministry: '법무부',
+        ministryBadge: 'bg-purple-50 text-purple-800 border-purple-200',
+        ministryIcon: '⚖️',
+        tag: '교정·소년·치료감호',
+        facilityCategory: '교정시설 · 소년보호 · 치료감호',
+        hierarchyFacility: '교정시설 · 소년보호 · 치료감호',
+        archiveDocId: 'doc-057',
+        fieldId: 'public-justice',
+        livingFacilities: ['교도소 · 구치소 · 교도소 지소 (사회복귀과)', '소년원 · 소년분류심사원 (법무부 직영 교정시설)', '치료감호소 (국립법무병원)', '군교도소 · 군구금시설 (국방부)'],
+        usingFacilities: ['교정 심리치료센터 · 교정 직업훈련·취업지원 시설', '소년원학교 · 청소년꿈키움센터 (청소년 비행예방센터)', '치료명령 외래 연계'],
+        laws: ['「형의 집행 및 수용자의 처우에 관한 법률」', '「보호소년 등의 처우에 관한 법률」', '「치료감호 등에 관한 법률」'],
+        articles: '형집행법 제2조·제3조·제55조; 보호소년법 제32조; 치료감호법 제16조',
+        note: ''
+    },
+    {
+        id: 'ext-jus-probation',
+        ministry: '법무부',
+        ministryBadge: 'bg-purple-50 text-purple-800 border-purple-200',
+        ministryIcon: '🛡️',
+        tag: '보호관찰·법무보호',
+        facilityCategory: '보호관찰 · 갱생보호 · 범죄피해자지원',
+        hierarchyFacility: '보호관찰 · 갱생보호 · 범죄피해자지원',
+        archiveDocId: 'doc-058',
+        fieldId: 'public-justice',
+        livingFacilities: ['한국법무보호복지공단 생활관 (숙식형 갱생보호시설)', '스마일센터 임시생활관 (주거지원형)'],
+        usingFacilities: ['보호관찰소 (준법지원센터 - 사회봉사·수강명령·판결전조사)', '법무보호복지공단 지부 (취업·직업훈련·자립지원)', '범죄피해자지원센터 · 스마일센터 심리치유실 (트라우마 치유·법률지원)', '법률홈닥터 (지자체·사회복지관 파견 법률복지)'],
+        laws: ['「보호관찰 등에 관한 법률」', '「범죄피해자 보호법」'],
+        articles: '보호관찰법 제14조·제32조; 범죄피해자보호법 제33조',
+        note: '7·9급 보호직 공무원, 교정보호 사회복지사, 한국법무보호복지공단 진출 분야'
+    },
+    {
+        id: 'ext-jus-foreign',
+        ministry: '법무부',
+        ministryBadge: 'bg-purple-50 text-purple-800 border-purple-200',
+        ministryIcon: '🌐',
+        tag: '출입국·난민지원',
+        facilityCategory: '출입국·외국인보호 · 난민지원',
+        hierarchyFacility: '출입국·외국인보호 · 난민지원',
+        archiveDocId: 'doc-059',
+        fieldId: 'public-justice',
+        livingFacilities: ['외국인보호소 · 보호시설', '출입국·외국인지원센터 숙식생활관'],
+        usingFacilities: ['외국인종합안내센터 (1345)', '난민지원센터 생계·의료·정착지원팀 (KIIP 연계)'],
+        laws: ['「출입국관리법」', '「난민법」'],
+        articles: '출입국관리법 제52조(보호); 난민법 제41조',
+        note: ''
+    },
+    // --- 7. 고용노동부 · 국가보훈부 · 국방부 (3개 법정분류) ---
     {
         id: 'law-labor-disability',
         ministry: '고용노동부',
         ministryBadge: 'bg-indigo-50 text-indigo-800 border-indigo-200',
+        ministryIcon: '💼',
+        tag: '고용·직업재활',
         facilityCategory: '장애인 고용 · 직업재활 · 국민취업지원',
         fieldId: 'disability',
         livingFacilities: ['장애인직업능력개발원 기숙생활관'],
@@ -860,37 +1047,43 @@ export const STATUTORY_MATRIX = [
         articles: '장애인고용촉진법 제15조·제21조·제43조; 구직자취업촉진법 제6조',
         note: '장애인 의무고용·직업훈련 및 국민취업지원제도 고용-복지 연계 전담'
     },
-    // --- 국가보훈부 ---
     {
         id: 'law-veterans',
         ministry: '국가보훈부',
         ministryBadge: 'bg-amber-50 text-amber-800 border-amber-200',
+        ministryIcon: '🎖️',
+        tag: '보훈복지·요양',
         facilityCategory: '국가유공자 복지 · 보훈요양시설',
         fieldId: 'elderly',
         livingFacilities: ['보훈요양원 (전국 8대 권역)', '보훈복지타운 · 보훈원 (주거형)'],
         usingFacilities: ['보훈재가복지센터 (보훈섬김이 방문돌봄)', '보훈회관 · 국가유공자 복지지원센터'],
         laws: ['「국가유공자 등 예우 및 지원에 관한 법률」', '「보훈보상대상자 지원에 관한 법률」'],
         articles: '국가유공자법 제67조; 보훈보상대상자법 제54조',
-        note: '보훈요양·주거·재가복지 전문인력 배치 운영 (의료진료는 Track 2 보훈병원 참조)'
+        note: '보훈요양·주거·재가복지 전문인력 배치 운영'
     },
-    // --- 법무부 ---
     {
-        id: 'law-justice',
-        ministry: '법무부',
-        ministryBadge: 'bg-purple-50 text-purple-800 border-purple-200',
-        facilityCategory: '보호관찰 · 사법·교정보호 시설',
-        fieldId: 'public-justice',
-        livingFacilities: ['법무부 직영 교정·소년보호처우 (교도소 사회복귀과)', '소년원 · 소년분류심사원', '치료감호소 (국립법무병원)'],
-        usingFacilities: ['전국 준법지원센터 (보호관찰소)', '한국법무보호복지공단 지부 (출소자 갱생보호·주거·취업지원)'],
-        laws: ['「보호관찰 등에 관한 법률」', '「형의 집행 및 수용자의 처우에 관한 법률」', '「치료감호 등에 관한 법률」', '「보호소년 등의 처우에 관한 법률」'],
-        articles: '보호관찰법 제14조·제32조; 형집행법 제55조; 치료감호법 제16조',
-        note: '7·9급 보호직 공무원, 교정보호 사회복지사, 법무보호복지공단 채용 연계'
+        id: 'ext-med-special',
+        ministry: '고용노동부·보훈부·국방부',
+        ministryBadge: 'bg-amber-50 text-amber-800 border-amber-200',
+        ministryIcon: '🎖️',
+        tag: '특수직역의료',
+        facilityCategory: '산재병원 · 보훈병원 · 국군병원',
+        hierarchyFacility: '산재병원 · 보훈병원 · 국군병원',
+        archiveDocId: 'doc-063',
+        fieldId: 'medical',
+        livingFacilities: ['근로복지공단 산재병원 입원병동', '중앙·권역 보훈병원 입원병동', '국군병원 · 국군외상센터 입원병동'],
+        usingFacilities: ['산재병원 재활사회사업실 · 직업복귀지원센터', '보훈병원 의료사회사업실 · 보훈재활체육센터', '군 의무시설 외래 · 장병심리회복지원팀'],
+        laws: ['「산업재해보상보험법」', '「한국보훈복지의료공단법」', '「군보건의료에 관한 법률」'],
+        articles: '산재보험법 제72조; 보훈공단법 제7조; 군보건의료법 제6조',
+        note: ''
     },
-    // --- 행정안전부 ---
+    // --- 8. 행정안전부 · 국토교통부 · 금융위원회 (3개 법정분류) ---
     {
         id: 'law-public-admin',
         ministry: '행정안전부',
         ministryBadge: 'bg-slate-100 text-slate-800 border-slate-300',
+        ministryIcon: '🏛️',
+        tag: '공공전달체계',
         facilityCategory: '공공복지 전달체계 · 지자체 · 사회서비스원',
         fieldId: 'public-justice',
         livingFacilities: [],
@@ -900,16 +1093,36 @@ export const STATUTORY_MATRIX = [
         note: '지자체 사회복지직 공무원 배치 및 통합사례관리·공공 사회서비스 제공 거점'
     },
     {
-        id: 'law-ngo-csr',
-        ministry: '비영리 · 민간임팩트',
-        ministryBadge: 'bg-blue-50 text-blue-800 border-blue-200',
-        facilityCategory: '국제구호 NGO · 공익재단 · 기업 CSR',
-        fieldId: 'ngo',
+        id: 'ext-life-housing-disaster',
+        ministry: '국토교통부·행안부',
+        ministryBadge: 'bg-cyan-50 text-cyan-800 border-cyan-200',
+        ministryIcon: '🏘️',
+        tag: '주거·재난구호',
+        facilityCategory: '주거복지센터 · 사회주택 · 재난구호시설',
+        hierarchyFacility: '주거복지센터 · 사회주택 · 재난구호시설',
+        archiveDocId: 'doc-067',
+        fieldId: 'community-selfreliance',
+        livingFacilities: ['전국재해구호협회 (이재민 임시주거시설·임시조립주택·대피소)', '사회주택 / 자립지원임대주택 (케어안심주택)', '영구임대주택 · 국민임대주택 · 매입·전세임대주택'],
+        usingFacilities: ['주거복지센터 (LH 마이홈센터 / 지자체 위탁, 주거급여·사회주택 연계)', '주거복지동 (영구임대 단지 내 복지관 결합)', '재난심리회복지원센터 · 재해구호협회 거점'],
+        laws: ['「주거기본법」', '「공공주택 특별법」', '「재해구호법」'],
+        articles: '주거기본법 제22조; 공공주택특별법 제2조; 재해구호법 제4조의2',
+        note: ''
+    },
+    {
+        id: 'ext-life-finance-volunteer',
+        ministry: '금융위원회·행정안전부',
+        ministryBadge: 'bg-cyan-50 text-cyan-800 border-cyan-200',
+        ministryIcon: '💳',
+        tag: '서민금융·자원봉사',
+        facilityCategory: '서민금융 · 채무조정 · 자원봉사 · NPO',
+        hierarchyFacility: '서민금융 · 채무조정 · 자원봉사 · NPO',
+        archiveDocId: 'doc-068',
+        fieldId: 'community-selfreliance',
         livingFacilities: [],
-        usingFacilities: ['국제구호·개발협력 NGO (KCOC 회원단체 등)', '모금·배분 공익재단 (사회복지공동모금회 사랑의열매·기업 출연재단)', '기업 사회공헌(CSR/ESG)팀'],
-        laws: ['「국제개발협력기본법」', '「비영리민간단체 지원법」', '「사회복지공동모금회법」'],
-        articles: '민법 제32조; 사회복지공동모금회법 제20조',
-        note: '인턴십·KOICA YP·모금/임팩트 커리어 진출 분야 (관련 법정시설은 복지부 등 별도 신고)'
+        usingFacilities: ['서민금융진흥원 (햇살론, 미소금융 등 서민금융지원 · 서민금융통합지원센터)', '신용회복위원회 (개인워크아웃, 채무조정)', '지역 자원봉사센터 (중앙·시도·시군구 - 「자원봉사기본법」 행안부 체계)', '중앙·시도 등록 비영리민간단체 (NPO 지원)'],
+        laws: ['「서민의 금융생활 지원에 관한 법률」', '「자원봉사활동 기본법」', '「비영리민간단체 지원법」'],
+        articles: '서민금융법 제3조·제56조; 자원봉사법 제19조; NPO법 제4조',
+        note: ''
     }
 ];
 
@@ -5345,6 +5558,81 @@ export const FACILITY_MAPPING_RULES = {
             "학교 늘봄·학생맞춤통합지원"
         ]
     },
+    "국제구호 NGO · 공익재단 · 기업 CSR": {
+        "domainId": "12_배분모금국제",
+        "facilityTypes": [
+            "사회복지공동모금회",
+            "국제개발협력 NGO"
+        ],
+        "level1": [
+            "민간 배분·모금 및 공익재단 사업",
+            "국제개발협력 및 인도적 지원"
+        ]
+    },
+    "국제구호·개발협력 NGO": {
+        "domainId": "12_배분모금국제",
+        "facilityTypes": [
+            "국제개발협력 NGO"
+        ],
+        "level1": [
+            "국제개발협력 및 인도적 지원"
+        ]
+    },
+    "모금·배분 공익재단": {
+        "domainId": "12_배분모금국제",
+        "facilityTypes": [
+            "사회복지공동모금회"
+        ],
+        "level1": [
+            "민간 배분·모금 및 공익재단 사업"
+        ]
+    },
+    "기업 사회공헌(CSR/ESG)팀": {
+        "domainId": "12_배분모금국제",
+        "facilityTypes": [
+            "사회복지공동모금회"
+        ],
+        "level1": [
+            "민간 배분·모금 및 공익재단 사업"
+        ]
+    },
+    "의료사회복지 · 병원 사회사업팀 · 의료급여": {
+        "domainId": "15_보건의료전문케어",
+        "facilityTypes": [
+            "상급종합병원·요양병원·호스피스·응급의료센터"
+        ],
+        "level1": [
+            "의료사회복지·호스피스 완화돌봄"
+        ]
+    },
+    "호스피스·완화의료 · 요양병원 · 응급의료센터": {
+        "domainId": "15_보건의료전문케어",
+        "facilityTypes": [
+            "상급종합병원·요양병원·호스피스·응급의료센터"
+        ],
+        "level1": [
+            "의료사회복지·호스피스 완화돌봄"
+        ]
+    },
+    "학교사회복지 · 교육복지우선지원": {
+        "domainId": "10_학교사회복지",
+        "facilityTypes": [
+            "초·중·고등학교",
+            "교육복지우선지원사업 초·중·고등학교"
+        ],
+        "level1": [
+            "학생맞춤형 통합지원 및 사례관리"
+        ]
+    },
+    "초·중·고교 늘봄학교 · Wee 프로젝트 · 대안교육": {
+        "domainId": "16_정규특수평생교육",
+        "facilityTypes": [
+            "초·중·고교(늘봄·교육복지·Wee)"
+        ],
+        "level1": [
+            "학교 늘봄·학생맞춤통합지원"
+        ]
+    },
     "보건소 · 보건지소 · 건강생활지원센터 · 보건진료소": {
         "domainId": "15_보건의료전문케어",
         "facilityTypes": [
@@ -5360,331 +5648,39 @@ export const FACILITY_MAPPING_RULES = {
  * Track 2: 확장 실무 & 범부처 안전망 도감 (6대 확장영역 · 17개 분류)
  * - Track 1(STATUTORY_MATRIX)과 동일한 5열 테이블 스키마 준용 (+ trackGroup, articles, operator 메타데이터)
  */
-export const EXTENDED_STATUTORY_MATRIX = [
-    // --- 4. 사회적경제 및 연대경제 ---
+export const CIVIL_IMPACT_ECOSYSTEM = [
+    // --- 축 1. 민법 제32조 비영리 공익법인 · 종교공익 생태계 (3대 영역) ---
     {
-        id: 'ext-sec-social-enterprise',
-        trackGroup: '4. 사회적경제 및 연대경제',
-        ministry: '고용노동부·중기부',
-        ministryBadge: 'bg-teal-50 text-teal-800 border-teal-200',
-        ministryIcon: '🌱',
-        facilityCategory: '사회적기업 · 예비사회적기업 · 소셜벤처',
-        hierarchyFacility: '사회적기업 · 예비사회적기업 · 소셜벤처',
-        archiveDocId: 'doc-054',
-        tag: '사회적경제',
+        id: 'law-ngo-csr',
+        axisGroup: '축 1 · 민법 제32조 비영리·공익법인',
+        trackGroup: '민법 제32조 비영리·공익법인',
+        ministry: '민법 제32조 · 주무관청',
+        ministryBadge: 'bg-blue-50 text-blue-800 border-blue-200',
+        ministryIcon: '🌍',
+        facilityCategory: '국제구호 NGO · 공익재단 · 기업 CSR',
+        hierarchyFacility: '국제구호 NGO · 공익재단 · 기업 CSR',
+        archiveDocId: 'doc-034',
+        tag: 'NGO·모금재단·CSR',
         livingFacilities: [],
         usingFacilities: [
-            '인증 사회적기업 (일자리제공형·사회서비스제공형·지역사회공헌형·혼합형)',
-            '부처형 · 지역형 예비사회적기업',
-            '소셜벤처 (중소벤처기업부 판별)',
-            '한국사회적기업진흥원'
+            '국제구호·개발협력 NGO (KCOC 회원단체 등)',
+            '모금·배분 공익재단 (사회복지공동모금회 사랑의열매·기업 출연재단)',
+            '기업 사회공헌(CSR/ESG)팀'
         ],
-        laws: ['「사회적기업 육성법」', '「벤처기업육성에 관한 특별법」'],
-        articles: '사회적기업육성법 제2조·제7조·제20조'
+        laws: ['「민법」 제32조', '「사회복지공동모금회법」', '「국제개발협력기본법」', '「공익법인의 설립·운영에 관한 법률」'],
+        articles: '민법 제32조; 사회복지공동모금회법 제20조; 공익법인법 제4조'
     },
-    {
-        id: 'ext-sec-coop-village',
-        trackGroup: '4. 사회적경제 및 연대경제',
-        ministry: '기재부·행안부·복지부',
-        ministryBadge: 'bg-teal-50 text-teal-800 border-teal-200',
-        ministryIcon: '🤝',
-        facilityCategory: '협동조합 · 마을기업 · 자활기업',
-        hierarchyFacility: '협동조합 · 마을기업 · 자활기업',
-        archiveDocId: 'doc-055',
-        tag: '연대경제',
-        livingFacilities: [],
-        usingFacilities: [
-            '일반협동조합 · 사회적협동조합 (기재부/관계부처 인가, 돌봄·복지형)',
-            '지정 마을기업 (행정안전부 지정 지역공동체 비즈니스)',
-            '인정 자활기업 (기초수급자·차상위계층 기반 자활공동체)'
-        ],
-        laws: ['「협동조합 기본법」', '「국민기초생활 보장법」'],
-        articles: '협동조합기본법 제15조·제85조; 기초보장법 제18조'
-    },
-    {
-        id: 'ext-sec-social-farm',
-        trackGroup: '4. 사회적경제 및 연대경제',
-        ministry: '농림축산식품부',
-        ministryBadge: 'bg-emerald-50 text-emerald-800 border-emerald-200',
-        ministryIcon: '🌾',
-        facilityCategory: '사회적농장 · 농어촌공동체회사',
-        hierarchyFacility: '사회적농장 · 농어촌공동체회사',
-        archiveDocId: 'doc-056',
-        tag: '농촌돌봄',
-        livingFacilities: ['농촌 돌봄공동체 숙식거주시설'],
-        usingFacilities: ['사회적농장 (장애인·고령자 주간 농촌돌봄·교육·고용)', '농어촌공동체회사 (농식품부 육성)'],
-        laws: ['「농어촌주민의 보건복지증진을 위한 특별법」', '「치유농업 연구개발 및 육성에 관한 법률」'],
-        articles: '농어촌복지법 및 농식품부 사회적농업 활성화 지원지침'
-    },
-
-    // --- 5. 사법·교정 및 법무보호 ---
-    {
-        id: 'ext-jus-correction',
-        trackGroup: '5. 사법·교정 및 법무보호',
-        ministry: '법무부·국방부',
-        ministryBadge: 'bg-purple-50 text-purple-800 border-purple-200',
-        ministryIcon: '⚖️',
-        facilityCategory: '교정시설 · 소년보호 · 치료감호',
-        hierarchyFacility: '교정시설 · 소년보호 · 치료감호',
-        archiveDocId: 'doc-057',
-        tag: '사법교정',
-        livingFacilities: [
-            '교도소 · 구치소 · 교도소 지소 (사회복귀과)',
-            '소년원 · 소년분류심사원 (법무부 직영 교정시설)',
-            '치료감호소 (국립법무병원)',
-            '군교도소 · 군구금시설 (국방부)'
-        ],
-        usingFacilities: [
-            '교정 심리치료센터 · 교정 직업훈련·취업지원 시설',
-            '소년원학교 · 청소년꿈키움센터 (청소년 비행예방센터)',
-            '치료명령 외래 연계'
-        ],
-        laws: ['「형의 집행 및 수용자의 처우에 관한 법률」', '「보호소년 등의 처우에 관한 법률」', '「치료감호 등에 관한 법률」'],
-        articles: '형집행법 제2조·제3조; 소년법 제32조; 군형집행법'
-    },
-    {
-        id: 'ext-jus-probation',
-        trackGroup: '5. 사법·교정 및 법무보호',
-        ministry: '법무부',
-        ministryBadge: 'bg-purple-50 text-purple-800 border-purple-200',
-        ministryIcon: '🛡️',
-        facilityCategory: '보호관찰 · 갱생보호 · 범죄피해자지원',
-        hierarchyFacility: '보호관찰 · 갱생보호 · 범죄피해자지원',
-        archiveDocId: 'doc-058',
-        tag: '법무보호',
-        livingFacilities: [
-            '한국법무보호복지공단 생활관 (숙식형 갱생보호시설)',
-            '스마일센터 임시생활관 (주거지원형)'
-        ],
-        usingFacilities: [
-            '보호관찰소 (준법지원센터 - 사회봉사·수강명령·판결전조사)',
-            '법무보호복지공단 지부 (취업·직업훈련·자립지원)',
-            '범죄피해자지원센터 · 스마일센터 심리치유실 (트라우마 치유·법률지원)',
-            '법률홈닥터 (지자체·사회복지관 파견 법률복지)'
-        ],
-        laws: ['「보호관찰 등에 관한 법률」', '「범죄피해자 보호법」'],
-        articles: '범죄피해자보호법 제33조; 보호관찰법 제14조'
-    },
-    {
-        id: 'ext-jus-foreign',
-        trackGroup: '5. 사법·교정 및 법무보호',
-        ministry: '법무부',
-        ministryBadge: 'bg-purple-50 text-purple-800 border-purple-200',
-        ministryIcon: '🌐',
-        facilityCategory: '출입국·외국인보호 · 난민지원',
-        hierarchyFacility: '출입국·외국인보호 · 난민지원',
-        archiveDocId: 'doc-059',
-        tag: '이주난민',
-        livingFacilities: ['외국인보호소 · 보호시설', '출입국·외국인지원센터 숙식생활관'],
-        usingFacilities: ['외국인종합안내센터 (1345)', '난민지원센터 생계·의료·정착지원팀 (KIIP 연계)'],
-        laws: ['「출입국관리법」', '「난민법」'],
-        articles: '출입국관리법 제52조(보호); 난민법 제41조'
-    },
-
-    // --- 6. 보건·의료 및 전문케어 ---
-    {
-        id: 'ext-med-hospital',
-        trackGroup: '6. 보건·의료 및 전문케어',
-        ministry: '보건복지부',
-        ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
-        ministryIcon: '🏥',
-        facilityCategory: '상급종합·종합병원 · 호스피스 · 요양병원',
-        hierarchyFacility: '상급종합·종합병원 · 호스피스 · 요양병원',
-        archiveDocId: 'doc-060',
-        tag: '의료사회복지',
-        livingFacilities: [
-            '요양병원 장기입원병동',
-            '입원형 호스피스 병동',
-            '권역응급의료센터 (응급병동)'
-        ],
-        usingFacilities: [
-            '상급종합병원 / 종합병원 (공공의료사업단·퇴원연계팀)',
-            '가정형·자문형 호스피스 전문기관',
-            '요양병원 낮병동 · 외래재활실'
-        ],
-        laws: ['「의료법」', '「호스피스·완화의료 및 임종과정에 있는 환자의 연명의료결정에 관한 법률」', '「암관리법」'],
-        articles: '의료법 시행규칙 제38조(의료사회복지사); 연명의료결정법 제25조; 암관리법 제20조'
-    },
-    {
-        id: 'ext-med-rehab',
-        trackGroup: '6. 보건·의료 및 전문케어',
-        ministry: '보건복지부',
-        ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
-        ministryIcon: '🩺',
-        facilityCategory: '재활의료 · 지방의료원 · 정신의료 · 산후조리원',
-        hierarchyFacility: '재활의료 · 지방의료원 · 정신의료 · 산후조리원',
-        archiveDocId: 'doc-061',
-        tag: '전문케어',
-        livingFacilities: [
-            '국립재활원 · 회복기 재활병동',
-            '정신의료기관 입원병동 (폐쇄·개방병동)',
-            '지방의료원 · 국립중앙의료원 · 국립암센터 · 적십자병원 입원진료',
-            '산후조리원 (산모·신생아 거주 요양)'
-        ],
-        usingFacilities: [
-            '권역재활병원 외래 · 지역사회중심재활센터(CBR)',
-            '정신건강의학과 외래 · 낮병원 (Day Hospital)',
-            '공공의료 301네트워크 · 취약계층 의료지원팀'
-        ],
-        laws: ['「장애인복지법」', '「정신건강증진 및 정신질환자 복지서비스 지원에 관한 법률」', '「지방의료원의 설립 및 운영에 관한 법률」', '「모자보건법」'],
-        articles: '정신건강복지법 제19조; 지방의료원법 제4조; 모자보건법 제15조의2'
-    },
-    {
-        id: 'ext-med-public-health',
-        trackGroup: '6. 보건·의료 및 전문케어',
-        ministry: '보건복지부',
-        ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
-        ministryIcon: '🧬',
-        facilityCategory: '지역보건의료기관 · 치매안심센터',
-        hierarchyFacility: '지역보건의료기관 · 치매안심센터',
-        archiveDocId: 'doc-062',
-        tag: '지역보건',
-        livingFacilities: [],
-        usingFacilities: [
-            '보건소 · 보건지소 · 건강생활지원센터 · 보건진료소',
-            '치매안심센터 (보건소 연계 치매조기검진·맞춤형 사례관리)'
-        ],
-        laws: ['「지역보건법」', '「치매관리법」'],
-        articles: '지역보건법 제10조·제13조·제14조; 치매관리법 제17조'
-    },
-    {
-        id: 'ext-med-special',
-        trackGroup: '6. 보건·의료 및 전문케어',
-        ministry: '고용노동부·보훈부·국방부',
-        ministryBadge: 'bg-amber-50 text-amber-800 border-amber-200',
-        ministryIcon: '🎖️',
-        facilityCategory: '산재병원 · 보훈병원 · 국군병원',
-        hierarchyFacility: '산재병원 · 보훈병원 · 국군병원',
-        archiveDocId: 'doc-063',
-        tag: '특수의료',
-        livingFacilities: [
-            '근로복지공단 산재병원 입원병동',
-            '중앙·권역 보훈병원 입원병동',
-            '국군병원 · 국군외상센터 입원병동'
-        ],
-        usingFacilities: [
-            '산재병원 재활사회사업실 · 직업복귀지원센터',
-            '보훈병원 의료사회사업실 · 보훈재활체육센터',
-            '군 의무시설 외래 · 장병심리회복지원팀'
-        ],
-        laws: ['「산업재해보상보험법」', '「한국보훈복지의료공단법」', '「군보건의료에 관한 법률」'],
-        articles: '산재보험법 제72조; 보훈공단법 제7조; 군보건의료법 제6조'
-    },
-
-    // --- 7. 정규 교육 및 특수교육 ---
-    {
-        id: 'ext-edu-k12',
-        trackGroup: '7. 정규 교육 및 특수교육',
-        ministry: '교육부',
-        ministryBadge: 'bg-indigo-50 text-indigo-800 border-indigo-200',
-        ministryIcon: '🎓',
-        facilityCategory: '초·중·고교 (늘봄학교 · 교육복지 · Wee)',
-        hierarchyFacility: '초·중·고교 (늘봄학교 · 교육복지 · Wee)',
-        archiveDocId: 'doc-064',
-        tag: '학교복지',
-        livingFacilities: ['기숙형 공립고 기숙사', '기숙형 대안학교 · Wee 스쿨'],
-        usingFacilities: [
-            '초·중·고등학교 (늘봄학교, 방과후학교, 학교돌봄터)',
-            '교육복지우선지원사업 학교 (교육복지사 배치)',
-            'Wee 클래스 (학교 단위) · Wee 센터 (교육지원청 학생위기상담) · 학생맞춤통합지원센터',
-            '대안학교 · 대안교육위탁교육기관'
-        ],
-        laws: ['「초·중등교육법」', '「학생맞춤통합지원법」'],
-        articles: '초·중등교육법 제28조·제60조의3; 시행령 제54조'
-    },
-    {
-        id: 'ext-edu-special',
-        trackGroup: '7. 정규 교육 및 특수교육',
-        ministry: '교육부',
-        ministryBadge: 'bg-indigo-50 text-indigo-800 border-indigo-200',
-        ministryIcon: '🧩',
-        facilityCategory: '특수학교 · 특수학급 · 특수교육지원센터',
-        hierarchyFacility: '특수학교 · 특수학급 · 특수교육지원센터',
-        archiveDocId: 'doc-065',
-        tag: '특수교육',
-        livingFacilities: ['특수학교 기숙생활관'],
-        usingFacilities: [
-            '특수학교 · 일반학교 특수학급',
-            '교육지원청 특수교육지원센터 (순회교육·치료지원·진로직업지원)'
-        ],
-        laws: ['「장애인 등에 대한 특수교육법」'],
-        articles: '특수교육법 제5조, 제11조(지원센터), 제27조(특수학교)'
-    },
-    {
-        id: 'ext-edu-univ-lifelong',
-        trackGroup: '7. 정규 교육 및 특수교육',
-        ministry: '교육부',
-        ministryBadge: 'bg-indigo-50 text-indigo-800 border-indigo-200',
-        ministryIcon: '🏫',
-        facilityCategory: '대학 장애학생·상담센터 · 평생교육기관',
-        hierarchyFacility: '대학 장애학생·상담센터 · 평생교육기관',
-        archiveDocId: 'doc-066',
-        tag: '대학·평생교육',
-        livingFacilities: ['대학교 학생생활관 (기숙사 - 장애인편의시설 설치)'],
-        usingFacilities: [
-            '대학교 장애학생지원센터 · 학생생활상담센터 · 인권센터',
-            '평생학습관 · 시·도평생교육진흥원 · 장애인평생교육시설 · 문해교육센터'
-        ],
-        laws: ['「고등교육법」', '「평생교육법」'],
-        articles: '고등교육법 제19조의2·제19조의3; 평생교육법 제20조의2·제31조'
-    },
-
-    // --- 8. 주거·금융·자원봉사 ---
-    {
-        id: 'ext-life-housing-disaster',
-        trackGroup: '8. 주거·금융·자원봉사',
-        ministry: '국토교통부·행안부',
-        ministryBadge: 'bg-cyan-50 text-cyan-800 border-cyan-200',
-        ministryIcon: '🏘️',
-        facilityCategory: '주거복지센터 · 사회주택 · 재난구호시설',
-        hierarchyFacility: '주거복지센터 · 사회주택 · 재난구호시설',
-        archiveDocId: 'doc-067',
-        tag: '주거·재난',
-        livingFacilities: [
-            '전국재해구호협회 (이재민 임시주거시설·임시조립주택·대피소)',
-            '사회주택 / 자립지원임대주택 (케어안심주택)',
-            '영구임대주택 · 국민임대주택 · 매입·전세임대주택'
-        ],
-        usingFacilities: [
-            '주거복지센터 (LH 마이홈센터 / 지자체 위탁, 주거급여·사회주택 연계)',
-            '주거복지동 (영구임대 단지 내 복지관 결합)',
-            '재난심리회복지원센터 · 재해구호협회 거점'
-        ],
-        laws: ['「주거기본법」', '「공공주택 특별법」', '「재해구호법」'],
-        articles: '주거기본법 제22조; 공공주택특별법 제2조; 재해구호법 제4조의2'
-    },
-    {
-        id: 'ext-life-finance-volunteer',
-        trackGroup: '8. 주거·금융·자원봉사',
-        ministry: '금융위원회·행정안전부',
-        ministryBadge: 'bg-cyan-50 text-cyan-800 border-cyan-200',
-        ministryIcon: '💳',
-        facilityCategory: '서민금융 · 채무조정 · 자원봉사 · NPO',
-        hierarchyFacility: '서민금융 · 채무조정 · 자원봉사 · NPO',
-        archiveDocId: 'doc-068',
-        tag: '금융·봉사',
-        livingFacilities: [],
-        usingFacilities: [
-            '서민금융진흥원 (햇살론, 미소금융 등 서민금융지원 · 서민금융통합지원센터)',
-            '신용회복위원회 (개인워크아웃, 채무조정)',
-            '지역 자원봉사센터 (중앙·시도·시군구 - 「자원봉사기본법」 행안부 체계)',
-            '중앙·시도 등록 비영리민간단체 (NPO 지원)'
-        ],
-        laws: ['「서민의 금융생활 지원에 관한 법률」', '「자원봉사활동 기본법」', '「비영리민간단체 지원법」'],
-        articles: '서민금융법 제3조·제56조; 자원봉사법 제19조; NPO법 제4조'
-    },
-
-    // --- 9. 종교 기반 복지체계 ---
     {
         id: 'ext-rel-welfare',
-        trackGroup: '9. 종교 기반 복지체계',
+        axisGroup: '축 1 · 민법 제32조 비영리·공익법인',
+        trackGroup: '민법 제32조 비영리·종교공익',
         ministry: '문화체육관광부·복지부·지자체',
         ministryBadge: 'bg-orange-50 text-orange-800 border-orange-200',
         ministryIcon: '🕊️',
         facilityCategory: '종교법인 복지시설 · 수도원 · 무료급식소',
         hierarchyFacility: '종교법인 복지시설 · 수도원 · 무료급식소',
         archiveDocId: 'doc-069',
-        tag: '종교복지',
+        tag: '종교복지·무료급식',
         livingFacilities: [
             '수도원 · 수녀원 (종교인 공동체 생활시설)',
             '종교단체 운영 무료 양로원 · 쉼터 · 아동·장애인 거주시설'
@@ -5698,14 +5694,15 @@ export const EXTENDED_STATUTORY_MATRIX = [
     },
     {
         id: 'ext-rel-heritage',
-        trackGroup: '9. 종교 기반 복지체계',
+        axisGroup: '축 1 · 민법 제32조 비영리·공익법인',
+        trackGroup: '민법 제32조 비영리·종교공익',
         ministry: '문화체육관광부·국가유산청·국토부',
         ministryBadge: 'bg-orange-50 text-orange-800 border-orange-200',
         ministryIcon: '🏯',
         facilityCategory: '전통사찰 · 템플스테이 · 종교문화유산',
         hierarchyFacility: '전통사찰 · 템플스테이 · 종교문화유산',
         archiveDocId: 'doc-070',
-        tag: '종교문화',
+        tag: '종교문화·치유',
         livingFacilities: ['사찰 수행·숙박 공간 (템플스테이 숙박동)'],
         usingFacilities: [
             '템플스테이 운영 전통사찰 (마음치유·힐링 프로그램)',
@@ -5714,6 +5711,68 @@ export const EXTENDED_STATUTORY_MATRIX = [
         ],
         laws: ['「전통사찰의 보존 및 지원에 관한 법률」', '「국가유산기본법」', '「건축법 시행령」'],
         articles: '전통사찰법 제2조; 건축법 시행령 별표 1 제6호'
+    },
+    // --- 축 2. 사회적경제 · 연대경제 · 농촌돌봄 특별법 생태계 (3대 영역) ---
+    {
+        id: 'ext-sec-social-enterprise',
+        axisGroup: '축 2 · 사회적경제 · 연대경제 특별법',
+        trackGroup: '사회적경제 및 연대경제',
+        ministry: '고용노동부·중기부',
+        ministryBadge: 'bg-teal-50 text-teal-800 border-teal-200',
+        ministryIcon: '🌱',
+        facilityCategory: '사회적기업 · 예비사회적기업 · 소셜벤처',
+        hierarchyFacility: '사회적기업 · 예비사회적기업 · 소셜벤처',
+        archiveDocId: 'doc-054',
+        tag: '사회적기업·소셜벤처',
+        livingFacilities: [],
+        usingFacilities: [
+            '인증 사회적기업 (일자리제공형·사회서비스제공형·지역사회공헌형·혼합형)',
+            '부처형 · 지역형 예비사회적기업',
+            '소셜벤처 (중소벤처기업부 판별)',
+            '한국사회적기업진흥원'
+        ],
+        laws: ['「사회적기업 육성법」', '「벤처기업육성에 관한 특별법」'],
+        articles: '사회적기업육성법 제2조·제7조·제20조'
+    },
+    {
+        id: 'ext-sec-coop-village',
+        axisGroup: '축 2 · 사회적경제 · 연대경제 특별법',
+        trackGroup: '사회적경제 및 연대경제',
+        ministry: '기재부·행안부·복지부',
+        ministryBadge: 'bg-teal-50 text-teal-800 border-teal-200',
+        ministryIcon: '🤝',
+        facilityCategory: '협동조합 · 마을기업 · 자활기업',
+        hierarchyFacility: '협동조합 · 마을기업 · 자활기업',
+        archiveDocId: 'doc-055',
+        tag: '협동조합·마을·자활',
+        livingFacilities: [],
+        usingFacilities: [
+            '일반협동조합 · 사회적협동조합 (기재부/관계부처 인가, 돌봄·복지형)',
+            '지정 마을기업 (행정안전부 지정 지역공동체 비즈니스)',
+            '인정 자활기업 (기초수급자·차상위계층 기반 자활공동체)'
+        ],
+        laws: ['「협동조합 기본법」', '「국민기초생활 보장법」'],
+        articles: '협동조합기본법 제15조·제85조; 기초보장법 제18조'
+    },
+    {
+        id: 'ext-sec-social-farm',
+        axisGroup: '축 2 · 사회적경제 · 연대경제 특별법',
+        trackGroup: '사회적경제 및 연대경제',
+        ministry: '농림축산식품부',
+        ministryBadge: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+        ministryIcon: '🌾',
+        facilityCategory: '사회적농장 · 농어촌공동체회사',
+        hierarchyFacility: '사회적농장 · 농어촌공동체회사',
+        archiveDocId: 'doc-056',
+        tag: '사회적농장·농촌돌봄',
+        livingFacilities: ['농촌 돌봄공동체 숙식거주시설'],
+        usingFacilities: [
+            '사회적농장 (장애인·고령자 주간 농촌돌봄·교육·고용)',
+            '농어촌공동체회사 (농식품부 육성)'
+        ],
+        laws: ['「농어촌주민의 보건복지증진을 위한 특별법」', '「치유농업 연구개발 및 육성에 관한 법률」'],
+        articles: '농어촌복지법 및 농식품부 사회적농업 활성화 지원지침'
     }
 ];
+export const EXTENDED_STATUTORY_MATRIX = CIVIL_IMPACT_ECOSYSTEM;
 
