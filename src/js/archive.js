@@ -16,6 +16,65 @@
     let searchQuery = '';
     let mobileActiveSection = 'SECTION_1';
     let activeFilterGuidelines = null;
+    let currentArchiveFacilityId = null;
+    let currentArchiveFacilityName = null;
+    let currentArchiveDocIds = null;
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    // Track 1(23개) + Track 2(17개) 시설 분류 ID별 공식 지침서 1:1 매핑 테이블 (Zero Empty State 보장)
+    const FACILITY_ARCHIVE_MAP = {
+        // Track 1 (23개)
+        'law-elderly': ['doc-005', 'doc-006', 'doc-007', 'doc-008', 'doc-033'],
+        'law-integrated-care': ['doc-028', 'doc-027', 'doc-005'],
+        'law-child': ['doc-014', 'doc-015', 'doc-016', 'doc-017', 'doc-018', 'doc-019', 'doc-020'],
+        'law-disability': ['doc-009', 'doc-010', 'doc-011', 'doc-012', 'doc-013', 'doc-030'],
+        'law-mental': ['doc-022', 'doc-023', 'doc-024'],
+        'law-homeless': ['doc-025', 'doc-031'],
+        'law-welfare-center': ['doc-004', 'doc-026', 'doc-001', 'doc-002', 'doc-003', 'doc-029', 'doc-048', 'doc-050'],
+        'law-selfreliance': ['doc-034', 'doc-032'],
+        'law-medical': ['doc-021', 'doc-060', 'doc-061'],
+        'law-kdca': ['doc-003', 'doc-021'],
+        'law-prostitution': ['doc-040'],
+        'law-sexual-violence': ['doc-040'],
+        'law-domestic-violence': ['doc-040'],
+        'law-single-parent': ['doc-039'],
+        'law-family-center': ['doc-035', 'doc-036'],
+        'law-youth': ['doc-037', 'doc-038', 'doc-041', 'doc-042'],
+        'law-unification': ['doc-051'],
+        'law-childcare': ['doc-043', 'doc-044'],
+        'law-school': ['doc-045', 'doc-064'],
+        'law-labor-disability': ['doc-046', 'doc-047', 'doc-030'],
+        'law-veterans': ['doc-052'],
+        'law-justice': ['doc-057', 'doc-058'],
+        'law-public-admin': ['doc-027', 'doc-028', 'doc-031', 'doc-032', 'doc-053'],
+        // Track 2 (17개)
+        'ext-sec-social-enterprise': ['doc-054'],
+        'ext-sec-coop-village': ['doc-055', 'doc-034'],
+        'ext-sec-social-farm': ['doc-056'],
+        'ext-jus-correction': ['doc-057'],
+        'ext-jus-probation': ['doc-058'],
+        'ext-jus-foreign': ['doc-059'],
+        'ext-med-hospital': ['doc-060', 'doc-021'],
+        'ext-med-rehab': ['doc-061', 'doc-023'],
+        'ext-med-public-health': ['doc-062'],
+        'ext-med-special': ['doc-063', 'doc-052'],
+        'ext-edu-k12': ['doc-064', 'doc-045'],
+        'ext-edu-special': ['doc-065'],
+        'ext-edu-univ-lifelong': ['doc-066'],
+        'ext-life-housing-disaster': ['doc-067'],
+        'ext-life-finance-volunteer': ['doc-068', 'doc-002'],
+        'ext-rel-welfare': ['doc-069', 'doc-026', 'doc-029'],
+        'ext-rel-heritage': ['doc-070']
+    };
 
     const FACILITY_PATTERNS = [
         { pattern: /통합돌봄|통합지원/, id: 'law-integrated-care', name: '지역 통합돌봄' },
@@ -114,6 +173,12 @@
     window.renderArchiveView = function (options = {}) {
         const container = document.getElementById('view-archive');
         if (!container) return;
+
+        currentMinistry = 'all';
+        searchQuery = '';
+        currentArchiveFacilityId = null;
+        currentArchiveFacilityName = null;
+        currentArchiveDocIds = null;
 
         const allFiles = getAllFiles();
         const config = getArchiveConfig();
@@ -308,7 +373,7 @@
                                 <span class="material-symbols-outlined text-[20px]">search</span>
                             </span>
                             <input type="text"
-                                   id="guidelineSearchInput" type="search" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="53종 공식 지침서명, 소관부처, 담당과, 근거법령 검색"
+                                   id="guidelineSearchInput" type="search" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="${countAll}종 공식 지침서명, 소관부처, 담당과, 근거법령 검색"
                                    class="w-full pl-10 pr-28 py-2 bg-surface-container-low rounded-lg text-body-md font-body-md text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all"
                                    placeholder="지침서명, 소관부처, 과명칭, 근거 법령, 대상 시설(예: 종합사회복지관, 지역아동센터, 노인복지법)...">
                             <div class="absolute inset-y-0 right-0 pr-2 flex items-center gap-1.5">
@@ -316,7 +381,7 @@
                                     <span class="material-symbols-outlined text-[16px]">close</span>
                                 </button>
                                 <span id="searchBadgeCount" class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-semibold">
-                                    53건 표시중
+                                    ${countAll}건 표시중
                                 </span>
                             </div>
                         </div>
@@ -367,6 +432,9 @@
                 </div>
             </div>
 
+            <!-- Facility-Matched Guideline Banner Container (Desktop) -->
+            <div id="archiveFacilityBannerContainer" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-4"></div>
+
             <!-- Master Administrative Classification Table Section (Desktop) -->
             <div id="archiveTablesContainer" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-4 flex flex-col gap-6">
                 
@@ -376,7 +444,7 @@
                         <span class="material-symbols-outlined text-[18px] text-primary">gavel</span>
                         <span class="font-semibold text-on-surface">국가법령정보센터 및 보건복지부 행정자료실 고시 기준 (2026.01.01 시행 정본)</span>
                         <span class="text-outline-variant hidden sm:inline">|</span>
-                        <span class="hidden sm:inline">부처 및 기능별 2대 매트릭스로 분리 편제됨</span>
+                        <span class="hidden sm:inline">부처 및 기능별 3대 매트릭스(섹션 Ⅰ·Ⅱ·Ⅲ)로 편제됨</span>
                     </div>
                     <div class="hidden sm:flex items-center gap-2 text-primary font-medium">
                         <span class="material-symbols-outlined text-[16px] text-secondary">account_tree</span>
@@ -609,6 +677,7 @@
                   </div>
 
                   <!-- 3. 모바일 지침서 카드 리스트 -->
+                  <div id="mobileArchiveFacilityBannerContainer" class="hidden"></div>
                   <div class="space-y-3" id="mobile-archive-cards-feed">
                     ${renderMobileCards(allFiles)}
                   </div>
@@ -693,8 +762,51 @@
 
         bindArchiveEvents(allFiles);
 
+        // 0. 시설 분류 1:1 직결 필터링 (options.facilityId / options.docIds)
+        if (options.facilityId) {
+            const mappedDocIds = (Array.isArray(options.docIds) && options.docIds.length > 0)
+                ? options.docIds
+                : (FACILITY_ARCHIVE_MAP[options.facilityId] || ['doc-003']);
+            currentArchiveFacilityId = options.facilityId;
+            currentArchiveFacilityName = options.facilityName || options.facilityId;
+            currentArchiveDocIds = mappedDocIds;
+            currentMinistry = 'all';
+            searchQuery = '';
+            const searchInput = document.getElementById('guidelineSearchInput');
+            if (searchInput) searchInput.value = '';
+            const clearBtn = document.getElementById('clearSearchBtn');
+            if (clearBtn) clearBtn.classList.add('hidden');
+            document.querySelectorAll('.ministry-pill').forEach(p => {
+                if (p.getAttribute('data-ministry') === 'all') {
+                    p.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+                    p.classList.add('bg-primary', 'text-on-primary', 'active-pill');
+                } else {
+                    p.classList.remove('bg-primary', 'text-on-primary', 'active-pill');
+                    p.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+                }
+            });
+            if (typeof activeFilterGuidelines === 'function') {
+                activeFilterGuidelines();
+            }
+            setTimeout(() => {
+                const bannerEl = (window.innerWidth >= 768)
+                    ? document.getElementById('archiveFacilityBannerContainer')
+                    : document.getElementById('mobileArchiveFacilityBannerContainer');
+                if (bannerEl && !bannerEl.classList.contains('hidden')) {
+                    bannerEl.scrollIntoView({ behavior: 'instant', block: 'start' });
+                }
+                const matchedRows = document.querySelectorAll('#archiveTablesContainer .guideline-row');
+                if (typeof window.triggerMatchHighlightAll === 'function' && matchedRows.length > 0) {
+                    window.triggerMatchHighlightAll(Array.from(matchedRows));
+                }
+            }, 120);
+        }
+
         // 1. Search keyword filter request handling (options.search)
         if (options.search) {
+            currentArchiveFacilityId = null;
+            currentArchiveFacilityName = null;
+            currentArchiveDocIds = null;
             const searchInput = document.getElementById('guidelineSearchInput');
             if (searchInput) {
                 searchInput.value = options.search;
@@ -726,7 +838,7 @@
                             if (typeof window.triggerMatchHighlight === 'function') {
                                 window.triggerMatchHighlight(targets[0]);
                             }
-                            targets[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            targets[0].scrollIntoView({ behavior: 'instant', block: 'center' });
                         }
                     }, 120);
                 }, 50);
@@ -737,7 +849,79 @@
         if (options.highlightId) {
             setTimeout(() => {
                 highlightAndScrollGuideline(options.highlightId);
-            }, 150);
+            }, 220);
+        }
+    };
+
+    function renderArchiveFacilityBanner(facilityId, facilityName, matchedFiles) {
+        const desktopBanner = document.getElementById('archiveFacilityBannerContainer');
+        const mobileBanner = document.getElementById('mobileArchiveFacilityBannerContainer');
+        if (!facilityId || !currentArchiveDocIds) {
+            if (desktopBanner) { desktopBanner.innerHTML = ''; desktopBanner.classList.add('hidden'); }
+            if (mobileBanner) { mobileBanner.innerHTML = ''; mobileBanner.classList.add('hidden'); }
+            return;
+        }
+        const count = (matchedFiles || []).length;
+        const desktopHtml = `
+            <div id="archive-facility-filter-banner" class="p-4 bg-gradient-to-r from-blue-50 via-indigo-50 to-emerald-50 border border-blue-300/80 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-xs animate-fadeIn">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-lg shadow-2xs shrink-0">📚</div>
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="text-xs font-bold text-blue-800 uppercase tracking-wider">📚 시설 맞춤 공식 지침서</span>
+                            <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-900 font-extrabold border border-blue-200">정본 지침서 ${count}종</span>
+                        </div>
+                        <h3 class="text-base font-black text-slate-900 mt-1">
+                            <span class="text-blue-700 font-black">${escapeHtml(facilityName)}</span> 직결 공식 사업안내·운영지침
+                        </h3>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 shrink-0 self-end md:self-auto">
+                    <button type="button" onclick="window.clearArchiveFacilityFilter()" class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-100 border border-slate-300 rounded-xl shadow-2xs transition cursor-pointer">
+                        <span>✕</span><span>전체 70종 보기</span>
+                    </button>
+                    <button type="button" onclick="window.jumpToFacility('${escapeHtml(facilityId)}'); return false;" class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-2xs transition cursor-pointer">
+                        <span>🏛️</span><span>시설도감으로 복귀</span>
+                    </button>
+                </div>
+            </div>
+        `;
+        const mobileHtml = `
+            <div class="p-3 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-300 rounded-2xl space-y-2 shadow-2xs">
+                <div class="flex items-center justify-between gap-2">
+                    <span class="text-[11px] font-extrabold text-blue-800">📚 시설 맞춤 공식 지침서 · 정본 ${count}종</span>
+                    <button type="button" onclick="window.clearArchiveFacilityFilter()" class="px-2 py-0.5 rounded-lg bg-white border border-slate-300 text-[10px] font-bold text-slate-700 cursor-pointer">✕ 전체 70종</button>
+                </div>
+                <div class="text-xs font-black text-slate-900">${escapeHtml(facilityName)} 직결 사업안내</div>
+                <button type="button" onclick="window.jumpToFacility('${escapeHtml(facilityId)}'); return false;" class="w-full py-1.5 rounded-xl bg-blue-600 text-white font-bold text-[11px] cursor-pointer">🏛️ 시설도감으로 복귀</button>
+            </div>
+        `;
+        if (desktopBanner) { desktopBanner.innerHTML = desktopHtml; desktopBanner.classList.remove('hidden'); }
+        if (mobileBanner) { mobileBanner.innerHTML = mobileHtml; mobileBanner.classList.remove('hidden'); }
+    }
+
+    window.clearArchiveFacilityFilter = function () {
+        currentArchiveFacilityId = null;
+        currentArchiveFacilityName = null;
+        currentArchiveDocIds = null;
+        currentMinistry = 'all';
+        searchQuery = '';
+        const searchInput = document.getElementById('guidelineSearchInput');
+        if (searchInput) searchInput.value = '';
+        const clearBtn = document.getElementById('clearSearchBtn');
+        if (clearBtn) clearBtn.classList.add('hidden');
+        document.querySelectorAll('.ministry-pill').forEach(p => {
+            if (p.getAttribute('data-ministry') === 'all') {
+                p.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+                p.classList.add('bg-primary', 'text-on-primary', 'active-pill');
+            } else {
+                p.classList.remove('bg-primary', 'text-on-primary', 'active-pill');
+                p.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+            }
+        });
+        window.location.hash = '#archive';
+        if (typeof activeFilterGuidelines === 'function') {
+            activeFilterGuidelines();
         }
     };
 
@@ -982,7 +1166,11 @@
             const normQ = q.replace(/성평등가족부/g, '여성가족부');
 
             // Rowspan 계층 구조 완결성을 위한 데이터 기반 필터링 및 동적 렌더링
-            const filteredFiles = allFiles.filter(f => {
+            const basePool = (currentArchiveDocIds && currentArchiveDocIds.length > 0)
+                ? allFiles.filter(f => currentArchiveDocIds.includes(f.id))
+                : allFiles;
+
+            const filteredFiles = basePool.filter(f => {
                 const keywords = [
                     f.title,
                     f.ministry,
@@ -997,6 +1185,8 @@
 
                 return ministryMatch && queryMatch;
             });
+
+            renderArchiveFacilityBanner(currentArchiveFacilityId, currentArchiveFacilityName, filteredFiles);
 
             const sec1Filtered = filteredFiles.filter(f => f.section === 'SECTION_1' || (f.section !== 'SECTION_3' && f.ministry && f.ministry.includes('보건복지부')));
             const sec2Filtered = filteredFiles.filter(f => f.section === 'SECTION_2');
@@ -1016,17 +1206,20 @@
 
             // Filter Mobile Cards
             cards.forEach(card => {
+                const cardId = (card.id || '').replace('mobile-card-', '');
                 const cardMinistry = card.getAttribute('data-ministry') || '';
                 const cardSection = card.getAttribute('data-section') || 'SECTION_1';
                 const keywords = (card.getAttribute('data-keywords') || '').toLowerCase();
                 const textContent = card.textContent.toLowerCase();
 
+                let docMatch = !currentArchiveDocIds || currentArchiveDocIds.includes(cardId);
                 let ministryMatch = checkMinistryMatch(cardMinistry, keywords, currentMinistry, cardSection);
                 let queryMatch = (q.length === 0) || textContent.includes(q) || (normQ && textContent.includes(normQ)) || keywords.includes(q) || (normQ && keywords.includes(normQ));
-                let sectionMatch = (mobileActiveSection === 'ALL') || (cardSection === mobileActiveSection);
+                let sectionMatch = (currentArchiveDocIds && currentArchiveDocIds.length > 0) || (mobileActiveSection === 'ALL') || (cardSection === mobileActiveSection);
 
-                if (ministryMatch && queryMatch && sectionMatch) {
+                if (docMatch && ministryMatch && queryMatch && sectionMatch) {
                     card.style.display = '';
+                    card.classList.remove('hidden');
                 } else {
                     card.style.display = 'none';
                 }
@@ -1069,6 +1262,9 @@
         // Ministry Pill Clicks
         pills.forEach(pill => {
             pill.addEventListener('click', function () {
+                currentArchiveFacilityId = null;
+                currentArchiveFacilityName = null;
+                currentArchiveDocIds = null;
                 pills.forEach(p => {
                     p.classList.remove('bg-primary', 'text-on-primary', 'active-pill');
                     p.classList.add('bg-surface-container-low', 'text-on-surface-variant');
@@ -1086,6 +1282,9 @@
         // Search Input
         if (searchInput) {
             searchInput.addEventListener('input', function () {
+                currentArchiveFacilityId = null;
+                currentArchiveFacilityName = null;
+                currentArchiveDocIds = null;
                 searchQuery = this.value;
                 if (clearBtn) {
                     if (searchQuery.length > 0) clearBtn.classList.remove('hidden');
@@ -1115,6 +1314,9 @@
         // Reset Filter
         if (resetBtn) {
             resetBtn.addEventListener('click', function () {
+                currentArchiveFacilityId = null;
+                currentArchiveFacilityName = null;
+                currentArchiveDocIds = null;
                 if (searchInput) {
                     searchInput.value = '';
                     searchQuery = '';
@@ -1309,6 +1511,9 @@
     // 위계도감 등 외부에서 특정 지침서로 포커스 요청 시
     function highlightAndScrollGuideline(docId) {
         // Reset filters so the row is guaranteed visible
+        currentArchiveFacilityId = null;
+        currentArchiveFacilityName = null;
+        currentArchiveDocIds = null;
         searchQuery = '';
         currentMinistry = 'all';
         const searchInput = document.getElementById('guidelineSearchInput');
@@ -1336,7 +1541,7 @@
             const targetEl = (window.innerWidth >= 768) ? row : card;
             if (!targetEl) return;
 
-            targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            targetEl.scrollIntoView({ behavior: 'instant', block: 'center' });
 
             // Highlight ring pulse animation (통합 초록 테두리 인터랙티브 강조)
             if (typeof window.triggerMatchHighlight === 'function') {
@@ -1346,7 +1551,7 @@
             setTimeout(() => {
                 targetEl.classList.remove('ring-4', 'ring-secondary');
             }, 2800);
-        }, 150);
+        }, 220);
     }
 
 })();
