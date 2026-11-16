@@ -8,12 +8,12 @@
 
 const GOOGLE_DRIVE_ARCHIVE_CONFIG = {
     title: "2026 사회복지 현장 지침서·사업안내 마스터 풀패키지 (최신 정본 아카이브)",
-    totalFiles: 53,
-    totalSizeStr: "450.95 MB",
+    totalFiles: 70,
+    totalSizeStr: "454.01 MB",
     updatedAt: "2026-11-15",
     // 구글 드라이브 대용량 전체 다운로드 링크 (사용자가 본인 드라이브 링크로 교체 가능)
     driveDownloadUrl: "https://drive.google.com/drive/folders/1Xj329hrtcrfgiY0atJYiCHY7pG6KVrlh?usp=sharing",
-    guideMessage: "최신 정본으로 정비된 53개 지침서 풀패키지(450.95 MB)를 구글 드라이브 고속 서버에서 압축파일(ZIP)로 한 번에 무료 다운로드받으실 수 있습니다."
+    guideMessage: "최신 정본으로 정비된 70개 지침서 풀패키지(454.01 MB)를 구글 드라이브 고속 서버에서 압축파일(ZIP)로 한 번에 무료 다운로드받으실 수 있습니다."
 };
 
 const GUIDELINES_ARCHIVE_DB = [
@@ -1670,6 +1670,517 @@ const GUIDELINES_ARCHIVE_DB = [
             "hierarchyLink": {
               "targetId": "emg-comm-care",
               "label": "L1 긴급돌봄 > 국정과제약자복지"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "categoryKey": "12_Track2_범부처_확장안전망",
+    "categoryName": "Track 2 · 범부처 확장 안전망 (6대 영역)",
+    "icon": "🌐",
+    "description": "사회적경제·사법교정·보건의료·정규/특수교육·주거/금융·종교기반 복지체계 전용 지침서 17종",
+    "fileCount": 17,
+    "totalBytes": 3206167,
+    "sources": [
+      {
+        "sourceKey": "[출처_범부처_공식안전망_2026]",
+        "sourceName": "범부처·공공기관 Track 2 확장 실무 지침서 통합본",
+        "fileCount": 17,
+        "totalBytes": 3206167,
+        "files": [
+          {
+            "id": "doc-054",
+            "filename": "01_사회적기업_인증업무지침_및_예비사회적기업_소셜벤처_매뉴얼_2026.pdf",
+            "title": "사회적기업 인증 업무지침 및 예비사회적기업·소셜벤처 판별 매뉴얼 2026",
+            "year": "2026",
+            "edition": "2026년 최신판",
+            "format": "PDF",
+            "actualExt": "PDF",
+            "sizeStr": "183.7 KB",
+            "sizeBytes": 188066,
+            "relPath": "12_Track2_범부처_확장안전망/01_사회적기업_인증업무지침_및_예비사회적기업_소셜벤처_매뉴얼_2026.pdf",
+            "ministry": "고용노동부·중소벤처기업부",
+            "section": "SECTION_3",
+            "code": "MOEL-SE-01",
+            "department": "사회적기업과·벤처정책과",
+            "legalTarget": "사회적기업 육성법 제7조·벤처기업육성법 · 인증/예비사회적기업, 소셜벤처, 진흥원",
+            "facilityTargetId": "ext-sec-social-enterprise",
+            "category": "(예비)사회적기업·소셜벤처",
+            "totalPages": 12,
+            "keyChapters": [
+              "사회적기업 인증요건",
+              "사회서비스형 지정",
+              "소셜벤처 판별기준"
+            ],
+            "hierarchyLink": {
+              "targetId": "sec-se-cert",
+              "label": "Track2 > (예비)사회적기업"
+            }
+          },
+          {
+            "id": "doc-055",
+            "filename": "02_사회적협동조합_설립운영안내서_및_마을기업_육성지침_2026.pdf",
+            "title": "사회적협동조합 설립·운영 안내서 및 마을기업 육성사업 시행지침 2026",
+            "year": "2026",
+            "edition": "2026년 최신판",
+            "format": "PDF",
+            "actualExt": "PDF",
+            "sizeStr": "184.4 KB",
+            "sizeBytes": 188783,
+            "relPath": "12_Track2_범부처_확장안전망/02_사회적협동조합_설립운영안내서_및_마을기업_육성지침_2026.pdf",
+            "ministry": "기획재정부·행정안전부",
+            "section": "SECTION_3",
+            "code": "MOEF-COOP-01",
+            "department": "지속가능경제과·지역공동체과",
+            "legalTarget": "협동조합 기본법 제85조·기초보장법 제18조 · 사회적협동조합, 마을기업, 자활기업",
+            "facilityTargetId": "ext-sec-coop-village",
+            "category": "사회적협동조합·마을기업·자활기업",
+            "totalPages": 12,
+            "keyChapters": [
+              "사회적협동조합 인가",
+              "마을기업 지정요건",
+              "자활기업 협업모델"
+            ],
+            "hierarchyLink": {
+              "targetId": "sec-coop-social",
+              "label": "Track2 > 사회적협동조합"
+            }
+          },
+          {
+            "id": "doc-056",
+            "filename": "03_사회적농업_활성화지원사업_사회적농장_농촌돌봄_시행지침_2026.pdf",
+            "title": "사회적농업 활성화 지원사업(사회적농장·농촌돌봄·공동체회사) 시행지침 2026",
+            "year": "2026",
+            "edition": "2026년 최신판",
+            "format": "PDF",
+            "actualExt": "PDF",
+            "sizeStr": "183.4 KB",
+            "sizeBytes": 187776,
+            "relPath": "12_Track2_범부처_확장안전망/03_사회적농업_활성화지원사업_사회적농장_농촌돌봄_시행지침_2026.pdf",
+            "ministry": "농림축산식품부",
+            "section": "SECTION_3",
+            "code": "MAFRA-SF-01",
+            "department": "농촌사회서비스과",
+            "legalTarget": "농촌공간재구조화법·치유농업법 · 사회적농장, 돌봄공동체 숙식모델, 농어촌공동체회사",
+            "facilityTargetId": "ext-sec-social-farm",
+            "category": "사회적농장·농어촌공동체회사",
+            "totalPages": 12,
+            "keyChapters": [
+              "사회적농장 거점운영",
+              "돌봄공동체 숙식모델",
+              "농촌지역사회 연계"
+            ],
+            "hierarchyLink": {
+              "targetId": "sec-farm-care",
+              "label": "Track2 > 사회적농장"
+            }
+          },
+          {
+            "id": "doc-057",
+            "filename": "04_교정시설_사회복귀_및_소년보호_치료감호_업무안내_2026.pdf",
+            "title": "교정시설 사회복귀·심리치료 및 소년보호(소년원·꿈키움센터)·치료감호 업무안내 2026",
+            "year": "2026",
+            "edition": "2026년 최신판",
+            "format": "PDF",
+            "actualExt": "PDF",
+            "sizeStr": "184.0 KB",
+            "sizeBytes": 188419,
+            "relPath": "12_Track2_범부처_확장안전망/04_교정시설_사회복귀_및_소년보호_치료감호_업무안내_2026.pdf",
+            "ministry": "법무부·국방부",
+            "section": "SECTION_3",
+            "code": "MOJ-COR-01",
+            "department": "사회복귀과·소년보호과·치료감호과",
+            "legalTarget": "형집행법·소년법·치료감호법 · 교도소, 구치소, 소년원, 꿈키움센터, 국립법무병원",
+            "facilityTargetId": "ext-jus-correction",
+            "category": "교정시설·소년원·치료감호소",
+            "totalPages": 12,
+            "keyChapters": [
+              "교정 사회복귀·심리치료",
+              "소년원·꿈키움센터 보호",
+              "국립법무병원 치료감호"
+            ],
+            "hierarchyLink": {
+              "targetId": "jus-cor-prison",
+              "label": "Track2 > 교정시설"
+            }
+          },
+          {
+            "id": "doc-058",
+            "filename": "05_보호관찰_갱생보호사업_및_범죄피해자지원_스마일센터_운영지침_2026.pdf",
+            "title": "보호관찰·갱생보호사업 및 범죄피해자 보호·지원(스마일센터·법률홈닥터) 운영지침 2026",
+            "year": "2026",
+            "edition": "2026년 최신판",
+            "format": "PDF",
+            "actualExt": "PDF",
+            "sizeStr": "184.2 KB",
+            "sizeBytes": 188609,
+            "relPath": "12_Track2_범부처_확장안전망/05_보호관찰_갱생보호사업_및_범죄피해자지원_스마일센터_운영지침_2026.pdf",
+            "ministry": "법무부·한국법무보호복지공단",
+            "section": "SECTION_3",
+            "code": "MOJ-PRO-01",
+            "department": "보호관찰과·인권구조과",
+            "legalTarget": "보호관찰법·범죄피해자보호법 · 준법지원센터, 법무보호복지공단, 스마일센터, 법률홈닥터",
+            "facilityTargetId": "ext-jus-probation",
+            "category": "보호관찰소·갱생보호시설·스마일센터",
+            "totalPages": 12,
+            "keyChapters": [
+              "보호관찰·판결전조사",
+              "숙식형 갱생보호·취업",
+              "스마일센터·법률홈닥터"
+            ],
+            "hierarchyLink": {
+              "targetId": "jus-pro-obs",
+              "label": "Track2 > 보호관찰소"
+            }
+          },
+          {
+            "id": "doc-059",
+            "filename": "06_출입국_외국인보호_및_난민지원센터_운영매뉴얼_2026.pdf",
+            "title": "출입국·외국인보호소 및 난민지원센터(생계·의료·사회통합) 운영매뉴얼 2026",
+            "year": "2026",
+            "edition": "2026년 최신판",
+            "format": "PDF",
+            "actualExt": "PDF",
+            "sizeStr": "183.7 KB",
+            "sizeBytes": 188081,
+            "relPath": "12_Track2_범부처_확장안전망/06_출입국_외국인보호_및_난민지원센터_운영매뉴얼_2026.pdf",
+            "ministry": "법무부",
+            "section": "SECTION_3",
+            "code": "MOJ-IMM-01",
+            "department": "체류관리과·난민과",
+            "legalTarget": "출입국관리법 제52조·난민법 제41조 · 외국인보호소, 출입국·외국인지원센터, 1345",
+            "facilityTargetId": "ext-jus-foreign",
+            "category": "외국인보호소·난민지원센터",
+            "totalPages": 12,
+            "keyChapters": [
+              "외국인보호소 인권처우",
+              "난민지원센터 숙식·생계",
+              "사회통합·다문화 연계"
+            ],
+            "hierarchyLink": {
+              "targetId": "jus-for-detain",
+              "label": "Track2 > 외국인보호소"
+            }
+          },
+          {
+            "id": "doc-060",
+            "filename": "07_의료사회복지실_퇴원연계_및_호스피스완화의료_응급의료_사업안내_2026.pdf",
+            "title": "의료사회복지실(퇴원환자 통합연계) 및 호스피스·완화의료(입원·가정·자문형)·응급의료 안내 2026",
+            "year": "2026",
+            "edition": "2026년 최신판",
+            "format": "PDF",
+            "actualExt": "PDF",
+            "sizeStr": "184.8 KB",
+            "sizeBytes": 189195,
+            "relPath": "12_Track2_범부처_확장안전망/07_의료사회복지실_퇴원연계_및_호스피스완화의료_응급의료_사업안내_2026.pdf",
+            "ministry": "보건복지부·국립암센터",
+            "section": "SECTION_3",
+            "code": "MOHW-MEDS-01",
+            "department": "질병정책과·공공의료과",
+            "legalTarget": "의료법·연명의료결정법·암관리법·응급의료법 · 의료사회복지실, 호스피스, 요양병원, 응급센터",
+            "facilityTargetId": "ext-med-hospital",
+            "category": "상급종합병원·요양병원·호스피스·응급의료센터",
+            "totalPages": 12,
+            "keyChapters": [
+              "의료사회복지사 상담·퇴원연계",
+              "호스피스 입원·가정·자문형",
+              "재난적의료비·응급병동 개입"
+            ],
+            "hierarchyLink": {
+              "targetId": "med-hosp-sw",
+              "label": "Track2 > 상급종합병원"
+            }
+          },
+          {
+            "id": "doc-061",
+            "filename": "08_회복기재활의료기관_권역재활병원_및_지방의료원_산후조리원_운영안내_2026.pdf",
+            "title": "회복기 재활의료기관·권역재활병원 및 지방의료원·정신의료·산후조리원 운영안내 2026",
+            "year": "2026",
+            "edition": "2026년 최신판",
+            "format": "PDF",
+            "actualExt": "PDF",
+            "sizeStr": "184.8 KB",
+            "sizeBytes": 189196,
+            "relPath": "12_Track2_범부처_확장안전망/08_회복기재활의료기관_권역재활병원_및_지방의료원_산후조리원_운영안내_2026.pdf",
+            "ministry": "보건복지부·국립재활원",
+            "section": "SECTION_3",
+            "code": "MOHW-REH-01",
+            "department": "의료기관정책과·공공의료과",
+            "legalTarget": "장애인복지법·정신건강복지법·지방의료원법·모자보건법 · 국립재활원, 권역재활병원, 지방의료원, 산후조리원",
+            "facilityTargetId": "ext-med-rehab",
+            "category": "재활의료기관·지방의료원·정신의료기관·산후조리원",
+            "totalPages": 12,
+            "keyChapters": [
+              "회복기 재활·권역재활병원",
+              "지방의료원 공공보건의료",
+              "정신의료·산후조리 돌봄"
+            ],
+            "hierarchyLink": {
+              "targetId": "med-reh-center",
+              "label": "Track2 > 재활의료기관"
+            }
+          },
+          {
+            "id": "doc-062",
+            "filename": "09_지역보건의료기관_방문건강관리_및_치매안심센터_통합운영지침_2026.pdf",
+            "title": "지역보건의료기관(보건소 방문건강관리) 및 치매안심센터 통합 운영지침 2026",
+            "year": "2026",
+            "edition": "2026년 최신판",
+            "format": "PDF",
+            "actualExt": "PDF",
+            "sizeStr": "183.2 KB",
+            "sizeBytes": 187591,
+            "relPath": "12_Track2_범부처_확장안전망/09_지역보건의료기관_방문건강관리_및_치매안심센터_통합운영지침_2026.pdf",
+            "ministry": "보건복지부",
+            "section": "SECTION_3",
+            "code": "MOHW-PHC-01",
+            "department": "건강정책과·치매정책과",
+            "legalTarget": "지역보건법 제10조·치매관리법 제17조 · 보건소, 보건지소, 건강생활지원센터, 치매안심센터",
+            "facilityTargetId": "ext-med-public-health",
+            "category": "보건소·건강생활지원센터·치매안심센터",
+            "totalPages": 12,
+            "keyChapters": [
+              "방문건강관리·AI·IoT 돌봄",
+              "치매안심센터 조기검진·쉼터",
+              "보건-복지 통합돌봄 거점"
+            ],
+            "hierarchyLink": {
+              "targetId": "med-phc-visit",
+              "label": "Track2 > 보건소"
+            }
+          },
+          {
+            "id": "doc-063",
+            "filename": "10_근로복지공단_산재병원_재활사회사업_및_보훈병원_국군병원_의료복지지침_2026.pdf",
+            "title": "근로복지공단 산재병원 재활사회사업 및 보훈병원·국군병원 특수의료복지 지침 2026",
+            "year": "2026",
+            "edition": "2026년 최신판",
+            "format": "PDF",
+            "actualExt": "PDF",
+            "sizeStr": "183.8 KB",
+            "sizeBytes": 188188,
+            "relPath": "12_Track2_범부처_확장안전망/10_근로복지공단_산재병원_재활사회사업_및_보훈병원_국군병원_의료복지지침_2026.pdf",
+            "ministry": "고용노동부·국가보훈부·국방부",
+            "section": "SECTION_3",
+            "code": "MULTI-SMED-01",
+            "department": "산재보상정책과·보훈의료과·보건정책과",
+            "legalTarget": "산재보험법·보훈공단법·군보건의료법 · 근로복지공단 산재병원, 보훈병원, 국군병원·외상센터",
+            "facilityTargetId": "ext-med-special",
+            "category": "산재병원·보훈병원·국군병원",
+            "totalPages": 12,
+            "keyChapters": [
+              "산재근로자 재활·직업복귀",
+              "보훈병원·보훈재활체육",
+              "국군병원·외상센터·군복지"
+            ],
+            "hierarchyLink": {
+              "targetId": "med-spc-ind",
+              "label": "Track2 > 산재병원"
+            }
+          },
+          {
+            "id": "doc-064",
+            "filename": "11_늘봄학교_운영길라잡이_및_학생맞춤통합지원_Wee프로젝트_매뉴얼_2026.pdf",
+            "title": "늘봄학교 운영 길라잡이 및 학생맞춤통합지원·Wee 프로젝트(클래스·센터·스쿨) 매뉴얼 2026",
+            "year": "2026",
+            "edition": "2026년 최신판",
+            "format": "PDF",
+            "actualExt": "PDF",
+            "sizeStr": "183.5 KB",
+            "sizeBytes": 187909,
+            "relPath": "12_Track2_범부처_확장안전망/11_늘봄학교_운영길라잡이_및_학생맞춤통합지원_Wee프로젝트_매뉴얼_2026.pdf",
+            "ministry": "교육부",
+            "section": "SECTION_3",
+            "code": "MOE-K12-01",
+            "department": "방과후돌봄정책과·학생지원총괄과",
+            "legalTarget": "초·중등교육법·학생맞춤통합지원법 · 초중고교, 늘봄학교, 교육복지실, Wee클래스·센터·스쿨",
+            "facilityTargetId": "ext-edu-k12",
+            "category": "초·중·고교(늘봄·교육복지·Wee)",
+            "totalPages": 12,
+            "keyChapters": [
+              "늘봄학교·돌봄교실 운영",
+              "교육복지우선·학생맞춤통합지원",
+              "Wee클래스·센터·스쿨 위기개입"
+            ],
+            "hierarchyLink": {
+              "targetId": "edu-k12-neulbom",
+              "label": "Track2 > 초"
+            }
+          },
+          {
+            "id": "doc-065",
+            "filename": "12_특수교육_운영계획_및_특수교육지원센터_운영가이드라인_2026.pdf",
+            "title": "특수교육 운영계획 및 특수교육지원센터(순회·치료지원·진로직업) 운영 가이드라인 2026",
+            "year": "2026",
+            "edition": "2026년 최신판",
+            "format": "PDF",
+            "actualExt": "PDF",
+            "sizeStr": "183.0 KB",
+            "sizeBytes": 187428,
+            "relPath": "12_Track2_범부처_확장안전망/12_특수교육_운영계획_및_특수교육지원센터_운영가이드라인_2026.pdf",
+            "ministry": "교육부",
+            "section": "SECTION_3",
+            "code": "MOE-SPE-01",
+            "department": "특수교육정책과",
+            "legalTarget": "장애인 등에 대한 특수교육법 제5조·제11조·제27조 · 특수학교, 기숙사, 특수학급, 특수교육지원센터",
+            "facilityTargetId": "ext-edu-special",
+            "category": "특수학교·특수학급·특수교육지원센터",
+            "totalPages": 12,
+            "keyChapters": [
+              "특수교육대상자 선정·IEP",
+              "특수학교·기숙사 안전지원",
+              "특수교육지원센터 순회·치료"
+            ],
+            "hierarchyLink": {
+              "targetId": "edu-spe-school",
+              "label": "Track2 > 특수학교"
+            }
+          },
+          {
+            "id": "doc-066",
+            "filename": "13_대학_장애학생지원센터_학생상담센터_및_장애인평생교육_문해교육_사업안내_2026.pdf",
+            "title": "대학 장애학생지원센터·학생상담센터 및 장애인 평생교육·성인 문해교육 사업안내 2026",
+            "year": "2026",
+            "edition": "2026년 최신판",
+            "format": "PDF",
+            "actualExt": "PDF",
+            "sizeStr": "184.1 KB",
+            "sizeBytes": 188501,
+            "relPath": "12_Track2_범부처_확장안전망/13_대학_장애학생지원센터_학생상담센터_및_장애인평생교육_문해교육_사업안내_2026.pdf",
+            "ministry": "교육부·국가평생교육진흥원",
+            "section": "SECTION_3",
+            "code": "MOE-UNIV-01",
+            "department": "대학규제혁신과·평생학습지원과",
+            "legalTarget": "고등교육법 제19조의2·평생교육법 제20조의2 · 대학 학생생활관·장애학생지원·상담·인권센터, 평생학습관",
+            "facilityTargetId": "ext-edu-univ-lifelong",
+            "category": "대학 장애학생지원센터·학생생활관·평생교육기관",
+            "totalPages": 12,
+            "keyChapters": [
+              "대학 장애학생지원·학생생활관",
+              "대학 학생상담·인권센터",
+              "시도평생교육진흥원·문해교육"
+            ],
+            "hierarchyLink": {
+              "targetId": "edu-univ-dis",
+              "label": "Track2 > 대학 장애학생지원센터"
+            }
+          },
+          {
+            "id": "doc-067",
+            "filename": "14_주거복지센터_사회주택_및_재해구호_재난심리회복지원_업무안내_2026.pdf",
+            "title": "주거복지센터·취약계층 주거지원(사회주택) 및 재해구호·재난심리회복지원 업무안내 2026",
+            "year": "2026",
+            "edition": "2026년 최신판",
+            "format": "PDF",
+            "actualExt": "PDF",
+            "sizeStr": "184.2 KB",
+            "sizeBytes": 188576,
+            "relPath": "12_Track2_범부처_확장안전망/14_주거복지센터_사회주택_및_재해구호_재난심리회복지원_업무안내_2026.pdf",
+            "ministry": "국토교통부·행정안전부",
+            "section": "SECTION_3",
+            "code": "MOLIT-HS-01",
+            "department": "주거복지지원과·재난구호과",
+            "legalTarget": "주거기본법 제22조·공공주택법·재해구호법 제4조의2 · 주거복지센터, 마이홈센터, 사회주택, 전국재해구호협회",
+            "facilityTargetId": "ext-life-housing-disaster",
+            "category": "주거복지센터·사회주택·재난구호시설",
+            "totalPages": 12,
+            "keyChapters": [
+              "주거복지센터·주거상향지원",
+              "사회주택·임대주택 주거복지동",
+              "재난임시주거·심리회복지원"
+            ],
+            "hierarchyLink": {
+              "targetId": "life-hs-center",
+              "label": "Track2 > 주거복지센터"
+            }
+          },
+          {
+            "id": "doc-068",
+            "filename": "15_서민금융진흥원_신용회복위원회_금융복지_및_자원봉사센터_NPO_운영지침_2026.pdf",
+            "title": "서민금융진흥원·신용회복위원회(금융-복지 복합지원) 및 지역 자원봉사센터·NPO 운영지침 2026",
+            "year": "2026",
+            "edition": "2026년 최신판",
+            "format": "PDF",
+            "actualExt": "PDF",
+            "sizeStr": "184.7 KB",
+            "sizeBytes": 189110,
+            "relPath": "12_Track2_범부처_확장안전망/15_서민금융진흥원_신용회복위원회_금융복지_및_자원봉사센터_NPO_운영지침_2026.pdf",
+            "ministry": "금융위원회·행정안전부",
+            "section": "SECTION_3",
+            "code": "FSC-FIN-01",
+            "department": "서민금융과·민간협력과",
+            "legalTarget": "서민금융법 제3조·제56조, 자원봉사기본법 제19조, NPO법 · 서민금융통합지원센터, 신복위, 자원봉사센터, NPO",
+            "facilityTargetId": "ext-life-finance-volunteer",
+            "category": "서민금융진흥원·신용회복위원회·자원봉사센터·NPO",
+            "totalPages": 12,
+            "keyChapters": [
+              "서민금융진흥원 복합지원",
+              "신용회복위 채무조정·복지연계",
+              "자원봉사센터·등록 NPO 지원"
+            ],
+            "hierarchyLink": {
+              "targetId": "life-fin-kinfa",
+              "label": "Track2 > 서민금융진흥원"
+            }
+          },
+          {
+            "id": "doc-069",
+            "filename": "16_종교법인_설립수탁편람_및_종교계_사회복지시설_무료급식_운영안내_2026.pdf",
+            "title": "종교법인(민법 제32조·사회복지법인) 설립·수탁 편람 및 종교계 복지시설·무료급식 안내 2026",
+            "year": "2026",
+            "edition": "2026년 최신판",
+            "format": "PDF",
+            "actualExt": "PDF",
+            "sizeStr": "186.4 KB",
+            "sizeBytes": 190873,
+            "relPath": "12_Track2_범부처_확장안전망/16_종교법인_설립수탁편람_및_종교계_사회복지시설_무료급식_운영안내_2026.pdf",
+            "ministry": "문화체육관광부·보건복지부·지자체",
+            "section": "SECTION_3",
+            "code": "MCST-REL-01",
+            "department": "종무1담당관·복지정책과",
+            "legalTarget": "민법 제32조·사회복지사업법·식품기부법 · 수도원·수녀원, 종교법인, 무료양로원·쉼터, 무료급식소",
+            "facilityTargetId": "ext-rel-welfare",
+            "category": "종교법인·종교계 복지시설·무료급식소",
+            "totalPages": 12,
+            "keyChapters": [
+              "종교법인·사회복지법인 수탁",
+              "무료 양로원·쉼터 운영",
+              "종교계 무료급식소·푸드뱅크"
+            ],
+            "hierarchyLink": {
+              "targetId": "rel-wel-corp",
+              "label": "Track2 > 종교법인"
+            }
+          },
+          {
+            "id": "doc-070",
+            "filename": "17_전통사찰_보존지원_및_템플스테이_공익마음치유_가이드라인_2026.pdf",
+            "title": "전통사찰 보존·지원 및 템플스테이 공익 마음치유·종교문화유산 활용 가이드라인 2026",
+            "year": "2026",
+            "edition": "2026년 최신판",
+            "format": "PDF",
+            "actualExt": "PDF",
+            "sizeStr": "185.4 KB",
+            "sizeBytes": 189866,
+            "relPath": "12_Track2_범부처_확장안전망/17_전통사찰_보존지원_및_템플스테이_공익마음치유_가이드라인_2026.pdf",
+            "ministry": "문화체육관광부·국가유산청",
+            "section": "SECTION_3",
+            "code": "MCST-TEM-01",
+            "department": "종무2담당관·문화유산활용과",
+            "legalTarget": "전통사찰법 제2조·국가유산기본법·건축법시행령 · 전통사찰, 템플스테이, 지정문화유산 종교시설",
+            "facilityTargetId": "ext-rel-heritage",
+            "category": "전통사찰·템플스테이·종교문화유산",
+            "totalPages": 12,
+            "keyChapters": [
+              "전통사찰 보존·지역 개방",
+              "템플스테이 공익 마음치유",
+              "종교문화유산 취약계층 향유"
+            ],
+            "hierarchyLink": {
+              "targetId": "rel-her-temple",
+              "label": "Track2 > 전통사찰"
             }
           }
         ]

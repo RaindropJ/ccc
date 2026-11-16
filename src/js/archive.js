@@ -44,6 +44,9 @@
     ];
 
     function resolveFacilityTarget(targetStr, file) {
+        if (file && file.facilityTargetId) {
+            return { id: file.facilityTargetId, name: targetStr || file.category || '범부처 확장시설' };
+        }
         const fullStr = `${targetStr} ${file ? (file.title + ' ' + (file.legalTarget || '')) : ''}`;
         for (const item of FACILITY_PATTERNS) {
             if (item.pattern.test(targetStr) || item.pattern.test(fullStr)) {
@@ -115,20 +118,24 @@
         const allFiles = getAllFiles();
         const config = getArchiveConfig();
 
-        const mohwFiles = allFiles.filter(f => f.section === 'SECTION_1' || (f.ministry && f.ministry.includes('보건복지부')));
-        const nonMohwFiles = allFiles.filter(f => f.section === 'SECTION_2' || (f.ministry && !f.ministry.includes('보건복지부')));
+        const mohwFiles = allFiles.filter(f => f.section === 'SECTION_1' || (f.section !== 'SECTION_3' && f.ministry && f.ministry.includes('보건복지부')));
+        const nonMohwFiles = allFiles.filter(f => f.section === 'SECTION_2');
+        const sec3Files = allFiles.filter(f => f.section === 'SECTION_3');
 
         // Calculate ministry counts
         const countAll = allFiles.length;
         const countMohw = mohwFiles.length;
-        const countMogef = allFiles.filter(f => f.ministry && f.ministry.includes('여성가족부')).length;
-        const countMoe = allFiles.filter(f => f.ministry && f.ministry.includes('교육부')).length;
-        const countMoel = allFiles.filter(f => f.ministry && f.ministry.includes('고용노동부')).length;
+        const countMogef = allFiles.filter(f => f.section !== 'SECTION_3' && f.ministry && f.ministry.includes('여성가족부')).length;
+        const countMoe = allFiles.filter(f => f.section !== 'SECTION_3' && f.ministry && f.ministry.includes('교육부')).length;
+        const countMoel = allFiles.filter(f => f.section !== 'SECTION_3' && f.ministry && f.ministry.includes('고용노동부')).length;
+        const countSec3 = sec3Files.length;
         const countOthers = allFiles.filter(f => {
+            if (f.section === 'SECTION_3') return false;
             const m = f.ministry || '';
             return m.includes('외교') || m.includes('보훈') || m.includes('통일') || m.includes('국무') || m.includes('행안') || m.includes('질병') || m.includes('법무');
         }).length;
         const countCivic = allFiles.filter(f => {
+            if (f.section === 'SECTION_3') return false;
             const m = f.ministry || '';
             return m.includes('공동모금회') || m.includes('사회공헌') || m.includes('재단') || m.includes('민간');
         }).length;
@@ -149,13 +156,13 @@
                     <div class="flex items-center gap-2.5 flex-wrap">
                         <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
                             <span class="h-1.5 w-1.5 rounded-full bg-secondary"></span>
-                            53개 전종 2026 개정판 대조 완료
+                            70개 전종 2026 개정판 대조 완료
                         </span>
                         <button type="button" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container-highest text-primary hover:bg-primary hover:text-on-primary transition-colors font-label-sm text-label-sm cursor-pointer" onclick="showView(\'hierarchy\')">
                             <span class="material-symbols-outlined text-[14px]">account_tree</span>
-                            <span>3단계 위계도감 167개 단위서비스 실시간 상호연동 중</span>
+                            <span>3단계 위계도감 218개 단위서비스 실시간 상호연동 중</span>
                         </a>
-                        <span class="text-on-surface-variant font-medium hidden md:inline">색인 문서: 24,180면</span>
+                        <span class="text-on-surface-variant font-medium hidden md:inline">색인 문서: 24,384면</span>
                     </div>
                 </div>
             </div>
@@ -179,10 +186,10 @@
                                 </span>
                             </div>
                             <h1 class="font-headline-lg text-headline-lg text-primary tracking-tight font-bold">
-                                공식 지침서 마스터 아카이브 (53종)
+                                공식 지침서 마스터 아카이브 (70종)
                             </h1>
                             <p class="font-body-md text-body-md text-on-surface-variant mt-1">
-                                대한민국 사회복지 12대 분야별 정부 주무부처 정본 업무처리지침 및 표준 매뉴얼 총람 (전문 24,180면 OCR 검색 지원)
+                                대한민국 사회복지 12대 분야 및 Track 2 범부처 안전망 6대 영역 공식 사업안내·표준 매뉴얼 총람 (전문 24,384면 OCR 검색 지원)
                             </p>
                         </div>
 
@@ -192,19 +199,19 @@
                                 <button type="button" class="px-3 py-1.5 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1.5 cursor-pointer"
                                    onclick="showView('fields')">
                                     <span class="material-symbols-outlined text-[18px]">account_balance</span>
-                                    <span>12대 분야·시설</span>
-                                    <span class="px-1.5 py-0.2 rounded-full font-label-sm text-label-sm bg-surface-container text-on-surface-variant">24개</span>
+                                    <span>분야·시설 도감</span>
+                                    <span class="px-1.5 py-0.2 rounded-full font-label-sm text-label-sm bg-surface-container text-on-surface-variant">41개</span>
                                 </a>
                                 <button type="button" class="px-3 py-1.5 rounded-lg font-label-md text-label-md bg-primary text-on-primary shadow-xs flex items-center gap-1.5 font-semibold cursor-pointer" onclick="showView(\'archive\')">
                                     <span class="material-symbols-outlined text-[18px]">folder_open</span>
                                     <span>지침서 아카이브</span>
-                                    <span class="px-1.5 py-0.2 rounded-full font-label-sm text-label-sm bg-surface-container-lowest text-primary">53종</span>
-                                </a>
+                                    <span class="px-1.5 py-0.2 rounded-full font-label-sm text-label-sm bg-surface-container-lowest text-primary">70종</span>
+                                </</a>
                                 <button type="button" class="px-3 py-1.5 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1.5 cursor-pointer"
                                    onclick="showView('hierarchy')">
                                     <span class="material-symbols-outlined text-[18px] text-secondary">account_tree</span>
                                     <span>3단계 위계 도감</span>
-                                    <span class="px-1.5 py-0.2 rounded-full font-label-sm text-label-sm bg-secondary-container text-on-secondary-container font-semibold">167단위</span>
+                                    <span class="px-1.5 py-0.2 rounded-full font-label-sm text-label-sm bg-secondary-container text-on-secondary-container font-semibold">218단위</span>
                                 </a>
                             </div>
 
@@ -215,14 +222,14 @@
                                     <span>인쇄 / PDF</span>
                                 </button>
                                 <button type="button" class="flex items-center gap-1 px-3 py-2 rounded-xl bg-surface-container-low hover:bg-surface-container-high border border-outline-variant/40 text-on-surface font-label-sm text-label-sm transition-all"
-                                        id="exportCsvBtn" title="53종 지침서 목록 CSV 다운로드">
+                                        id="exportCsvBtn" title="70종 지침서 목록 CSV 다운로드">
                                     <span class="material-symbols-outlined text-[18px] text-secondary">table_chart</span>
                                     <span>Excel (.csv) 저장</span>
                                 </button>
                                 <a class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-secondary-container hover:bg-secondary hover:text-on-secondary text-on-secondary-container font-label-sm text-label-sm font-semibold transition-all shadow-xs"
-                                   id="downloadMasterZipBtn" href="${config.driveDownloadUrl}" target="_blank" title="53종 정본 일괄 다운로드(ZIP)">
+                                   id="downloadMasterZipBtn" href="${config.driveDownloadUrl}" target="_blank" title="전체 정본 일괄 다운로드(ZIP)">
                                     <span class="material-symbols-outlined text-[18px]">download_for_offline</span>
-                                    <span>53종 전체 ZIP (450MB)</span>
+                                    <span>70종 전체 ZIP</span>
                                 </a>
                             </div>
                         </div>
@@ -235,9 +242,9 @@
                             <div class="flex flex-col">
                                 <span class="font-legal-code text-legal-code text-on-surface-variant uppercase tracking-wider">수록 지침서 총괄</span>
                                 <span class="font-headline-md text-headline-md text-primary mt-0.5 font-bold">
-                                    53<span class="font-label-md text-label-md font-normal text-on-surface">종 정본</span>
+                                    70<span class="font-label-md text-label-md font-normal text-on-surface">종 정본</span>
                                 </span>
-                                <span class="font-legal-code text-legal-code text-secondary mt-1 font-medium">2026 최신개정판 100% 반영</span>
+                                <span class="font-legal-code text-legal-code text-secondary mt-1 font-medium">Track 1 (53) + Track 2 (17)</span>
                             </div>
                             <div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-primary shadow-xs">
                                 <span class="material-symbols-outlined text-[20px]">library_books</span>
@@ -249,7 +256,7 @@
                             <div class="flex flex-col">
                                 <span class="font-legal-code text-legal-code text-on-surface-variant uppercase tracking-wider">누적 색인 분량</span>
                                 <span class="font-headline-md text-headline-md text-primary mt-0.5 font-bold">
-                                    24,180<span class="font-label-md text-label-md font-normal text-on-surface">면</span>
+                                    24,384<span class="font-label-md text-label-md font-normal text-on-surface">면</span>
                                 </span>
                                 <span class="font-legal-code text-legal-code text-outline mt-1 font-medium">PDF 본문 전문(OCR) 색인</span>
                             </div>
@@ -326,7 +333,7 @@
                         <span class="text-legal-code font-legal-code text-outline mr-2">소관 부처별 분류:</span>
                         <button type="button" class="ministry-pill px-3 py-1 rounded-full text-label-sm font-label-sm font-semibold bg-primary text-on-primary shadow-xs transition-all active-pill"
                                 data-ministry="all">
-                            전체 53종
+                            전체 ${countAll}종
                         </button>
                         <button type="button" class="ministry-pill px-3 py-1 rounded-full text-label-sm font-label-sm font-medium bg-surface-container-low text-on-surface-variant hover:bg-surface-container transition-all"
                                 data-ministry="보건복지부">
@@ -351,6 +358,10 @@
                         <button type="button" class="ministry-pill px-3 py-1 rounded-full text-label-sm font-label-sm font-medium bg-surface-container-low text-on-surface-variant hover:bg-surface-container transition-all"
                                 data-ministry="공익재단·기타">
                             공동모금회·민간공익 (${countCivic})
+                        </button>
+                        <button type="button" class="ministry-pill px-3 py-1 rounded-full text-label-sm font-label-sm font-medium bg-emerald-50 text-emerald-800 border border-emerald-200/70 hover:bg-emerald-100 transition-all"
+                                data-ministry="TRACK2">
+                            🌐 Track 2 범부처 확장 (${countSec3})
                         </button>
                     </div>
                 </div>
@@ -441,7 +452,7 @@
                                         섹션 Ⅱ: 범부처 및 특화·전문 실천지침서
                                     </h2>
                                     <span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
-                                        관계부처 및 공익법인 ${countAll - countMohw}종
+                                        관계부처 및 공익법인 ${nonMohwFiles.length}종
                                     </span>
                                     <span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-primary font-label-sm text-label-sm font-semibold">
                                         협력행정 연동
@@ -480,6 +491,59 @@
                         </table>
                     </div>
                 </section>
+
+                <!-- Table 3: Track 2 범부처·확장 안전망 실천지침서 (섹션 Ⅲ) -->
+                <section id="section3-block" class="bg-surface-container-lowest rounded-xl shadow-sm border border-emerald-200/80 overflow-hidden">
+                    <div class="bg-emerald-50/70 px-4 py-3.5 border-b border-emerald-200/70 flex flex-wrap items-center justify-between gap-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-700 text-white flex items-center justify-center font-bold text-[14px] shadow-xs">
+                                Ⅲ
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <h2 class="font-headline-sm text-headline-sm text-emerald-950 font-bold">
+                                        섹션 Ⅲ: Track 2 범부처·확장 안전망 실천지침서
+                                    </h2>
+                                    <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-900 font-label-sm text-label-sm font-semibold">
+                                        6대 확장영역 · 17종
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-emerald-900 font-label-sm text-label-sm font-semibold">
+                                        Track 2 1:1 딥링킹
+                                    </span>
+                                </div>
+                                <p class="text-legal-code font-legal-code text-emerald-900/80 mt-0.5">
+                                    법무부·보건의료·교육부·국토교통부·금융위원회·행정안전부·문체부·농식품부 범부처 실무지침
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-legal-code font-legal-code text-emerald-900/70 hidden md:inline">수록 분량: 204면 (17종 핵심요강)</span>
+                            <button type="button" onclick="window.showView('fields', { track: 'extended' })"
+                               class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-emerald-100/70 text-emerald-900 font-label-sm text-label-sm transition-colors border border-emerald-200 shadow-xs cursor-pointer">
+                                <span class="material-symbols-outlined text-[16px]">domain</span>
+                                <span>Track 2 도감 보기</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-emerald-50/40 text-on-surface-variant font-label-sm text-label-sm border-b border-surface-container">
+                                <tr class="h-10">
+                                    <th scope="col" class="py-2.5 px-3 w-32 font-semibold border-r border-surface-container text-center">소관 기관</th>
+                                    <th scope="col" class="py-2.5 px-3.5 w-36 font-semibold border-r border-surface-container">소속 부서</th>
+                                    <th scope="col" class="py-2.5 px-4 w-72 font-semibold border-r border-surface-container">지침서 공식 명칭 &amp; 판본</th>
+                                    <th scope="col" class="py-2.5 px-4 w-60 font-semibold border-r border-surface-container">핵심 관할 법령 &amp; 대상 시설</th>
+                                    <th scope="col" class="py-2.5 px-4 font-semibold border-r border-surface-container">주요 수록 챕터 및 핵심 지침 요약</th>
+                                    <th scope="col" class="py-2.5 px-4 w-48 text-right font-semibold">연계 위계 &amp; 원문 열람</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table3-tbody" class="divide-y divide-surface-container text-body-sm font-body-sm text-on-surface">
+                                ${renderDesktopRows(sec3Files)}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
             </div>
 
             
@@ -493,19 +557,19 @@
                   <div class="bg-gradient-to-br from-blue-700 via-indigo-800 to-slate-900 rounded-2xl p-4 text-white shadow-md relative overflow-hidden">
                     <div class="flex items-center justify-between mb-2">
                       <span class="px-2 py-0.5 rounded-full bg-blue-500/30 text-blue-200 text-[10px] font-bold">2026 정부 공인 정본</span>
-                      <span class="text-[10px] text-blue-300">총 53종 450MB</span>
+                      <span class="text-[10px] text-blue-300">총 ${countAll}종 454MB</span>
                     </div>
                     <h2 class="text-base font-extrabold tracking-tight">공식 지침서 아카이브</h2>
-                    <p class="text-xs text-blue-100/90 mt-0.5">보건복지부 및 중앙부처 공식 사업안내서 PDF 전수 보관</p>
+                    <p class="text-xs text-blue-100/90 mt-0.5">보건복지부 및 범부처 공식 사업안내서 PDF 전수 보관</p>
                     
                     <div class="grid grid-cols-3 gap-2 pt-3 text-center">
                       <div class="bg-white/10 rounded-xl py-2">
                         <div class="text-[10px] text-blue-200">지침서 확보</div>
-                        <div class="text-sm font-black text-white font-num">53종 전수</div>
+                        <div class="text-sm font-black text-white font-num">${countAll}종 전수</div>
                       </div>
                       <div class="bg-white/10 rounded-xl py-2">
                         <div class="text-[10px] text-blue-200">중앙부처</div>
-                        <div class="text-sm font-black text-white font-num">10개 부처</div>
+                        <div class="text-sm font-black text-white font-num">14개 부처</div>
                       </div>
                       <div class="bg-white/10 rounded-xl py-2">
                         <div class="text-[10px] text-blue-200">인건비 기준</div>
@@ -534,8 +598,9 @@
                     <!-- 소관 부처 필터 -->
                     <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="mobile-archive-ministry-pills">
                       <span class="text-[10px] font-bold text-slate-400 pl-1">부처:</span>
-                      <button type="button" onclick="filterArchiveByMinistry('전체', this)" class="archive-ministry-pill px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-900 text-white flex-shrink-0 shadow-2xs cursor-pointer">전체 53</button>
-                      <button type="button" onclick="filterArchiveByMinistry('보건복지부', this)" class="archive-ministry-pill px-2.5 py-1 rounded-lg text-xs font-medium bg-white text-slate-600 border border-slate-200 flex-shrink-0 cursor-pointer">보건복지부 34</button>
+                      <button type="button" onclick="filterArchiveByMinistry('전체', this)" class="archive-ministry-pill px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-900 text-white flex-shrink-0 shadow-2xs cursor-pointer">전체 ${countAll}</button>
+                      <button type="button" onclick="filterArchiveByMinistry('TRACK2', this)" class="archive-ministry-pill px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 flex-shrink-0 cursor-pointer">Track 2 (${countSec3})</button>
+                      <button type="button" onclick="filterArchiveByMinistry('보건복지부', this)" class="archive-ministry-pill px-2.5 py-1 rounded-lg text-xs font-medium bg-white text-slate-600 border border-slate-200 flex-shrink-0 cursor-pointer">보건복지부 ${countMohw}</button>
                       <button type="button" onclick="filterArchiveByMinistry('여성가족부', this)" class="archive-ministry-pill px-2.5 py-1 rounded-lg text-xs font-medium bg-white text-slate-600 border border-slate-200 flex-shrink-0 cursor-pointer">여성가족부 11</button>
                       <button type="button" onclick="filterArchiveByMinistry('교육부', this)" class="archive-ministry-pill px-2.5 py-1 rounded-lg text-xs font-medium bg-white text-slate-600 border border-slate-200 flex-shrink-0 cursor-pointer">교육부 2</button>
                       <button type="button" onclick="filterArchiveByMinistry('고용노동부', this)" class="archive-ministry-pill px-2.5 py-1 rounded-lg text-xs font-medium bg-white text-slate-600 border border-slate-200 flex-shrink-0 cursor-pointer">고용노동부</button>
@@ -587,13 +652,13 @@
                                     <span class="font-legal-code text-legal-code text-outline">최종 무결성 검증: 2026-02-24</span>
                                 </div>
                                 <h3 class="font-headline-md text-headline-md text-primary mt-1 font-bold">
-                                    2026 대한민국 사회복지 공식 지침서 53종 전종 통합 패키지
+                                    2026 대한민국 사회복지 공식 지침서 70종 전종 통합 패키지
                                 </h3>
                                 <p class="font-body-md text-body-md text-on-surface-variant mt-1.5 max-w-2xl">
-                                    12대 분야 전 영역의 보건복지부, 여성가족부, 고용노동부 등 주무부처 정본 지침서 53종(총 24,180면, OCR 텍스트 검색 가능 PDF)을 단일 ZIP 압축 아카이브로 즉시 일괄 다운로드하실 수 있습니다.
+                                    12대 핵심 분야 및 Track 2 범부처 안전망 전 영역의 보건복지부, 여성가족부, 법무부, 교육부 등 주무부처 정본 지침서 70종(총 24,384면, OCR 텍스트 검색 가능 PDF)을 단일 ZIP 압축 아카이브로 즉시 일괄 다운로드하실 수 있습니다.
                                 </p>
                                 <div class="flex items-center gap-4 text-legal-code font-legal-code text-outline mt-3 flex-wrap">
-                                    <span>용량: 약 450.95 MB</span>
+                                    <span>용량: 약 454.01 MB</span>
                                     <span>•</span>
                                     <span>포맷: PDF / HWPX 정본 원문</span>
                                     <span>•</span>
@@ -606,11 +671,11 @@
                             <a href="${config.driveDownloadUrl}" target="_blank"
                                class="flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md shadow-md transition-all">
                                 <span class="material-symbols-outlined text-[20px]">download</span>
-                                <span>전종 일괄 다운로드 (ZIP, 450MB)</span>
+                                <span>전종 일괄 다운로드 (ZIP, 454MB)</span>
                             </a>
                             <button type="button" class="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-surface-container-high hover:bg-surface-container-highest border border-outline-variant/40 text-primary font-label-md text-label-md transition-all text-center shadow-xs cursor-pointer" onclick="showView(\'hierarchy\')">
                                 <span class="material-symbols-outlined text-[20px] text-secondary">account_tree</span>
-                                <span>3단계 위계도감 167단위 연동조회</span>
+                                <span>3단계 위계도감 218단위 연동조회</span>
                                 <span class="px-1.5 py-0.2 rounded-full font-label-sm text-label-sm bg-secondary-container text-on-secondary-container font-semibold">SCREEN_9</span>
                             </a>
                         </div>
@@ -843,6 +908,7 @@
             const ministryClean = (f.ministry || '관계부처').split('(')[0].trim();
             const yearClean = f.year || '2026';
             const keywords = (f.keyChapters || ["법정지침", "운영서식"]);
+            const hl = f.hierarchyLink || { targetId: "comm-case-intake", label: "L1 종합복지 > L2 운영" };
 
             return `
             <div class="guideline-card bg-white rounded-2xl border border-slate-200 p-4 shadow-sm space-y-2.5 transition-all duration-200"
@@ -880,7 +946,7 @@
                 <button type="button" onclick="viewGuidelineModal('${f.id}')" class="py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1 transition cursor-pointer">
                   <span>👁 목차/뷰어</span>
                 </button>
-                <button type="button" onclick="showView('hierarchy', {parentCategory: '${escapeHtml(f.category || f.title)}'})" class="py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-center gap-1 border border-emerald-200 transition cursor-pointer">
+                <button type="button" onclick="showView('hierarchy', {targetNodeId: '${hl.targetId}'})" class="py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-center gap-1 border border-emerald-200 transition cursor-pointer">
                   <span>🌳 위계도감</span>
                 </button>
               </div>
@@ -902,6 +968,7 @@
         const tablesContainer = document.getElementById('archiveTablesContainer');
         const sec1Block = document.getElementById('section1-block');
         const sec2Block = document.getElementById('section2-block');
+        const sec3Block = document.getElementById('section3-block');
         const mobTabSec1 = document.getElementById('mobTabSec1');
         const mobTabSec2 = document.getElementById('mobTabSec2');
         const exportCsvBtn = document.getElementById('exportCsvBtn');
@@ -910,6 +977,7 @@
             let visibleCount = 0;
             let sec1Count = 0;
             let sec2Count = 0;
+            let sec3Count = 0;
             const q = searchQuery.trim().toLowerCase();
             const normQ = q.replace(/성평등가족부/g, '여성가족부');
 
@@ -924,23 +992,27 @@
                     ...(f.keyChapters || [])
                 ].filter(Boolean).join(' ').toLowerCase();
 
-                let ministryMatch = checkMinistryMatch(f.ministry || '', keywords, currentMinistry);
+                let ministryMatch = checkMinistryMatch(f.ministry || '', keywords, currentMinistry, f.section || '');
                 let queryMatch = (q.length === 0) || keywords.includes(q) || (normQ && keywords.includes(normQ)) || (f.title || '').toLowerCase().includes(q) || (f.department || '').toLowerCase().includes(q);
 
                 return ministryMatch && queryMatch;
             });
 
-            const sec1Filtered = filteredFiles.filter(f => f.section === 'SECTION_1' || (f.ministry && f.ministry.includes('보건복지부')));
-            const sec2Filtered = filteredFiles.filter(f => f.section === 'SECTION_2' || (f.ministry && !f.ministry.includes('보건복지부')));
+            const sec1Filtered = filteredFiles.filter(f => f.section === 'SECTION_1' || (f.section !== 'SECTION_3' && f.ministry && f.ministry.includes('보건복지부')));
+            const sec2Filtered = filteredFiles.filter(f => f.section === 'SECTION_2');
+            const sec3Filtered = filteredFiles.filter(f => f.section === 'SECTION_3');
 
             visibleCount = filteredFiles.length;
             sec1Count = sec1Filtered.length;
             sec2Count = sec2Filtered.length;
+            sec3Count = sec3Filtered.length;
 
             const t1 = document.getElementById('table1-tbody');
             const t2 = document.getElementById('table2-tbody');
+            const t3 = document.getElementById('table3-tbody');
             if (t1) t1.innerHTML = renderDesktopRows(sec1Filtered);
             if (t2) t2.innerHTML = renderDesktopRows(sec2Filtered);
+            if (t3) t3.innerHTML = renderDesktopRows(sec3Filtered);
 
             // Filter Mobile Cards
             cards.forEach(card => {
@@ -949,7 +1021,7 @@
                 const keywords = (card.getAttribute('data-keywords') || '').toLowerCase();
                 const textContent = card.textContent.toLowerCase();
 
-                let ministryMatch = checkMinistryMatch(cardMinistry, keywords, currentMinistry);
+                let ministryMatch = checkMinistryMatch(cardMinistry, keywords, currentMinistry, cardSection);
                 let queryMatch = (q.length === 0) || textContent.includes(q) || (normQ && textContent.includes(normQ)) || keywords.includes(q) || (normQ && keywords.includes(normQ));
                 let sectionMatch = (mobileActiveSection === 'ALL') || (cardSection === mobileActiveSection);
 
@@ -963,6 +1035,7 @@
             // Toggle table section blocks
             if (sec1Block) sec1Block.style.display = (sec1Count > 0) ? '' : 'none';
             if (sec2Block) sec2Block.style.display = (sec2Count > 0) ? '' : 'none';
+            if (sec3Block) sec3Block.style.display = (sec3Count > 0) ? '' : 'none';
 
             // Badge count
             if (badgeCount) badgeCount.textContent = `${visibleCount}건 표시중`;
@@ -978,18 +1051,19 @@
         }
         activeFilterGuidelines = filterGuidelines;
 
-        function checkMinistryMatch(rowMinistry, keywords, target) {
+        function checkMinistryMatch(rowMinistry, keywords, target, section) {
             if (target === 'all') return true;
+            if (target === 'TRACK2') return section === 'SECTION_3';
             if (target === '행안부/질병청/법무부') {
-                return rowMinistry.includes('행안') || rowMinistry.includes('질병') || rowMinistry.includes('법무') ||
+                return section !== 'SECTION_3' && (rowMinistry.includes('행안') || rowMinistry.includes('질병') || rowMinistry.includes('법무') ||
                        rowMinistry.includes('외교') || rowMinistry.includes('보훈') || rowMinistry.includes('통일') ||
-                       rowMinistry.includes('국무') || keywords.includes('행정안전부') || keywords.includes('질병관리청');
+                       rowMinistry.includes('국무') || keywords.includes('행정안전부') || keywords.includes('질병관리청'));
             }
             if (target === '공익재단·기타') {
-                return rowMinistry.includes('공동모금회') || rowMinistry.includes('사회공헌') ||
-                       rowMinistry.includes('재단') || rowMinistry.includes('공익') || keywords.includes('사회복지공동모금회');
+                return section !== 'SECTION_3' && (rowMinistry.includes('공동모금회') || rowMinistry.includes('사회공헌') ||
+                       rowMinistry.includes('재단') || rowMinistry.includes('공익') || keywords.includes('사회복지공동모금회'));
             }
-            return rowMinistry.includes(target);
+            return section !== 'SECTION_3' && rowMinistry.includes(target);
         }
 
         // Ministry Pill Clicks
@@ -1327,7 +1401,10 @@
 
             const matchSearch = !mobileArchiveQuery || text.includes(mobileArchiveQuery) || cardKeywords.includes(mobileArchiveQuery);
             const matchYear = (mobileArchiveYear === '전체') || cardYear.includes(mobileArchiveYear.toLowerCase());
-            const matchMinistry = (mobileArchiveMinistry === '전체') || cardMinistry.includes(mobileArchiveMinistry.toLowerCase()) || text.includes(mobileArchiveMinistry.toLowerCase());
+            const cardSection = card.getAttribute('data-section') || '';
+            const matchMinistry = (mobileArchiveMinistry === '전체')
+                || (mobileArchiveMinistry === 'TRACK2' && cardSection === 'SECTION_3')
+                || (mobileArchiveMinistry !== 'TRACK2' && (cardMinistry.includes(mobileArchiveMinistry.toLowerCase()) || text.includes(mobileArchiveMinistry.toLowerCase())));
 
             if (matchSearch && matchYear && matchMinistry) {
                 card.classList.remove('hidden');

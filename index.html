@@ -21,10 +21,10 @@
     <script src="src/data/practicum-postings-db.js?v=20261112"></script>
     <script src="src/data/practicum-direct-db.js?v=20261112"></script>
     <script src="src/data/national-practicum-db.js?v=20261112" defer></script>
-    <script src="src/data/guidelines-archive-db.js?v=20261115"></script>
-    <script src="src/js/archive.js?v=20261115_v10"></script>
-    <script src="src/data/welfare-hierarchy-db.js?v=20261115_optA2"></script>
-    <script src="src/js/hierarchy.js?v=20261115_v8"></script>
+    <script src="src/data/guidelines-archive-db.js?v=20261116"></script>
+    <script src="src/js/archive.js?v=20261116"></script>
+    <script src="src/data/welfare-hierarchy-db.js?v=20261116"></script>
+    <script src="src/js/hierarchy.js?v=20261116"></script>
     <script src="src/js/mobile-stitch-controller.js?v=20261116"></script>
     <script src="src/js/demo-tour.js?v=20261116"></script>
 
@@ -43,6 +43,7 @@
             if (options.targetNodeId) params.set('targetNodeId', options.targetNodeId);
             if (options.highlightId) params.set('highlightId', options.highlightId);
             if (options.domainKey) params.set('domainKey', options.domainKey);
+            if (options.track) params.set('track', options.track);
             const qs = params.toString();
             return '#' + v + (qs ? '?' + qs : '');
         }
@@ -91,10 +92,16 @@
                         window.renderArchiveView(options);
                     }
                 } else if (viewId === 'fields') {
+                    if (options.track === 'extended' || (options.facilityId && String(options.facilityId).startsWith('ext-'))) {
+                        if (typeof switchFieldsTrack === 'function') switchFieldsTrack('extended');
+                    } else if (options.track === 'core' || (options.facilityId && String(options.facilityId).startsWith('law-'))) {
+                        if (typeof switchFieldsTrack === 'function') switchFieldsTrack('core');
+                    }
                     if (typeof window.renderFieldsView === 'function') {
                         window.renderFieldsView(options);
                     } else if (typeof renderFieldsTable === 'function') {
-                        renderFieldsTable();
+                        if (typeof applyFieldsFilter === 'function') applyFieldsFilter();
+                        else renderFieldsTable();
                     }
                     if (options.search) {
                         const searchInput = document.getElementById('fields-search-input');
@@ -152,13 +159,52 @@
 
         window.jumpToFacilityByTerm = function(term) {
             if (!term) return;
-            const clean = String(term).replace(/\s*\(.*?\)\s*/g, '').trim();
-            let targetRow = (STATUTORY_MATRIX || []).find(r => {
-                const hay = `${r.facilityCategory} ${(r.livingFacilities || []).join(' ')} ${(r.usingFacilities || []).join(' ')}`;
-                return hay.includes(clean);
+            const rawTerm = String(term).trim();
+            const compactRaw = rawTerm.replace(/[·\s()]+/g, '');
+            const clean = rawTerm.replace(/\s*\(.*?\)\s*/g, '').trim();
+            const compactClean = clean.replace(/[·\s]+/g, '');
+
+            const pool = (typeof currentFieldsTrack !== 'undefined' && currentFieldsTrack === 'extended')
+                ? [...(EXTENDED_STATUTORY_MATRIX || []), ...(STATUTORY_MATRIX || [])]
+                : [...(STATUTORY_MATRIX || []), ...(EXTENDED_STATUTORY_MATRIX || [])];
+
+            const normalizeHay = (r) => `${r.facilityCategory || ''} ${r.hierarchyFacility || ''} ${(r.livingFacilities || []).join(' ')} ${(r.usingFacilities || []).join(' ')}`;
+
+            // 1. Exact full term match (preserves qualifiers like 늘봄·교육복지·Wee)
+            let targetRow = pool.find(r => {
+                const hay = normalizeHay(r);
+                return hay.includes(rawTerm) || hay.replace(/[·\s()]+/g, '').includes(compactRaw);
             });
+            // 2. Track 2 multi-keyword full category / compact match
             if (!targetRow) {
-                targetRow = (STATUTORY_MATRIX || []).find(r => clean.includes(r.facilityCategory) || r.facilityCategory.includes(clean));
+                targetRow = (EXTENDED_STATUTORY_MATRIX || []).find(r => {
+                    const c = (r.facilityCategory || '').replace(/[·\s()]+/g, '');
+                    return compactRaw === c || (compactRaw.length >= 6 && c.includes(compactClean) && (rawTerm.includes('늘봄') || rawTerm.includes('특수') || rawTerm.includes('보훈') || rawTerm.includes('산재') || rawTerm.includes('사회적') || rawTerm.includes('자활') || rawTerm.includes('주거') || rawTerm.includes('종교') || rawTerm.includes('사찰') || rawTerm.includes('교정') || rawTerm.includes('보호관찰') || rawTerm.includes('외국인') || rawTerm.includes('상급종합') || rawTerm.includes('재활의료') || rawTerm.includes('치매안심') || rawTerm.includes('서민금융') || rawTerm.includes('대학')));
+                });
+            }
+            // 3. Clean substring match across pool
+            if (!targetRow) {
+                targetRow = pool.find(r => {
+                    const hay = normalizeHay(r);
+                    return hay.includes(clean) || hay.replace(/[·\s]+/g, '').includes(compactClean);
+                });
+            }
+            // 4. Category containment fallback
+            if (!targetRow) {
+                targetRow = pool.find(r => {
+                    const cat = r.facilityCategory || '';
+                    return clean.includes(cat) || cat.includes(clean) || compactClean.includes(cat.replace(/[·\s]+/g, '')) || cat.replace(/[·\s]+/g, '').includes(compactClean);
+                });
+            }
+            // 5. Token fallback
+            if (!targetRow) {
+                const tokens = clean.split(/[·/\s,]+/).filter(t => t.length >= 2 && !['시설', '지원', '센터', '기관'].includes(t));
+                if (tokens.length > 0) {
+                    targetRow = pool.find(r => {
+                        const hay = normalizeHay(r);
+                        return tokens.some(t => hay.includes(t));
+                    });
+                }
             }
             if (targetRow) {
                 window.jumpToFacility(targetRow.id);
@@ -203,6 +249,7 @@
             if (params.get('targetNodeId')) options.targetNodeId = decodeURIComponent(params.get('targetNodeId'));
             if (params.get('highlightId')) options.highlightId = decodeURIComponent(params.get('highlightId'));
             if (params.get('domainKey')) options.domainKey = decodeURIComponent(params.get('domainKey'));
+            if (params.get('track')) options.track = decodeURIComponent(params.get('track'));
 
             showView(viewId, options);
 
@@ -256,7 +303,8 @@
 
         window.jumpToFacility = function(facilityId) {
             if (!facilityId) return;
-            window.showView('fields', { facilityId: facilityId, preventScroll: true });
+            const isExt = String(facilityId).startsWith('ext-');
+            window.showView('fields', { facilityId: facilityId, track: isExt ? 'extended' : 'core', preventScroll: true });
 
             const searchInput = document.getElementById('fields-search-input');
             if (searchInput && searchInput.value) {
@@ -264,7 +312,13 @@
                 if (typeof filterFieldsTable === 'function') filterFieldsTable('');
             }
             if (typeof clearMobileSearch === 'function') clearMobileSearch();
-            if (typeof setMinistryFilter === 'function') setMinistryFilter('전체');
+            if (isExt) {
+                if (typeof switchFieldsTrack === 'function') switchFieldsTrack('extended');
+                if (typeof setExtendedGroupFilter === 'function') setExtendedGroupFilter('전체');
+            } else {
+                if (typeof switchFieldsTrack === 'function') switchFieldsTrack('core');
+                if (typeof setMinistryFilter === 'function') setMinistryFilter('전체');
+            }
 
             setTimeout(() => {
                 const targetRow = document.getElementById(`facility-row-${facilityId}`);
@@ -470,11 +524,11 @@
                             </button>
                             <button type="button" onclick="showView('hierarchy')" class="w-full text-left flex items-center justify-between px-3.5 py-2.5 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 font-semibold border-t border-slate-100 cursor-pointer">
                                 <span>🌳 3단계 위계 도감</span>
-                                <span class="px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 font-bold font-num text-[10px]">167</span>
+                                <span class="px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 font-bold font-num text-[10px]">218</span>
                             </button>
                             <button type="button" onclick="showView('archive')" class="w-full text-left flex items-center justify-between px-3.5 py-2.5 hover:bg-blue-50 text-slate-700 hover:text-blue-600 font-semibold border-t border-slate-100 cursor-pointer">
                                 <span>📁 공식 지침서 아카이브</span>
-                                <span class="px-1.5 py-0.2 rounded-full bg-blue-100 text-blue-700 font-bold font-num text-[10px]">53</span>
+                                <span class="px-1.5 py-0.2 rounded-full bg-blue-100 text-blue-700 font-bold font-num text-[10px]">70</span>
                             </button>
                         </div>
                     </div>
@@ -509,12 +563,12 @@
 
                 <button type="button" onclick="showView('hierarchy')" data-view="hierarchy" class="subnav-tab flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 flex items-center gap-1.5 whitespace-nowrap cursor-pointer transition">
                     <span>3단계 위계 도감</span>
-                    <span class="px-1.5 py-0.2 rounded-full bg-emerald-600 text-white text-[10px] font-num">167</span>
+                    <span class="px-1.5 py-0.2 rounded-full bg-emerald-600 text-white text-[10px] font-num">218</span>
                 </button>
                 
                 <button type="button" onclick="showView('archive')" data-view="archive" class="subnav-tab flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 flex items-center gap-1.5 whitespace-nowrap cursor-pointer transition">
                     <span>공식 지침서 아카이브</span>
-                    <span class="px-1.5 py-0.2 rounded-full bg-blue-600 text-white text-[10px] font-num">53</span>
+                    <span class="px-1.5 py-0.2 rounded-full bg-blue-600 text-white text-[10px] font-num">70</span>
                 </button>
 
                 <button type="button" onclick="showView('practicum')" data-view="practicum" class="subnav-tab flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 flex items-center gap-1 whitespace-nowrap cursor-pointer transition">
@@ -545,11 +599,11 @@
             </button>
             <button type="button" onclick="showView('hierarchy'); document.getElementById('mobile-subnav-menu').classList.add('hidden');" class="w-full text-left py-2 px-3 rounded-lg hover:bg-emerald-50 text-emerald-800 flex items-center justify-between">
                 <span>🌳 3단계 위계 도감</span>
-                <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold font-num">167건</span>
+                <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold font-num">218건</span>
             </button>
             <button type="button" onclick="showView('archive'); document.getElementById('mobile-subnav-menu').classList.add('hidden');" class="w-full text-left py-2 px-3 rounded-lg hover:bg-blue-50 text-blue-700 flex items-center justify-between">
                 <span>📁 공식 지침서 아카이브</span>
-                <span class="px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 font-bold font-num">53건</span>
+                <span class="px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 font-bold font-num">70건</span>
             </button>
             <button type="button" onclick="showView('practicum'); document.getElementById('mobile-subnav-menu').classList.add('hidden');" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">실습처 탐색 (320건)</button>
             <button type="button" onclick="showView('residency'); document.getElementById('mobile-subnav-menu').classList.add('hidden');" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700">수련처 탐색 (284곳)</button>
@@ -565,11 +619,11 @@
             </button>
             <button type="button" data-view="hierarchy" onclick="showView('hierarchy')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
                 <span>🌳 3단계 위계</span>
-                <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-emerald-100 text-emerald-700 rounded-full font-bold">167</span>
+                <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-emerald-100 text-emerald-700 rounded-full font-bold">218</span>
             </button>
             <button type="button" data-view="archive" onclick="showView('archive')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
                 <span>📁 아카이브</span>
-                <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-blue-100 text-blue-700 rounded-full font-bold">53</span>
+                <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-blue-100 text-blue-700 rounded-full font-bold">70</span>
             </button>
             <button type="button" data-view="practicum" onclick="showView('practicum')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
                 <span>실습처</span>
@@ -608,10 +662,10 @@
                 <!-- 1. 퀵 네비게이션 탭 버튼 -->
                 <div class="grid grid-cols-2 gap-2">
                     <button type="button" onclick="showView('hierarchy')" class="p-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition cursor-pointer">
-                        <span>🌳 3단계 위계 도감 (167)</span>
+                        <span>🌳 3단계 위계 도감 (218)</span>
                     </button>
                     <button type="button" onclick="showView('archive')" class="p-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition cursor-pointer">
-                        <span>📁 지침서 아카이브 (53)</span>
+                        <span>📁 지침서 아카이브 (70)</span>
                     </button>
                 </div>
 
@@ -770,10 +824,10 @@
                 <div class="pt-3 pb-4">
                     <div class="grid grid-cols-2 gap-2">
                         <button type="button" onclick="showView('hierarchy')" class="py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
-                            <span>🌳</span><span>3단계 위계 도감 (167)</span>
+                            <span>🌳</span><span>3단계 위계 도감 (218)</span>
                         </button>
                         <button type="button" onclick="showView('archive')" class="py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
-                            <span>📁</span><span>지침서 아카이브 (53)</span>
+                            <span>📁</span><span>지침서 아카이브 (70)</span>
                         </button>
                     </div>
                 </div>
@@ -804,7 +858,7 @@
                             3단계 위계 도감 (숲에서 나무로) →
                         </h3>
                         <p class="text-xs text-emerald-100/90 leading-snug">
-                            12대 분야 167개 법정 단위 서비스 [대-중-소분류] 및 38종 공식 지침서 원문 매칭 바로가기
+                            18대 분야 218개 법정·실천단위서비스 [대-중-소분류] 및 70종 공식 지침서 원문 매칭 바로가기
                         </p>
                     </div>
                     <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-2xl flex-shrink-0 group-hover:scale-110 transition">
@@ -818,10 +872,10 @@
                             <span>📁 2026 정부 공인 정본</span>
                         </div>
                         <h3 class="text-base sm:text-lg font-black tracking-tight group-hover:text-blue-200 transition">
-                            공식 지침서 마스터 아카이브 (53종) →
+                            공식 지침서 마스터 아카이브 (70종) →
                         </h3>
                         <p class="text-xs text-blue-100/90 leading-snug">
-                            보건복지부·여가부·교육부 공식 사업안내서 450MB 풀패키지 일괄 다운로드 및 실시간 검색
+                            Track 1(53종) + Track 2 범부처 안전망(17종) 공식 사업안내서 454MB 풀패키지 및 실시간 검색
                         </p>
                     </div>
                     <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-2xl flex-shrink-0 group-hover:scale-110 transition">
@@ -869,7 +923,7 @@
                                 <span class="text-sm font-black text-slate-900">Track 2. 확장 실무 &amp; 범부처 안전망 도감</span>
                                 <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-teal-100 text-teal-800">6대 영역 · 17개 분류</span>
                             </div>
-                            <p class="text-[11px] text-slate-500 mt-0.5">사회적경제 · 사법·교정 · 보건·의료 · 정규/특수교육 · 주거·금융·봉사 · 종교복지</p>
+                            <p class="text-[11px] text-slate-500 mt-0.5">6대 범부처 안전망 · 🌳 3단계 위계도감(51) ⇄ 📚 지침서(17종) 1:1 직결</p>
                         </div>
                     </div>
                     <span id="badge-track-extended-active" class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-500 text-[11px] font-bold shrink-0 group-hover:bg-teal-600 group-hover:text-white transition">전환 ➔</span>
@@ -2697,10 +2751,13 @@
                 ministryBadge: 'bg-teal-50 text-teal-800 border-teal-200',
                 ministryIcon: '🌱',
                 facilityCategory: '사회적기업 · 예비사회적기업 · 소셜벤처',
+                hierarchyFacility: '사회적기업 · 예비사회적기업 · 소셜벤처',
+                archiveDocId: 'doc-054',
                 tag: '사회적경제',
                 livingFacilities: [],
                 usingFacilities: [
-                    '(예비)사회적기업 (고용노동부 인증/지정)',
+                    '인증 사회적기업 (일자리제공형·사회서비스제공형·지역사회공헌형·혼합형)',
+                    '부처형 · 지역형 예비사회적기업',
                     '소셜벤처 (중소벤처기업부 판별)',
                     '한국사회적기업진흥원'
                 ],
@@ -2716,12 +2773,14 @@
                 ministryBadge: 'bg-teal-50 text-teal-800 border-teal-200',
                 ministryIcon: '🤝',
                 facilityCategory: '협동조합 · 마을기업 · 자활기업',
+                hierarchyFacility: '협동조합 · 마을기업 · 자활기업',
+                archiveDocId: 'doc-055',
                 tag: '연대경제',
                 livingFacilities: [],
                 usingFacilities: [
-                    '일반협동조합 / 사회적협동조합 (기재부/관계부처 인가)',
-                    '마을기업 (행정안전부 지정)',
-                    '인정 자활기업 (기초수급자·차상위계층 기반)'
+                    '일반협동조합 · 사회적협동조합 (기재부/관계부처 인가, 돌봄·복지형)',
+                    '지정 마을기업 (행정안전부 지정 지역공동체 비즈니스)',
+                    '인정 자활기업 (기초수급자·차상위계층 기반 자활공동체)'
                 ],
                 laws: ['「협동조합 기본법」', '「국민기초생활 보장법」'],
                 articles: '협동조합기본법 제15조·제85조; 기초보장법 제18조',
@@ -2735,13 +2794,15 @@
                 ministryBadge: 'bg-emerald-50 text-emerald-800 border-emerald-200',
                 ministryIcon: '🌾',
                 facilityCategory: '사회적농장 · 농어촌공동체회사',
+                hierarchyFacility: '사회적농장 · 농어촌공동체회사',
+                archiveDocId: 'doc-056',
                 tag: '농촌돌봄',
                 livingFacilities: ['사회적농장 / 돌봄공동체 숙식 거주형 모델'],
-                usingFacilities: ['사회적농장 (농식품부 - 돌봄·교육·고용)', '농어촌공동체회사 (농식품부)'],
+                usingFacilities: ['사회적농장 (장애인·고령자·취약계층 농업 기반 돌봄·교육·고용)', '농어촌공동체회사 (농식품부 육성)'],
                 laws: ['「농어촌주민의 보건복지증진을 위한 특별법」', '「치유농업 연구개발 및 육성에 관한 법률」'],
                 articles: '농어촌복지법 및 농식품부 사회적농업 활성화 지원지침',
                 operator: '농업법인·사회적협동조합·마을공동체',
-                note: '농업 활동을 통한 사회적 약자 돌봄·치유·고용 통합 모델'
+                note: '농업 활동을 통한 사회적 약자 돌봄·교육·고용 통합 실천 모델'
             },
 
             // --- 5. 사법·교정 및 법무보호 ---
@@ -2752,15 +2813,18 @@
                 ministryBadge: 'bg-purple-50 text-purple-800 border-purple-200',
                 ministryIcon: '⚖️',
                 facilityCategory: '교정시설 · 소년보호 · 치료감호',
+                hierarchyFacility: '교정시설 · 소년보호 · 치료감호',
+                archiveDocId: 'doc-057',
                 tag: '사법교정',
                 livingFacilities: [
-                    '교도소·구치소·군교도소 (법무부·국방부)',
+                    '교도소, 구치소, 교도소 지소 (사회복귀과)',
                     '소년원, 소년분류심사원 (법무부 직영 교정시설)',
-                    '치료감호소 (국립법무병원)'
+                    '치료감호소 (국립법무병원)',
+                    '군교도소, 군구금시설 (국방부)'
                 ],
                 usingFacilities: [
                     '교정 심리치료센터, 교정 직업훈련·취업지원 시설',
-                    '소년원학교, 청소년꿈키움센터 (비행예방센터)',
+                    '소년원학교, 청소년꿈키움센터 (청소년 비행예방센터)',
                     '치료명령 외래 연계'
                 ],
                 laws: ['「형의 집행 및 수용자의 처우에 관한 법률」', '「보호소년 등의 처우에 관한 법률」', '「치료감호 등에 관한 법률」'],
@@ -2775,16 +2839,18 @@
                 ministryBadge: 'bg-purple-50 text-purple-800 border-purple-200',
                 ministryIcon: '🛡️',
                 facilityCategory: '보호관찰 · 갱생보호 · 범죄피해자지원',
+                hierarchyFacility: '보호관찰 · 갱생보호 · 범죄피해자지원',
+                archiveDocId: 'doc-058',
                 tag: '법무보호',
                 livingFacilities: [
                     '한국법무보호복지공단 갱생보호시설 (숙식형)',
                     '범죄피해자지원센터 스마일센터 (임시주거형)'
                 ],
                 usingFacilities: [
-                    '보호관찰소 (사회봉사, 수강명령, 판결전조사)',
-                    '법무보호복지공단 지부 (취업·직업훈련)',
-                    '범죄피해자지원센터 (스마일센터 심리치료)',
-                    '법률홈닥터 (지자체·복지관 파견 법률복지)'
+                    '보호관찰소 (준법지원센터 - 사회봉사·수강명령·판결전조사)',
+                    '법무보호복지공단 지부 (취업·직업훈련·자립지원)',
+                    '범죄피해자지원센터 · 스마일센터 (트라우마 심리치유·법률지원)',
+                    '법률홈닥터 (지자체·사회복지관 파견 법률복지)'
                 ],
                 laws: ['「보호관찰 등에 관한 법률」', '「범죄피해자 보호법」'],
                 articles: '범죄피해자보호법 제33조; 보호관찰법',
@@ -2798,9 +2864,11 @@
                 ministryBadge: 'bg-purple-50 text-purple-800 border-purple-200',
                 ministryIcon: '🌐',
                 facilityCategory: '출입국·외국인보호 · 난민지원',
+                hierarchyFacility: '출입국·외국인보호 · 난민지원',
+                archiveDocId: 'doc-059',
                 tag: '이주난민',
-                livingFacilities: ['외국인보호소, 난민지원센터 (출입국·외국인지원센터)'],
-                usingFacilities: ['외국인종합안내센터 (1345)', '난민지원센터 (생계·의료·한국어 정착 지원)'],
+                livingFacilities: ['외국인보호소, 보호시설', '난민지원센터 (출입국·외국인지원센터 숙식형)'],
+                usingFacilities: ['외국인종합안내센터 (1345)', '난민지원센터 (난민 인정 신청자 생계·의료·정착 교육)'],
                 laws: ['「출입국관리법」', '「난민법」'],
                 articles: '출입국관리법 제52조(보호); 난민법 제41조',
                 operator: '국가 (법무부)',
@@ -2815,6 +2883,8 @@
                 ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
                 ministryIcon: '🏥',
                 facilityCategory: '상급종합·종합병원 · 호스피스 · 요양병원',
+                hierarchyFacility: '상급종합·종합병원 · 호스피스 · 요양병원',
+                archiveDocId: 'doc-060',
                 tag: '의료사회복지',
                 livingFacilities: [
                     '요양병원 (장기입원 요양)',
@@ -2822,11 +2892,11 @@
                     '권역응급의료센터 (응급병동)'
                 ],
                 usingFacilities: [
-                    '상급종합병원 / 종합병원 (의료사회복지실 운영)',
+                    '상급종합병원 / 종합병원 (의료사회복지실·공공의료사업단 운영)',
                     '호스피스·완화의료기관 (가정형, 자문형)',
                     '요양병원 외래, 낮병동'
                 ],
-                laws: ['「의료법」', '「연명의료결정법」', '「암관리법」'],
+                laws: ['「의료법」', '「호스피스·완화의료 및 임종과정에 있는 환자의 연명의료결정에 관한 법률」', '「암관리법」'],
                 articles: '의료법 시행규칙 제38조(의료사회복지사); 암관리법 제20조',
                 operator: '국공립병원 / 학교법인 / 의료법인·의사',
                 note: '법정 국가자격 「의료사회복지사」 1년 수련 및 병원 사회사업 실천 거점'
@@ -2838,19 +2908,21 @@
                 ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
                 ministryIcon: '🩺',
                 facilityCategory: '재활의료 · 지방의료원 · 정신의료 · 산후조리원',
+                hierarchyFacility: '재활의료 · 지방의료원 · 정신의료 · 산후조리원',
+                archiveDocId: 'doc-061',
                 tag: '전문케어',
                 livingFacilities: [
                     '국립재활원 · 재활의료기관 (입원병상)',
-                    '정신의료기관 (정신병원 입원병동)',
-                    '지방의료원 · 국립중앙의료원 · 적십자병원',
+                    '정신의료기관 (정신병원 폐쇄·개방병동, 종합병원 정신건강의학과)',
+                    '지방의료원 · 국립중앙의료원 · 국립암센터 · 적십자병원',
                     '산후조리원 (산모·신생아 거주 요양)'
                 ],
                 usingFacilities: [
-                    '재활의료기관, 권역재활병원',
+                    '재활의료기관, 권역재활병원 외래, 지역사회 재활센터',
                     '정신건강의학과 외래, 낮병원',
                     '공공보건의료지원센터, 취약계층 의료지원 전담팀'
                 ],
-                laws: ['「장애인복지법」', '「정신건강복지법」', '「지방의료원법」', '「모자보건법」'],
+                laws: ['「장애인복지법」', '「정신건강증진 및 정신질환자 복지서비스 지원에 관한 법률」', '「지방의료원의 설립 및 운영에 관한 법률」', '「모자보건법」'],
                 articles: '정신건강복지법 제19조; 지방의료원법 제4조; 모자보건법 제15조의2',
                 operator: '국가·지자체 / 의료법인 / 개인·법인',
                 note: '회복기 재활, 정신응급·낮병원 및 지역 공공의료 안전망'
@@ -2862,11 +2934,13 @@
                 ministryBadge: 'bg-sky-50 text-sky-800 border-sky-200',
                 ministryIcon: '🧬',
                 facilityCategory: '지역보건의료기관 · 치매안심센터',
+                hierarchyFacility: '지역보건의료기관 · 치매안심센터',
+                archiveDocId: 'doc-062',
                 tag: '지역보건',
                 livingFacilities: [],
                 usingFacilities: [
                     '보건소, 보건지소, 건강생활지원센터, 보건진료소',
-                    '치매안심센터 (보건소 연계 치매조기검진·사례관리)'
+                    '치매안심센터 (보건소 연계 치매조기검진·맞춤형 사례관리)'
                 ],
                 laws: ['「지역보건법」', '「치매관리법」'],
                 articles: '지역보건법 제10조·제13조·제14조; 치매관리법 제17조',
@@ -2880,14 +2954,17 @@
                 ministryBadge: 'bg-amber-50 text-amber-800 border-amber-200',
                 ministryIcon: '🎖️',
                 facilityCategory: '산재병원 · 보훈병원 · 국군병원',
+                hierarchyFacility: '산재병원 · 보훈병원 · 국군병원',
+                archiveDocId: 'doc-063',
                 tag: '특수의료',
                 livingFacilities: [
-                    '근로복지공단 산재병원, 국군병원 (입원)',
-                    '보훈병원 입원, 보훈요양병원'
+                    '근로복지공단 산재병원 입원',
+                    '보훈병원 입원, 보훈요양병원',
+                    '국군병원 입원'
                 ],
                 usingFacilities: [
-                    '산재병원 의료사회사업실 · 직업재활센터',
-                    '보훈병원 외래 · 보훈재활체육센터',
+                    '산재병원 의료사회사업실 · 직업재활센터 · 산재 재활 시설',
+                    '보훈병원 외래, 보훈재활체육센터',
                     '군 의무시설, 국군외상센터'
                 ],
                 laws: ['「산업재해보상보험법」', '「한국보훈복지의료공단법」', '「군보건의료에 관한 법률」'],
@@ -2904,12 +2981,15 @@
                 ministryBadge: 'bg-indigo-50 text-indigo-800 border-indigo-200',
                 ministryIcon: '🎓',
                 facilityCategory: '초·중·고교 (늘봄학교 · 교육복지 · Wee)',
+                hierarchyFacility: '초·중·고교 (늘봄학교 · 교육복지 · Wee)',
+                archiveDocId: 'doc-064',
                 tag: '학교복지',
                 livingFacilities: ['기숙형 공립고 기숙사', '기숙형 대안학교 · Wee 스쿨'],
                 usingFacilities: [
-                    '초·중·고등학교 (늘봄학교, 방과후학교)',
-                    '교육복지우선지원사업 학교 (교육복지사·학교사회복지사 배치)',
-                    'Wee 클래스 · Wee 센터 · 학생맞춤통합지원센터'
+                    '초·중·고등학교 (늘봄학교, 방과후학교, 학교돌봄터)',
+                    '교육복지우선지원사업 학교 (학교사회복지사·교육복지사 배치)',
+                    'Wee 클래스 (학교 단위) · Wee 센터 (교육지원청 학생위기상담) · 학생맞춤통합지원센터',
+                    '대안학교, 대안교육위탁교육기관'
                 ],
                 laws: ['「초·중등교육법」', '「학생맞춤통합지원법」'],
                 articles: '초·중등교육법 제28조·제60조의3; 시행령 제54조',
@@ -2923,11 +3003,13 @@
                 ministryBadge: 'bg-indigo-50 text-indigo-800 border-indigo-200',
                 ministryIcon: '🧩',
                 facilityCategory: '특수학교 · 특수학급 · 특수교육지원센터',
+                hierarchyFacility: '특수학교 · 특수학급 · 특수교육지원센터',
+                archiveDocId: 'doc-065',
                 tag: '특수교육',
                 livingFacilities: ['특수학교 기숙시설'],
                 usingFacilities: [
-                    '특수학교 및 특수교육지원센터',
-                    '일반학교 내 특수학급 (순회교육·치료지원·진로직업)'
+                    '특수학교, 일반학교 내 특수학급',
+                    '교육지원청 특수교육지원센터 (순회교육·치료지원·진로직업지원)'
                 ],
                 laws: ['「장애인 등에 대한 특수교육법」'],
                 articles: '특수교육법 제5조, 제11조(지원센터), 제27조(특수학교)',
@@ -2941,11 +3023,13 @@
                 ministryBadge: 'bg-indigo-50 text-indigo-800 border-indigo-200',
                 ministryIcon: '🏫',
                 facilityCategory: '대학 장애학생·상담센터 · 평생교육기관',
+                hierarchyFacility: '대학 장애학생·상담센터 · 평생교육기관',
+                archiveDocId: 'doc-066',
                 tag: '대학·평생교육',
                 livingFacilities: ['대학교 학생생활관 (기숙사 - 장애인편의시설 설치)'],
                 usingFacilities: [
                     '대학교 장애학생지원센터 · 학생생활상담센터 · 인권센터',
-                    '평생학습관, 시·도평생교육진흥원, 문해교육센터, 장애인평생교육시설'
+                    '평생학습관, 시·도평생교육진흥원, 장애인평생교육시설, 문해교육센터'
                 ],
                 laws: ['「고등교육법」', '「평생교육법」'],
                 articles: '고등교육법 제19조의2·제19조의3; 평생교육법 제20조의2·제31조',
@@ -2961,15 +3045,17 @@
                 ministryBadge: 'bg-cyan-50 text-cyan-800 border-cyan-200',
                 ministryIcon: '🏘️',
                 facilityCategory: '주거복지센터 · 사회주택 · 재난구호시설',
+                hierarchyFacility: '주거복지센터 · 사회주택 · 재난구호시설',
+                archiveDocId: 'doc-067',
                 tag: '주거·재난',
                 livingFacilities: [
-                    '전국재해구호협회 (이재민 임시주거시설)',
-                    '사회주택 / 자립지원임대주택',
-                    '영구임대·국민임대·매입전세임대주택'
+                    '전국재해구호협회 (이재민 임시주거시설·임시조립주택·대피소)',
+                    '사회주택 / 자립지원임대주택 (케어안심주택)',
+                    '영구임대주택, 국민임대주택, 매입·전세임대주택'
                 ],
                 usingFacilities: [
-                    '주거복지센터 (LH/지자체 위탁, 주거급여·사회주택 연계)',
-                    '주거복지동 (단지 내 복지관 결합)',
+                    '주거복지센터 (LH 마이홈센터 / 지자체 위탁, 주거급여·사회주택 연계)',
+                    '주거복지동 (영구임대 단지 내 복지관 결합)',
                     '재난심리회복지원센터, 재해구호협회 거점'
                 ],
                 laws: ['「주거기본법」', '「공공주택 특별법」', '「재해구호법」'],
@@ -2984,12 +3070,14 @@
                 ministryBadge: 'bg-cyan-50 text-cyan-800 border-cyan-200',
                 ministryIcon: '💳',
                 facilityCategory: '서민금융 · 채무조정 · 자원봉사 · NPO',
+                hierarchyFacility: '서민금융 · 채무조정 · 자원봉사 · NPO',
+                archiveDocId: 'doc-068',
                 tag: '금융·봉사',
                 livingFacilities: [],
                 usingFacilities: [
-                    '서민금융진흥원 (햇살론, 미소금융 등 서민금융지원)',
+                    '서민금융진흥원 (햇살론, 미소금융 등 서민금융지원 · 서민금융통합지원센터)',
                     '신용회복위원회 (개인워크아웃, 채무조정)',
-                    '지역 자원봉사센터 (「자원봉사기본법」 행안부 체계)',
+                    '지역 자원봉사센터 (중앙·시도·시군구 - 「자원봉사기본법」 행안부 체계)',
                     '중앙·시도 등록 비영리민간단체 (NPO 지원)'
                 ],
                 laws: ['「서민의 금융생활 지원에 관한 법률」', '「자원봉사활동 기본법」', '「비영리민간단체 지원법」'],
@@ -3006,13 +3094,15 @@
                 ministryBadge: 'bg-orange-50 text-orange-800 border-orange-200',
                 ministryIcon: '🕊️',
                 facilityCategory: '종교법인 복지시설 · 수도원 · 무료급식소',
+                hierarchyFacility: '종교법인 복지시설 · 수도원 · 무료급식소',
+                archiveDocId: 'doc-069',
                 tag: '종교복지',
                 livingFacilities: [
                     '수도원, 수녀원 (종교인 공동체 생활시설)',
-                    '종교단체 운영 무료 양로원, 쉼터'
+                    '종교단체 운영 무료 양로원, 쉼터 및 아동·장애인 거주시설'
                 ],
                 usingFacilities: [
-                    '종교법인 (사단·재단법인 - 복지시설 수탁 운영 주체)',
+                    '종교법인 (사단·재단·사회복지법인 - 복지시설 수탁 운영 주체)',
                     '종교단체 부설 무료급식소 (집단급식소 신고) · 푸드뱅크 연계'
                 ],
                 laws: ['「민법」 제32조', '「사회복지사업법」', '「식품 등 기부 활성화에 관한 법률」'],
@@ -3023,19 +3113,22 @@
             {
                 id: 'ext-rel-heritage',
                 trackGroup: '9. 종교 기반 복지체계',
-                ministry: '문화체육관광부·국가유산청',
+                ministry: '문화체육관광부·국가유산청·국토부',
                 ministryBadge: 'bg-orange-50 text-orange-800 border-orange-200',
                 ministryIcon: '🏯',
                 facilityCategory: '전통사찰 · 템플스테이 · 종교문화유산',
+                hierarchyFacility: '전통사찰 · 템플스테이 · 종교문화유산',
+                archiveDocId: 'doc-070',
                 tag: '종교문화',
                 livingFacilities: ['사찰 수행·숙박 공간 (템플스테이 숙박동)'],
                 usingFacilities: [
-                    '템플스테이 운영 전통사찰',
-                    '지정문화유산 사찰·성당·교회 등'
+                    '템플스테이 운영 전통사찰 (마음치유·힐링 프로그램)',
+                    '지정문화유산 사찰·성당·교회 등',
+                    '건축법상 종교시설 (교회, 성당, 사찰 등 용도 분류)'
                 ],
-                laws: ['「전통사찰의 보존 및 지원에 관한 법률」', '「국가유산기본법」'],
-                articles: '전통사찰법 제2조; 국가유산기본법',
-                operator: '불교 종단·사찰 / 소유자·관리단체',
+                laws: ['「전통사찰의 보존 및 지원에 관한 법률」', '「국가유산기본법」', '「건축법 시행령」'],
+                articles: '전통사찰법 제2조; 건축법 시행령 별표 1 제6호',
+                operator: '불교 종단·사찰 / 소유자·관리단체 / 건축주',
                 note: '전통 종교 공간의 지역사회 개방 및 심리치유·문화복지 연계'
             }
         ];
@@ -9138,6 +9231,11 @@
                     renderHierarchyView(options);
                 }
             } else if (viewId === 'fields') {
+                if (options.track === 'extended' || (options.facilityId && String(options.facilityId).startsWith('ext-'))) {
+                    if (typeof switchFieldsTrack === 'function') switchFieldsTrack('extended');
+                } else if (options.track === 'core' || (options.facilityId && String(options.facilityId).startsWith('law-'))) {
+                    if (typeof switchFieldsTrack === 'function') switchFieldsTrack('core');
+                }
                 if (typeof renderFieldsView === 'function') {
                     renderFieldsView(options);
                 }
@@ -9715,7 +9813,7 @@
                                 </div>
                                 ${livingCount > 0 ? `
                                     <ul class="text-[11px] text-slate-700 space-y-1 list-disc list-inside">
-                                        ${item.livingFacilities.map(f => `<li>${isExtended ? escapeHtml(f) : renderFacilityInteractiveText(f)}</li>`).join('')}
+                                        ${item.livingFacilities.map(f => `<li>${renderFacilityInteractiveText(f)}</li>`).join('')}
                                     </ul>
                                 ` : `
                                     <div class="text-[11px] text-amber-800/80">
@@ -9734,7 +9832,7 @@
                                 </div>
                                 ${usingCount > 0 ? `
                                     <ul class="text-[11px] text-slate-700 space-y-1 list-disc list-inside">
-                                        ${item.usingFacilities.map(f => `<li>${isExtended ? escapeHtml(f) : renderFacilityInteractiveText(f)}</li>`).join('')}
+                                        ${item.usingFacilities.map(f => `<li>${renderFacilityInteractiveText(f)}</li>`).join('')}
                                     </ul>
                                 ` : `
                                     <div class="text-[11px] text-blue-800/80">
@@ -9771,15 +9869,27 @@
 
                             <!-- 5. 카드 하단 액션 버튼 -->
                             ${isExtended ? `
-                                <div class="pt-2 flex items-center gap-2">
-                                    <button type="button" onclick="showView('useful-sites')" 
-                                            class="flex-1 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center justify-center gap-1 transition shadow-xs cursor-pointer">
-                                        <span>🔗 유관 공식사이트 ➔</span>
-                                    </button>
-                                    <button type="button" onclick="saveToWorkspace('laws', '${escapeHtml(item.id)}', '${escapeHtml(item.ministry)}', '${escapeHtml(item.facilityCategory)}', '범부처 확장도감')" 
-                                            class="py-2 px-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 font-bold text-xs transition cursor-pointer">
-                                        <span>⭐ 찜하기</span>
-                                    </button>
+                                <div class="pt-2 space-y-1.5">
+                                    <div class="flex items-center gap-2">
+                                        <button type="button" onclick="showView('hierarchy', { facility: '${escapeHtml(item.hierarchyFacility || item.facilityCategory)}' })" 
+                                                class="flex-1 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-800 border border-emerald-200 font-bold text-xs flex items-center justify-center gap-1 transition cursor-pointer">
+                                            <span>🌳 위계도감 보기</span>
+                                        </button>
+                                        <button type="button" onclick="showView('archive', { highlightId: '${escapeHtml(item.archiveDocId || 'doc-054')}' })" 
+                                                class="flex-1 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-1 transition shadow-xs cursor-pointer">
+                                            <span>📖 지침서 열람</span>
+                                        </button>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <button type="button" onclick="showView('useful-sites')" 
+                                                class="flex-1 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-[11px] flex items-center justify-center gap-1 transition shadow-xs cursor-pointer">
+                                            <span>🔗 유관 공식사이트 ➔</span>
+                                        </button>
+                                        <button type="button" onclick="saveToWorkspace('laws', '${escapeHtml(item.id)}', '${escapeHtml(item.ministry)}', '${escapeHtml(item.facilityCategory)}', '범부처 확장도감')" 
+                                                class="py-1.5 px-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 font-bold text-[11px] transition cursor-pointer">
+                                            <span>⭐ 찜하기</span>
+                                        </button>
+                                    </div>
                                 </div>
                             ` : `
                                 <div class="pt-2 flex items-center gap-2">
@@ -9946,17 +10056,9 @@
                             return `<span class="text-slate-400 text-xs">${emptyMsg}</span>`;
                         }
                         return items.map(f => {
-                            if (isExtended) {
-                                return `
-                                    <div class="flex items-start gap-1.5 py-1 px-1.5 rounded-md hover:bg-slate-100/80 transition-colors leading-snug">
-                                        <span class="text-teal-600 font-bold text-xs mt-0.5">•</span>
-                                        <div class="text-xs text-slate-800 font-medium min-w-0">${escapeHtml(f)}</div>
-                                    </div>
-                                `;
-                            }
                             return `
                                 <div class="group/subf flex items-start gap-1.5 py-1 px-1.5 rounded-md hover:bg-slate-100/90 transition-colors leading-snug">
-                                    <span class="text-slate-400 text-xs mt-0.5">•</span>
+                                    <span class="${isExtended ? 'text-teal-600 font-bold' : 'text-slate-400'} text-xs mt-0.5">•</span>
                                     <div class="text-xs text-slate-800 min-w-0">
                                         ${renderFacilityInteractiveText(f)}
                                     </div>
@@ -10006,17 +10108,31 @@
 
                     // 5열: 근거 법령 & 탐색
                     const actionButtonsHtml = isExtended ? `
-                        <div class="pt-1.5 border-t border-slate-100 flex items-center gap-1.5">
+                        <div class="pt-1.5 border-t border-slate-100 flex flex-col sm:flex-row items-center gap-1.5">
+                            <button type="button"
+                                    onclick="showView('hierarchy', { facility: '${escapeHtml(r.hierarchyFacility || r.facilityCategory)}' }); return false;"
+                                    class="w-full sm:flex-1 inline-flex items-center justify-center gap-1 px-2 py-1 rounded-md bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-800 border border-emerald-200 text-[10px] font-bold transition shadow-2xs cursor-pointer"
+                                    title="${escapeHtml(r.facilityCategory)}의 3단계 위계도감 단위서비스로 직결">
+                                <span>🌳 위계도감 ➔</span>
+                            </button>
+                            <button type="button"
+                                    onclick="showView('archive', { highlightId: '${escapeHtml(r.archiveDocId || 'doc-054')}' }); return false;"
+                                    class="w-full sm:flex-1 inline-flex items-center justify-center gap-1 px-2 py-1 rounded-md bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-800 border border-blue-200 text-[10px] font-bold transition shadow-2xs cursor-pointer"
+                                    title="${escapeHtml(r.facilityCategory)} 관련 공식 정본 지침서로 직결">
+                                <span>📚 지침서 ➔</span>
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-1.5">
                             <button type="button"
                                     onclick="showView('useful-sites'); return false;"
-                                    class="w-full inline-flex items-center justify-center gap-1 px-2 py-1.5 rounded-md bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-800 border border-teal-200 text-[10px] font-bold transition shadow-2xs cursor-pointer"
+                                    class="flex-1 inline-flex items-center justify-center gap-1 px-2 py-1 rounded-md bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-800 border border-teal-200 text-[10px] font-bold transition shadow-2xs cursor-pointer"
                                     title="중앙부처·공공기관·유관 협회 공식 사이트 바로가기">
                                 <span>🔗 유관 공식사이트 ➔</span>
                             </button>
+                            <button type="button" onclick="saveToWorkspace('laws', '${escapeHtml(r.id)}', '${escapeHtml(r.ministry)}', '${escapeHtml(r.facilityCategory)}', '범부처 확장도감')" class="px-2.5 text-center py-1 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold border border-amber-200 text-[10px] cursor-pointer shrink-0">
+                                ⭐ 찜하기
+                            </button>
                         </div>
-                        <button type="button" onclick="saveToWorkspace('laws', '${escapeHtml(r.id)}', '${escapeHtml(r.ministry)}', '${escapeHtml(r.facilityCategory)}', '범부처 확장도감')" class="w-full text-center py-1 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold border border-amber-200 text-[11px] cursor-pointer">
-                            ⭐ 찜하기
-                        </button>
                     ` : `
                         <div class="pt-1.5 border-t border-slate-100 flex flex-col sm:flex-row items-center gap-1.5">
                             <button type="button"
@@ -10096,10 +10212,10 @@
                 if (ministryBox) ministryBox.classList.add('hidden');
                 if (extBox) extBox.classList.remove('hidden');
                 if (titleEl) titleEl.innerText = '🌐 Track 2 · 범부처 확장 실무 & 생활안전망 도감 (5열 통합 분류표)';
-                if (tipTitle) tipTitle.innerText = '범부처 확장 도감 탐색 안내:';
-                if (tipBadge) tipBadge.innerText = '6대 확장영역 · 법령 직결';
-                if (tipText) tipText.innerHTML = '사회적경제·사법교정·보건의료·정규/특수교육·주거/금융·종교복지 등 <strong>전통적 복지시설 외 범부처 공공안전망</strong>의 거주형/이용형 분류와 근거법·조문을 한눈에 확인하세요.';
-                if (tipRight) tipRight.innerHTML = '<span>법령 칩 클릭 ➔ 국가법령센터 ↗</span>';
+                if (tipTitle) tipTitle.innerText = 'Track 2 범부처 · 위계 · 지침서 1:1 직결 안내:';
+                if (tipBadge) tipBadge.innerText = '1-클릭 3대 플랫폼 연동';
+                if (tipText) tipText.innerHTML = 'Track 2 표 내 <span class="font-bold text-emerald-800 underline decoration-emerald-400 underline-offset-2">모든 기관·시설명(예: 사회적기업, 스마일센터, 의료사회복지실, 늘봄학교 등)</span> 클릭 시 <strong>3단계 위계도감 섹션 Ⅲ(51단위)</strong>와 <strong>공식 지침서 아카이브(17종)</strong>로 1:1 직결됩니다.';
+                if (tipRight) tipRight.innerHTML = '<span>시설명 클릭 ➔ 위계도감 · 지침서 직결</span>';
 
                 if (mBtnCore) mBtnCore.className = 'py-2 px-2 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1 cursor-pointer';
                 if (mBtnExt) mBtnExt.className = 'py-2 px-2 rounded-lg text-xs font-extrabold bg-white text-teal-700 shadow-2xs transition flex items-center justify-center gap-1 cursor-pointer';

@@ -345,10 +345,13 @@
       const text = card.textContent.toLowerCase();
       const cardYear = card.getAttribute('data-year') || '';
       const cardMinistry = card.getAttribute('data-ministry') || '';
+      const cardSection = card.getAttribute('data-section') || '';
 
       const matchSearch = !currentArchiveSearch || text.includes(currentArchiveSearch);
       const matchYear = (currentArchiveYear === '전체') || cardYear.includes(currentArchiveYear) || text.includes(currentArchiveYear);
-      const matchMinistry = (currentArchiveMinistry === '전체') || cardMinistry.includes(currentArchiveMinistry) || text.includes(currentArchiveMinistry.toLowerCase());
+      const matchMinistry = (currentArchiveMinistry === '전체')
+        || (currentArchiveMinistry === 'TRACK2' && cardSection === 'SECTION_3')
+        || (currentArchiveMinistry !== 'TRACK2' && (cardMinistry.includes(currentArchiveMinistry) || text.includes(currentArchiveMinistry.toLowerCase())));
 
       if (matchSearch && matchYear && matchMinistry) {
         card.classList.remove('hidden');
