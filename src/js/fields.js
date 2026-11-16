@@ -38,6 +38,7 @@ export function matchesMinistry(rowMinistry, targetMinistry) {
 import {
     WELFARE_FIELDS,
     STATUTORY_MATRIX,
+    EXTENDED_STATUTORY_MATRIX,
     MINISTRY_COMPARISON_MATRIX,
     getFieldById,
     getLawUrl

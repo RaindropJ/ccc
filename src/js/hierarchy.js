@@ -1711,8 +1711,16 @@
     const SECTION_2_KEYS = ['06_가족복지', '07_청소년여성권익', '10_학교사회복지', '09_자활고용지원', '12_배분모금국제'];
 
     function getDB() {
+        const rawDomains = (typeof window !== 'undefined' && window.WELFARE_HIERARCHY_DOMAINS) ? window.WELFARE_HIERARCHY_DOMAINS : [];
+        const domains = rawDomains.length > 0 ? rawDomains : [...SECTION_1_KEYS, ...SECTION_2_KEYS].map(key => ({
+            id: key,
+            name: (DOMAIN_MAP[key] && DOMAIN_MAP[key].short) || key.replace(/^\d+_/, ''),
+            icon: (DOMAIN_MAP[key] && DOMAIN_MAP[key].icon) || '🌳'
+        }));
+
         return {
-            nodes: (typeof window !== 'undefined' && window.WELFARE_HIERARCHY_NODES) ? window.WELFARE_HIERARCHY_NODES : []
+            nodes: (typeof window !== 'undefined' && window.WELFARE_HIERARCHY_NODES) ? window.WELFARE_HIERARCHY_NODES : [],
+            domains: domains
         };
     }
 
@@ -1797,7 +1805,7 @@
         return `
             <div class="flex flex-col w-full animate-fadeIn font-body-md text-on-surface pb-16">
                 <!-- Top Statutory Context Banner & Page Metadata -->
-                <section class="w-full bg-surface-container-low py-space-md border-b border-surface-container">
+                <section class="w-full bg-surface-container-low py-space-md border-b border-surface-container hidden md:block">
                     <div class="max-w-7xl mx-auto px-margin flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
                         <div class="flex flex-wrap items-center gap-space-sm">
                             <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-primary text-on-primary font-headline-sm text-headline-sm">
@@ -1826,7 +1834,7 @@
                 </section>
 
                 <!-- Administrative Header & Directive Notice -->
-                <section class="max-w-7xl mx-auto px-margin pt-space-lg w-full">
+                <section class="max-w-7xl mx-auto px-margin pt-space-lg w-full hidden md:block">
                     <div id="facilityFilterBannerContainer" class="hidden mb-6"></div>
                     <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-lg">
                         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
@@ -1926,7 +1934,7 @@
                 </section>
 
                 <!-- Live Filters & Standard Domain Selector Strip -->
-                <section class="max-w-7xl mx-auto px-margin pt-space-lg w-full">
+                <section class="max-w-7xl mx-auto px-margin pt-space-lg w-full hidden md:block">
                     <div class="flex flex-col gap-space-md">
                         <!-- Search & Realtime Counts Bar -->
                         <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-space-md bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
@@ -2090,9 +2098,131 @@
                         </button>
                     </div>
 
-                    <!-- 모바일 카드 목록 컨테이너 -->
-                    <div class="block md:hidden flex flex-col gap-space-sm w-full" id="mobileCardsContainer">
-                        ${renderMobileCards(nodes)}
+                    <!-- [구글 스티치 리디자인: 3단계 위계 도감 & 바텀시트 인스펙터 모바일 뷰 (block md:hidden)] -->
+                    <div class="block md:hidden w-full pb-36" id="mobileHierarchyView">
+                        <div class="mobile-hierarchy-container max-w-md mx-auto px-4 py-3 space-y-4 font-sans text-slate-800">
+
+                          <!-- 1. 핵심 지표 통계 바 -->
+                          <div class="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-2xl p-4 text-white shadow-md">
+                            <div class="flex items-center justify-between mb-2">
+                              <span class="px-2 py-0.5 rounded-full bg-white/20 text-[10px] font-extrabold text-emerald-100">사회복지사업법 제2조 법정체계</span>
+                              <span class="text-[10px] text-emerald-200">2026 개정판 반영</span>
+                            </div>
+                            <h2 class="text-base font-extrabold tracking-tight">3단계 위계 도감 (12대 분야 · 167개 단위시설)</h2>
+                            <p class="text-xs text-emerald-100/90 mt-0.5">대분류 ➔ 중분류 ➔ 소분류 법정시설 연계망</p>
+
+                            <div class="grid grid-cols-4 gap-2 pt-3 text-center">
+                              <div class="bg-white/10 rounded-xl py-2">
+                                <div class="text-[10px] text-emerald-200 font-medium">대분류</div>
+                                <div class="text-base font-black text-white font-num">12</div>
+                              </div>
+                              <div class="bg-white/10 rounded-xl py-2">
+                                <div class="text-[10px] text-emerald-200 font-medium">중분류</div>
+                                <div class="text-base font-black text-white font-num">48</div>
+                              </div>
+                              <div class="bg-white/10 rounded-xl py-2">
+                                <div class="text-[10px] text-emerald-200 font-medium">소분류</div>
+                                <div class="text-base font-black text-white font-num">167</div>
+                              </div>
+                              <div class="bg-white/10 rounded-xl py-2">
+                                <div class="text-[10px] text-emerald-200 font-medium">지침서</div>
+                                <div class="text-base font-black text-white font-num">38</div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- 2. 실시간 검색 & 분류 필터 알약 -->
+                          <div class="space-y-2">
+                            <div class="relative">
+                              <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
+                              <input type="text" id="mobile-hierarchy-search" oninput="handleMobileHierarchySearch(this.value)" placeholder="단위 서비스명, 법정시설명 검색..." 
+                                     class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-white text-xs focus:ring-2 focus:ring-emerald-500 shadow-xs">
+                            </div>
+                            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="mobile-hierarchy-domain-pills">
+                              <button type="button" onclick="filterMobileHierarchyByDomain('all', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-extrabold bg-emerald-600 text-white flex-shrink-0 cursor-pointer shadow-2xs">전체 167</button>
+                              <button type="button" onclick="filterMobileHierarchyByDomain('01_사회복지관', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">01. 복지관 (4)</button>
+                              <button type="button" onclick="filterMobileHierarchyByDomain('02_노인복지', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">02. 노인 (38)</button>
+                              <button type="button" onclick="filterMobileHierarchyByDomain('03_장애인복지', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">03. 장애인 (22)</button>
+                              <button type="button" onclick="filterMobileHierarchyByDomain('04_아동돌봄복지', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">04. 아동 (19)</button>
+                              <button type="button" onclick="filterMobileHierarchyByDomain('05_영유아보육', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">05. 보육 (10)</button>
+                              <button type="button" onclick="filterMobileHierarchyByDomain('06_가족복지', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">06. 가족 (8)</button>
+                              <button type="button" onclick="filterMobileHierarchyByDomain('07_청소년여성권익', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">07. 청소년 (14)</button>
+                              <button type="button" onclick="filterMobileHierarchyByDomain('08_정신건강자살예방', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">08. 정신건강 (12)</button>
+                              <button type="button" onclick="filterMobileHierarchyByDomain('09_자활고용지원', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">09. 자활 (10)</button>
+                              <button type="button" onclick="filterMobileHierarchyByDomain('10_학교사회복지', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">10. 학교 (6)</button>
+                              <button type="button" onclick="filterMobileHierarchyByDomain('11_지역보호긴급돌봄', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">11. 돌봄 (14)</button>
+                              <button type="button" onclick="filterMobileHierarchyByDomain('12_배분모금국제', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">12. 배분·국제 (10)</button>
+                            </div>
+                          </div>
+
+                          <!-- 3. 위계 트리 카드 목록 -->
+                          <div id="mobile-hierarchy-cards-feed" class="space-y-3">
+                            ${renderMobileCards(nodes)}
+                          </div>
+
+                          <!-- 4. 하단 모바일 바텀시트 인스펙터 -->
+                          <div id="mobile-hierarchy-inspector" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/95 backdrop-blur-xl border-t-2 border-slate-200 shadow-2xl z-40 rounded-t-2xl transition-all duration-300">
+                            <div onclick="toggleMobileInspector()" class="pt-2.5 pb-2 px-4 flex flex-col items-center cursor-pointer select-none border-b border-slate-100">
+                              <div class="w-10 h-1 rounded-full bg-slate-300 mb-2"></div>
+                              <div class="w-full flex items-center justify-between text-xs font-extrabold text-slate-900">
+                                <div class="flex items-center gap-2">
+                                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                  <span>실시간 세부 도감 인스펙터</span>
+                                  <span class="px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">LIVE</span>
+                                </div>
+                                <div class="flex items-center gap-1 text-slate-500 font-medium text-[11px]" id="inspector-toggle-label">
+                                  <span>접기</span>
+                                  <span id="inspector-toggle-icon">▼</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div id="inspector-content" class="p-4 space-y-3 max-h-80 overflow-y-auto">
+                              <div>
+                                <div class="flex items-center gap-2">
+                                  <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-700 text-[10px] font-bold">이용시설 (통원형)</span>
+                                  <span class="text-[11px] text-slate-500">보건복지부 노인정책과</span>
+                                </div>
+                                <h4 class="text-base font-black text-slate-900 mt-1">노인복지관 (Senior Welfare Center)</h4>
+                                <div class="text-[11px] text-emerald-700 font-semibold mt-0.5">✔ 근거: 노인복지법 제36조 제1항 제1호</div>
+                              </div>
+
+                              <div class="bg-amber-50 rounded-xl p-3 border border-amber-200/80 text-xs">
+                                <div class="font-extrabold text-amber-950 flex items-center gap-1.5 mb-1">
+                                  <span>⚡</span><span>사회복지사업법 시행규칙 제11조 법정 인력배치</span>
+                                </div>
+                                <p class="text-[11px] text-amber-900 leading-relaxed">
+                                  관장 1인, 사회복지사 정규직 6인 이상 필수 (일반 이용인원 및 사업 규모에 따른 가산 규정 적용)
+                                </p>
+                              </div>
+
+                              <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-2 min-w-0">
+                                  <span class="text-lg flex-shrink-0">📖</span>
+                                  <div class="min-w-0">
+                                    <div class="text-[10px] text-slate-500 font-medium">보건복지부 발간 공식 지침서 매칭</div>
+                                    <div class="text-xs font-extrabold text-slate-900 truncate">2026 노인보건복지사업안내 (1권)</div>
+                                  </div>
+                                </div>
+                                <button type="button" onclick="showView('archive', {search: '노인보건복지사업안내'})" class="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1 transition flex-shrink-0 shadow-2xs cursor-pointer">
+                                  <span>원문</span>
+                                </button>
+                              </div>
+
+                              <div class="grid grid-cols-2 gap-2 pt-1">
+                                <button type="button" onclick="showView('archive', {search: '노인'})" class="p-2.5 rounded-xl bg-blue-50 border border-blue-200 text-center hover:bg-blue-100 transition cursor-pointer">
+                                  <div class="text-[10px] text-blue-600 font-bold">공식 지침서 53종</div>
+                                  <div class="text-[11px] text-blue-900 font-extrabold">지침서 아카이브 열람 ➔</div>
+                                </button>
+                                <button type="button" onclick="showView('fields', {search: '노인복지'})" class="p-2.5 rounded-xl bg-indigo-50 border border-indigo-200 text-center hover:bg-indigo-100 transition cursor-pointer">
+                                  <div class="text-[10px] text-indigo-600 font-bold">24개 법정 시설분류</div>
+                                  <div class="text-[11px] text-indigo-900 font-extrabold">시설도감 상세대조 ➔</div>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
                     </div>
 
                     <!-- 데스크톱 섹션 Ⅰ: 보건복지부 소관 7개 실천분야 -->
@@ -2457,65 +2587,126 @@
     /**
      * 모바일 스마트 카드 렌더러
      */
-    function renderMobileCards(nodes) {
-        return nodes.map(node => {
-            const domainMeta = DOMAIN_MAP[node.domainId] || { key: 'misc', icon: 'corporate_fare', short: node.domainId };
-            const ministryName = SECTION_1_KEYS.includes(node.domainId) ? '보건복지부' : '관계부처';
-            const bullets = (node.details && node.details.length > 0) ? node.details : [node.summary || ''];
-            const gRef = node.guidelineRef || { file: '공식 업무안내', page: '', archiveId: 'doc-004' };
+    function renderMobileCards(nodesList) {
+        const db = getDB();
+        const domains = db.domains || (typeof window !== 'undefined' && window.WELFARE_HIERARCHY_DOMAINS) || [];
+        return domains.map(domain => {
+            const domainNodes = nodesList.filter(n => n.domainId === domain.id);
+            if (domainNodes.length === 0) return '';
+            const ministryName = SECTION_1_KEYS.includes(domain.id) ? '보건복지부' : '관계부처';
+
+            // Group by level2
+            const level2Map = {};
+            domainNodes.forEach(node => {
+                const key = node.level2 || node.level1 || '기본사업';
+                if (!level2Map[key]) {
+                    level2Map[key] = {
+                        level1: node.level1,
+                        level2: key,
+                        facilityType: node.facilityType,
+                        nodes: []
+                    };
+                }
+                level2Map[key].nodes.push(node);
+            });
+
+            const groups = Object.values(level2Map);
 
             return `
-                <div id="mobile-card-${node.id}" class="bg-surface-container-lowest border border-surface-container rounded-xl p-space-md flex flex-col gap-space-sm shadow-sm" data-domain="${domainMeta.key}">
-                    <div class="flex items-center justify-between border-b border-surface-container pb-space-xs">
-                        <div class="flex items-center gap-space-xs">
-                            <span class="material-symbols-outlined text-primary text-[20px]">${domainMeta.icon}</span>
-                            <span class="font-headline-sm text-headline-sm font-bold text-primary">${domainMeta.short}</span>
+                <div class="mobile-domain-card bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden" data-domain-id="${domain.id}">
+                    <!-- 대분류 헤더 -->
+                    <div class="p-3.5 bg-slate-50 flex items-center justify-between border-b border-slate-200">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
+                                ${domain.icon || '🌳'}
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <span class="px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">${domain.id.split('_')[0]}</span>
+                                    <span class="text-[10px] text-slate-500">${ministryName}</span>
+                                </div>
+                                <h3 class="text-sm font-black text-slate-900">${domain.name}</h3>
+                            </div>
                         </div>
-                        <span class="px-space-xs py-0.5 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold">
-                            ${ministryName}
-                        </span>
+                        <span class="px-2 py-0.5 rounded-full bg-slate-200/80 text-[10px] font-bold text-slate-700 font-num">${domainNodes.length}개 시설</span>
                     </div>
-                    <div class="flex flex-col gap-space-xs">
-                        <div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-space-xs">
-                            <div class="flex items-center justify-between flex-wrap gap-1">
-                                <span class="font-label-md text-label-md font-bold text-primary flex items-center gap-1">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
-                                    ${node.level1} ➔ ${node.level2}
-                                </span>
-                                ${node.facilityType ? `
-                                    <button type="button"
-                                            onclick="window.jumpToFacilityByTerm('${escapeHtml(node.facilityType)}'); return false;"
-                                            class="px-2 py-0.5 rounded bg-surface-container hover:bg-emerald-100 text-on-surface-variant hover:text-emerald-800 text-[10px] font-bold border border-outline-variant/30 transition cursor-pointer"
-                                            title="'${escapeHtml(node.facilityType)}' 시설도감 행으로 이동">
-                                        🏛️ ${escapeHtml(node.facilityType)}
-                                    </button>
-                                ` : ''}
-                            </div>
-                            <div class="bg-surface-container-lowest p-space-xs rounded border border-surface-container flex flex-col gap-1">
-                                <span class="font-label-sm text-label-sm font-bold text-on-surface">${node.level3}</span>
-                                <div class="font-body-sm text-body-sm text-on-surface-variant space-y-0.5">
-                                    ${bullets.map(b => `<div>• ${b}</div>`).join('')}
-                                </div>
-                                <div class="flex items-center justify-between pt-1 border-t border-surface-container-low">
-                                    <span class="font-legal-code text-legal-code text-secondary font-semibold font-num">
-                                        지침 ${gRef.page || ''}
+
+                    <div class="p-3 space-y-3">
+                        ${groups.map(g => `
+                            <div class="border border-slate-100 rounded-xl p-2.5 bg-slate-50/50 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                        <span>중분류: ${g.level2}</span>
                                     </span>
-                                    <button 
-                                        type="button" 
-                                        onclick="window.jumpToArchive('${gRef.archiveId || 'doc-004'}')" 
-                                        class="px-2 py-0.5 rounded-full bg-primary text-on-primary font-legal-code text-legal-code font-bold flex items-center gap-0.5 cursor-pointer"
-                                    >
-                                        <span>지침서</span>
-                                        <span class="material-symbols-outlined text-[12px]">arrow_forward</span>
-                                    </button>
+                                    <span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-semibold">${g.facilityType || '단위시설'}</span>
+                                </div>
+                                <div class="space-y-1.5">
+                                    ${g.nodes.map(node => `
+                                        <div onclick="window.selectMobileHierarchyNode('${node.id}')" 
+                                             id="mobile-hierarchy-item-${node.id}"
+                                             class="mobile-hierarchy-item p-2.5 rounded-lg bg-white border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/40 flex items-center justify-between cursor-pointer transition select-none">
+                                            <div class="min-w-0 flex-1 pr-2">
+                                                <div class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                                                    <span class="text-emerald-600">⦿</span>
+                                                    <span class="truncate">${node.level3}</span>
+                                                </div>
+                                                <div class="text-[10px] text-slate-500 mt-0.5 truncate">${node.summary || ''}</div>
+                                            </div>
+                                            <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-medium flex-shrink-0 item-status-badge">분석 ➔</span>
+                                        </div>
+                                    `).join('')}
                                 </div>
                             </div>
-                        </div>
+                        `).join('')}
                     </div>
                 </div>
             `;
         }).join('');
     }
+    
+    window.selectMobileHierarchyNode = function(nodeId) {
+        const { nodes } = getDB();
+        const node = nodes.find(n => n.id === nodeId);
+        if (!node) return;
+
+        // Highlight active item
+        document.querySelectorAll('.mobile-hierarchy-item').forEach(el => {
+            el.className = 'mobile-hierarchy-item p-2.5 rounded-lg bg-white border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/40 flex items-center justify-between cursor-pointer transition select-none';
+            const badge = el.querySelector('.item-status-badge');
+            if (badge) {
+                badge.className = 'px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-medium flex-shrink-0 item-status-badge';
+                badge.textContent = '분석 ➔';
+            }
+        });
+
+        const activeEl = document.getElementById('mobile-hierarchy-item-' + nodeId);
+        if (activeEl) {
+            activeEl.className = 'mobile-hierarchy-item p-2.5 rounded-lg bg-emerald-50/80 border-2 border-emerald-500 flex items-center justify-between cursor-pointer transition select-none shadow-xs';
+            const badge = activeEl.querySelector('.item-status-badge');
+            if (badge) {
+                badge.className = 'px-2 py-0.5 rounded-full bg-emerald-600 text-white text-[10px] font-bold flex-shrink-0 item-status-badge';
+                badge.textContent = '선택됨';
+            }
+        }
+
+        const isLiving = (node.level1 || '').includes('주거') || (node.level1 || '').includes('생활') || (node.level1 || '').includes('요양') || (node.facilityType || '').includes('양로') || (node.facilityType || '').includes('요양') || (node.facilityType || '').includes('거주');
+        const ministryName = SECTION_1_KEYS.includes(node.domainId) ? '보건복지부' : '관계부처';
+
+        const facilityData = {
+            name: `${node.level3} (${node.facilityType || '법정시설'})`,
+            facilityType: isLiving ? '생활시설 (거주형 24h 케어)' : '이용시설 (통원형·주간·방문)',
+            isLiving: isLiving,
+            department: ministryName,
+            legalBasis: (node.guidelineRef && node.guidelineRef.chapter) ? node.guidelineRef.chapter : '사회복지사업법 제34조의5 및 각 개별법령',
+            staffCriteria: (node.details && node.details.length > 0) ? node.details.map(d => '• ' + d).join('<br>') : (node.summary || '공식 실천 기준을 준용합니다.'),
+            matchedGuideline: node.guidelineRef ? `${node.guidelineRef.file} [${node.guidelineRef.page || '전문'}]` : '2026 사회복지시설 관리안내'
+        };
+
+        if (typeof window.inspectFacilityDetail === 'function') {
+            window.inspectFacilityDetail(facilityData);
+        }
+    };
 
     function bindEvents() {
         const input = document.getElementById('matrixSearchInput');
@@ -2667,7 +2858,7 @@
         }
 
         // Re-render mobile cards
-        const mobContainer = document.getElementById('mobileCardsContainer');
+        const mobContainer = document.getElementById('mobile-hierarchy-cards-feed') || document.getElementById('mobileCardsContainer');
         if (mobContainer) {
             mobContainer.innerHTML = renderMobileCards(filteredNodes);
         }
