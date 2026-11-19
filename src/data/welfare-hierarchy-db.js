@@ -523,11 +523,11 @@ const WELFARE_HIERARCHY_NODES = [
     "level3": "직업기능훈련·취업상담 및 지역특화사업(ESG)",
     "summary": "취약계층의 취·창업 역량강화 교육 및 취업정보 연계와 함께, 지역사회 욕구에 기반한 1인가구 고독사 예방, 친환경 ESG 마을실천 등 차별화된 특화사업 운영",
     "guidelineRef": {
-      "file": "02_사회복지관_운영관련_업무처리안내_종합복지관3대기능_2026.pdf",
+      "file": "00_사회복지시설_종사자_인건비가이드라인_2026.pdf",
       "page": "p.28~29 (본문 32~33p)",
       "chapter": "Ⅱ. 사회복지관 사업 - 2. 서비스제공기능 - 라. 자활지원 등 기타 사업",
-      "archiveId": "doc-004",
-      "archiveCode": "MOHW-WEL-01"
+      "archiveId": "doc-001",
+      "archiveCode": "MOHW-SAL-01"
     },
     "details": [
       "취약계층의 자립을 위한 취·창업 역량강화 교육 및 취업정보 연계",
@@ -544,11 +544,11 @@ const WELFARE_HIERARCHY_NODES = [
     "level3": "지역사회연계·지역욕구조사 및 실습지도",
     "summary": "지역사회보장협의체 등 유관기관 연계 협력, 주민 복지욕구조사 및 사회복지 전공 대학(원)생 현장실습 체계적 지도·슈퍼비전 수행",
     "guidelineRef": {
-      "file": "02_사회복지관_운영관련_업무처리안내_종합복지관3대기능_2026.pdf",
+      "file": "01_사회복지시설_관리안내_공통_2026.pdf",
       "page": "p.29 (본문 33p)",
       "chapter": "Ⅱ. 사회복지관 사업 - 3. 지역조직화기능 - 가. 복지네트워크 구축",
-      "archiveId": "doc-004",
-      "archiveCode": "MOHW-WEL-01"
+      "archiveId": "doc-003",
+      "archiveCode": "MOHW-FAC-01"
     },
     "details": [
       "지역사회보장협의체 및 복지 유관기관 간 상시 협력 네트워크 구축",
@@ -586,11 +586,11 @@ const WELFARE_HIERARCHY_NODES = [
     "level3": "자원봉사자 양성·배치(VMS) 및 후원자 개발·관리",
     "summary": "자원봉사자 모집, 전문교육, 활동처 배치 및 VMS 인증 관리와 개인·기업 결연후원자 발굴, 기부금품 영수증 발급 및 투명한 관리",
     "guidelineRef": {
-      "file": "02_사회복지관_운영관련_업무처리안내_종합복지관3대기능_2026.pdf",
+      "file": "00_사회복지자원봉사_사업지침_VMS_2026.pdf",
       "page": "p.29 (본문 33p)",
       "chapter": "Ⅱ. 사회복지관 사업 - 3. 지역조직화기능 - 다. 자원개발 및 관리",
-      "archiveId": "doc-004",
-      "archiveCode": "MOHW-WEL-01"
+      "archiveId": "doc-002",
+      "archiveCode": "MOHW-VMS-01"
     },
     "details": [
       "자원봉사자 신규 모집, 활동처 적재적소 배치 및 VMS 실적 인증 관리",
@@ -691,11 +691,11 @@ const WELFARE_HIERARCHY_NODES = [
     "level3": "안전안부확인·사회참여·일상생활지원 및 특화서비스",
     "summary": "취약 어르신의 욕구에 따라 전담사회복지사와 생활지원사가 가정방문·유선을 통해 안전확인, 영양·보건 생활교육, 가사·외출동행 및 우울·은둔 노인 특화 개입을 제공",
     "guidelineRef": {
-      "file": "03_노인보건복지사업안내_1권_2026.pdf",
+      "file": "03_노인맞춤돌봄서비스_사업안내_2026_첨부1.pdf",
       "page": "p.127~133",
       "chapter": "3. 노인돌봄 및 지원서비스 - 3-1. 노인맞춤돌봄서비스 사업",
-      "archiveId": "doc-007",
-      "archiveCode": "MOHW-SR-03"
+      "archiveId": "doc-005",
+      "archiveCode": "MOHW-SR-01"
     },
     "details": [
       "전담사회복지사 및 생활지원사를 통한 주 1~2회 가정방문 안전·안부확인",
@@ -712,11 +712,11 @@ const WELFARE_HIERARCHY_NODES = [
     "level3": "독거노인·장애인 응급안전안심서비스 및 무료급식",
     "summary": "화재·가스감지기 및 활동미감지 센서 등 댁내 ICT 장비를 통한 24시간 응급상황 모니터링과 저소득 결식 우려 노인 무료급식·도시락 지원",
     "guidelineRef": {
-      "file": "03_노인보건복지사업안내_1권_2026.pdf",
+      "file": "03_노인맞춤돌봄서비스_사업안내_2026_첨부2.pdf",
       "page": "p.134~137, p.223~227",
       "chapter": "3. 노인돌봄 및 지원서비스 - 3-2. 응급안전안심서비스, 3-7. 결식노인 무료급식",
-      "archiveId": "doc-007",
-      "archiveCode": "MOHW-SR-03"
+      "archiveId": "doc-006",
+      "archiveCode": "MOHW-SR-02"
     },
     "details": [
       "댁내 ICT 화재·가스감지기 및 활동미감지 센서를 통한 24시간 응급 모니터링",
@@ -1237,11 +1237,11 @@ const WELFARE_HIERARCHY_NODES = [
     "level3": "어린이집 평가인증 및 급식·위생·안전점검",
     "summary": "한국보육진흥원 평가체계에 따른 보육환경, 보육과정, 상호작용, 건강·안전 평가 지표 점검 및 영양기준 준수 급간식 위생관리",
     "guidelineRef": {
-      "file": "09_보육사업안내_어린이집운영_본문_2026.pdf",
+      "file": "09_보육사업안내_어린이집운영_부록_2026.pdf",
       "page": "p.260~261",
       "chapter": "Ⅵ. 어린이집 평가 사업개요",
-      "archiveId": "doc-043",
-      "archiveCode": "MOE-DAY-01"
+      "archiveId": "doc-044",
+      "archiveCode": "MOE-DAY-02"
     },
     "details": [
       "한국보육진흥원 평가체계에 따른 보육환경, 보육과정, 상호작용 법정 점검",
@@ -1510,11 +1510,11 @@ const WELFARE_HIERARCHY_NODES = [
     "level3": "1388 상담·심리검사 및 청소년동반자(YC) 밀착개입",
     "summary": "위기청소년 발굴 및 24시간 상담(1388), 우울·불안 심리상담, 전문상담사가 직접 찾아가는 청소년동반자 프로그램을 통한 1:1 맞춤 지원",
     "guidelineRef": {
-      "file": "01_청소년사업안내_2권_복지보호_쉼터자립지원관_2026.pdf",
+      "file": "02_청소년백서_2025_2025 청소년백서.pdf",
       "page": "p.115~204",
       "chapter": "제2편 Ⅱ. 청소년상담복지센터 운영 및 Ⅲ. 청소년동반자 프로그램",
-      "archiveId": "doc-038",
-      "archiveCode": "MOGEF-YTH-02"
+      "archiveId": "doc-041",
+      "archiveCode": "MOGEF-YTH-03"
     },
     "details": [
       "위기청소년 조기 발굴 및 24시간 청소년전화 1388 상담·심리검사 운영",
@@ -1636,11 +1636,11 @@ const WELFARE_HIERARCHY_NODES = [
     "level3": "중증정신질환자 등록·사례관리 및 주간재활 프로그램",
     "summary": "조현병·양극성장애 등 중증정신질환자의 조기발견, 등록사례관리, 투약관리, 일상생활훈련 및 주간재활 프로그램을 통한 지역사회 복귀 도모",
     "guidelineRef": {
-      "file": "11_정신건강사업안내_2026_첨부2.pdf",
+      "file": "11_정신건강사업안내_2026_첨부1.pdf",
       "page": "p.31~70",
       "chapter": "Ⅱ. 지역사회기반 정신건강서비스 체계·운영 (센터 주요기능 및 사례관리)",
-      "archiveId": "doc-024",
-      "archiveCode": "MOHW-MH-03"
+      "archiveId": "doc-023",
+      "archiveCode": "MOHW-MH-02"
     },
     "details": [
       "조현병, 양극성 장애 등 중증 정신질환자 대상 1:1 등록 사례관리",
@@ -2224,11 +2224,11 @@ const WELFARE_HIERARCHY_NODES = [
     "level3": "복지관 유휴공간 개방 및 커뮤니티 공간 공유복지 운영",
     "summary": "복지관의 강당, 세미나실, 공유주방 등 유휴 공간을 지역 주민과 공익단체에 전면 개방하여 주민자치와 공유경제를 실현하는 열린 복지 플랫폼",
     "guidelineRef": {
-      "file": "02_사회복지관_운영관련_업무처리안내_종합복지관3대기능_2026.pdf",
+      "file": "00_사회복지법인_관리안내_2026_2026년_사회복지법인_관리안내.pdf",
       "page": "p.47~50",
       "chapter": "Ⅱ. 사회복지관 사업 - 3. 지역조직화기능 (지역사회 연계)",
-      "archiveId": "doc-004",
-      "archiveCode": "MOHW-WEL-01"
+      "archiveId": "doc-029",
+      "archiveCode": "MOHW-CORP-01"
     },
     "details": [
       "복지관 시설 개방 규정 수립 및 온라인 예약제 운영",
@@ -2248,8 +2248,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "01_사회복지관_ESG_실천가이드_한국사회복지관협회.pdf",
       "page": "p.15~24",
       "chapter": "제2장. 사회복지관 ESG 실천 지표 및 영역별 프로그램",
-      "archiveId": "doc-004",
-      "archiveCode": "MOHW-WEL-01"
+      "archiveId": "doc-050",
+      "archiveCode": "ESG-SASW-01"
     },
     "details": [
       "복지관 에너지 감축 진단 및 탄소중립 실천 서약",
@@ -2266,11 +2266,11 @@ const WELFARE_HIERARCHY_NODES = [
     "level3": "1인가구 안부확인 및 이웃지킴이 연계 고립가구 발굴",
     "summary": "청년·중장년·노인 1인가구의 고독사를 예방하기 위해 지역 상가·배달원 등 명예사회복지공무원과 협력하여 고립가구를 조기 발굴하고 일상회복을 지원하는 사업",
     "guidelineRef": {
-      "file": "02_사회복지관_운영관련_업무처리안내_종합복지관3대기능_2026.pdf",
+      "file": "01_이재명정부_123대_국정과제.pdf",
       "page": "p.55~60",
       "chapter": "Ⅱ. 사회복지관 사업 - 3. 지역사회 보호 및 특화사업",
-      "archiveId": "doc-004",
-      "archiveCode": "MOHW-WEL-01"
+      "archiveId": "doc-053",
+      "archiveCode": "OPC-GOV-01"
     },
     "details": [
       "생활업종 종사자(편의점·약국·부동산) 연계 위기가구 망 구축",
@@ -2437,8 +2437,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "03_노인일자리_및_사회활동지원사업_운영안내_2026.pdf",
       "page": "p.45~60",
       "chapter": "제3장. 유형별 사업 운영기준 - 사회서비스형",
-      "archiveId": "doc-009",
-      "archiveCode": "MOHW-SR-05"
+      "archiveId": "doc-033",
+      "archiveCode": "MOHW-SENJOB-01"
     },
     "details": [
       "참여자 직무소양 교육 및 근로계약 체결",
@@ -2458,8 +2458,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "01_보훈업무_시행지침_2권_보훈요양원_의료복지_2026.pdf",
       "page": "p.120~145",
       "chapter": "제2편. 보훈요양원 운영관리 - 제2장 입소 및 요양급여",
-      "archiveId": "doc-037",
-      "archiveCode": "VETS-MED-01"
+      "archiveId": "doc-052",
+      "archiveCode": "MPVA-VET-01"
     },
     "details": [
       "국가유공자 본인 및 유가족 입소 자격 및 감면율 심사",
@@ -2476,7 +2476,7 @@ const WELFARE_HIERARCHY_NODES = [
     "level3": "지역보조기기서비스센터 맞춤형 기기교부·대여 및 수리·개조",
     "summary": "지체·뇌병변·시청각 장애인의 일상생활과 이동을 돕기 위해 전문 보조공학사가 개인별 신체 치수를 정밀 평가하고 전동휠체어 등 보조기기를 지원·수리하는 서비스",
     "guidelineRef": {
-      "file": "05_장애인복지사업안내_2026_첨부1.pdf",
+      "file": "05_장애인복지사업안내_2026_첨부2.pdf",
       "page": "p.180~195",
       "chapter": "제3편. 장애인 자립생활 지원 - 보조기기 교부 및 사후관리",
       "archiveId": "doc-012",
@@ -2500,8 +2500,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "05_장애인복지사업안내_2026_첨부1.pdf",
       "page": "p.210~225",
       "chapter": "제4편. 장애인 생활이동 및 정보접근 지원 - 수어통역센터",
-      "archiveId": "doc-012",
-      "archiveCode": "MOHW-DIS-04"
+      "archiveId": "doc-011",
+      "archiveCode": "MOHW-DIS-03"
     },
     "details": [
       "병원 진료·수술 등 긴급 수어통역사 현장 파견",
@@ -2521,8 +2521,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "05_장애인복지사업안내_2026_첨부1.pdf",
       "page": "p.230~242",
       "chapter": "제4편. 장애인 정보접근권 보장 - 점자도서관 운영",
-      "archiveId": "doc-012",
-      "archiveCode": "MOHW-DIS-04"
+      "archiveId": "doc-011",
+      "archiveCode": "MOHW-DIS-03"
     },
     "details": [
       "신간도서 점자 전자책(e-Braille) 데이터베이스 구축",
@@ -2539,7 +2539,7 @@ const WELFARE_HIERARCHY_NODES = [
     "level3": "도전적 행동 최중증 발달장애인 24시간 개별 1:1 돌봄체계",
     "summary": "자해·타해 등 심각한 도전적 행동으로 기존 복지시설 이용이 어려운 최중증 발달장애인에게 전문케어 인력을 1:1 전담 배치하여 낮과 밤 24시간 안전돌봄을 제공하는 특화사업",
     "guidelineRef": {
-      "file": "05_발달장애인지원센터_사업안내_2026_첨부1.pdf",
+      "file": "05_발달장애인지원센터_사업안내_2026_첨부2.pdf",
       "page": "p.85~110",
       "chapter": "제3편. 최중증 발달장애인 통합돌봄서비스",
       "archiveId": "doc-010",
@@ -2563,8 +2563,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "05_발달장애인지원센터_사업안내_2026_첨부1.pdf",
       "page": "p.140~155",
       "chapter": "제5편. 발달장애인 가족지원사업",
-      "archiveId": "doc-010",
-      "archiveCode": "MOHW-DIS-02"
+      "archiveId": "doc-009",
+      "archiveCode": "MOHW-DIS-01"
     },
     "details": [
       "가족 테마여행 및 1박2일 힐링캠프 프로그램 운영",
@@ -2584,8 +2584,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "05_장애인복지사업안내_2026_첨부1.pdf",
       "page": "p.310~325",
       "chapter": "제6편. 장애인 인권증진 및 권익옹호 - 장애인차별상담",
-      "archiveId": "doc-012",
-      "archiveCode": "MOHW-DIS-04"
+      "archiveId": "doc-011",
+      "archiveCode": "MOHW-DIS-03"
     },
     "details": [
       "장애인차별금지법 위반 사례 접수 및 현장 사실조사",
@@ -2605,8 +2605,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "05_장애인복지사업안내_2026_첨부1.pdf",
       "page": "p.330~340",
       "chapter": "제6편. 장애인 보조견 표지 발급 및 관리 규정",
-      "archiveId": "doc-012",
-      "archiveCode": "MOHW-DIS-04"
+      "archiveId": "doc-011",
+      "archiveCode": "MOHW-DIS-03"
     },
     "details": [
       "공인 보조견 훈련인증 확인 및 국가표지 발급",
@@ -2626,7 +2626,7 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "01_장애인_직업능력개발원_사업_업무매뉴얼_한국장애인고용공단.pdf",
       "page": "p.45~70",
       "chapter": "제2편. 장애인 직업능력개발훈련 운영 - 훈련수당 및 취업",
-      "archiveId": "doc-041",
+      "archiveId": "doc-047",
       "archiveCode": "MOEL-DIS-01"
     },
     "details": [
@@ -2647,8 +2647,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "05_장애인복지사업안내_2026_첨부1.pdf",
       "page": "p.360~372",
       "chapter": "제8편. 여성장애인 특별지원사업 - 출산비용 및 홈헬퍼",
-      "archiveId": "doc-012",
-      "archiveCode": "MOHW-DIS-04"
+      "archiveId": "doc-011",
+      "archiveCode": "MOHW-DIS-03"
     },
     "details": [
       "여성장애인 출산지원금 100만원 신청접수 및 즉시 지급",
@@ -2668,8 +2668,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "07_아동분야사업안내_1권_시설설치운영_2026.pdf",
       "page": "p.80~95",
       "chapter": "제2편. 아동복지시설의 종류 및 운영 - 2. 아동일시보호시설",
-      "archiveId": "doc-016",
-      "archiveCode": "MOHW-CHD-01"
+      "archiveId": "doc-015",
+      "archiveCode": "MOHW-CH-02"
     },
     "details": [
       "학대·유기 피해아동 24시간 응급인계 및 입소",
@@ -2689,8 +2689,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "08_아동보호서비스_업무매뉴얼_2026.pdf",
       "page": "p.60~75",
       "chapter": "제4장. 피해아동 보호 및 분리조치 - 학대피해아동쉼터",
-      "archiveId": "doc-019",
-      "archiveCode": "MOHW-CHD-04"
+      "archiveId": "doc-017",
+      "archiveCode": "MOHW-CH-04"
     },
     "details": [
       "위치 비공개 안전 가옥 내 1실 1인 가정형 돌봄",
@@ -2710,8 +2710,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "07_아동분야사업안내_2권_자립지원가정위탁_2026.pdf",
       "page": "p.15~35",
       "chapter": "제1편. 아동발달지원계좌(디딤씨앗통장) 사업안내",
-      "archiveId": "doc-017",
-      "archiveCode": "MOHW-CHD-02"
+      "archiveId": "doc-016",
+      "archiveCode": "MOHW-CH-03"
     },
     "details": [
       "취약계층 아동 적립계좌 개설 및 민간 후원금 1:1 결연",
@@ -2731,8 +2731,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "07_아동분야사업안내_2권_자립지원가정위탁_2026.pdf",
       "page": "p.80~105",
       "chapter": "제2편. 가정위탁지원사업 - 위탁부모 교육 및 관리",
-      "archiveId": "doc-017",
-      "archiveCode": "MOHW-CHD-02"
+      "archiveId": "doc-016",
+      "archiveCode": "MOHW-CH-03"
     },
     "details": [
       "예비 위탁부모 5시간 의무 사전교육 및 적격성 실사",
@@ -2752,8 +2752,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "07_아동분야사업안내_1권_시설설치운영_2026.pdf",
       "page": "p.120~140",
       "chapter": "제2편. 아동복지시설의 종류 - 4. 공동생활가정",
-      "archiveId": "doc-016",
-      "archiveCode": "MOHW-CHD-01"
+      "archiveId": "doc-015",
+      "archiveCode": "MOHW-CH-02"
     },
     "details": [
       "가정식 식사 제공 및 개별 침실 중심 안락한 생활공간",
@@ -2773,8 +2773,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "07_아동분야사업안내_1권_시설설치운영_2026.pdf",
       "page": "p.180~195",
       "chapter": "제3편. 아동복지시설 특화프로그램 - 경계선지능아동 지원",
-      "archiveId": "doc-016",
-      "archiveCode": "MOHW-CHD-01"
+      "archiveId": "doc-015",
+      "archiveCode": "MOHW-CH-02"
     },
     "details": [
       "웩슬러 지능검사 기반 경계선지능 아동 선별",
@@ -2791,11 +2791,11 @@ const WELFARE_HIERARCHY_NODES = [
     "level3": "방과후 돌봄 취약시간대 주말(토요) 및 야간연장 돌봄교실 운영",
     "summary": "맞벌이·한부모 가정의 돌봄 공백을 해소하기 위해 평일 저녁 10시까지 및 토요일 낮 시간대에 지역아동센터를 연장 개방하여 급식과 안전보호를 제공하는 사업",
     "guidelineRef": {
-      "file": "09_지역아동센터_지원사업안내_2026_첨부1.pdf",
+      "file": "09_지역아동센터_지원사업안내_2026_첨부2.pdf",
       "page": "p.95~110",
       "chapter": "제4편. 운영형태별 특화프로그램 - 토요 및 야간연장",
       "archiveId": "doc-020",
-      "archiveCode": "MOHW-CHD-05"
+      "archiveCode": "MOHW-CH-07"
     },
     "details": [
       "야간(19:00~22:00) 연장운영 및 야간 간식·석식 제공",
@@ -2815,8 +2815,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "09_다함께돌봄센터_사업안내_2025.pdf",
       "page": "p.50~65",
       "chapter": "제3장. 다함께돌봄센터 프로그램 및 급식 운영",
-      "archiveId": "doc-021",
-      "archiveCode": "MOHW-CHD-06"
+      "archiveId": "doc-018",
+      "archiveCode": "MOHW-CH-05"
     },
     "details": [
       "방학 중 오전 9시~오후 6시 전일제 돌봄 운영 전환",
@@ -2836,8 +2836,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "09_보육사업안내_어린이집운영_본문_2026.pdf",
       "page": "p.140~160",
       "chapter": "제3편. 보육서비스 유형별 운영 - 시간제보육",
-      "archiveId": "doc-022",
-      "archiveCode": "MOHW-INF-01"
+      "archiveId": "doc-043",
+      "archiveCode": "MOE-DAY-01"
     },
     "details": [
       "임신육아종합포털(아이사랑) 실시간 온라인 예약 접수",
@@ -2857,8 +2857,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "09_보육사업안내_어린이집운영_본문_2026.pdf",
       "page": "p.280~300",
       "chapter": "제5편. 육아종합지원센터 설치 및 운영",
-      "archiveId": "doc-022",
-      "archiveCode": "MOHW-INF-01"
+      "archiveId": "doc-043",
+      "archiveCode": "MOE-DAY-01"
     },
     "details": [
       "영아 발달단계별 장난감 및 그림책 무료 대여·반납",
@@ -2878,8 +2878,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "09_보육사업안내_어린이집운영_본문_2026.pdf",
       "page": "p.165~185",
       "chapter": "제3편. 보육서비스 유형별 운영 - 야간연장 및 휴일보육",
-      "archiveId": "doc-022",
-      "archiveCode": "MOHW-INF-01"
+      "archiveId": "doc-043",
+      "archiveCode": "MOE-DAY-01"
     },
     "details": [
       "야간연장 전담보육교사 배치 및 야간 보육료 국비 지원",
@@ -2899,8 +2899,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "09_보육사업안내_어린이집운영_본문_2026.pdf",
       "page": "p.320~340",
       "chapter": "제6편. 어린이집 평가제 및 품질향상 컨설팅",
-      "archiveId": "doc-022",
-      "archiveCode": "MOHW-INF-01"
+      "archiveId": "doc-043",
+      "archiveCode": "MOE-DAY-01"
     },
     "details": [
       "보육교직원 대상 평가제 지표별 서면·현장 코칭",
@@ -2920,8 +2920,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "09_보육사업안내_어린이집운영_본문_2026.pdf",
       "page": "p.190~215",
       "chapter": "제3편. 보육서비스 유형별 운영 - 장애아보육",
-      "archiveId": "doc-022",
-      "archiveCode": "MOHW-INF-01"
+      "archiveId": "doc-043",
+      "archiveCode": "MOE-DAY-01"
     },
     "details": [
       "장애아 3명당 특수교사 1명 의무배치 및 전담지도",
@@ -2941,7 +2941,7 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "01_가족사업안내_1권_본문_2026.pdf",
       "page": "p.75~90",
       "chapter": "제2편. 가족센터 사업 - 1인가구 사회안전망 구축사업",
-      "archiveId": "doc-031",
+      "archiveId": "doc-035",
       "archiveCode": "MOGEF-FAM-01"
     },
     "details": [
@@ -2962,7 +2962,7 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "01_가족사업안내_1권_본문_2026.pdf",
       "page": "p.120~140",
       "chapter": "제3편. 다문화가족 특화사업 - 이중언어 환경조성",
-      "archiveId": "doc-031",
+      "archiveId": "doc-035",
       "archiveCode": "MOGEF-FAM-01"
     },
     "details": [
@@ -2983,7 +2983,7 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "01_가족사업안내_1권_본문_2026.pdf",
       "page": "p.160~175",
       "chapter": "제4편. 가족관계 개선사업 - 이혼가정 면접교섭 지원",
-      "archiveId": "doc-031",
+      "archiveId": "doc-035",
       "archiveCode": "MOGEF-FAM-01"
     },
     "details": [
@@ -3004,7 +3004,7 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "01_가족사업안내_2권_본문_2026.pdf",
       "page": "p.40~60",
       "chapter": "제2편. 공동육아나눔터 설치 및 운영지침",
-      "archiveId": "doc-032",
+      "archiveId": "doc-036",
       "archiveCode": "MOGEF-FAM-02"
     },
     "details": [
@@ -3025,7 +3025,7 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "01_가족사업안내_1권_본문_2026.pdf",
       "page": "p.180~205",
       "chapter": "제5편. 취약·위기가족 지원사업(가족희망드림)",
-      "archiveId": "doc-031",
+      "archiveId": "doc-035",
       "archiveCode": "MOGEF-FAM-01"
     },
     "details": [
@@ -3046,7 +3046,7 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "01_가족사업안내_1권_본문_2026.pdf",
       "page": "p.220~235",
       "chapter": "제3편. 다문화가족 정착지원 - 통번역서비스",
-      "archiveId": "doc-031",
+      "archiveId": "doc-035",
       "archiveCode": "MOGEF-FAM-01"
     },
     "details": [
@@ -3064,11 +3064,11 @@ const WELFARE_HIERARCHY_NODES = [
     "level3": "청소년회복지원시설(사법형 6호처분 청소년) 대안가정식 교화보호",
     "summary": "소년법 제32조 제1항 제6호에 따라 법원으로부터 감호위탁 처분을 받은 청소년을 시설장이 대안가정 형태로 수용하여 6개월간 상담, 학업복귀, 인성치유를 수행하는 소규모 보호시설",
     "guidelineRef": {
-      "file": "01_청소년사업안내_2권_복지보호_쉼터자립지원관_2026.pdf",
+      "file": "02_청소년복지시설_쉼터_자립지원관_현황_(26.10월기준)청소년복지시설 기관현황(홈페이지게시).pdf",
       "page": "p.90~110",
       "chapter": "제3편. 청소년회복지원시설 설치 및 운영",
-      "archiveId": "doc-034",
-      "archiveCode": "MOGEF-YTH-02"
+      "archiveId": "doc-042",
+      "archiveCode": "MOGEF-YTH-04"
     },
     "details": [
       "법원 소년부 감호위탁 청소년(최대 8명) 입소 관리",
@@ -3088,8 +3088,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "03_여성아동권익증진사업_운영지침_폭력피해자보호시설_2026.pdf",
       "page": "p.45~65",
       "chapter": "제2편. 디지털 성범죄 피해자 지원센터 운영지침",
-      "archiveId": "doc-036",
-      "archiveCode": "MOGEF-WMN-01"
+      "archiveId": "doc-040",
+      "archiveCode": "MOGEF-WOM-01"
     },
     "details": [
       "디지털 불법합성물(딥페이크) 채증 및 전문 삭제지원",
@@ -3109,8 +3109,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "03_여성아동권익증진사업_운영지침_폭력피해자보호시설_2026.pdf",
       "page": "p.15~35",
       "chapter": "제1편. 여성긴급전화1366 및 긴급피난처 운영",
-      "archiveId": "doc-036",
-      "archiveCode": "MOGEF-WMN-01"
+      "archiveId": "doc-040",
+      "archiveCode": "MOGEF-WOM-01"
     },
     "details": [
       "24시간 국번없는 1366 긴급전화 접수 및 위기도 평가",
@@ -3130,8 +3130,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "03_여성아동권익증진사업_운영지침_폭력피해자보호시설_2026.pdf",
       "page": "p.80~105",
       "chapter": "제3편. 성폭력 피해자 의료비 및 무료법률지원",
-      "archiveId": "doc-036",
-      "archiveCode": "MOGEF-WMN-01"
+      "archiveId": "doc-040",
+      "archiveCode": "MOGEF-WOM-01"
     },
     "details": [
       "해바라기센터 연계 성폭력 증거채취 응급키트 무료검진",
@@ -3151,8 +3151,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "03_여성아동권익증진사업_운영지침_폭력피해자보호시설_2026.pdf",
       "page": "p.120~140",
       "chapter": "제4편. 가정폭력 피해자 보호시설 및 퇴소 자립지원",
-      "archiveId": "doc-036",
-      "archiveCode": "MOGEF-WMN-01"
+      "archiveId": "doc-040",
+      "archiveCode": "MOGEF-WOM-01"
     },
     "details": [
       "보호시설 2년 이내 생활 후 퇴소 자립적격성 심사",
@@ -3172,8 +3172,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "03_여성아동권익증진사업_운영지침_폭력피해자보호시설_2026.pdf",
       "page": "p.160~180",
       "chapter": "제5편. 성매매 피해자 구조지원 및 자활지원센터",
-      "archiveId": "doc-036",
-      "archiveCode": "MOGEF-WMN-01"
+      "archiveId": "doc-040",
+      "archiveCode": "MOGEF-WOM-01"
     },
     "details": [
       "선불금·채무협박 관련 법률상담 및 무료 소송 대리",
@@ -3193,8 +3193,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "03_여성아동권익증진사업_운영지침_폭력피해자보호시설_2026.pdf",
       "page": "p.200~225",
       "chapter": "제6편. 폭력피해 이주여성 보호시설 운영지침",
-      "archiveId": "doc-036",
-      "archiveCode": "MOGEF-WMN-01"
+      "archiveId": "doc-040",
+      "archiveCode": "MOGEF-WOM-01"
     },
     "details": [
       "모국어 통역 지원 하 쉼터 입소 및 숙식 무상 제공",
@@ -3214,8 +3214,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "11_정신건강사업안내_2026_첨부2.pdf",
       "page": "p.70~95",
       "chapter": "제3편. 정신응급대응체계 - 1. 정신응급합동대응센터",
-      "archiveId": "doc-026",
-      "archiveCode": "MOHW-MNT-02"
+      "archiveId": "doc-024",
+      "archiveCode": "MOHW-MH-03"
     },
     "details": [
       "112·119 공동지령 기반 전문요원-경찰관 패트롤차량 합동출동",
@@ -3235,8 +3235,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "11_정신건강사업안내_2026_첨부2.pdf",
       "page": "p.120~145",
       "chapter": "제4편. 아동·청소년 및 청년 정신건강증진사업",
-      "archiveId": "doc-026",
-      "archiveCode": "MOHW-MNT-02"
+      "archiveId": "doc-024",
+      "archiveCode": "MOHW-MH-03"
     },
     "details": [
       "정신증 초기 전조증상(불안·환청·망상) 무료 선별검사",
@@ -3256,8 +3256,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "11_자살예방사업안내_2026.pdf",
       "page": "p.85~110",
       "chapter": "제4장. 자살유족 지원사업 - 자살유족 원스톱서비스",
-      "archiveId": "doc-025",
-      "archiveCode": "MOHW-MNT-01"
+      "archiveId": "doc-022",
+      "archiveCode": "MOHW-MH-01"
     },
     "details": [
       "경찰청 변사통보 접수 후 24시간 이내 유족 초기접촉",
@@ -3277,8 +3277,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "11_정신건강사업안내_2026_첨부2.pdf",
       "page": "p.180~200",
       "chapter": "제5편. 정신질환자 지역사회 자립지원 - 동료지원가 운영",
-      "archiveId": "doc-026",
-      "archiveCode": "MOHW-MNT-02"
+      "archiveId": "doc-024",
+      "archiveCode": "MOHW-MH-03"
     },
     "details": [
       "정신질환 회복 당사자 100시간 표준화 양성과정 운영",
@@ -3298,8 +3298,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "11_정신건강사업안내_2026_첨부2.pdf",
       "page": "p.220~240",
       "chapter": "제6편. 정신재활시설 설치·운영 - 직업재활시설",
-      "archiveId": "doc-026",
-      "archiveCode": "MOHW-MNT-02"
+      "archiveId": "doc-024",
+      "archiveCode": "MOHW-MH-03"
     },
     "details": [
       "바리스타·제과제빵 실습 훈련 및 위생교육",
@@ -3319,8 +3319,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "11_자살예방사업안내_2026.pdf",
       "page": "p.130~150",
       "chapter": "제5장. 응급실 기반 자살시도자 사후관리사업",
-      "archiveId": "doc-025",
-      "archiveCode": "MOHW-MNT-01"
+      "archiveId": "doc-022",
+      "archiveCode": "MOHW-MH-01"
     },
     "details": [
       "응급실 내원 자살시도자 병상 면담 및 정서적 안정 도모",
@@ -3340,8 +3340,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "04_자활사업안내_2026_최종.pdf",
       "page": "p.180~210",
       "chapter": "제5편. 자산형성지원사업 - 청년내일저축계좌",
-      "archiveId": "doc-028",
-      "archiveCode": "MOHW-SLF-02"
+      "archiveId": "doc-034",
+      "archiveCode": "MOHW-SELF-01"
     },
     "details": [
       "근로청년 소득심사 및 통장 개설 접수",
@@ -3361,8 +3361,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "04_자활사업안내_2026_최종.pdf",
       "page": "p.40~65",
       "chapter": "제2편. 자활근로사업 - 게이트웨이(Gateway) 운영",
-      "archiveId": "doc-028",
-      "archiveCode": "MOHW-SLF-02"
+      "archiveId": "doc-034",
+      "archiveCode": "MOHW-SELF-01"
     },
     "details": [
       "참여자 개인별 근로역량 및 심리적 취약성 진단",
@@ -3382,8 +3382,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "04_자활사업안내_2026_최종.pdf",
       "page": "p.240~270",
       "chapter": "제6편. 자활기업 설치 및 육성지원",
-      "archiveId": "doc-028",
-      "archiveCode": "MOHW-SLF-02"
+      "archiveId": "doc-034",
+      "archiveCode": "MOHW-SELF-01"
     },
     "details": [
       "자활기업 법인(협동조합·주식회사) 설립 정관 및 등기 조력",
@@ -3403,8 +3403,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "04_자활사업안내_2026_최종.pdf",
       "page": "p.280~305",
       "chapter": "제7편. 광역자활센터 운영 및 광역사업단",
-      "archiveId": "doc-028",
-      "archiveCode": "MOHW-SLF-02"
+      "archiveId": "doc-034",
+      "archiveCode": "MOHW-SELF-01"
     },
     "details": [
       "시·도 단위 광역자활사업단 공모 및 연합체 구성",
@@ -3424,7 +3424,7 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "01_국민취업지원제도_업무매뉴얼_2026.pdf",
       "page": "p.30~55",
       "chapter": "제2장. 수급자격 판단 및 구직촉진수당 지급관리",
-      "archiveId": "doc-042",
+      "archiveId": "doc-046",
       "archiveCode": "MOEL-KUA-01"
     },
     "details": [
@@ -3445,7 +3445,7 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "01_교육복지우선지원사업_운영매뉴얼_학교사회복지.pdf",
       "page": "p.20~35",
       "chapter": "제1장. 교육복지우선지원사업 개요 - 교육복지안전망",
-      "archiveId": "doc-039",
+      "archiveId": "doc-045",
       "archiveCode": "MOE-SCH-01"
     },
     "details": [
@@ -3466,7 +3466,7 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "01_교육복지우선지원사업_운영매뉴얼_학교사회복지.pdf",
       "page": "p.50~68",
       "chapter": "제2장. 학생 맞춤형 통합지원 체계 - Wee프로젝트 협업",
-      "archiveId": "doc-039",
+      "archiveId": "doc-045",
       "archiveCode": "MOE-SCH-01"
     },
     "details": [
@@ -3487,7 +3487,7 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "01_교육복지우선지원사업_운영매뉴얼_학교사회복지.pdf",
       "page": "p.85~102",
       "chapter": "제3장. 학생 생활적응 및 학업중단 예방 프로그램",
-      "archiveId": "doc-039",
+      "archiveId": "doc-045",
       "archiveCode": "MOE-SCH-01"
     },
     "details": [
@@ -3508,7 +3508,7 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "01_교육복지우선지원사업_운영매뉴얼_학교사회복지.pdf",
       "page": "p.110~130",
       "chapter": "제4장. 특별지원대상 학생 프로그램 - 다문화학생",
-      "archiveId": "doc-039",
+      "archiveId": "doc-045",
       "archiveCode": "MOE-SCH-01"
     },
     "details": [
@@ -3529,8 +3529,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "15_통합돌봄_사회서비스원_운영매뉴얼_2026_첨부1.pdf",
       "page": "p.30~65",
       "chapter": "제2편. 통합돌봄 전달체계 - 1. 통합지원협의체 및 코디네이터",
-      "archiveId": "doc-024",
-      "archiveCode": "MOHW-ELM-02"
+      "archiveId": "doc-028",
+      "archiveCode": "MOHW-SW-02"
     },
     "details": [
       "시·군·구 통합돌봄 창구 접수 및 통합판정 도구 적용",
@@ -3550,8 +3550,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "12_노숙인_등의_복지사업안내_2026.pdf",
       "page": "p.140~165",
       "chapter": "제3편. 쪽방상담소 설치 및 운영지침",
-      "archiveId": "doc-027",
-      "archiveCode": "MOHW-HMS-01"
+      "archiveId": "doc-025",
+      "archiveCode": "MOHW-HL-01"
     },
     "details": [
       "쪽방 밀집지역 전담 간호사 상시 혈압·당뇨 방문체크",
@@ -3571,8 +3571,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "12_노숙인_등의_복지사업안내_2026.pdf",
       "page": "p.85~110",
       "chapter": "제2편. 노숙인일시보호시설 운영 및 거리상담",
-      "archiveId": "doc-027",
-      "archiveCode": "MOHW-HMS-01"
+      "archiveId": "doc-025",
+      "archiveCode": "MOHW-HL-01"
     },
     "details": [
       "역사·지하도 야간 거리상담(Outreach) 및 입소 유도",
@@ -3592,8 +3592,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "13_기부식품등_제공사업안내_푸드뱅크_2026.pdf",
       "page": "p.40~65",
       "chapter": "제2장. 푸드마켓 설치 및 이용자 관리",
-      "archiveId": "doc-029",
-      "archiveCode": "MOHW-FDB-01"
+      "archiveId": "doc-026",
+      "archiveCode": "MOHW-FB-01"
     },
     "details": [
       "주민센터 연계 푸드마켓 회원카드 발급 및 포인트 충전",
@@ -3610,11 +3610,11 @@ const WELFARE_HIERARCHY_NODES = [
     "level3": "긴급복지지원법 생계·주거·의료지원 연계 및 위기사유 심사",
     "summary": "주소득자의 사망, 실직, 중한 질병 등으로 생계유지가 곤란한 위기가구에 72시간 내 선지원 후심사 원칙으로 생계비(4인가구 월 183만원선)와 의료비(최대 300만원)를 즉각 지원하는 국가 안전망",
     "guidelineRef": {
-      "file": "16_긴급복지지원사업안내_2026_2026년_긴급복지지원사업_안내.pdf",
+      "file": "17_차상위계층확인사업안내_2026.pdf",
       "page": "p.15~40",
       "chapter": "제1편. 긴급복지지원 제도 개요 및 지원기준",
-      "archiveId": "doc-030",
-      "archiveCode": "MOHW-EMG-01"
+      "archiveId": "doc-032",
+      "archiveCode": "MOHW-SUB-01"
     },
     "details": [
       "보건복지상담센터(129) 및 주민센터 긴급지원 요청 접수",
@@ -3634,8 +3634,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "15_시도사회서비스원_표준운영지침_2026.pdf",
       "page": "p.75~95",
       "chapter": "제3편. 사회서비스원 사업 - 긴급돌봄사업 운영지침",
-      "archiveId": "doc-023",
-      "archiveCode": "MOHW-ELM-01"
+      "archiveId": "doc-027",
+      "archiveCode": "MOHW-SW-01"
     },
     "details": [
       "돌봄 공백 발생 시 48시간 이내 긴급돌봄 신청 접수",
@@ -3655,7 +3655,7 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "01_북한이탈주민_지역적응센터_하나센터_업무매뉴얼_2025.pdf",
       "page": "p.25~45",
       "chapter": "제2편. 초기집중교육 운영 - 50시간 표준 커리큘럼",
-      "archiveId": "doc-040",
+      "archiveId": "doc-051",
       "archiveCode": "MOU-HANA-01"
     },
     "details": [
@@ -3739,8 +3739,8 @@ const WELFARE_HIERARCHY_NODES = [
       "file": "01_KOICA_시민사회협력프로그램_공모안내서_2027.pdf",
       "page": "p.15~40",
       "chapter": "제1편. 공모 개요 및 사업추진 체계",
-      "archiveId": "doc-051",
-      "archiveCode": "KOICA-ODA-01"
+      "archiveId": "doc-049",
+      "archiveCode": "MOFA-KOICA-01"
     },
     "details": [
       "개도국 현지 사전 타당성조사 및 성과관리(PDM) 수립",
@@ -4198,11 +4198,11 @@ const WELFARE_HIERARCHY_NODES = [
     "level3": "요양병원 장기입원 케어 및 권역응급의료센터 위기개입",
     "summary": "노인·만성질환자 요양병원 사회사업 및 응급실 취약환자 신속 개입",
     "guidelineRef": {
-      "file": "07_의료사회복지실_퇴원연계_및_호스피스완화의료_응급의료_사업안내_2026.pdf",
+      "file": "10_의료급여사업안내_2026.pdf",
       "page": "p.8~9",
       "chapter": "제3장 단위서비스 3.3 (요양병원 장기입원 케어 및 권역응급의료센터 위기개입)",
-      "archiveId": "doc-060",
-      "archiveCode": "MOHW-MEDS-01"
+      "archiveId": "doc-021",
+      "archiveCode": "MOHW-MED-01"
     },
     "details": [
       "요양병원 입원 환자 정서 프로그램·가족 상담 및 지역사회 복귀 평가",

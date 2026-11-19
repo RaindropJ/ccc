@@ -59,8 +59,8 @@ const GUIDELINES_ARCHIVE_DB = [
               "처우개선비"
             ],
             "hierarchyLink": {
-              "targetId": "comm-case-intake",
-              "label": "L1 종합복지 > 종사자처우"
+              "targetId": "comm-svc-self-spec",
+              "label": "L1 종합복지 > 종사자처우·특화"
             },
             "driveFileId": "1RGyK_48qJ0YIo-aUUnn6hVCuXRFyzVLV",
             "driveViewUrl": "https://drive.google.com/file/d/1RGyK_48qJ0YIo-aUUnn6hVCuXRFyzVLV/view?usp=sharing",
@@ -119,8 +119,8 @@ const GUIDELINES_ARCHIVE_DB = [
               "재무회계 규칙"
             ],
             "hierarchyLink": {
-              "targetId": "comm-case-intake",
-              "label": "L1 종합복지 > 시설관리"
+              "targetId": "comm-org-net-survey",
+              "label": "L1 종합복지 > 시설관리·네트워크"
             },
             "driveFileId": "1sJMBt5Vv4USpCAw3ap4pcWsu3PA5vxOn",
             "driveViewUrl": "https://drive.google.com/file/d/1sJMBt5Vv4USpCAw3ap4pcWsu3PA5vxOn/view?usp=sharing",
@@ -659,8 +659,8 @@ const GUIDELINES_ARCHIVE_DB = [
               "적정의료이용"
             ],
             "hierarchyLink": {
-              "targetId": "med-hosp-sw",
-              "label": "L1 긴급돌봄 > 의료급여사례관리"
+              "targetId": "med-hosp-ltc",
+              "label": "L1 보건의료 > 요양병원·의료급여"
             },
             "driveFileId": "1Bw4MvH9gGP3xPleNQDlH9cM35r5g6tmd",
             "driveViewUrl": "https://drive.google.com/file/d/1Bw4MvH9gGP3xPleNQDlH9cM35r5g6tmd/view?usp=sharing",
@@ -907,8 +907,8 @@ const GUIDELINES_ARCHIVE_DB = [
               "법인 정관변경"
             ],
             "hierarchyLink": {
-              "targetId": "comm-case-intake",
-              "label": "L1 종합복지 > 법인관리"
+              "targetId": "comm-org-space-sharing",
+              "label": "L1 종합복지 > 법인관리·공간공유"
             },
             "driveFileId": "1UE5ks2jNq_LiwIHjUdOviJ--l1Am0Wu9",
             "driveViewUrl": "https://drive.google.com/file/d/1UE5ks2jNq_LiwIHjUdOviJ--l1Am0Wu9/view?usp=sharing",
@@ -997,8 +997,8 @@ const GUIDELINES_ARCHIVE_DB = [
               "양곡할인 지원"
             ],
             "hierarchyLink": {
-              "targetId": "crisis-emerg-welfare",
-              "label": "L1 자활지원 > 차상위확인"
+              "targetId": "care-emergency-welfare-link",
+              "label": "L1 긴급돌봄 > 차상위·위기지원"
             },
             "driveFileId": "1ol-diLpwrOIeuffEbTZsuOXVfgyCpVKt",
             "driveViewUrl": "https://drive.google.com/file/d/1ol-diLpwrOIeuffEbTZsuOXVfgyCpVKt/view?usp=sharing",
@@ -1445,8 +1445,8 @@ const GUIDELINES_ARCHIVE_DB = [
               "입소정원 안내"
             ],
             "hierarchyLink": {
-              "targetId": "youth-shelter-care",
-              "label": "L1 청소년여성 > 쉼터현황"
+              "targetId": "youth-recovery-probation",
+              "label": "L1 청소년여성 > 보호시설·쉼터현황"
             },
             "driveFileId": "1yQxC1kycaDvs1SWXq1VG2EjySbX0Aqmg",
             "driveViewUrl": "https://drive.google.com/file/d/1yQxC1kycaDvs1SWXq1VG2EjySbX0Aqmg/view?usp=sharing",
@@ -2133,8 +2133,8 @@ const GUIDELINES_ARCHIVE_DB = [
               "돌봄국가책임제"
             ],
             "hierarchyLink": {
-              "targetId": "care-integrated-coordinator",
-              "label": "L1 긴급돌봄 > 국정과제약자복지"
+              "targetId": "comm-spec-solitude-prevention",
+              "label": "L1 종합복지 > 국정과제·고립대응"
             },
             "driveFileId": "159hb5m53wrose6mJPVzztmI_Dk-X0mbh",
             "driveViewUrl": "https://drive.google.com/file/d/159hb5m53wrose6mJPVzztmI_Dk-X0mbh/view?usp=sharing",
