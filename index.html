@@ -278,6 +278,7 @@
             const options = { skipHistory: true };
             if (params.get('facility')) options.facility = decodeURIComponent(params.get('facility'));
             if (params.get('facilityId')) options.facilityId = decodeURIComponent(params.get('facilityId'));
+            if (options.facilityId && window.FACILITY_ROW_ID_ALIASES && window.FACILITY_ROW_ID_ALIASES[options.facilityId]) options.facilityId = window.FACILITY_ROW_ID_ALIASES[options.facilityId];
             if (params.get('facilityName')) options.facilityName = decodeURIComponent(params.get('facilityName'));
             if (params.get('search')) options.search = decodeURIComponent(params.get('search'));
             if (params.get('category')) options.category = decodeURIComponent(params.get('category'));
@@ -341,6 +342,7 @@
             if (!facilityId) return;
             if (facilityId === 'law-justice') facilityId = 'ext-jus-probation';
             if (facilityId === 'law-rural-elderly') facilityId = 'law-elderly';
+            if (window.FACILITY_ROW_ID_ALIASES && window.FACILITY_ROW_ID_ALIASES[facilityId]) facilityId = window.FACILITY_ROW_ID_ALIASES[facilityId];
             window.showView('fields', { facilityId: facilityId, preventScroll: true });
 
             const searchInput = document.getElementById('fields-search-input');
@@ -714,7 +716,7 @@
                             거주형 <strong>생활시설</strong>과 통원형 <strong>이용시설</strong>의 법적 구분 및 근거법령을 카드별로 손쉽게 확인하세요.
                         </p>
                         <div class="flex items-center gap-2 pt-1 text-[11px] font-semibold text-blue-200">
-                            <span>• 34개 중앙부처 법정분야</span>
+                            <span>• 39개 중앙부처 법정분야</span>
                             <span>• 민간 제3섹터·사회적경제·종교(6)</span>
                         </div>
                     </div>
@@ -731,13 +733,13 @@
 
                                         <!-- 통합 소관부처 가로 스크롤 필터 알약 -->
                     <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="mobile-ministry-pills">
-                        <button type="button" onclick="filterByMinistry('전체')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-extrabold bg-slate-900 text-white flex-shrink-0 transition shadow-2xs cursor-pointer">전체 (34)</button>
+                        <button type="button" onclick="filterByMinistry('전체')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-extrabold bg-slate-900 text-white flex-shrink-0 transition shadow-2xs cursor-pointer">전체 (39)</button>
                         <button type="button" onclick="filterByMinistry('보건복지부')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition cursor-pointer">🏥 복지부 (12)</button>
                         <button type="button" onclick="filterByMinistry('성평등가족부')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition cursor-pointer">👨‍👩‍👧 성평등가족부 (6)</button>
                         <button type="button" onclick="filterByMinistry('교육부')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition cursor-pointer">🎓 교육부 (5)</button>
                         <button type="button" onclick="filterByMinistry('법무부')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition cursor-pointer">⚖️ 법무부 (3)</button>
-                        <button type="button" onclick="filterByMinistry('고용·보훈·국방')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition cursor-pointer">💼 고용·보훈·국방 (3)</button>
-                        <button type="button" onclick="filterByMinistry('행안·국토·금융')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition cursor-pointer">🏛️ 행안·국토·금융 (3)</button>
+                        <button type="button" onclick="filterByMinistry('고용·보훈·국방')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition cursor-pointer">💼 고용·보훈·국방 (5)</button>
+                        <button type="button" onclick="filterByMinistry('행안·국토·금융')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition cursor-pointer">🏛️ 행안·국토·금융 (6)</button>
                         <button type="button" onclick="filterByMinistry('질병청·통일부')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition cursor-pointer">🔬 질병청·통일부 (2)</button>
                         <button type="button" onclick="filterByMinistry('민간제3섹터')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 flex-shrink-0 transition cursor-pointer flex items-center gap-1">
                             <span>🤝</span><span>민간·사회적경제·종교 (6)</span>
@@ -756,7 +758,7 @@
                 <!-- 5. 검색 결과 및 전체 펼치기/접기 컨트롤 -->
                 <div class="flex items-center justify-between text-xs px-1 text-slate-500">
                     <div>
-                        검색 결과: <strong id="mobile-match-count" class="text-blue-600 font-extrabold">34</strong>개 법정분야
+                        검색 결과: <strong id="mobile-match-count" class="text-blue-600 font-extrabold">39</strong>개 법정분야
                     </div>
                     <div class="flex items-center gap-2">
                         <button type="button" onclick="toggleAllCards(true)" class="text-[11px] font-semibold text-slate-600 hover:text-blue-600 transition cursor-pointer">전체 펼치기</button>
@@ -857,20 +859,20 @@
                 </div>
             </div>
 
-                        <!-- 소관부처별 원클릭 퀵 필터 뱃지 (34개 중앙부처 법정분류 + 6대 민간·사회적경제·종교 생태계) -->
+                        <!-- 소관부처별 원클릭 퀵 필터 뱃지 (39개 중앙부처 법정분류 + 6대 민간·사회적경제·종교 생태계) -->
             <div id="fields-ministry-filters-box" class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-xs mb-4">
                 <div class="text-[11px] font-bold text-slate-500 mb-2 flex items-center justify-between">
                     <span class="flex items-center gap-1.5">🏛️ 소관부처 및 섹터별 원클릭 필터 (단일 마스터 통합표):</span>
-                    <span class="text-[10px] text-slate-400">클릭 시 해당 부처 소관 법정시설(34개) 또는 민간·사회적경제·종교 생태계(6개)로 즉시 필터링됩니다.</span>
+                    <span class="text-[10px] text-slate-400">클릭 시 해당 부처 소관 법정시설(39개) 또는 민간·사회적경제·종교 생태계(6개)로 즉시 필터링됩니다.</span>
                 </div>
                 <div id="fields-ministry-filters" class="flex flex-wrap gap-1.5">
-                    <button type="button" data-ministry="전체" onclick="setMinistryFilter('전체')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-extrabold bg-blue-600 text-white shadow-2xs transition cursor-pointer">전체 (34개 법정분야)</button>
+                    <button type="button" data-ministry="전체" onclick="setMinistryFilter('전체')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-extrabold bg-blue-600 text-white shadow-2xs transition cursor-pointer">전체 (39개 법정분야)</button>
                     <button type="button" data-ministry="보건복지부" onclick="setMinistryFilter('보건복지부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">🏥 보건복지부 (12)</button>
                     <button type="button" data-ministry="성평등가족부" onclick="setMinistryFilter('성평등가족부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">👨‍👩‍👧 성평등가족부 (6)</button>
                     <button type="button" data-ministry="교육부" onclick="setMinistryFilter('교육부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">🎓 교육부 (5)</button>
                     <button type="button" data-ministry="법무부" onclick="setMinistryFilter('법무부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">⚖️ 법무부 (3)</button>
-                    <button type="button" data-ministry="고용·보훈·국방" onclick="setMinistryFilter('고용·보훈·국방')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">💼 고용·보훈·국방 (3)</button>
-                    <button type="button" data-ministry="행안·국토·금융" onclick="setMinistryFilter('행안·국토·금융')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">🏛️ 행안·국토·금융 (3)</button>
+                    <button type="button" data-ministry="고용·보훈·국방" onclick="setMinistryFilter('고용·보훈·국방')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">💼 고용·보훈·국방 (5)</button>
+                    <button type="button" data-ministry="행안·국토·금융" onclick="setMinistryFilter('행안·국토·금융')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">🏛️ 행안·국토·금융 (6)</button>
                     <button type="button" data-ministry="질병청·통일부" onclick="setMinistryFilter('질병청·통일부')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">🔬 질병청·통일부 (2)</button>
                     <button type="button" data-ministry="민간제3섹터" onclick="setMinistryFilter('민간제3섹터')" class="ministry-btn px-3 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 transition cursor-pointer flex items-center gap-1 shadow-2xs ml-auto">
                         <span>🤝</span><span>민간 제3섹터 · 사회적경제 · 종교 (6)</span>
@@ -901,7 +903,7 @@
             <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div class="flex items-center gap-2 flex-wrap">
                     <span id="fields-table-title" class="text-base font-extrabold text-slate-800">🏛️ 중앙정부 소관 법정시설 분류표</span>
-                    <span id="fields-count-badge" class="text-xs text-slate-400 font-medium">총 34개 정부부처 법정분야 (+ 민간·사회적경제·종교 6대 영역 별도 안내)</span>
+                    <span id="fields-count-badge" class="text-xs text-slate-400 font-medium">총 39개 정부부처 법정분야 (11개 소속계통 · 12개 소관기관)</span>
                 </div>
                 <div class="flex items-center gap-2 w-full sm:w-auto">
                     <div class="relative flex-1 sm:w-64">
@@ -918,14 +920,15 @@
             <div id="fields-table-container" class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse text-xs">
-                        <caption class="sr-only">소관 부처별 34개 법정 시설·안전망 상세 분류표</caption>
+                        <caption class="sr-only">소속 계통(부) ▸ 소관기관(부·처·청·위원회)별 39개 법정 시설·안전망 상세 분류표</caption>
                         <thead>
                             <tr class="bg-slate-50/80 text-slate-700 border-b border-slate-200 font-extrabold">
-                                <th scope="col" class="py-3 px-4 text-center w-[12%] border-r border-slate-200">소관부처</th>
-                                <th scope="col" class="py-3 px-4 text-center w-[18%] border-r border-slate-200">시설·분야 종류</th>
-                                <th scope="col" class="py-3 px-4 text-center w-[25%] border-r border-slate-200">🏠 생활시설 (거주형)</th>
-                                <th scope="col" class="py-3 px-4 text-center w-[25%] border-r border-slate-200">🏢 이용시설·전담기관</th>
-                                <th scope="col" class="py-3 px-4 text-center w-[20%]">근거 법령 & 탐색</th>
+                                <th scope="col" class="py-3 px-3 text-center w-[9%] border-r border-slate-200">소속 계통</th>
+                                <th scope="col" class="py-3 px-3 text-center w-[10%] border-r border-slate-200">소관기관<span class="block text-[10px] font-bold text-slate-400 mt-0.5">부 · 처 · 청 · 위원회</span></th>
+                                <th scope="col" class="py-3 px-4 text-center w-[17%] border-r border-slate-200">시설·분야 종류</th>
+                                <th scope="col" class="py-3 px-4 text-center w-[23%] border-r border-slate-200">🏠 생활시설 (거주형)</th>
+                                <th scope="col" class="py-3 px-4 text-center w-[23%] border-r border-slate-200">🏢 이용시설·전담기관</th>
+                                <th scope="col" class="py-3 px-4 text-center w-[18%]">근거 법령 &amp; 탐색</th>
                             </tr>
                         </thead>
                         <tbody id="fields-table-body" class="divide-y divide-slate-100 text-slate-600">
@@ -963,10 +966,10 @@
                 <div class="p-4 rounded-xl bg-white/90 border border-amber-200/90 text-xs text-slate-700 leading-relaxed space-y-1.5">
                     <div class="font-extrabold text-amber-900 flex items-center gap-1.5 text-xs sm:text-sm">
                         <span>📜</span>
-                        <span>왜 중앙부처 5열 시설 표와 경계를 분리했나요? (민법 제32조 비영리법인 및 사회적경제 특별법 체계)</span>
+                        <span>왜 중앙부처 6열 시설 표와 경계를 분리했나요? (민법 제32조 비영리법인 및 사회적경제 특별법 체계)</span>
                     </div>
                     <p class="text-slate-600">
-                        상단 5열 마스터 표의 34개 중앙부처 법정시설(거주형 생활시설 vs 이용시설)과 달리,
+                        상단 6열 마스터 표의 39개 중앙부처 법정시설(거주형 생활시설 vs 이용시설)과 달리,
                         <strong>축 1(국제구호 NGO·모금배분 공익재단·기업 CSR·종교법인·전통사찰 치유생태계)</strong>은 <strong>「민법」 제32조</strong> 및 공익법인·전통사찰 법령에 따른 민간 공익 영역이며,
                         <strong>축 2(사회적기업·소셜벤처·사회적협동조합·마을기업·자활기업·사회적농장)</strong>는 <strong>사회적경제·농촌돌봄 특별법</strong>에 기반한 연대경제 조직입니다.
                         각 카드에서도 동일하게 <strong>📌 근거조문 확인, 세부 기관 클릭 시 🌳 3단계 위계도감 직결, 📚 정본 지침서 1:1 필터링</strong>을 지원합니다.
@@ -1167,7 +1170,7 @@
                           <div class="text-[11px] text-blue-900 font-extrabold">지침서 아카이브 열람 ➔</div>
                         </button>
                         <button type="button" onclick="showView('fields', {search: '노인복지'})" class="p-2.5 rounded-xl bg-indigo-50 border border-indigo-200 text-center hover:bg-indigo-100 transition cursor-pointer">
-                          <div class="text-[10px] text-indigo-600 font-bold">34개 법정 시설분류</div>
+                          <div class="text-[10px] text-indigo-600 font-bold">39개 법정 시설분류</div>
                           <div class="text-[11px] text-indigo-900 font-extrabold">시설도감 상세대조 ➔</div>
                         </button>
                       </div>
@@ -2744,20 +2747,53 @@
         articles: '국가유공자법 제67조; 보훈보상대상자법 제54조',
         note: '보훈요양·주거·재가복지 전문인력 배치 운영'
     },
+    // --- 특수직역의료: 소관기관 × 근거법 1:1 분리 (구 ext-med-special) ---
     {
-        id: 'ext-med-special',
-        ministry: '고용노동부·보훈부·국방부',
+        id: 'ext-med-industrial',
+        ministry: '고용노동부',
         ministryBadge: 'bg-amber-50 text-amber-800 border-amber-200',
-        ministryIcon: '🎖️',
+        ministryIcon: '💼',
         tag: '특수직역의료',
-        facilityCategory: '산재병원 · 보훈병원 · 국군병원',
+        facilityCategory: '산재병원',
         hierarchyFacility: '산재병원 · 보훈병원 · 국군병원',
         archiveDocId: 'doc-063',
         fieldId: 'medical',
-        livingFacilities: ['근로복지공단 산재병원 입원병동', '중앙·권역 보훈병원 입원병동', '국군병원 · 국군외상센터 입원병동'],
-        usingFacilities: ['산재병원 재활사회사업실 · 직업복귀지원센터', '보훈병원 의료사회사업실 · 보훈재활체육센터', '군 의무시설 외래 · 장병심리회복지원팀'],
-        laws: ['「산업재해보상보험법」', '「한국보훈복지의료공단법」', '「군보건의료에 관한 법률」'],
-        articles: '산재보험법 제72조; 보훈공단법 제7조; 군보건의료법 제6조',
+        livingFacilities: ['근로복지공단 산재병원 입원병동'],
+        usingFacilities: ['산재병원 재활사회사업실 · 직업복귀지원센터'],
+        laws: ['「산업재해보상보험법」'],
+        articles: '산재보험법 제72조',
+        note: ''
+    },
+    {
+        id: 'ext-med-veterans',
+        ministry: '국가보훈부',
+        ministryBadge: 'bg-amber-50 text-amber-800 border-amber-200',
+        ministryIcon: '🎖️',
+        tag: '특수직역의료',
+        facilityCategory: '보훈병원',
+        hierarchyFacility: '산재병원 · 보훈병원 · 국군병원',
+        archiveDocId: 'doc-063',
+        fieldId: 'medical',
+        livingFacilities: ['중앙·권역 보훈병원 입원병동'],
+        usingFacilities: ['보훈병원 의료사회사업실 · 보훈재활체육센터'],
+        laws: ['「한국보훈복지의료공단법」'],
+        articles: '보훈공단법 제7조',
+        note: ''
+    },
+    {
+        id: 'ext-med-military',
+        ministry: '국방부',
+        ministryBadge: 'bg-amber-50 text-amber-800 border-amber-200',
+        ministryIcon: '🪖',
+        tag: '특수직역의료',
+        facilityCategory: '국군병원',
+        hierarchyFacility: '산재병원 · 보훈병원 · 국군병원',
+        archiveDocId: 'doc-063',
+        fieldId: 'medical',
+        livingFacilities: ['국군병원 · 국군외상센터 입원병동'],
+        usingFacilities: ['군 의무시설 외래 · 장병심리회복지원팀'],
+        laws: ['「군보건의료에 관한 법률」'],
+        articles: '군보건의료법 제6조',
         note: ''
     },
     // --- 8. 행정안전부 · 국토교통부 · 금융위원회 (3개 법정분류) ---
@@ -2775,40 +2811,137 @@
         articles: '사회보장급여법 제41조·제43조; 사회서비스원법 제10조',
         note: '지자체 사회복지직 공무원 배치 및 통합사례관리·공공 사회서비스 제공 거점'
     },
+    // --- 주거·재난구호 / 서민금융·자원봉사·NPO: 소관기관 × 근거법 1:1 분리 (구 ext-life-housing-disaster, ext-life-finance-volunteer) ---
     {
-        id: 'ext-life-housing-disaster',
-        ministry: '국토교통부·행안부',
+        id: 'ext-life-housing',
+        ministry: '국토교통부',
         ministryBadge: 'bg-cyan-50 text-cyan-800 border-cyan-200',
         ministryIcon: '🏘️',
-        tag: '주거·재난구호',
-        facilityCategory: '주거복지센터 · 사회주택 · 재난구호시설',
+        tag: '주거복지',
+        facilityCategory: '주거복지센터 · 사회주택',
         hierarchyFacility: '주거복지센터 · 사회주택 · 재난구호시설',
         archiveDocId: 'doc-067',
         fieldId: 'community-selfreliance',
-        livingFacilities: ['전국재해구호협회 (이재민 임시주거시설·임시조립주택·대피소)', '사회주택 / 자립지원임대주택 (케어안심주택)', '영구임대주택 · 국민임대주택 · 매입·전세임대주택'],
-        usingFacilities: ['주거복지센터 (LH 마이홈센터 / 지자체 위탁, 주거급여·사회주택 연계)', '주거복지동 (영구임대 단지 내 복지관 결합)', '재난심리회복지원센터 · 재해구호협회 거점'],
-        laws: ['「주거기본법」', '「공공주택 특별법」', '「재해구호법」'],
-        articles: '주거기본법 제22조; 공공주택특별법 제2조; 재해구호법 제4조의2',
+        livingFacilities: ['사회주택 / 자립지원임대주택 (케어안심주택)', '영구임대주택 · 국민임대주택 · 매입·전세임대주택'],
+        usingFacilities: ['주거복지센터 (LH 마이홈센터 / 지자체 위탁, 주거급여·사회주택 연계)', '주거복지동 (영구임대 단지 내 복지관 결합)'],
+        laws: ['「주거기본법」', '「공공주택 특별법」'],
+        articles: '주거기본법 제22조; 공공주택특별법 제2조',
         note: ''
     },
     {
-        id: 'ext-life-finance-volunteer',
-        ministry: '금융위원회·행정안전부',
+        id: 'ext-life-disaster',
+        ministry: '행정안전부',
+        ministryBadge: 'bg-cyan-50 text-cyan-800 border-cyan-200',
+        ministryIcon: '🏛️',
+        tag: '재난구호',
+        facilityCategory: '재난구호시설',
+        hierarchyFacility: '주거복지센터 · 사회주택 · 재난구호시설',
+        archiveDocId: 'doc-067',
+        fieldId: 'community-selfreliance',
+        livingFacilities: ['전국재해구호협회 (이재민 임시주거시설·임시조립주택·대피소)'],
+        usingFacilities: ['재난심리회복지원센터 · 재해구호협회 거점'],
+        laws: ['「재해구호법」'],
+        articles: '재해구호법 제4조의2',
+        note: ''
+    },
+    {
+        id: 'ext-life-finance',
+        ministry: '금융위원회',
         ministryBadge: 'bg-cyan-50 text-cyan-800 border-cyan-200',
         ministryIcon: '💳',
-        tag: '서민금융·자원봉사',
-        facilityCategory: '서민금융 · 채무조정 · 자원봉사 · NPO',
+        tag: '서민금융',
+        facilityCategory: '서민금융 · 채무조정',
         hierarchyFacility: '서민금융 · 채무조정 · 자원봉사 · NPO',
         archiveDocId: 'doc-068',
         fieldId: 'community-selfreliance',
         livingFacilities: [],
-        usingFacilities: ['서민금융진흥원 (햇살론, 미소금융 등 서민금융지원 · 서민금융통합지원센터)', '신용회복위원회 (개인워크아웃, 채무조정)', '지역 자원봉사센터 (중앙·시도·시군구 - 「자원봉사기본법」 행안부 체계)', '중앙·시도 등록 비영리민간단체 (NPO 지원)'],
-        laws: ['「서민의 금융생활 지원에 관한 법률」', '「자원봉사활동 기본법」', '「비영리민간단체 지원법」'],
-        articles: '서민금융법 제3조·제56조; 자원봉사법 제19조; NPO법 제4조',
+        usingFacilities: ['서민금융진흥원 (햇살론, 미소금융 등 서민금융지원 · 서민금융통합지원센터)', '신용회복위원회 (개인워크아웃, 채무조정)'],
+        laws: ['「서민의 금융생활 지원에 관한 법률」'],
+        articles: '서민금융법 제3조·제56조',
+        note: ''
+    },
+    {
+        id: 'ext-life-volunteer',
+        ministry: '행정안전부',
+        ministryBadge: 'bg-cyan-50 text-cyan-800 border-cyan-200',
+        ministryIcon: '🏛️',
+        tag: '자원봉사',
+        facilityCategory: '자원봉사센터',
+        hierarchyFacility: '서민금융 · 채무조정 · 자원봉사 · NPO',
+        archiveDocId: 'doc-068',
+        fieldId: 'community-selfreliance',
+        livingFacilities: [],
+        usingFacilities: ['지역 자원봉사센터 (중앙·시도·시군구 - 「자원봉사기본법」 행안부 체계)'],
+        laws: ['「자원봉사활동 기본법」'],
+        articles: '자원봉사법 제19조',
+        note: ''
+    },
+    {
+        id: 'ext-life-npo',
+        ministry: '행정안전부',
+        ministryBadge: 'bg-cyan-50 text-cyan-800 border-cyan-200',
+        ministryIcon: '🏛️',
+        tag: 'NPO',
+        facilityCategory: '비영리민간단체 (NPO)',
+        hierarchyFacility: '서민금융 · 채무조정 · 자원봉사 · NPO',
+        archiveDocId: 'doc-068',
+        fieldId: 'community-selfreliance',
+        livingFacilities: [],
+        usingFacilities: ['중앙·시도 등록 비영리민간단체 (NPO 지원)'],
+        laws: ['「비영리민간단체 지원법」'],
+        articles: 'NPO법 제4조',
         note: ''
     }
 ];
         window.STATUTORY_MATRIX = STATUTORY_MATRIX;
+
+        // ==================== 정부조직 레지스트리 (정부조직법: 각 부 ▸ 소속 청 / 국무총리 ▸ 처·위원회) ====================
+        // type: '부' | '처' | '청' | '위원회'  /  parent: 상위 계통 (부는 null = 자기 자신이 계통)
+        const GOV_ORG_REGISTRY = {
+            '보건복지부':   { type: '부', parent: null, icon: '🏥' },
+            '질병관리청':   { type: '청', parent: '보건복지부', icon: '🔬' },
+            '성평등가족부': { type: '부', parent: null, icon: '👨‍👩‍👧‍👦' },
+            '통일부':       { type: '부', parent: null, icon: '🕊️' },
+            '교육부':       { type: '부', parent: null, icon: '🎓' },
+            '법무부':       { type: '부', parent: null, icon: '⚖️' },
+            '고용노동부':   { type: '부', parent: null, icon: '💼' },
+            '국가보훈부':   { type: '부', parent: null, icon: '🎖️' },
+            '국방부':       { type: '부', parent: null, icon: '🪖' },
+            '행정안전부':   { type: '부', parent: null, icon: '🏛️' },
+            '국토교통부':   { type: '부', parent: null, icon: '🏘️' },
+            '금융위원회':   { type: '위원회', parent: '국무총리', icon: '💳' }
+            // 확장 예: '식품의약품안전처': { type: '처', parent: '국무총리', icon: '💊' }, '소방청': { type: '청', parent: '행정안전부', icon: '🚒' }
+        };
+        const GOV_ORG_ALIASES = { '행안부': '행정안전부', '보훈부': '국가보훈부', '여성가족부': '성평등가족부', '질병청': '질병관리청' };
+        const GOV_LINEAGE_META = { '국무총리': { label: '국무총리 소속', icon: '🏛️' } };
+        const GOV_ORG_TYPE_ORDER = { '부': 0, '청': 1, '처': 2, '위원회': 3 };
+
+        function resolveOrgLineage(ministryStr) {
+            const names = String(ministryStr || '기타').split('·').map(s => s.trim()).filter(Boolean).map(n => GOV_ORG_ALIASES[n] || n);
+            const primary = names[0] || '기타';
+            const reg = GOV_ORG_REGISTRY[primary] || { type: '부', parent: null, icon: '🏛️' };
+            const lineage = reg.parent || primary;
+            const lineageReg = GOV_ORG_REGISTRY[lineage];
+            const lineageMeta = GOV_LINEAGE_META[lineage];
+            return {
+                primary,
+                partners: names.slice(1),
+                orgType: reg.type,
+                orgIcon: reg.icon || '🏛️',
+                lineage,
+                lineageLabel: lineageMeta ? lineageMeta.label : lineage,
+                lineageIcon: lineageMeta ? lineageMeta.icon : ((lineageReg && lineageReg.icon) || reg.icon || '🏛️')
+            };
+        }
+        window.resolveOrgLineage = resolveOrgLineage;
+
+        // 분리 이전 구(舊) 행 ID → 대표 신규 행 ID (찜 목록·지침서 아카이브 역링크 호환)
+        const FACILITY_ROW_ID_ALIASES = {
+            'ext-med-special': 'ext-med-industrial',
+            'ext-life-housing-disaster': 'ext-life-housing',
+            'ext-life-finance-volunteer': 'ext-life-finance'
+        };
+        window.FACILITY_ROW_ID_ALIASES = FACILITY_ROW_ID_ALIASES;
 
         const CIVIL_IMPACT_ECOSYSTEM = [
     // --- 축 1. 민법 제32조 비영리 공익법인 · 종교공익 생태계 (3대 영역) ---
@@ -9397,7 +9530,7 @@
             currentDisplayedDesktopRows = rows || [];
 
             if (!rows || rows.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="py-12 text-center text-slate-400 font-bold">검색된 소관부처 및 시설 분류가 없습니다.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="py-12 text-center text-slate-400 font-bold">검색된 소관부처 및 시설 분류가 없습니다.</td></tr>`;
                 const countBadge = document.getElementById('fields-count-badge');
                 if (countBadge) countBadge.innerText = '0개 분야';
                 return;
@@ -9433,36 +9566,61 @@
 
             const isExtended = (currentFieldsTrack === 'extended');
 
-            // 연속 행 그룹화 (Track 1: 동일 소관부처 rowspan, Track 2: 동일 소관부처 + 동일 6대 영역 rowspan)
-            const groups = [];
-            let currentGroup = null;
-
+            // 2단 계층 그룹화: [소속 계통(부 / 국무총리)] ▸ [소관기관(부 본부 · 청 · 처 · 위원회)]
+            // - 데이터가 있는 기관만 렌더링 (처 데이터가 없어도 청이 있으면 청은 상위 부 아래 세부 분류로 분리)
+            // - 계통 순서는 STATUTORY_MATRIX 최초 등장 순서 유지, 계통 내부는 부 → 청 → 처 → 위원회 순
+            const lineageMap = new Map();
             rows.forEach(r => {
-                const ministryName = r.ministry || '기타';
-                const groupKey = isExtended ? `${r.trackGroup || ''}::${ministryName}` : ministryName;
-                if (!currentGroup || currentGroup.key !== groupKey) {
-                    currentGroup = {
-                        key: groupKey,
-                        ministry: ministryName,
-                        trackGroup: r.trackGroup || '',
-                        ministryIcon: r.ministryIcon || '',
-                        items: [r]
-                    };
-                    groups.push(currentGroup);
-                } else {
-                    currentGroup.items.push(r);
-                }
+                const L = resolveOrgLineage(r.ministry);
+                if (!lineageMap.has(L.lineage)) lineageMap.set(L.lineage, { L, orgs: new Map() });
+                const orgMap = lineageMap.get(L.lineage).orgs;
+                if (!orgMap.has(L.primary)) orgMap.set(L.primary, { L, items: [] });
+                orgMap.get(L.primary).items.push(r);
             });
+
+            const flatRows = [];
+            let orgTotal = 0;
+            lineageMap.forEach(({ L: lineageL, orgs }) => {
+                const orgList = Array.from(orgs.values()).sort((a, b) => {
+                    const aSelf = a.L.primary === a.L.lineage ? -1 : 0;
+                    const bSelf = b.L.primary === b.L.lineage ? -1 : 0;
+                    if (aSelf !== bSelf) return aSelf - bSelf;
+                    return (GOV_ORG_TYPE_ORDER[a.L.orgType] ?? 9) - (GOV_ORG_TYPE_ORDER[b.L.orgType] ?? 9);
+                });
+                const lineageCount = orgList.reduce((s, o) => s + o.items.length, 0);
+                orgTotal += orgList.length;
+                orgList.forEach((org, oIdx) => {
+                    org.items.forEach((r, idx) => {
+                        flatRows.push({
+                            r,
+                            lineageL,
+                            orgL: org.L,
+                            lineageFirst: (oIdx === 0 && idx === 0),
+                            lineageCount,
+                            orgFirst: (idx === 0),
+                            orgCount: org.items.length,
+                            orgIdx: oIdx,
+                            isSubOrg: org.L.primary !== org.L.lineage,
+                            hasSubOrgs: orgList.some(o => o.L.primary !== o.L.lineage)
+                        });
+                    });
+                });
+            });
+
+            const orgTypeBadgeMap = {
+                '부': 'bg-blue-50 text-blue-700 border-blue-200',
+                '청': 'bg-emerald-50 text-emerald-700 border-emerald-200',
+                '처': 'bg-violet-50 text-violet-700 border-violet-200',
+                '위원회': 'bg-amber-50 text-amber-800 border-amber-200'
+            };
 
             let fullHtml = '';
 
-            groups.forEach((group, gIdx) => {
-                const rowCount = group.items.length;
-                const mIcon = group.ministryIcon || ministryIconMap[group.ministry] || '🏛️';
-
-                group.items.forEach((r, idx) => {
-                    const isFirstInGroup = (idx === 0);
-                    const isLastInGroup = (idx === rowCount - 1);
+            flatRows.forEach((entry, fIdx) => {
+                    const r = entry.r;
+                    const isFirstInGroup = entry.lineageFirst;
+                    const nextEntry = flatRows[fIdx + 1];
+                    const isLastInGroup = !nextEntry || nextEntry.lineageFirst;
                     const bCls = r.ministryBadge || badgeColorMap[r.fieldId] || 'bg-blue-50 text-blue-800 border-blue-200';
                     
                     function renderSubFacilityChips(items, emptyMsg) {
@@ -9491,27 +9649,42 @@
                         }).join(' ')
                         : '<span class="text-slate-400">관계 규정 준용</span>';
 
-                    const rowBorderClass = isFirstInGroup && gIdx > 0 
-                        ? 'border-t-2 border-slate-300' 
-                        : (isLastInGroup ? 'border-b border-slate-200' : 'border-b border-slate-100');
+                    const rowBorderClass = isFirstInGroup && fIdx > 0
+                        ? 'border-t-2 border-slate-300'
+                        : (entry.orgFirst && entry.orgIdx > 0 ? 'border-t border-dashed border-emerald-300' : (isLastInGroup ? 'border-b border-slate-200' : 'border-b border-slate-100'));
 
-                    fullHtml += `<tr id="facility-row-${r.id}" class="hover:bg-slate-50/70 transition ${rowBorderClass}">`;
+                    fullHtml += `<tr id="facility-row-${r.id}" class="hover:bg-slate-50/70 transition ${rowBorderClass}" data-lineage="${escapeHtml(entry.lineageL.lineage)}" data-org="${escapeHtml(entry.orgL.primary)}" data-org-type="${escapeHtml(entry.orgL.orgType)}">`;
 
-                    // 1열: 소관부처 (rowspan 그룹) - Track 1/Track 2 통일 디자인
+                    // 1열: 소속 계통 (계통 전체 rowspan)
                     if (isFirstInGroup) {
                         fullHtml += `
-                            <td rowspan="${rowCount}" class="p-4 text-center border-r border-slate-200 align-middle bg-slate-50/70 border-b-2 border-slate-200">
+                            <td rowspan="${entry.lineageCount}" class="p-3 text-center border-r border-slate-200 align-middle bg-slate-50/70 border-b-2 border-slate-200">
                                 <div class="flex flex-col items-center justify-center gap-1.5 py-2 sticky top-24">
-                                    ${isExtended && group.trackGroup ? `<span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-slate-200/70 text-slate-700 border border-slate-300">${escapeHtml(group.trackGroup)}</span>` : ''}
-                                    <span class="w-9 h-9 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center text-base shadow-2xs">${mIcon}</span>
-                                    <span class="text-xs sm:text-sm font-black text-slate-900 tracking-tight leading-tight">${escapeHtml(group.ministry)}</span>
-                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-50 text-blue-700 border-blue-200/80 border shadow-2xs">${rowCount}개 ${isExtended ? '확장분류' : '법정분야'}</span>
+                                    <span class="w-9 h-9 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center text-base shadow-2xs">${entry.lineageL.lineageIcon}</span>
+                                    <span class="text-xs sm:text-sm font-black text-slate-900 tracking-tight leading-tight">${escapeHtml(entry.lineageL.lineageLabel)}</span>
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-50 text-blue-700 border-blue-200/80 border shadow-2xs">${entry.lineageCount}개 법정분야</span>
                                 </div>
                             </td>
                         `;
                     }
 
-                    // 5열: 근거 법령 & 탐색 (근거조문 표시 및 1:1 딥링킹 통일)
+                    // 2열: 소관기관 (부 본부 · 청 · 처 · 위원회 rowspan 하위 분류)
+                    if (entry.orgFirst) {
+                        const o = entry.orgL;
+                        const typeCls = orgTypeBadgeMap[o.orgType] || orgTypeBadgeMap['부'];
+                        const orgName = entry.isSubOrg ? o.primary : (entry.hasSubOrgs ? `${o.primary} 본부` : o.primary);
+                        fullHtml += `
+                            <td rowspan="${entry.orgCount}" class="p-3 text-center border-r border-slate-200 align-middle ${entry.isSubOrg ? 'bg-emerald-50/40' : 'bg-white'}">
+                                <div class="flex flex-col items-center justify-center gap-1 py-1.5 sticky top-24">
+                                    <span class="px-1.5 py-0.5 rounded-md text-[10px] font-black border ${typeCls}">[${escapeHtml(o.orgType)}]</span>
+                                    <span class="text-[11px] sm:text-xs font-extrabold text-slate-800 leading-tight flex items-center gap-1">${entry.isSubOrg ? '<span class="text-emerald-500 font-black">└</span>' : ''}<span>${entry.isSubOrg ? o.orgIcon + ' ' : ''}${escapeHtml(orgName)}</span></span>
+                                    <span class="text-[10px] font-bold text-slate-400">${entry.orgCount}개</span>
+                                </div>
+                            </td>
+                        `;
+                    }
+
+                    // 6열: 근거 법령 & 탐색 (근거조문 표시 및 1:1 딥링킹 통일)
                     const hierarchyTarget = r.hierarchyFacility || r.facilityCategory.replace(/\s*\(.*?\)/g, '').trim();
                     const articlesHtml = r.articles
                         ? `<div class="text-[11px] text-slate-600 bg-slate-50 px-2 py-1 rounded-md border border-slate-200/80 leading-snug"><strong class="text-slate-800">📌 근거조문:</strong> ${escapeHtml(r.articles)}</div>`
@@ -9553,7 +9726,6 @@
                             ${actionButtonsHtml}
                         </td>
                     </tr>`;
-                });
             });
 
             tbody.innerHTML = fullHtml;
@@ -9562,7 +9734,7 @@
             if (countBadge) {
                 countBadge.innerText = isExtended
                     ? `총 ${rows.length}개 범부처 확장 실무·안전망 분류`
-                    : `총 ${rows.length}개 정부부처 법정분야 (${groups.length}개 소관부처)`;
+                    : `총 ${rows.length}개 정부부처 법정분야 (${lineageMap.size}개 소속계통 · ${orgTotal}개 소관기관)`;
             }
         }
 
@@ -9604,7 +9776,7 @@
             const isExtended = (currentFieldsTrack === 'extended');
             const header = isExtended
                 ? ['구분', '소관부처', '시설 분야, 종류', '생활시설', '이용시설, 전담기관', '근거법', '근거조문']
-                : ['구분', '소관부처', '시설·분야 종류', '생활시설 (거주형)', '이용시설·전담기관', '근거법령', '근거조문', '실무비고'];
+                : ['구분', '소속계통', '기관유형', '소관기관', '시설·분야 종류', '생활시설 (거주형)', '이용시설·전담기관', '근거법령', '근거조문', '실무비고'];
 
             const lines = [header.join('\t')];
             rows.forEach(r => {
@@ -9622,9 +9794,12 @@
                         r.articles || '-'
                     ].map(v => String(v).replace(/[\t\r\n]+/g, ' ')).join('\t'));
                 } else {
+                    const L = resolveOrgLineage(r.ministry);
                     lines.push([
                         'Ⅰ. 핵심 법정시설',
-                        r.ministry || '-',
+                        L.lineageLabel || '-',
+                        L.orgType || '-',
+                        L.primary || r.ministry || '-',
                         r.facilityCategory || '-',
                         living,
                         using,
