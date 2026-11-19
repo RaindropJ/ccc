@@ -1,10 +1,10 @@
 /**
- * 대한민국 사회복지 현장 나침반: 3단계 위계 도감 (218개 법정·실천단위서비스 전수 매트릭스)
+ * 대한민국 사회복지 현장 나침반: 3단계 위계 도감 (219개 법정·실천단위서비스 전수 매트릭스)
  * Google Stitch Material Design 3 리디자인 반영 컨트롤러
  */
 
 (function () {
-    let currentMinistryGroup = 'all';
+    let currentMinistryGroup = '전체';
     let currentDomainFilter = 'all';
     let currentSearchKeyword = '';
     let currentFacilityFilter = null;
@@ -2691,7 +2691,9 @@
     "산재병원 · 보훈병원 · 국군병원": {
         "domainId": "15_보건의료전문케어",
         "facilityTypes": [
-            "산재병원·보훈병원·국군병원"
+            "산재병원",
+            "보훈병원",
+            "국군병원"
         ],
         "level1": [
             "특수직역(산재·보훈·군) 의료복지"
@@ -2700,7 +2702,7 @@
     "근로복지공단 산재병원 입원": {
         "domainId": "15_보건의료전문케어",
         "facilityTypes": [
-            "산재병원·보훈병원·국군병원"
+            "산재병원"
         ],
         "level1": [
             "특수직역(산재·보훈·군) 의료복지"
@@ -2709,7 +2711,7 @@
     "산재병원": {
         "domainId": "15_보건의료전문케어",
         "facilityTypes": [
-            "산재병원·보훈병원·국군병원"
+            "산재병원"
         ],
         "level1": [
             "특수직역(산재·보훈·군) 의료복지"
@@ -2718,7 +2720,7 @@
     "보훈병원 입원, 보훈요양병원": {
         "domainId": "15_보건의료전문케어",
         "facilityTypes": [
-            "산재병원·보훈병원·국군병원"
+            "보훈병원"
         ],
         "level1": [
             "특수직역(산재·보훈·군) 의료복지"
@@ -2727,7 +2729,7 @@
     "보훈병원": {
         "domainId": "15_보건의료전문케어",
         "facilityTypes": [
-            "산재병원·보훈병원·국군병원"
+            "보훈병원"
         ],
         "level1": [
             "특수직역(산재·보훈·군) 의료복지"
@@ -2736,7 +2738,7 @@
     "보훈요양병원": {
         "domainId": "15_보건의료전문케어",
         "facilityTypes": [
-            "산재병원·보훈병원·국군병원"
+            "보훈병원"
         ],
         "level1": [
             "특수직역(산재·보훈·군) 의료복지"
@@ -2745,7 +2747,7 @@
     "국군병원 입원": {
         "domainId": "15_보건의료전문케어",
         "facilityTypes": [
-            "산재병원·보훈병원·국군병원"
+            "국군병원"
         ],
         "level1": [
             "특수직역(산재·보훈·군) 의료복지"
@@ -2754,7 +2756,7 @@
     "국군병원": {
         "domainId": "15_보건의료전문케어",
         "facilityTypes": [
-            "산재병원·보훈병원·국군병원"
+            "국군병원"
         ],
         "level1": [
             "특수직역(산재·보훈·군) 의료복지"
@@ -2763,7 +2765,7 @@
     "산재병원 의료사회사업실 · 직업재활센터 · 산재 재활 시설": {
         "domainId": "15_보건의료전문케어",
         "facilityTypes": [
-            "산재병원·보훈병원·국군병원"
+            "산재병원"
         ],
         "level1": [
             "특수직역(산재·보훈·군) 의료복지"
@@ -2772,7 +2774,7 @@
     "보훈병원 외래, 보훈재활체육센터": {
         "domainId": "15_보건의료전문케어",
         "facilityTypes": [
-            "산재병원·보훈병원·국군병원"
+            "보훈병원"
         ],
         "level1": [
             "특수직역(산재·보훈·군) 의료복지"
@@ -2781,7 +2783,7 @@
     "보훈재활체육센터": {
         "domainId": "15_보건의료전문케어",
         "facilityTypes": [
-            "산재병원·보훈병원·국군병원"
+            "보훈병원"
         ],
         "level1": [
             "특수직역(산재·보훈·군) 의료복지"
@@ -2790,7 +2792,7 @@
     "군 의무시설, 국군외상센터": {
         "domainId": "15_보건의료전문케어",
         "facilityTypes": [
-            "산재병원·보훈병원·국군병원"
+            "국군병원"
         ],
         "level1": [
             "특수직역(산재·보훈·군) 의료복지"
@@ -2799,7 +2801,7 @@
     "국군외상센터": {
         "domainId": "15_보건의료전문케어",
         "facilityTypes": [
-            "산재병원·보훈병원·국군병원"
+            "국군병원"
         ],
         "level1": [
             "특수직역(산재·보훈·군) 의료복지"
@@ -3156,10 +3158,29 @@
             "고등·성인 평생학습 안전망"
         ]
     },
+    "주거복지센터 · 사회주택": {
+        "domainId": "17_주거금융자원봉사",
+        "facilityTypes": [
+            "주거복지센터 · 사회주택"
+        ],
+        "level1": [
+            "주거복지 상향·재난구호 지원"
+        ]
+    },
+    "재난구호시설": {
+        "domainId": "17_주거금융자원봉사",
+        "facilityTypes": [
+            "재난구호시설"
+        ],
+        "level1": [
+            "주거복지 상향·재난구호 지원"
+        ]
+    },
     "주거복지센터 · 사회주택 · 재난구호시설": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "주거복지센터·사회주택·재난구호시설"
+            "주거복지센터 · 사회주택",
+            "재난구호시설"
         ],
         "level1": [
             "주거복지 상향·재난구호 지원"
@@ -3168,7 +3189,7 @@
     "전국재해구호협회": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "주거복지센터·사회주택·재난구호시설"
+            "재난구호시설"
         ],
         "level1": [
             "주거복지 상향·재난구호 지원"
@@ -3177,7 +3198,7 @@
     "이재민 임시주거시설": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "주거복지센터·사회주택·재난구호시설"
+            "재난구호시설"
         ],
         "level1": [
             "주거복지 상향·재난구호 지원"
@@ -3186,7 +3207,7 @@
     "임시조립주택": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "주거복지센터·사회주택·재난구호시설"
+            "재난구호시설"
         ],
         "level1": [
             "주거복지 상향·재난구호 지원"
@@ -3195,7 +3216,7 @@
     "대피소": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "주거복지센터·사회주택·재난구호시설"
+            "재난구호시설"
         ],
         "level1": [
             "주거복지 상향·재난구호 지원"
@@ -3204,7 +3225,7 @@
     "사회주택 / 자립지원임대주택": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "주거복지센터·사회주택·재난구호시설"
+            "주거복지센터 · 사회주택"
         ],
         "level1": [
             "주거복지 상향·재난구호 지원"
@@ -3213,7 +3234,7 @@
     "사회주택": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "주거복지센터·사회주택·재난구호시설"
+            "주거복지센터 · 사회주택"
         ],
         "level1": [
             "주거복지 상향·재난구호 지원"
@@ -3222,7 +3243,7 @@
     "케어안심주택": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "주거복지센터·사회주택·재난구호시설"
+            "주거복지센터 · 사회주택"
         ],
         "level1": [
             "주거복지 상향·재난구호 지원"
@@ -3231,7 +3252,7 @@
     "영구임대주택, 국민임대주택, 매입·전세임대주택": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "주거복지센터·사회주택·재난구호시설"
+            "주거복지센터 · 사회주택"
         ],
         "level1": [
             "주거복지 상향·재난구호 지원"
@@ -3240,7 +3261,7 @@
     "영구임대주택": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "주거복지센터·사회주택·재난구호시설"
+            "주거복지센터 · 사회주택"
         ],
         "level1": [
             "주거복지 상향·재난구호 지원"
@@ -3249,7 +3270,7 @@
     "주거복지센터": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "주거복지센터·사회주택·재난구호시설"
+            "주거복지센터 · 사회주택"
         ],
         "level1": [
             "주거복지 상향·재난구호 지원"
@@ -3258,7 +3279,7 @@
     "LH 마이홈센터": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "주거복지센터·사회주택·재난구호시설"
+            "주거복지센터 · 사회주택"
         ],
         "level1": [
             "주거복지 상향·재난구호 지원"
@@ -3267,7 +3288,7 @@
     "지자체 위탁": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "주거복지센터·사회주택·재난구호시설"
+            "주거복지센터 · 사회주택"
         ],
         "level1": [
             "주거복지 상향·재난구호 지원"
@@ -3276,7 +3297,7 @@
     "주거급여": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "주거복지센터·사회주택·재난구호시설"
+            "주거복지센터 · 사회주택"
         ],
         "level1": [
             "주거복지 상향·재난구호 지원"
@@ -3285,7 +3306,7 @@
     "주거복지동": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "주거복지센터·사회주택·재난구호시설"
+            "주거복지센터 · 사회주택"
         ],
         "level1": [
             "주거복지 상향·재난구호 지원"
@@ -3294,7 +3315,7 @@
     "영구임대 단지 내 복지관 결합": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "주거복지센터·사회주택·재난구호시설"
+            "주거복지센터 · 사회주택"
         ],
         "level1": [
             "주거복지 상향·재난구호 지원"
@@ -3303,7 +3324,7 @@
     "재난심리회복지원센터, 재해구호협회 거점": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "주거복지센터·사회주택·재난구호시설"
+            "재난구호시설"
         ],
         "level1": [
             "주거복지 상향·재난구호 지원"
@@ -3312,16 +3333,45 @@
     "재난심리회복지원센터": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "주거복지센터·사회주택·재난구호시설"
+            "재난구호시설"
         ],
         "level1": [
             "주거복지 상향·재난구호 지원"
         ]
     },
+    "대한적십자사": {
+        "domainId": "17_주거금융자원봉사",
+        "facilityTypes": [
+            "재난구호시설"
+        ],
+        "level1": [
+            "주거복지 상향·재난구호 지원"
+        ]
+    },
+    "서민금융 · 채무조정": {
+        "domainId": "17_주거금융자원봉사",
+        "facilityTypes": [
+            "서민금융 · 채무조정"
+        ],
+        "level1": [
+            "서민금융·채무조정·시민봉사"
+        ]
+    },
+    "비영리민간단체 (NPO)": {
+        "domainId": "17_주거금융자원봉사",
+        "facilityTypes": [
+            "비영리민간단체 (NPO)"
+        ],
+        "level1": [
+            "서민금융·채무조정·시민봉사"
+        ]
+    },
     "서민금융 · 채무조정 · 자원봉사 · NPO": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "서민금융진흥원·신용회복위원회·자원봉사센터·NPO"
+            "서민금융 · 채무조정",
+            "자원봉사센터",
+            "비영리민간단체 (NPO)"
         ],
         "level1": [
             "서민금융·채무조정·시민봉사"
@@ -3330,7 +3380,7 @@
     "서민금융진흥원": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "서민금융진흥원·신용회복위원회·자원봉사센터·NPO"
+            "서민금융 · 채무조정"
         ],
         "level1": [
             "서민금융·채무조정·시민봉사"
@@ -3339,7 +3389,7 @@
     "햇살론": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "서민금융진흥원·신용회복위원회·자원봉사센터·NPO"
+            "서민금융 · 채무조정"
         ],
         "level1": [
             "서민금융·채무조정·시민봉사"
@@ -3348,7 +3398,7 @@
     "미소금융 등 서민금융지원": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "서민금융진흥원·신용회복위원회·자원봉사센터·NPO"
+            "서민금융 · 채무조정"
         ],
         "level1": [
             "서민금융·채무조정·시민봉사"
@@ -3357,7 +3407,7 @@
     "서민금융통합지원센터": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "서민금융진흥원·신용회복위원회·자원봉사센터·NPO"
+            "서민금융 · 채무조정"
         ],
         "level1": [
             "서민금융·채무조정·시민봉사"
@@ -3366,7 +3416,7 @@
     "신용회복위원회": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "서민금융진흥원·신용회복위원회·자원봉사센터·NPO"
+            "서민금융 · 채무조정"
         ],
         "level1": [
             "서민금융·채무조정·시민봉사"
@@ -3375,7 +3425,7 @@
     "개인워크아웃": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "서민금융진흥원·신용회복위원회·자원봉사센터·NPO"
+            "서민금융 · 채무조정"
         ],
         "level1": [
             "서민금융·채무조정·시민봉사"
@@ -3384,7 +3434,7 @@
     "채무조정": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "서민금융진흥원·신용회복위원회·자원봉사센터·NPO"
+            "서민금융 · 채무조정"
         ],
         "level1": [
             "서민금융·채무조정·시민봉사"
@@ -3393,7 +3443,7 @@
     "지역 자원봉사센터": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "서민금융진흥원·신용회복위원회·자원봉사센터·NPO"
+            "자원봉사센터"
         ],
         "level1": [
             "서민금융·채무조정·시민봉사"
@@ -3402,7 +3452,7 @@
     "자원봉사센터": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "서민금융진흥원·신용회복위원회·자원봉사센터·NPO"
+            "자원봉사센터"
         ],
         "level1": [
             "서민금융·채무조정·시민봉사"
@@ -3411,7 +3461,7 @@
     "시군구 - 「자원봉사기본법」 행안부 체계": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "서민금융진흥원·신용회복위원회·자원봉사센터·NPO"
+            "자원봉사센터"
         ],
         "level1": [
             "서민금융·채무조정·시민봉사"
@@ -3420,7 +3470,7 @@
     "중앙·시도 등록 비영리민간단체": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "서민금융진흥원·신용회복위원회·자원봉사센터·NPO"
+            "비영리민간단체 (NPO)"
         ],
         "level1": [
             "서민금융·채무조정·시민봉사"
@@ -3429,7 +3479,7 @@
     "NPO 지원": {
         "domainId": "17_주거금융자원봉사",
         "facilityTypes": [
-            "서민금융진흥원·신용회복위원회·자원봉사센터·NPO"
+            "비영리민간단체 (NPO)"
         ],
         "level1": [
             "서민금융·채무조정·시민봉사"
@@ -3991,7 +4041,7 @@
     "근로복지공단 산재병원 입원병동": {
         "domainId": "15_보건의료전문케어",
         "facilityTypes": [
-            "산재병원·보훈병원·국군병원"
+            "산재병원"
         ],
         "level1": [
             "특수직역(산재·보훈·군) 의료복지"
@@ -4000,7 +4050,7 @@
     "중앙·권역 보훈병원 입원병동": {
         "domainId": "15_보건의료전문케어",
         "facilityTypes": [
-            "산재병원·보훈병원·국군병원"
+            "보훈병원"
         ],
         "level1": [
             "특수직역(산재·보훈·군) 의료복지"
@@ -4009,7 +4059,7 @@
     "국군병원 · 국군외상센터 입원병동": {
         "domainId": "15_보건의료전문케어",
         "facilityTypes": [
-            "산재병원·보훈병원·국군병원"
+            "국군병원"
         ],
         "level1": [
             "특수직역(산재·보훈·군) 의료복지"
@@ -4018,7 +4068,7 @@
     "산재병원 재활사회사업실 · 직업복귀지원센터": {
         "domainId": "15_보건의료전문케어",
         "facilityTypes": [
-            "산재병원·보훈병원·국군병원"
+            "산재병원"
         ],
         "level1": [
             "특수직역(산재·보훈·군) 의료복지"
@@ -4027,7 +4077,7 @@
     "보훈병원 의료사회사업실 · 보훈재활체육센터": {
         "domainId": "15_보건의료전문케어",
         "facilityTypes": [
-            "산재병원·보훈병원·국군병원"
+            "보훈병원"
         ],
         "level1": [
             "특수직역(산재·보훈·군) 의료복지"
@@ -4036,7 +4086,7 @@
     "군 의무시설 외래 · 장병심리회복지원팀": {
         "domainId": "15_보건의료전문케어",
         "facilityTypes": [
-            "산재병원·보훈병원·국군병원"
+            "국군병원"
         ],
         "level1": [
             "특수직역(산재·보훈·군) 의료복지"
@@ -4161,6 +4211,71 @@
         "level1": [
             "종교법인 수탁·무료보호·급식"
         ]
+    },
+    "대한노인회": {
+        "domainId": "02_노인복지",
+        "facilityTypes": ["노인복지관", "경로당", "노인일자리지원기관(시니어클럽)"],
+        "level1": ["노인 여가 및 사회활동 지원"]
+    },
+    "아동권리보장원": {
+        "domainId": "04_아동돌봄복지",
+        "facilityTypes": ["아동양육시설", "가정위탁지원센터", "자립지원전담기관", "아동보호전문기관"],
+        "level1": ["가정외보호 및 아동자립지원", "아동학대 예방 및 아동권리보호"]
+    },
+    "입양기관": {
+        "domainId": "04_아동돌봄복지",
+        "facilityTypes": ["가정위탁지원센터", "아동일시보호시설", "아동양육시설"],
+        "level1": ["가정외보호 및 아동자립지원"]
+    },
+    "한국사회복지협의회": {
+        "domainId": "01_사회복지관",
+        "facilityTypes": ["종합사회복지관"],
+        "level1": ["사례관리기능", "서비스제공기능", "지역조직화기능"]
+    },
+    "한국사회복지사협회": {
+        "domainId": "01_사회복지관",
+        "facilityTypes": ["종합사회복지관"],
+        "level1": ["사례관리기능", "서비스제공기능", "지역조직화기능"]
+    },
+    "재난적의료비 지원": {
+        "domainId": "15_보건의료전문케어",
+        "facilityTypes": ["상급종합병원·요양병원·호스피스·응급의료센터"],
+        "level1": ["의료사회복지·호스피스 완화돌봄"]
+    },
+    "응급의료센터": {
+        "domainId": "15_보건의료전문케어",
+        "facilityTypes": ["상급종합병원·요양병원·호스피스·응급의료센터"],
+        "level1": ["의료사회복지·호스피스 완화돌봄"]
+    },
+    "권역외상센터": {
+        "domainId": "15_보건의료전문케어",
+        "facilityTypes": ["상급종합병원·요양병원·호스피스·응급의료센터"],
+        "level1": ["의료사회복지·호스피스 완화돌봄"]
+    },
+    "아이돌봄지원센터": {
+        "domainId": "06_가족복지",
+        "facilityTypes": ["가족센터", "공동육아나눔터"],
+        "level1": ["가족관계·돌봄지원 및 다양한 가족 역량강화"]
+    },
+    "여성인력개발센터": {
+        "domainId": "06_가족복지",
+        "facilityTypes": ["가족센터", "한부모가족복지상담소"],
+        "level1": ["가족관계·돌봄지원 및 다양한 가족 역량강화", "취약위기가족 지원 및 통합사례관리"]
+    },
+    "다문화교육지원센터": {
+        "domainId": "16_정규특수평생교육",
+        "facilityTypes": ["초·중·고교(늘봄·교육복지·Wee)"],
+        "level1": ["학교 늘봄·학생맞춤통합지원"]
+    },
+    "다문화예비학교": {
+        "domainId": "16_정규특수평생교육",
+        "facilityTypes": ["초·중·고교(늘봄·교육복지·Wee)"],
+        "level1": ["학교 늘봄·학생맞춤통합지원"]
+    },
+    "장애인표준사업장": {
+        "domainId": "03_장애인복지",
+        "facilityTypes": ["직업능력개발원", "장애인직업재활시설(보호작업장·근로사업장)"],
+        "level1": ["장애인 직업재활 및 일자리지원", "장애인직업재활"]
     }
 };
 
@@ -4308,13 +4423,280 @@
         '18_종교기반복지체계': { key: 'rel', icon: 'temple_buddhist', short: '종교기반 복지체계', facilityId: 'ext-rel-welfare', archiveSearch: '종교', badge: '종교법인·급식·템플 (6)', legal: '<span>「민법」 제32조</span><span>「전통사찰법」·「식품기부법」</span><span class="text-secondary font-bold">문체부·국가유산청 지침</span>' }
     };
 
-    const SECTION_1_KEYS = ['01_사회복지관', '02_노인복지', '03_장애인복지', '04_아동돌봄복지', '05_영유아보육', '08_정신건강자살예방', '11_지역보호긴급돌봄'];
-    const SECTION_2_KEYS = ['06_가족복지', '07_청소년여성권익', '10_학교사회복지', '09_자활고용지원', '12_배분모금국제'];
-    const SECTION_3_KEYS = ['13_사회적경제연대', '14_사법교정법무보호', '15_보건의료전문케어', '16_정규특수평생교육', '17_주거금융자원봉사', '18_종교기반복지체계'];
+    const CENTRAL_DOMAIN_KEYS = [
+        '01_사회복지관', '02_노인복지', '03_장애인복지', '04_아동돌봄복지', '05_영유아보육',
+        '06_가족복지', '07_청소년여성권익', '08_정신건강자살예방', '09_자활고용지원', '10_학교사회복지',
+        '11_지역보호긴급돌봄', '14_사법교정법무보호', '15_보건의료전문케어', '16_정규특수평생교육', '17_주거금융자원봉사'
+    ];
+    const CIVIL_DOMAIN_KEYS = ['12_배분모금국제', '13_사회적경제연대', '18_종교기반복지체계'];
+
+    const LINEAGE_ORDER = [
+        '보건복지부', '성평등가족부', '교육부', '법무부',
+        '고용노동부', '국가보훈부', '국방부',
+        '행정안전부', '국토교통부', '국무총리', '통일부'
+    ];
+    const AXIS_ORDER = [
+        '축 1 · 민법 제32조 비영리·공익법인',
+        '축 2 · 사회적경제·연대',
+        '축 3 · 종교법인·문화유산 공익'
+    ];
+
+    const FILTER_PILL_DEFS = [
+        { key: '전체', label: '전체', icon: '' },
+        { key: '보건복지부', label: '보건복지부', icon: '🏥' },
+        { key: '성평등가족부', label: '성평등가족부', icon: '👨‍👩‍👧' },
+        { key: '교육부', label: '교육부', icon: '🎓' },
+        { key: '법무부', label: '법무부', icon: '⚖️' },
+        { key: '고용·보훈·국방', label: '고용·보훈·국방', icon: '💼' },
+        { key: '행안·국토·금융', label: '행안·국토·금융', icon: '🏛️' },
+        { key: '질병청·통일부', label: '질병청·통일부', icon: '🔬' },
+        { key: '민간제3섹터', label: '민간제3섹터(6)', icon: '🤝', isCivil: true }
+    ];
+
+    function localEscHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function safeResolveLineage(agency) {
+        if (typeof window !== 'undefined' && typeof window.resolveOrgLineage === 'function') {
+            return window.resolveOrgLineage(agency);
+        }
+        const isPrime = agency === '금융위원회';
+        return {
+            primary: agency,
+            partners: [],
+            orgType: isPrime ? '위원회' : '부',
+            orgIcon: agency === '금융위원회' ? '💳' : '🏛️',
+            lineage: isPrime ? '국무총리' : agency,
+            lineageLabel: isPrime ? '국무총리 소속' : agency,
+            lineageIcon: '🏛️'
+        };
+    }
+
+    /**
+     * 219개 위계 노드를 탭 1(시설도감)의 11계통·12소관기관 또는 민간 제3섹터 6대 생태계와 1:1 정합 매핑
+     */
+    function resolveHierarchyNodeOrg(node) {
+        const dId = node.domainId || '';
+        const nId = node.id || '';
+        const ftype = node.facilityType || '';
+        const l1 = node.level1 || '';
+
+        if (dId === '12_배분모금국제') {
+            if (nId.startsWith('koica-') || ftype.includes('KOICA') || ftype.includes('국제개발')) {
+                return {
+                    isCivil: true,
+                    axis: '축 1 · 민법 제32조 비영리·공익법인',
+                    agency: '외교부·KOICA (국제구호·개발협력 NGO)',
+                    orgType: '공익법인·NGO',
+                    lineage: '민간제3섹터',
+                    lineageLabel: '축 1 · 민법 제32조 비영리·공익법인',
+                    lineageIcon: '🌍',
+                    orgIcon: '🌍',
+                    facilityId: 'law-ngo-csr'
+                };
+            }
+            return {
+                isCivil: true,
+                axis: '축 1 · 민법 제32조 비영리·공익법인',
+                agency: '사회복지공동모금회(사랑의열매) · 공익재단',
+                orgType: '비영리·모금',
+                lineage: '민간제3섹터',
+                lineageLabel: '축 1 · 민법 제32조 비영리·공익법인',
+                lineageIcon: '🌍',
+                orgIcon: '🍒',
+                facilityId: 'law-ngo-csr'
+            };
+        }
+        if (dId === '13_사회적경제연대') {
+            if (nId.startsWith('sec-se-')) {
+                return {
+                    isCivil: true,
+                    axis: '축 2 · 사회적경제·연대',
+                    agency: '고용노동부·중소벤처기업부 ((예비)사회적기업·소셜벤처)',
+                    orgType: '사회적경제',
+                    lineage: '민간제3섹터',
+                    lineageLabel: '축 2 · 사회적경제·연대',
+                    lineageIcon: '🌱',
+                    orgIcon: '🌱',
+                    facilityId: 'ext-sec-social-enterprise'
+                };
+            }
+            if (nId.startsWith('sec-coop-')) {
+                return {
+                    isCivil: true,
+                    axis: '축 2 · 사회적경제·연대',
+                    agency: '기획재정부·행정안전부 (사회적협동조합·마을기업)',
+                    orgType: '사회적경제',
+                    lineage: '민간제3섹터',
+                    lineageLabel: '축 2 · 사회적경제·연대',
+                    lineageIcon: '🤝',
+                    orgIcon: '🤝',
+                    facilityId: 'ext-sec-coop-village'
+                };
+            }
+            return {
+                isCivil: true,
+                axis: '축 2 · 사회적경제·연대',
+                agency: '농림축산식품부 (사회적농장·농촌돌봄공동체)',
+                orgType: '사회적경제',
+                lineage: '민간제3섹터',
+                lineageLabel: '축 2 · 사회적경제·연대',
+                lineageIcon: '🌾',
+                orgIcon: '🌾',
+                facilityId: 'ext-sec-social-farm'
+            };
+        }
+        if (dId === '18_종교기반복지체계') {
+            if (nId.startsWith('rel-her-')) {
+                return {
+                    isCivil: true,
+                    axis: '축 3 · 종교법인·문화유산 공익',
+                    agency: '문화체육관광부·국가유산청 (전통사찰·템플스테이)',
+                    orgType: '종교문화유산',
+                    lineage: '민간제3섹터',
+                    lineageLabel: '축 3 · 종교법인·문화유산 공익',
+                    lineageIcon: '🪷',
+                    orgIcon: '🪷',
+                    facilityId: 'ext-rel-heritage'
+                };
+            }
+            return {
+                isCivil: true,
+                axis: '축 3 · 종교법인·문화유산 공익',
+                agency: '문화체육관광부·주무관청 (종교계 사회복지법인·시설)',
+                orgType: '종교·공익법인',
+                lineage: '민간제3섹터',
+                lineageLabel: '축 3 · 종교법인·문화유산 공익',
+                lineageIcon: '🕊️',
+                orgIcon: '🕊️',
+                facilityId: 'ext-rel-welfare'
+            };
+        }
+
+        let agency = '보건복지부';
+        let facilityId = (DOMAIN_MAP[dId] && DOMAIN_MAP[dId].facilityId) || 'law-welfare-center';
+
+        if (dId === '02_노인복지') {
+            if (nId === 'senior-bohun-nursing-care' || l1.includes('보훈')) {
+                agency = '국가보훈부';
+                facilityId = 'law-elderly';
+            }
+        } else if (dId === '03_장애인복지') {
+            if (nId === 'disab-vocation-training-allowance' || ftype.includes('직업능력개발원')) {
+                agency = '고용노동부';
+                facilityId = 'law-labor-disability';
+            }
+        } else if (dId === '05_영유아보육') {
+            agency = '교육부';
+            facilityId = 'law-childcare';
+        } else if (dId === '06_가족복지') {
+            agency = '성평등가족부';
+            facilityId = 'law-family-center';
+        } else if (dId === '07_청소년여성권익') {
+            agency = '성평등가족부';
+            facilityId = /여성|성폭력|가정폭력|성매매|1366/.test(ftype + nId) ? 'law-women-violence' : 'law-youth';
+        } else if (dId === '09_자활고용지원') {
+            if (ftype.includes('고용복지플러스센터') || nId.includes('kua')) {
+                agency = '고용노동부';
+                facilityId = 'law-self-support';
+            } else {
+                agency = '보건복지부';
+                facilityId = 'law-self-support';
+            }
+        } else if (dId === '10_학교사회복지') {
+            agency = '교육부';
+            facilityId = 'law-school';
+        } else if (dId === '11_지역보호긴급돌봄') {
+            if (ftype.includes('하나센터') || nId.includes('hana')) {
+                agency = '통일부';
+                facilityId = 'law-homeless';
+            }
+        } else if (dId === '14_사법교정법무보호') {
+            agency = '법무부';
+            if (nId.startsWith('jus-corr')) facilityId = 'ext-jus-correction';
+            else if (nId.startsWith('jus-prob')) facilityId = 'ext-jus-probation';
+            else facilityId = 'ext-jus-foreign';
+        } else if (dId === '15_보건의료전문케어') {
+            if (nId === 'med-spc-ind' || ftype === '산재병원') {
+                agency = '고용노동부';
+                facilityId = 'ext-med-industrial';
+            } else if (nId === 'med-spc-vet' || ftype === '보훈병원') {
+                agency = '국가보훈부';
+                facilityId = 'ext-med-veterans';
+            } else if (nId === 'med-spc-mil' || ftype === '국군병원') {
+                agency = '국방부';
+                facilityId = 'ext-med-military';
+            } else if (nId.startsWith('med-phc')) {
+                agency = '보건복지부';
+                facilityId = 'ext-med-health-center';
+            } else if (nId.startsWith('med-reh')) {
+                agency = '보건복지부';
+                facilityId = 'ext-med-hospital';
+            } else {
+                agency = '보건복지부';
+                facilityId = 'law-medical';
+            }
+        } else if (dId === '16_정규특수평생교육') {
+            agency = '교육부';
+            if (nId.startsWith('edu-spe')) facilityId = 'ext-edu-special';
+            else if (nId.startsWith('edu-univ')) facilityId = 'ext-edu-univ-lifelong';
+            else facilityId = 'ext-edu-k12';
+        } else if (dId === '17_주거금융자원봉사') {
+            if (nId === 'life-hs-center' || nId === 'life-hs-social') {
+                agency = '국토교통부';
+                facilityId = 'ext-life-housing';
+            } else if (nId === 'life-hs-dis') {
+                agency = '행정안전부';
+                facilityId = 'ext-life-disaster';
+            } else if (nId === 'life-fin-kinfa' || nId === 'life-fin-ccrs') {
+                agency = '금융위원회';
+                facilityId = 'ext-life-finance';
+            } else if (nId === 'life-fin-npo') {
+                agency = '행정안전부';
+                facilityId = 'ext-life-npo';
+            } else {
+                agency = '행정안전부';
+                facilityId = 'ext-life-volunteer';
+            }
+        }
+
+        const L = safeResolveLineage(agency);
+        return {
+            isCivil: false,
+            axis: null,
+            agency: agency,
+            orgType: L.orgType || '부',
+            lineage: L.lineage || agency,
+            lineageLabel: L.lineageLabel || agency,
+            lineageIcon: L.lineageIcon || L.orgIcon || '🏛️',
+            orgIcon: L.orgIcon || '🏛️',
+            facilityId: facilityId
+        };
+    }
+
+    function matchHierarchyMinistryFilter(orgInfo, filterKey) {
+        if (!filterKey || filterKey === '전체' || filterKey === 'all') return true;
+        if (filterKey === '민간제3섹터') return !!orgInfo.isCivil;
+        if (orgInfo.isCivil) return false;
+        if (typeof window !== 'undefined' && typeof window.matchMinistryFilter === 'function') {
+            return window.matchMinistryFilter(orgInfo.agency, filterKey);
+        }
+        if (filterKey === '고용·보훈·국방') return ['고용노동부', '국가보훈부', '국방부'].includes(orgInfo.agency);
+        if (filterKey === '행안·국토·금융') return ['행정안전부', '국토교통부', '금융위원회'].includes(orgInfo.agency);
+        if (filterKey === '질병청·통일부') return ['질병관리청', '통일부'].includes(orgInfo.agency);
+        return orgInfo.agency === filterKey;
+    }
 
     function getDB() {
         const rawDomains = (typeof window !== 'undefined' && window.WELFARE_HIERARCHY_DOMAINS) ? window.WELFARE_HIERARCHY_DOMAINS : [];
-        const domains = rawDomains.length > 0 ? rawDomains : [...SECTION_1_KEYS, ...SECTION_2_KEYS, ...SECTION_3_KEYS].map(key => ({
+        const domains = rawDomains.length > 0 ? rawDomains : [...CENTRAL_DOMAIN_KEYS, ...CIVIL_DOMAIN_KEYS].map(key => ({
             id: key,
             name: (DOMAIN_MAP[key] && DOMAIN_MAP[key].short) || key.replace(/^\d+_/, ''),
             icon: (DOMAIN_MAP[key] && DOMAIN_MAP[key].icon) || '🌳'
@@ -4333,13 +4715,17 @@
         currentFacilityFilter = null;
         currentParentCategory = null;
         currentDomainFilter = 'all';
-        currentMinistryGroup = 'all';
+        currentMinistryGroup = '전체';
         currentSearchKeyword = '';
 
         container.innerHTML = buildHierarchyHTML();
         bindEvents();
 
-        // 1. 도메인 필터 요청 처리 (options.domainKey 또는 options.domainId)
+        if (options.ministry) {
+            const pill = document.querySelector(`.hierarchy-ministry-pill[data-ministry="${options.ministry}"]`);
+            window.setHierarchyMinistryFilter(options.ministry, pill);
+        }
+
         if (options.domainKey) {
             const btn = document.querySelector(`.domain-tab-btn[onclick*="'${options.domainKey}'"]`);
             if (btn && typeof window.selectDomainFilter === 'function') {
@@ -4347,19 +4733,18 @@
             }
         }
 
-        // 1-1. 특정 시설 맞춤 기능·사업 필터링 요청 처리 (options.facility)
         if (options.facility) {
             currentFacilityFilter = options.facility;
             currentParentCategory = options.parentCategory || null;
             currentDomainFilter = 'all';
-            currentMinistryGroup = 'all';
+            currentMinistryGroup = '전체';
             currentSearchKeyword = '';
             const searchInput = document.getElementById('matrixSearchInput') || document.getElementById('hierarchySearchInput');
             if (searchInput) searchInput.value = '';
             applyFilters();
             setTimeout(() => {
-                const matchedTrs = document.querySelectorAll('#hierarchicalMatrixTable tbody tr.domain-row, #hierarchicalMatrixTable2 tbody tr.domain-row, #hierarchicalMatrixTable3 tbody tr.domain-row');
-                const matchedCards = document.querySelectorAll('#mobile-hierarchy-cards-feed .domain-card, #mobileCardsContainer .domain-card, #mobileCardsContainer > div');
+                const matchedTrs = document.querySelectorAll('#hierarchicalMatrixTable tbody tr.domain-row, #hierarchyCivilTable tbody tr.domain-row');
+                const matchedCards = document.querySelectorAll('#mobile-hierarchy-cards-feed .mobile-domain-card');
                 const allTargets = (window.innerWidth >= 768) ? matchedTrs : matchedCards;
                 if (allTargets && allTargets.length > 0) {
                     if (typeof window.triggerMatchHighlight === 'function') {
@@ -4373,19 +4758,18 @@
             }, 180);
         }
 
-        // 2. 검색 키워드 필터 요청 처리 (options.search)
         if (options.search) {
             const searchInput = document.getElementById('matrixSearchInput') || document.getElementById('hierarchySearchInput');
             if (searchInput) {
                 searchInput.value = options.search;
                 currentSearchKeyword = options.search.toLowerCase();
                 currentDomainFilter = 'all';
-                currentMinistryGroup = 'all';
+                currentMinistryGroup = '전체';
                 currentFacilityFilter = null;
                 applyFilters();
                 setTimeout(() => {
-                    const matchedTrs = document.querySelectorAll('#hierarchicalMatrixTable tbody tr.domain-row, #hierarchicalMatrixTable2 tbody tr.domain-row, #hierarchicalMatrixTable3 tbody tr.domain-row');
-                    const matchedCards = document.querySelectorAll('#mobile-hierarchy-cards-feed .domain-card, #mobileCardsContainer .domain-card, #mobileCardsContainer > div');
+                    const matchedTrs = document.querySelectorAll('#hierarchicalMatrixTable tbody tr.domain-row, #hierarchyCivilTable tbody tr.domain-row');
+                    const matchedCards = document.querySelectorAll('#mobile-hierarchy-cards-feed .mobile-domain-card');
                     const allTargets = (window.innerWidth >= 768) ? matchedTrs : matchedCards;
                     if (allTargets && allTargets.length > 0) {
                         if (typeof window.triggerMatchHighlight === 'function') {
@@ -4397,7 +4781,6 @@
             }
         }
 
-        // 3. 특정 노드 하이라이트 및 스크롤 요청 처리 (options.targetNodeId)
         if (options.targetNodeId) {
             setTimeout(() => {
                 highlightAndScrollNode(options.targetNodeId);
@@ -4407,54 +4790,113 @@
 
     function buildHierarchyHTML() {
         const { nodes } = getDB();
-        const sec1Nodes = nodes.filter(n => SECTION_1_KEYS.includes(n.domainId));
-        const sec2Nodes = nodes.filter(n => SECTION_2_KEYS.includes(n.domainId));
-        const sec3Nodes = nodes.filter(n => SECTION_3_KEYS.includes(n.domainId));
+        const totalCount = nodes.length;
+        const level1Count = new Set(nodes.map(n => `${n.domainId}|${n.level1}`)).size;
+        const level2Count = new Set(nodes.map(n => `${n.domainId}|${n.level1}|${n.level2}`)).size;
+
+        const centralNodes = nodes.filter(n => !resolveHierarchyNodeOrg(n).isCivil);
+        const civilNodes = nodes.filter(n => resolveHierarchyNodeOrg(n).isCivil);
+
+        const pillCounts = {};
+        FILTER_PILL_DEFS.forEach(p => {
+            if (p.key === '전체') {
+                pillCounts[p.key] = centralNodes.length;
+            } else {
+                pillCounts[p.key] = nodes.filter(n => matchHierarchyMinistryFilter(resolveHierarchyNodeOrg(n), p.key)).length;
+            }
+        });
+
+        const domainCounts = {};
+        nodes.forEach(n => {
+            domainCounts[n.domainId] = (domainCounts[n.domainId] || 0) + 1;
+        });
+
+        const pillsHtml = FILTER_PILL_DEFS.map(p => {
+            const cnt = pillCounts[p.key] || 0;
+            if (p.key === '전체') {
+                return `<button type="button" data-ministry="전체" onclick="window.setHierarchyMinistryFilter('전체', this)" class="hierarchy-ministry-pill active px-3 py-1.5 rounded-full text-xs font-extrabold bg-emerald-600 text-white shadow-2xs transition cursor-pointer">전체 (중앙 ${cnt} · 총 ${totalCount})</button>`;
+            }
+            if (p.isCivil) {
+                return `<button type="button" data-ministry="${p.key}" onclick="window.setHierarchyMinistryFilter('${p.key}', this)" class="hierarchy-ministry-pill px-3 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 transition cursor-pointer flex items-center gap-1 shadow-2xs ml-auto"><span>${p.icon}</span><span>${p.label}</span><span class="px-1.5 py-0.2 bg-white/80 rounded-full text-[10px]">${cnt}</span></button>`;
+            }
+            return `<button type="button" data-ministry="${p.key}" onclick="window.setHierarchyMinistryFilter('${p.key}', this)" class="hierarchy-ministry-pill px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">${p.icon} ${p.label} (${cnt})</button>`;
+        }).join('');
+
+        const domainChips = [
+            { key: 'all', label: `전체 18분야 (${totalCount})`, active: true },
+            { key: 'community', label: `종합복지관 (${domainCounts['01_사회복지관'] || 0})` },
+            { key: 'elder', label: `노인 (${domainCounts['02_노인복지'] || 0})` },
+            { key: 'disabled', label: `장애인 (${domainCounts['03_장애인복지'] || 0})` },
+            { key: 'child', label: `아동 (${domainCounts['04_아동돌봄복지'] || 0})` },
+            { key: 'infant', label: `보육 (${domainCounts['05_영유아보육'] || 0})` },
+            { key: 'family', label: `가족 (${domainCounts['06_가족복지'] || 0})` },
+            { key: 'youth', label: `청소년·여성 (${domainCounts['07_청소년여성권익'] || 0})` },
+            { key: 'mental', label: `정신건강 (${domainCounts['08_정신건강자살예방'] || 0})` },
+            { key: 'selfhelp', label: `자활·고용 (${domainCounts['09_자활고용지원'] || 0})` },
+            { key: 'school', label: `학교 (${domainCounts['10_학교사회복지'] || 0})` },
+            { key: 'crisis', label: `긴급·통합돌봄 (${domainCounts['11_지역보호긴급돌봄'] || 0})` },
+            { key: 'jus', label: `사법·법무 (${domainCounts['14_사법교정법무보호'] || 0})` },
+            { key: 'med', label: `보건·특수의료 (${domainCounts['15_보건의료전문케어'] || 0})` },
+            { key: 'edu', label: `초중고·특수교육 (${domainCounts['16_정규특수평생교육'] || 0})` },
+            { key: 'lifesafe', label: `주거·금융·NPO (${domainCounts['17_주거금융자원봉사'] || 0})` },
+            { key: 'donation', label: `배분·국제 (${domainCounts['12_배분모금국제'] || 0})`, isCivil: true },
+            { key: 'sec', label: `사회적경제 (${domainCounts['13_사회적경제연대'] || 0})`, isCivil: true },
+            { key: 'rel', label: `종교공익 (${domainCounts['18_종교기반복지체계'] || 0})`, isCivil: true }
+        ];
+
+        const domainChipsHtml = domainChips.map(c => {
+            if (c.active) {
+                return `<button type="button" class="domain-tab-btn px-3 py-1 rounded-full text-xs font-bold bg-primary text-on-primary shadow-sm transition cursor-pointer" onclick="window.selectDomainFilter('${c.key}', this)">${c.label}</button>`;
+            }
+            const cls = c.isCivil
+                ? 'domain-tab-btn px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-900 border border-amber-200 hover:bg-amber-100 transition cursor-pointer'
+                : 'domain-tab-btn px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer';
+            return `<button type="button" class="${cls}" onclick="window.selectDomainFilter('${c.key}', this)">${c.label}</button>`;
+        }).join('');
 
         return `
             <div class="flex flex-col w-full animate-fadeIn font-body-md text-on-surface pb-16">
-                <!-- Top Statutory Context Banner & Page Metadata -->
+                <!-- Top Statutory Context Banner -->
                 <section class="w-full bg-surface-container-low py-space-md border-b border-surface-container hidden md:block">
                     <div class="max-w-7xl mx-auto px-margin flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
                         <div class="flex flex-wrap items-center gap-space-sm">
-                            <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-primary text-on-primary font-headline-sm text-headline-sm">
+                            <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-700 text-white font-headline-sm">
                                 <span class="material-symbols-outlined text-[18px]">account_tree</span>
                             </span>
                             <div class="flex items-center gap-space-xs font-label-md text-label-md">
-                                <span class="text-primary font-bold">국가법정기준</span>
+                                <span class="text-primary font-bold">6단계 표준 위계 마스터</span>
                                 <span class="text-outline-variant">/</span>
-                                <span class="text-on-surface-variant">사회복지사업법 제34조의5 및 각 부처 개별법령</span>
+                                <span class="text-on-surface-variant">탭 1·2·3 공통 9대 원클릭 부처·섹터 필터 통합</span>
                                 <span class="text-outline-variant">/</span>
-                                <span class="text-on-surface font-semibold">18대 분야 218개 법정·실천단위서비스 위계 매트릭스</span>
+                                <span class="text-on-surface font-semibold">18대 분야 ${totalCount}개 단위서비스</span>
                             </div>
                         </div>
                         <div class="flex flex-wrap items-center gap-space-sm font-legal-code text-legal-code">
-                            <a class="inline-flex items-center gap-space-xs px-space-sm py-0.5 rounded-full bg-surface-container text-primary font-bold border border-primary/20 hover:bg-primary hover:text-on-primary transition-colors cursor-pointer" onclick="showView('archive'); return false;" title="지침서 아카이브 70종 화면 바로가기">
+                            <a class="inline-flex items-center gap-space-xs px-space-sm py-0.5 rounded-full bg-surface-container text-primary font-bold border border-primary/20 hover:bg-primary hover:text-on-primary transition-colors cursor-pointer" onclick="showView('fields'); return false;">
+                                <span>🏛️ 12대 분야·시설도감 (45)</span>
+                            </a>
+                            <a class="inline-flex items-center gap-space-xs px-space-sm py-0.5 rounded-full bg-surface-container text-primary font-bold border border-primary/20 hover:bg-primary hover:text-on-primary transition-colors cursor-pointer" onclick="showView('archive'); return false;">
                                 <span class="material-symbols-outlined text-[14px] text-secondary">auto_stories</span>
-                                <span>공식 지침서 70종 연계 가동중</span>
+                                <span>공식 지침서 70종</span>
                                 <span class="material-symbols-outlined text-[12px]">arrow_forward</span>
                             </a>
-                            <span class="inline-flex items-center gap-space-xs px-space-sm py-0.5 rounded-full bg-surface text-secondary font-bold shadow-sm">
-                                <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>2026년 정부 고시·범부처 통합본
-                            </span>
-                            <span class="text-on-surface-variant">코드: MHW-2026-STAT-90</span>
                         </div>
                     </div>
                 </section>
 
-                <!-- Administrative Header & Directive Notice -->
+                <!-- Header & 4 Summary Cards -->
                 <section class="max-w-7xl mx-auto px-margin pt-space-lg w-full hidden md:block">
                     <div id="facilityFilterBannerContainer" class="hidden mb-6"></div>
-                    <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-lg">
+                    <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-lg border border-slate-200/80">
                         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
                             <div class="flex flex-col gap-space-xs">
                                 <div class="flex items-center gap-space-sm">
-                                    <span class="px-space-sm py-0.5 rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold uppercase tracking-wider">Statutory Matrix v3.0</span>
-                                    <span class="text-on-surface-variant font-label-sm text-label-sm">12대 핵심 분야 + 6대 범부처·사회혁신 안전망 (총 18대 분야 · 70종 지침 연계)</span>
+                                    <span class="px-space-sm py-0.5 rounded-full bg-emerald-100 text-emerald-900 font-label-sm text-label-sm font-bold tracking-wider">6-STEP MASTER MATRIX v3.5</span>
+                                    <span class="text-on-surface-variant font-label-sm text-label-sm">소속 계통 ▸ 소관기관(부·처·청·위) ▸ 대분류 ▸ 중분류 ▸ 소분류 ▸ 공식지침서</span>
                                 </div>
-                                <h1 class="font-headline-lg text-headline-lg text-primary font-extrabold tracking-tight">사회복지 3단계 위계 도감 (218개 법정·실천단위서비스 전수 매트릭스)</h1>
+                                <h1 class="font-headline-lg text-headline-lg text-primary font-extrabold tracking-tight">사회복지 3단계 위계 도감 (${totalCount}개 법정·실천단위서비스 전수 통합표)</h1>
                                 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                                    기관명의 반복 나열을 배제하고, <strong class="text-on-surface font-semibold">[실천분야] → [대분류(법정기능)] → [중분류(사업체계)] → [소분류(단위서비스/실천내용)]</strong>의 공공 행정 계층 구조로 체계화한 대한민국 표준 복지행정 분류표입니다.
+                                    상단 탭 1(45개 시설체계) · 탭 3(70종 지침서)과 동일한 <strong class="text-on-surface font-semibold">9대 원클릭 부처·섹터 필터</strong> 및 <strong class="text-on-surface font-semibold">6단계 소속계통-소관기관 마스터 그리드</strong>로 1:1 딥링킹됩니다.
                                 </p>
                             </div>
                             <div class="flex flex-wrap items-center gap-space-sm shrink-0">
@@ -4466,58 +4908,44 @@
                                     <span class="material-symbols-outlined text-[18px]">table_view</span>
                                     <span>Excel (.csv) 저장</span>
                                 </button>
-                                <a class="inline-flex items-center gap-space-xs h-[38px] px-space-md rounded-lg bg-primary text-on-primary hover:bg-primary-container transition-all font-label-md text-label-md font-semibold shadow-sm ring-2 ring-primary/20 group cursor-pointer" onclick="showView('archive'); return false;" title="지침서 아카이브(SCREEN_2)로 즉시 전환">
+                                <a class="inline-flex items-center gap-space-xs h-[38px] px-space-md rounded-lg bg-primary text-on-primary hover:bg-primary-container transition-all font-label-md text-label-md font-semibold shadow-sm cursor-pointer" onclick="showView('archive'); return false;">
                                     <span class="material-symbols-outlined text-[18px]">menu_book</span>
-                                    <span>지침서 70종 연계 아카이브</span>
-                                    <span class="px-1.5 py-0.5 rounded text-[11px] bg-secondary text-on-secondary font-bold ml-0.5">SCREEN_2 직결</span>
-                                    <span class="material-symbols-outlined text-[16px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+                                    <span>지침서 70종 아카이브</span>
+                                    <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
                                 </a>
                             </div>
                         </div>
 
-                        <!-- 4대 요약 지표 카드 -->
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-space-md pt-space-xs border-t border-surface-container-low">
                             <div class="bg-surface-container-low rounded-xl p-space-md flex flex-col justify-between gap-space-xs shadow-sm">
-                                <div class="flex items-center justify-between">
-                                    <span class="font-label-sm text-label-sm text-on-surface-variant font-bold">총 법정·실천단위 서비스</span>
-                                    <span class="material-symbols-outlined text-primary text-[20px]">dataset</span>
-                                </div>
+                                <span class="font-label-sm text-label-sm text-on-surface-variant font-bold">총 단위서비스 (소분류)</span>
                                 <div class="flex items-baseline gap-1">
-                                    <span class="font-headline-lg text-headline-lg font-extrabold text-primary">218</span>
+                                    <span class="font-headline-lg text-headline-lg font-extrabold text-primary">${totalCount}</span>
                                     <span class="font-label-md text-label-md text-on-surface-variant font-semibold">개 단위</span>
                                 </div>
-                                <span class="font-legal-code text-legal-code text-secondary font-semibold">● 18개 실천분야 전수 등재</span>
+                                <span class="font-legal-code text-legal-code text-secondary font-semibold">● 중앙 ${centralNodes.length} + 민간제3섹터 ${civilNodes.length}</span>
                             </div>
                             <div class="bg-surface-container-low rounded-xl p-space-md flex flex-col justify-between gap-space-xs shadow-sm">
-                                <div class="flex items-center justify-between">
-                                    <span class="font-label-sm text-label-sm text-on-surface-variant font-bold">소관 정부부처</span>
-                                    <span class="material-symbols-outlined text-primary text-[20px]">account_balance</span>
-                                </div>
+                                <span class="font-label-sm text-label-sm text-on-surface-variant font-bold">위계 계층 규모</span>
                                 <div class="flex items-baseline gap-1">
-                                    <span class="font-headline-lg text-headline-lg font-extrabold text-primary">14</span>
-                                    <span class="font-label-md text-label-md text-on-surface-variant font-semibold">개 부처·기구</span>
+                                    <span class="font-headline-lg text-headline-lg font-extrabold text-primary">${level1Count}</span>
+                                    <span class="font-label-md text-label-md text-on-surface-variant font-semibold">대분류 · ${level2Count} 중분류</span>
                                 </div>
-                                <span class="font-legal-code text-legal-code text-on-surface-variant">복지·여가·법무·교육·국토 등</span>
+                                <span class="font-legal-code text-legal-code text-on-surface-variant">18대 실천분야 전수 편제</span>
                             </div>
                             <div class="bg-surface-container-low rounded-xl p-space-md flex flex-col justify-between gap-space-xs shadow-sm">
-                                <div class="flex items-center justify-between">
-                                    <span class="font-label-sm text-label-sm text-on-surface-variant font-bold">법정·확장 실천분야</span>
-                                    <span class="material-symbols-outlined text-secondary text-[20px]">view_comfy</span>
-                                </div>
+                                <span class="font-label-sm text-label-sm text-on-surface-variant font-bold">매칭 시설 · 기관체계</span>
                                 <div class="flex items-baseline gap-1">
-                                    <span class="font-headline-lg text-headline-lg font-extrabold text-secondary">18</span>
-                                    <span class="font-label-md text-label-md text-on-surface-variant font-semibold">대 핵심영역</span>
+                                    <span class="font-headline-lg text-headline-lg font-extrabold text-secondary">45</span>
+                                    <span class="font-label-md text-label-md text-on-surface-variant font-semibold">개 통합엔티티</span>
                                 </div>
-                                <span class="font-legal-code text-legal-code text-on-surface-variant">복지 7 + 범부처 5 + Track2 6</span>
+                                <span class="font-legal-code text-legal-code text-on-surface-variant">중앙 39 법정 + 민간·사회혁신 6</span>
                             </div>
                             <div class="bg-surface-container-low rounded-xl p-space-md flex flex-col justify-between gap-space-xs shadow-sm">
-                                <div class="flex items-center justify-between">
-                                    <span class="font-label-sm text-label-sm text-on-surface-variant font-bold">위계도감 데이터 패키지</span>
-                                    <span class="material-symbols-outlined text-primary text-[20px]">download_for_offline</span>
-                                </div>
+                                <span class="font-label-sm text-label-sm text-on-surface-variant font-bold">연계 공식 지침서</span>
                                 <div class="flex items-baseline gap-1">
-                                    <span class="font-headline-lg text-headline-lg font-extrabold text-primary">2026</span>
-                                    <span class="font-label-md text-label-md text-on-surface-variant font-semibold">정례개정판</span>
+                                    <span class="font-headline-lg text-headline-lg font-extrabold text-primary">70</span>
+                                    <span class="font-label-md text-label-md text-on-surface-variant font-semibold">종 순수 PDF 정본</span>
                                 </div>
                                 <a class="font-legal-code text-legal-code text-primary hover:underline font-semibold flex items-center gap-0.5 cursor-pointer" onclick="window.exportHierarchyCSV()">
                                     <span class="material-symbols-outlined text-[14px]">download</span>
@@ -4525,735 +4953,359 @@
                                 </a>
                             </div>
                         </div>
-
-                        <!-- 안내문 박스 -->
-                        <div class="bg-surface-container-low rounded-lg p-space-md flex items-start gap-space-md">
-                            <span class="material-symbols-outlined text-primary text-[24px] mt-0.5 shrink-0">info</span>
-                            <div class="flex flex-col gap-space-xs font-body-sm text-body-sm text-on-surface-variant">
-                                <div class="font-headline-sm text-headline-sm text-on-surface font-bold">■ 법정 표준 행정 지침 고시 기준 안내</div>
-                                <p class="leading-normal">
-                                    1. 본 위계 매트릭스는 <span class="text-primary font-semibold">「사회복지사업법 시행규칙」 제21조의2</span>(사회복지관의 사업 등), <span class="text-primary font-semibold">「노인복지법」</span>, <span class="text-primary font-semibold">「장애인복지법」</span> 등 소관 법령 및 2026년도 보건복지부 공식 사업안내 지침을 기준으로 전수 정리되었습니다.
-                                </p>
-                                <p class="leading-normal">
-                                    2. 종전의 불필요한 시설 단어 중복을 완전히 제거하고, 상위 기능에 하위 서비스를 종속시키는 계층형 그리드(Rowspan Grouping)를 적용하여 실습생, 수련생, 종사자의 서비스 포트폴리오 산출과 사업계획서 작성을 즉각 지원합니다.
-                                </p>
-                            </div>
-                        </div>
                     </div>
                 </section>
 
-                <!-- Live Filters & Standard Domain Selector Strip -->
-                <section class="max-w-7xl mx-auto px-margin pt-space-lg w-full hidden md:block">
-                    <div class="flex flex-col gap-space-md">
-                        <!-- Search & Realtime Counts Bar -->
-                        <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-space-md bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
-                            <div class="relative flex-1 max-w-xl">
-                                <span class="absolute left-space-md top-1/2 -translate-y-1/2 material-symbols-outlined text-outline text-[20px]">search</span>
-                                <input 
-                                    type="text" 
-                                    id="matrixSearchInput" type="search" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="실천분야, 법정기능, 세부사업명, 단위서비스 키워드 검색" 
-                                    class="w-full h-10 pl-11 pr-space-md bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:bg-surface focus:shadow-inner" 
-                                    placeholder="실천분야, 법정기능, 세부사업명, 단위서비스 키워드 검색 (예: Intake, 주간보호, 사례관리, 돌봄)"
-                                />
+                <!-- Unified Filter Strip (Identical 9 Pills + Sub-domain Chips + Search) -->
+                <section class="max-w-7xl mx-auto px-margin pt-space-md w-full hidden md:block">
+                    <div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-slate-200/80 space-y-3">
+                        <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+                            <div class="relative flex-1">
+                                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">search</span>
+                                <input type="text" id="matrixSearchInput" placeholder="단위서비스, 법정시설명, 소관기관, 지침서명 검색 (예: 노인복지관, 산재병원, 하나센터)..."
+                                    class="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs focus:ring-2 focus:ring-emerald-500 focus:bg-white transition outline-none">
                             </div>
-                            <div class="flex items-center gap-space-sm font-legal-code text-legal-code text-on-surface-variant">
-                                <span class="px-space-sm py-1 rounded bg-surface-container font-bold text-primary" id="displayCountTag">
-                                    전체 18개 실천분야 / 218개 법정·실천단위서비스 수록
+                            <div class="flex items-center gap-2 shrink-0">
+                                <span id="displayCountTag" class="text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
+                                    전체 18개 실천분야 / ${totalCount}개 법정·실천단위서비스 수록
                                 </span>
-                                <span class="hidden sm:inline text-outline-variant">|</span>
-                                <button type="button" class="text-secondary hover:underline flex items-center gap-0.5 font-semibold cursor-pointer" onclick="window.resetHierarchyFilters()">
-                                    <span class="material-symbols-outlined text-[14px]">refresh</span> 초기화
+                                <button type="button" onclick="window.resetHierarchyFilters()" class="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-600 cursor-pointer transition">
+                                    초기화
                                 </button>
                             </div>
                         </div>
 
-                        <!-- 2단 부처 및 분야 탭 -->
-                        <div class="w-full bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-md">
-                            <div class="flex flex-col md:flex-row md:items-center justify-between pb-space-xs border-b border-surface-container gap-space-xs">
-                                <div class="flex items-center gap-space-xs font-label-md text-label-md text-primary font-bold">
-                                    <span class="material-symbols-outlined text-[20px]">account_balance</span>
-                                    <span>소관 중앙부처 및 주관 주체별 18대 실천분야 통합 필터</span>
-                                </div>
-                                <div class="flex items-center gap-space-sm font-legal-code text-legal-code text-on-surface-variant">
-                                    <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary"></span>부처별 일괄 조회</span>
-                                    <span>•</span>
-                                    <span id="currentActiveFilterName">단위 실천분야 단독 필터링 지원</span>
-                                </div>
-                            </div>
+                        <!-- 탭 1·2·3 공통 9대 원클릭 부처·섹터 필터 바 -->
+                        <div class="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-100" id="hierarchy-ministry-pills-bar">
+                            ${pillsHtml}
+                        </div>
 
-                            <!-- 부처 탭 (오른쪽 잘림 방지: flex-wrap 자연스러운 줄바꿈) -->
-                            <div class="flex flex-wrap items-center gap-2 pb-space-xs border-b border-surface-container-low" id="ministryGroupTabs">
-                                <button type="button" class="ministry-btn active px-3 py-1.5 rounded-lg font-label-sm text-label-sm font-bold transition-all bg-primary text-on-primary shadow-sm flex items-center gap-1 cursor-pointer" onclick="window.selectMinistryGroup('all', this)">
-                                    <span class="material-symbols-outlined text-[16px]">apps</span>
-                                    <span>전체 부처 (18대 분야 · 218개 단위)</span>
-                                </button>
-                                <button type="button" class="ministry-btn px-3 py-1.5 rounded-lg font-label-sm text-label-sm font-medium transition-all bg-surface-container text-on-surface-variant hover:bg-surface-container-high flex items-center gap-1 cursor-pointer" onclick="window.selectMinistryGroup('mohw', this)">
-                                    <span class="material-symbols-outlined text-[16px]">health_and_safety</span>
-                                    <span>보건복지부 (7대 분야 · 112개)</span>
-                                </button>
-                                <button type="button" class="ministry-btn px-3 py-1.5 rounded-lg font-label-sm text-label-sm font-medium transition-all bg-surface-container text-on-surface-variant hover:bg-surface-container-high flex items-center gap-1 cursor-pointer" onclick="window.selectMinistryGroup('mogef', this)">
-                                    <span class="material-symbols-outlined text-[16px]">family_restroom</span>
-                                    <span>여성가족부 (2대 분야 · 28개)</span>
-                                </button>
-                                <button type="button" class="ministry-btn px-3 py-1.5 rounded-lg font-label-sm text-label-sm font-medium transition-all bg-surface-container text-on-surface-variant hover:bg-surface-container-high flex items-center gap-1 cursor-pointer" onclick="window.selectMinistryGroup('moe', this)">
-                                    <span class="material-symbols-outlined text-[16px]">school</span>
-                                    <span>교육부 (1대 분야 · 8개)</span>
-                                </button>
-                                <button type="button" class="ministry-btn px-3 py-1.5 rounded-lg font-label-sm text-label-sm font-medium transition-all bg-surface-container text-on-surface-variant hover:bg-surface-container-high flex items-center gap-1 cursor-pointer" onclick="window.selectMinistryGroup('moel', this)">
-                                    <span class="material-symbols-outlined text-[16px]">work</span>
-                                    <span>고용노동부·복지부공동 (1대 분야 · 10개)</span>
-                                </button>
-                                <button type="button" class="ministry-btn px-3 py-1.5 rounded-lg font-label-sm text-label-sm font-medium transition-all bg-surface-container text-on-surface-variant hover:bg-surface-container-high flex items-center gap-1 cursor-pointer" onclick="window.selectMinistryGroup('civic', this)">
-                                    <span class="material-symbols-outlined text-[16px]">volunteer_activism</span>
-                                    <span>제3섹터·공동모금회 (1대 분야 · 9개)</span>
-                                </button>
-                                <button type="button" class="ministry-btn px-3 py-1.5 rounded-lg font-label-sm text-label-sm font-semibold transition-all bg-emerald-50 text-emerald-900 border border-emerald-200 hover:bg-emerald-100 flex items-center gap-1 cursor-pointer" onclick="window.selectMinistryGroup('track2', this)">
-                                    <span class="material-symbols-outlined text-[16px]">hub</span>
-                                    <span>🌐 범부처·사회혁신 안전망 (6대 분야 · 51개)</span>
-                                </button>
-                            </div>
-
-                            <!-- 세부 분야 버튼 그룹 -->
-                            <div class="flex flex-col gap-space-sm" id="ministryGroupContainer">
-                                <div class="ministry-subgroup flex flex-col md:flex-row md:items-center gap-space-sm p-space-sm rounded-lg bg-surface-container-low transition-colors" data-ministry="mohw">
-                                    <div class="flex items-center gap-space-xs shrink-0 w-[140px]">
-                                        <span class="px-space-xs py-0.5 rounded bg-primary text-on-primary font-legal-code text-legal-code font-bold">보건복지부</span>
-                                        <span class="font-legal-code text-legal-code text-on-surface-variant font-medium">7개 분야</span>
-                                    </div>
-                                    <div class="flex flex-wrap items-center gap-1.5 flex-1">
-                                        <button type="button" class="domain-tab-btn active px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-bold bg-primary text-on-primary transition-all shadow-sm cursor-pointer" onclick="window.selectDomainFilter('all', this)">보건복지부 전체</button>
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('community', this)">🏢 종합사회복지관 (22)</button>
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('elder', this)">👴 노인복지·맞춤돌봄 (20)</button>
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('disabled', this)">♿ 장애인자립·재활 (19)</button>
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('child', this)">🧒 아동보호·돌봄 (16)</button>
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('infant', this)">🍼 영유아·보육지원 (10)</button>
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('mental', this)">🧠 정신건강·자살예방 (12)</button>
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('crisis', this)">🛡️ 긴급복지·위기개입 (13)</button>
-                                    </div>
-                                </div>
-                                <div class="ministry-subgroup flex flex-col md:flex-row md:items-center gap-space-sm p-space-sm rounded-lg bg-surface-container-low transition-colors" data-ministry="mogef">
-                                    <div class="flex items-center gap-space-xs shrink-0 w-[140px]">
-                                        <span class="px-space-xs py-0.5 rounded bg-secondary text-on-secondary font-legal-code text-legal-code font-bold">여성가족부</span>
-                                        <span class="font-legal-code text-legal-code text-on-surface-variant font-medium">2개 분야</span>
-                                    </div>
-                                    <div class="flex flex-wrap items-center gap-1.5 flex-1">
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('family', this)">🏠 가족·다문화 (13)</button>
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('youth', this)">🎒 청소년·여성권익 (15)</button>
-                                    </div>
-                                </div>
-                                <div class="ministry-subgroup flex flex-col md:flex-row md:items-center gap-space-sm p-space-sm rounded-lg bg-surface-container-low transition-colors" data-ministry="moe">
-                                    <div class="flex items-center gap-space-xs shrink-0 w-[140px]">
-                                        <span class="px-space-xs py-0.5 rounded bg-primary-container text-on-primary-container font-legal-code text-legal-code font-bold">교육부</span>
-                                        <span class="font-legal-code text-legal-code text-on-surface-variant font-medium">1개 분야</span>
-                                    </div>
-                                    <div class="flex flex-wrap items-center gap-1.5 flex-1">
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('school', this)">🏫 학교사회복지 (8)</button>
-                                    </div>
-                                </div>
-                                <div class="ministry-subgroup flex flex-col md:flex-row md:items-center gap-space-sm p-space-sm rounded-lg bg-surface-container-low transition-colors" data-ministry="moel">
-                                    <div class="flex items-center gap-space-xs shrink-0 w-[140px]">
-                                        <span class="px-space-xs py-0.5 rounded bg-tertiary text-on-tertiary font-legal-code text-legal-code font-bold">고용·복지</span>
-                                        <span class="font-legal-code text-legal-code text-on-surface-variant font-medium">1개 분야</span>
-                                    </div>
-                                    <div class="flex flex-wrap items-center gap-1.5 flex-1">
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('selfhelp', this)">💼 자활·일자리 (10)</button>
-                                    </div>
-                                </div>
-                                <div class="ministry-subgroup flex flex-col md:flex-row md:items-center gap-space-sm p-space-sm rounded-lg bg-surface-container-low transition-colors" data-ministry="civic">
-                                    <div class="flex items-center gap-space-xs shrink-0 w-[140px]">
-                                        <span class="px-space-xs py-0.5 rounded bg-surface-variant text-on-surface font-legal-code text-legal-code font-bold">제3섹터</span>
-                                        <span class="font-legal-code text-legal-code text-on-surface-variant font-medium">1개 분야</span>
-                                    </div>
-                                    <div class="flex flex-wrap items-center gap-1.5 flex-1">
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('donation', this)">🤝 모금·나눔배분 (9)</button>
-                                    </div>
-                                </div>
-                                <div class="ministry-subgroup flex flex-col md:flex-row md:items-center gap-space-sm p-space-sm rounded-lg bg-emerald-50/70 border border-emerald-200/70 transition-colors" data-ministry="track2">
-                                    <div class="flex items-center gap-space-xs shrink-0 w-[140px]">
-                                        <span class="px-space-xs py-0.5 rounded bg-emerald-700 text-white font-legal-code text-legal-code font-bold">범부처·사회혁신</span>
-                                        <span class="font-legal-code text-legal-code text-emerald-900 font-medium">6개 분야</span>
-                                    </div>
-                                    <div class="flex flex-wrap items-center gap-1.5 flex-1">
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('sec', this)">🌱 사회적경제·연대 (9)</button>
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('jus', this)">⚖️ 사법교정·법무보호 (9)</button>
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('med', this)">🏥 보건의료·전문케어 (12)</button>
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('edu', this)">🎓 정규·특수·평생교육 (9)</button>
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('lifesafe', this)">🏘️ 주거·금융·자원봉사 (6)</button>
-                                        <button type="button" class="domain-tab-btn px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" onclick="window.selectDomainFilter('rel', this)">🕊️ 종교기반 복지체계 (6)</button>
-                                    </div>
-                                </div>
-                            </div>
+                        <!-- 18개 세부 실천분야 보조 칩 -->
+                        <div class="flex flex-wrap items-center gap-1.5 pt-1.5 border-t border-slate-100" id="hierarchy-domain-chips-bar">
+                            ${domainChipsHtml}
                         </div>
                     </div>
                 </section>
 
-                <!-- Core Table Matrix Section (Clean Administrative Rowspan Architecture) -->
+                <!-- Main Tables & Mobile View Container -->
                 <section class="max-w-7xl mx-auto px-margin pt-space-md pb-space-xl w-full flex flex-col gap-space-xl">
-                    <!-- 모바일 스마트 카드 뷰 (md:hidden) -->
-                    <div class="block md:hidden w-full flex flex-col gap-space-sm mb-space-xs">
-                        <div class="p-space-sm rounded-xl bg-primary text-on-primary shadow-sm flex items-center justify-between">
-                            <div class="flex items-center gap-space-xs">
-                                <span class="material-symbols-outlined text-[20px]">phone_android</span>
-                                <div class="flex flex-col">
-                                    <span class="font-label-sm text-label-sm font-bold">모바일 최적화 위계 탐색 모드</span>
-                                    <span class="font-legal-code text-legal-code text-on-primary-container">218개 단위서비스 스마트 카드 뷰</span>
-                                </div>
-                            </div>
-                            <a class="px-space-sm py-1 rounded bg-secondary text-on-secondary font-label-sm text-label-sm font-bold flex items-center gap-0.5 cursor-pointer" onclick="showView('archive'); return false;">
-                                <span>지침서 70종</span>
-                                <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
-                            </a>
-                        </div>
-                        <div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm px-1">
-                            <span>※ 터치하여 세부 사업내용과 매핑 서식을 확인하세요</span>
-                            <span class="text-primary font-bold">총 218개 전수</span>
-                        </div>
-                    </div>
-
-                    <!-- 검색 결과 0건 안내 (Empty State) -->
-                    <div id="hierarchyEmptyStateContainer" class="hidden w-full py-16 px-6 text-center bg-surface-container-lowest rounded-2xl border-2 border-dashed border-outline-variant/50 shadow-sm animate-fadeIn">
-                        <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-surface-container flex items-center justify-center text-3xl shadow-2xs">
-                            🔍
-                        </div>
+                    <!-- Empty State -->
+                    <div id="hierarchyEmptyStateContainer" class="hidden w-full py-16 px-6 text-center bg-surface-container-lowest rounded-2xl border-2 border-dashed border-outline-variant/50 shadow-sm">
+                        <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-surface-container flex items-center justify-center text-3xl shadow-2xs">🔍</div>
                         <h3 class="text-base font-extrabold text-on-surface mb-1.5">일치하는 법정단위서비스가 없습니다</h3>
-                        <p class="text-xs text-on-surface-variant max-w-md mx-auto leading-relaxed mb-4">
-                            입력하신 검색어 또는 선택한 부처·분야 필터 조건에 해당하는 단위서비스를 찾을 수 없습니다. 검색어를 변경하거나 필터를 초기화해 보세요.
-                        </p>
-                        <button type="button" onclick="window.resetHierarchyFilters()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md font-bold transition shadow-xs cursor-pointer">
-                            <span class="material-symbols-outlined text-[16px]">refresh</span>
+                        <p class="text-xs text-on-surface-variant max-w-md mx-auto leading-relaxed mb-4">검색어 또는 부처·분야 필터를 변경하거나 초기화해 보세요.</p>
+                        <button type="button" onclick="window.resetHierarchyFilters()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-on-primary font-bold text-xs cursor-pointer">
                             <span>필터 조건 초기화</span>
                         </button>
                     </div>
 
-                    <!-- [구글 스티치 리디자인: 3단계 위계 도감 & 바텀시트 인스펙터 모바일 뷰 (block md:hidden)] -->
+                    <!-- Mobile View -->
                     <div class="block md:hidden w-full pb-36" id="mobileHierarchyView">
                         <div class="mobile-hierarchy-container max-w-md mx-auto px-4 py-3 space-y-4 font-sans text-slate-800">
-
-                          <!-- 1. 핵심 지표 통계 바 -->
                           <div class="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-2xl p-4 text-white shadow-md">
                             <div class="flex items-center justify-between mb-2">
                               <span class="px-2 py-0.5 rounded-full bg-white/20 text-[10px] font-extrabold text-emerald-100">사회복지사업법 제2조 법정체계</span>
-                              <span class="text-[10px] text-emerald-200">2026 개정판 반영</span>
+                              <span class="text-[10px] text-emerald-200">2026 통합 매트릭스</span>
                             </div>
-                            <h2 class="text-base font-extrabold tracking-tight">3단계 위계 도감 (18대 분야 · 218개 단위서비스)</h2>
-                            <p class="text-xs text-emerald-100/90 mt-0.5">대분류 ➔ 중분류 ➔ 소분류 법정시설 연계망</p>
-
+                            <h2 class="text-base font-extrabold tracking-tight">3단계 위계 도감 (18대 분야 · ${totalCount}개 단위서비스)</h2>
+                            <p class="text-xs text-emerald-100/90 mt-0.5">소관기관 ▸ 대분류 ▸ 중분류 ▸ 소분류 ▸ 지침서</p>
                             <div class="grid grid-cols-4 gap-2 pt-3 text-center">
                               <div class="bg-white/10 rounded-xl py-2">
                                 <div class="text-[10px] text-emerald-200 font-medium">대분류</div>
-                                <div class="text-base font-black text-white font-num">12</div>
+                                <div class="text-base font-black text-white font-num">${level1Count}</div>
                               </div>
                               <div class="bg-white/10 rounded-xl py-2">
                                 <div class="text-[10px] text-emerald-200 font-medium">중분류</div>
-                                <div class="text-base font-black text-white font-num">48</div>
+                                <div class="text-base font-black text-white font-num">${level2Count}</div>
                               </div>
                               <div class="bg-white/10 rounded-xl py-2">
                                 <div class="text-[10px] text-emerald-200 font-medium">소분류</div>
-                                <div class="text-base font-black text-white font-num">167</div>
+                                <div class="text-base font-black text-white font-num">${totalCount}</div>
                               </div>
                               <div class="bg-white/10 rounded-xl py-2">
                                 <div class="text-[10px] text-emerald-200 font-medium">지침서</div>
-                                <div class="text-base font-black text-white font-num">38</div>
+                                <div class="text-base font-black text-white font-num">70</div>
                               </div>
                             </div>
                           </div>
-
-                          <!-- 2. 실시간 검색 & 분류 필터 알약 -->
                           <div class="space-y-2">
                             <div class="relative">
                               <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
-                              <input type="text" id="mobile-hierarchy-search" oninput="handleMobileHierarchySearch(this.value)" placeholder="단위 서비스명, 법정시설명 검색..." 
+                              <input type="text" id="mobile-hierarchy-search" oninput="handleMobileHierarchySearch(this.value)" placeholder="단위 서비스명, 법정시설명 검색..."
                                      class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-white text-xs focus:ring-2 focus:ring-emerald-500 shadow-xs">
                             </div>
                             <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="mobile-hierarchy-domain-pills">
-                              <button type="button" onclick="filterMobileHierarchyByDomain('all', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-extrabold bg-emerald-600 text-white flex-shrink-0 cursor-pointer shadow-2xs">전체 218</button>
-                              <button type="button" onclick="filterMobileHierarchyByDomain('01_사회복지관', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">01. 복지관 (4)</button>
-                              <button type="button" onclick="filterMobileHierarchyByDomain('02_노인복지', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">02. 노인 (38)</button>
-                              <button type="button" onclick="filterMobileHierarchyByDomain('03_장애인복지', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">03. 장애인 (22)</button>
-                              <button type="button" onclick="filterMobileHierarchyByDomain('04_아동돌봄복지', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">04. 아동 (19)</button>
-                              <button type="button" onclick="filterMobileHierarchyByDomain('05_영유아보육', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">05. 보육 (10)</button>
-                              <button type="button" onclick="filterMobileHierarchyByDomain('06_가족복지', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">06. 가족 (8)</button>
-                              <button type="button" onclick="filterMobileHierarchyByDomain('07_청소년여성권익', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">07. 청소년 (14)</button>
-                              <button type="button" onclick="filterMobileHierarchyByDomain('08_정신건강자살예방', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">08. 정신건강 (12)</button>
-                              <button type="button" onclick="filterMobileHierarchyByDomain('09_자활고용지원', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">09. 자활 (10)</button>
-                              <button type="button" onclick="filterMobileHierarchyByDomain('10_학교사회복지', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">10. 학교 (6)</button>
-                              <button type="button" onclick="filterMobileHierarchyByDomain('11_지역보호긴급돌봄', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">11. 돌봄 (14)</button>
-                              <button type="button" onclick="filterMobileHierarchyByDomain('12_배분모금국제', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">12. 배분·국제 (10)</button>
-                              <button type="button" onclick="filterMobileHierarchyByDomain('13_사회적경제연대', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 flex-shrink-0 cursor-pointer">13. 사회적경제 (9)</button>
-                              <button type="button" onclick="filterMobileHierarchyByDomain('14_사법교정법무보호', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 flex-shrink-0 cursor-pointer">14. 사법·법무 (9)</button>
-                              <button type="button" onclick="filterMobileHierarchyByDomain('15_보건의료전문케어', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 flex-shrink-0 cursor-pointer">15. 보건의료 (12)</button>
-                              <button type="button" onclick="filterMobileHierarchyByDomain('16_정규특수평생교육', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 flex-shrink-0 cursor-pointer">16. 교육·특수 (9)</button>
-                              <button type="button" onclick="filterMobileHierarchyByDomain('17_주거금융자원봉사', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 flex-shrink-0 cursor-pointer">17. 주거·금융 (6)</button>
-                              <button type="button" onclick="filterMobileHierarchyByDomain('18_종교기반복지체계', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 flex-shrink-0 cursor-pointer">18. 종교복지 (6)</button>
+                              <button type="button" onclick="filterMobileHierarchyByDomain('all', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-extrabold bg-emerald-600 text-white flex-shrink-0 cursor-pointer shadow-2xs">전체 ${totalCount}</button>
+                              ${Object.keys(DOMAIN_MAP).map((k, idx) => {
+                                  const m = DOMAIN_MAP[k];
+                                  return `<button type="button" onclick="filterMobileHierarchyByDomain('${k}', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">${String(idx+1).padStart(2,'0')}. ${localEscHtml(m.short)} (${domainCounts[k] || 0})</button>`;
+                              }).join('')}
                             </div>
                           </div>
-
-                          <!-- 3. 위계 트리 카드 목록 -->
                           <div id="mobile-hierarchy-cards-feed" class="space-y-3">
                             ${renderMobileCards(nodes)}
                           </div>
-
-                          <!-- 4. 하단 모바일 바텀시트 인스펙터 -->
-                          <div id="mobile-hierarchy-inspector" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/95 backdrop-blur-xl border-t-2 border-slate-200 shadow-2xl z-40 rounded-t-2xl transition-all duration-300">
-                            <div onclick="toggleMobileInspector()" class="pt-2.5 pb-2 px-4 flex flex-col items-center cursor-pointer select-none border-b border-slate-100">
-                              <div class="w-10 h-1 rounded-full bg-slate-300 mb-2"></div>
-                              <div class="w-full flex items-center justify-between text-xs font-extrabold text-slate-900">
-                                <div class="flex items-center gap-2">
-                                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                  <span>실시간 세부 도감 인스펙터</span>
-                                  <span class="px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">LIVE</span>
-                                </div>
-                                <div class="flex items-center gap-1 text-slate-500 font-medium text-[11px]" id="inspector-toggle-label">
-                                  <span>접기</span>
-                                  <span id="inspector-toggle-icon">▼</span>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div id="inspector-content" class="p-4 space-y-3 max-h-80 overflow-y-auto">
-                              <div>
-                                <div class="flex items-center gap-2">
-                                  <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-700 text-[10px] font-bold">이용시설 (통원형)</span>
-                                  <span class="text-[11px] text-slate-500">보건복지부 노인정책과</span>
-                                </div>
-                                <h4 class="text-base font-black text-slate-900 mt-1">노인복지관 (Senior Welfare Center)</h4>
-                                <div class="text-[11px] text-emerald-700 font-semibold mt-0.5">✔ 근거: 노인복지법 제36조 제1항 제1호</div>
-                              </div>
-
-                              <div class="bg-amber-50 rounded-xl p-3 border border-amber-200/80 text-xs">
-                                <div class="font-extrabold text-amber-950 flex items-center gap-1.5 mb-1">
-                                  <span>⚡</span><span>사회복지사업법 시행규칙 제11조 법정 인력배치</span>
-                                </div>
-                                <p class="text-[11px] text-amber-900 leading-relaxed">
-                                  관장 1인, 사회복지사 정규직 6인 이상 필수 (일반 이용인원 및 사업 규모에 따른 가산 규정 적용)
-                                </p>
-                              </div>
-
-                              <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 flex items-center justify-between gap-2">
-                                <div class="flex items-center gap-2 min-w-0">
-                                  <span class="text-lg flex-shrink-0">📖</span>
-                                  <div class="min-w-0">
-                                    <div class="text-[10px] text-slate-500 font-medium">보건복지부 발간 공식 지침서 매칭</div>
-                                    <div class="text-xs font-extrabold text-slate-900 truncate">2026 노인보건복지사업안내 (1권)</div>
-                                  </div>
-                                </div>
-                                <button type="button" onclick="showView('archive', {search: '노인보건복지사업안내'})" class="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1 transition flex-shrink-0 shadow-2xs cursor-pointer">
-                                  <span>원문</span>
-                                </button>
-                              </div>
-
-                              <div class="grid grid-cols-2 gap-2 pt-1">
-                                <button type="button" onclick="showView('archive', {search: '노인'})" class="p-2.5 rounded-xl bg-blue-50 border border-blue-200 text-center hover:bg-blue-100 transition cursor-pointer">
-                                  <div class="text-[10px] text-blue-600 font-bold">공식 지침서 70종</div>
-                                  <div class="text-[11px] text-blue-900 font-extrabold">지침서 아카이브 열람 ➔</div>
-                                </button>
-                                <button type="button" onclick="showView('fields', {search: '노인복지'})" class="p-2.5 rounded-xl bg-indigo-50 border border-indigo-200 text-center hover:bg-indigo-100 transition cursor-pointer">
-                                  <div class="text-[10px] text-indigo-600 font-bold">34개 법정 시설분류</div>
-                                  <div class="text-[11px] text-indigo-900 font-extrabold">시설도감 상세대조 ➔</div>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-
                         </div>
                     </div>
 
-                    <!-- 데스크톱 섹션 Ⅰ: 보건복지부 소관 7개 실천분야 -->
-                    <div class="bg-surface-container-lowest rounded-xl shadow-md overflow-hidden border border-surface-container hidden md:block" id="section1Container">
-                        <div class="px-space-lg py-space-md bg-surface-container-high flex flex-wrap items-center justify-between gap-space-sm border-b border-surface-container">
-                            <div class="flex flex-wrap items-center gap-space-sm">
-                                <span class="px-space-sm py-0.5 rounded bg-primary text-on-primary font-label-sm text-label-sm font-bold">섹션 Ⅰ</span>
-                                <h2 class="font-headline-sm text-headline-sm text-primary font-extrabold">중앙 정부부처 핵심 법정단위 서비스 (보건복지부 소관 7개 실천분야)</h2>
-                                <span class="px-space-xs py-0.5 rounded bg-surface font-semibold text-secondary font-legal-code text-legal-code font-num">${sec1Nodes.length}개 단위서비스 직결</span>
+                    <!-- 1. 단일 중앙정부 6단계 마스터 통합표 (15개 중앙부처·특수안전망 분야) -->
+                    <div class="bg-surface-container-lowest rounded-xl shadow-md overflow-hidden border border-slate-200 hidden md:block" id="sectionCentralHierarchyContainer">
+                        <div class="px-5 py-3.5 bg-gradient-to-r from-slate-900 to-slate-800 text-white flex items-center justify-between gap-4">
+                            <div class="flex items-center gap-2.5">
+                                <span class="text-lg">🏛️</span>
+                                <div>
+                                    <h2 class="text-sm font-extrabold tracking-tight">중앙행정기관 소관 6단계 위계 마스터 통합표</h2>
+                                    <p class="text-[11px] text-slate-300">11개 행정계통 · 12개 부처·청·위원회 · 중앙 ${centralNodes.length}개 단위서비스 (탭 1·3 동일 기준)</p>
+                                </div>
                             </div>
-                            <div class="flex items-center gap-space-xs">
-                                <button type="button" class="inline-flex items-center gap-0.5 px-space-sm py-1 rounded bg-surface text-on-surface hover:bg-surface-container transition-colors font-label-sm text-label-sm font-semibold cursor-pointer" onclick="window.print()">
-                                    <span class="material-symbols-outlined text-[16px]">print</span>
-                                    <span>인쇄</span>
-                                </button>
-                                <button type="button" class="inline-flex items-center gap-0.5 px-space-sm py-1 rounded bg-surface text-on-surface hover:bg-surface-container transition-colors font-label-sm text-label-sm font-semibold cursor-pointer" onclick="window.exportHierarchyCSV()">
-                                    <span class="material-symbols-outlined text-[16px]">download</span>
-                                    <span>CSV</span>
-                                </button>
-                            </div>
+                            <span id="centralHierarchyBadge" class="px-2.5 py-1 rounded-lg bg-white/10 text-xs font-bold text-emerald-300">
+                                중앙 ${centralNodes.length}단위 표시중
+                            </span>
                         </div>
-                        <div class="overflow-x-auto w-full">
-                            <table class="w-full text-left border-collapse table-fixed min-w-[1080px]" id="hierarchicalMatrixTable">
-                                <caption class="sr-only">사회복지 3단계 위계 도감 (중앙정부부처 핵심 법정단위 서비스)</caption>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse table-fixed min-w-[960px]" id="hierarchicalMatrixTable">
                                 <colgroup>
-                                    <col class="w-[18%]">
-                                    <col class="w-[18%]">
-                                    <col class="w-[20%]">
-                                    <col class="w-[28%]">
+                                    <col class="w-[10%]">
                                     <col class="w-[16%]">
+                                    <col class="w-[15%]">
+                                    <col class="w-[15%]">
+                                    <col class="w-[26%]">
+                                    <col class="w-[18%]">
                                 </colgroup>
                                 <thead>
-                                    <tr class="bg-primary text-on-primary font-label-md text-label-md uppercase tracking-wider">
-                                        <th class="py-space-md px-space-md font-bold" scope="col">1단계: 실천분야 및 법적근거</th>
-                                        <th class="py-space-md px-space-md font-bold" scope="col">2단계: 대분류 (기능)</th>
-                                        <th class="py-space-md px-space-md font-bold" scope="col">3단계: 중분류 (사업분야)</th>
-                                        <th class="py-space-md px-space-md font-bold" scope="col">소분류 (사업 및 세부내용)</th>
-                                        <th class="py-space-md px-space-md font-bold text-center" scope="col">공식지침서 / 법정서식</th>
+                                    <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-extrabold text-slate-600 uppercase tracking-wider">
+                                        <th class="py-3 px-3 border-r border-slate-200/80">1열 소속 계통<br><span class="text-[10px] font-normal text-slate-400">(부 / 국무총리)</span></th>
+                                        <th class="py-3 px-3 border-r border-slate-200/80">2열 소관기관 · 실천분야<br><span class="text-[10px] font-normal text-slate-400">(부·처·청·위원회 ▸ 분야)</span></th>
+                                        <th class="py-3 px-3 border-r border-slate-200/80">3열 대분류<br><span class="text-[10px] font-normal text-slate-400">(법정기능)</span></th>
+                                        <th class="py-3 px-3 border-r border-slate-200/80">4열 중분류<br><span class="text-[10px] font-normal text-slate-400">(사업분야 · 시설유형)</span></th>
+                                        <th class="py-3 px-3 border-r border-slate-200/80">5열 소분류<br><span class="text-[10px] font-normal text-slate-400">(단위서비스 및 세부내용)</span></th>
+                                        <th class="py-3 px-3">6열 공식지침서 / 법정서식<br><span class="text-[10px] font-normal text-slate-400">(70종 아카이브 직결)</span></th>
                                     </tr>
                                 </thead>
-                                <tbody class="font-body-md text-body-md divide-y divide-surface-container">
-                                    ${renderDesktopTableRows(sec1Nodes, SECTION_1_KEYS)}
+                                <tbody class="divide-y divide-slate-200 text-xs">
+                                    ${renderDesktopTableRows(centralNodes, false)}
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- 데스크톱 섹션 Ⅱ: 범부처 및 공공기관 5개 실천분야 -->
-                    <div class="bg-surface-container-lowest rounded-xl shadow-md overflow-hidden border border-surface-container hidden md:block" id="section2Container">
-                        <div class="px-space-lg py-space-md bg-surface-container-high flex flex-wrap items-center justify-between gap-space-sm border-b border-surface-container">
-                            <div class="flex flex-wrap items-center gap-space-sm">
-                                <span class="px-space-sm py-0.5 rounded bg-secondary text-on-secondary font-label-sm text-label-sm font-bold">섹션 Ⅱ</span>
-                                <h2 class="font-headline-sm text-headline-sm text-primary font-extrabold">범부처 및 특화·전문 실천단위 서비스 (여성가족부·고용노동부·교육부·제3섹터 5개 실천분야)</h2>
-                                <span class="px-space-xs py-0.5 rounded bg-surface font-semibold text-secondary font-legal-code text-legal-code font-num">${sec2Nodes.length}개 단위서비스 직결</span>
+                    <!-- 2. 하단 민간 제3섹터 · 사회적경제 · 종교공익 생태계 6단계 특별 섹션 -->
+                    <div class="bg-white rounded-2xl shadow-md overflow-hidden border-2 border-amber-200/80 hidden md:block" id="hierarchyCivilSection">
+                        <div class="px-5 py-4 bg-gradient-to-r from-amber-50 via-orange-50/70 to-emerald-50/70 border-b border-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-amber-600 text-white flex items-center justify-center text-xl shadow-xs">🤝</div>
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="px-2 py-0.5 rounded bg-amber-600 text-white text-[10px] font-extrabold">민간·사회적경제·종교공익</span>
+                                        <h2 class="text-sm font-extrabold text-amber-950">민간 제3섹터 · 사회적경제 · 종교공익 생태계 위계 섹션 (6대 영역)</h2>
+                                    </div>
+                                    <p class="text-xs text-amber-900/80 mt-0.5">
+                                        12. 배분·모금·국제NGO(사랑의열매·KOICA) · 13. 사회적경제연대(사회적기업·협동조합·농촌돌봄) · 18. 종교법인·전통사찰 (${civilNodes.length}개 단위서비스)
+                                    </p>
+                                </div>
                             </div>
-                            <div class="flex items-center gap-space-xs">
-                                <button type="button" class="inline-flex items-center gap-0.5 px-space-sm py-1 rounded bg-surface text-on-surface hover:bg-surface-container transition-colors font-label-sm text-label-sm font-semibold cursor-pointer" onclick="window.print()">
-                                    <span class="material-symbols-outlined text-[16px]">print</span>
-                                    <span>인쇄</span>
-                                </button>
-                                <button type="button" class="inline-flex items-center gap-0.5 px-space-sm py-1 rounded bg-surface text-on-surface hover:bg-surface-container transition-colors font-label-sm text-label-sm font-semibold cursor-pointer" onclick="window.exportHierarchyCSV()">
-                                    <span class="material-symbols-outlined text-[16px]">download</span>
-                                    <span>CSV</span>
-                                </button>
-                            </div>
+                            <span id="civilHierarchyBadge" class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-xs font-extrabold shrink-0">
+                                제3섹터 ${civilNodes.length}단위
+                            </span>
                         </div>
-                        <div class="overflow-x-auto w-full">
-                            <table class="w-full text-left border-collapse table-fixed min-w-[1080px]" id="hierarchicalMatrixTable2">
-                                <caption class="sr-only">사회복지 3단계 위계 도감 (범부처 및 특화·전문 실천단위 서비스)</caption>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse table-fixed min-w-[960px]" id="hierarchyCivilTable">
                                 <colgroup>
-                                    <col class="w-[18%]">
-                                    <col class="w-[18%]">
-                                    <col class="w-[20%]">
-                                    <col class="w-[28%]">
+                                    <col class="w-[10%]">
                                     <col class="w-[16%]">
+                                    <col class="w-[15%]">
+                                    <col class="w-[15%]">
+                                    <col class="w-[26%]">
+                                    <col class="w-[18%]">
                                 </colgroup>
                                 <thead>
-                                    <tr class="bg-tertiary text-on-tertiary font-label-md text-label-md uppercase tracking-wider">
-                                        <th class="py-space-md px-space-md font-bold" scope="col">1단계: 실천분야 및 소관부처</th>
-                                        <th class="py-space-md px-space-md font-bold" scope="col">2단계: 대분류 (기능)</th>
-                                        <th class="py-space-md px-space-md font-bold" scope="col">3단계: 중분류 (사업분야)</th>
-                                        <th class="py-space-md px-space-md font-bold" scope="col">소분류 (사업 및 세부내용)</th>
-                                        <th class="py-space-md px-space-md font-bold text-center" scope="col">공식지침서 / 법정서식</th>
+                                    <tr class="bg-amber-50/70 border-b border-amber-200/80 text-[11px] font-extrabold text-amber-950 uppercase tracking-wider">
+                                        <th class="py-3 px-3 border-r border-amber-200/60">1열 생태계 축</th>
+                                        <th class="py-3 px-3 border-r border-amber-200/60">2열 대표영역 · 실천분야</th>
+                                        <th class="py-3 px-3 border-r border-amber-200/60">3열 대분류 (법정기능)</th>
+                                        <th class="py-3 px-3 border-r border-amber-200/60">4열 중분류 (사업분야)</th>
+                                        <th class="py-3 px-3 border-r border-amber-200/60">5열 소분류 (단위서비스 및 세부내용)</th>
+                                        <th class="py-3 px-3">6열 공식지침서 / 법정서식</th>
                                     </tr>
                                 </thead>
-                                <tbody class="font-body-md text-body-md divide-y divide-surface-container">
-                                    ${renderDesktopTableRows(sec2Nodes, SECTION_2_KEYS)}
+                                <tbody class="divide-y divide-amber-100 text-xs">
+                                    ${renderDesktopTableRows(civilNodes, true)}
                                 </tbody>
                             </table>
-                        </div>
-                    </div>
-
-                    <!-- 데스크톱 섹션 Ⅲ: Track 2 범부처 확장 안전망 6개 실천분야 -->
-                    <div class="bg-surface-container-lowest rounded-xl shadow-md overflow-hidden border border-emerald-200/80 hidden md:block" id="section3Container">
-                        <div class="px-space-lg py-space-md bg-emerald-50/80 flex flex-wrap items-center justify-between gap-space-sm border-b border-emerald-200/70">
-                            <div class="flex flex-wrap items-center gap-space-sm">
-                                <span class="px-space-sm py-0.5 rounded bg-emerald-700 text-white font-label-sm text-label-sm font-bold">섹션 Ⅲ (범부처·사회혁신)</span>
-                                <h2 class="font-headline-sm text-headline-sm text-emerald-950 font-extrabold">범부처·확장 실무 안전망 단위 서비스 (사회적경제·사법교정·보건의료·교육·주거금융·종교복지 6대 분야)</h2>
-                                <span class="px-space-xs py-0.5 rounded bg-white font-semibold text-emerald-800 border border-emerald-200 font-legal-code text-legal-code font-num">${sec3Nodes.length}개 단위서비스 직결</span>
-                            </div>
-                            <div class="flex items-center gap-space-xs">
-                                <button type="button" class="inline-flex items-center gap-0.5 px-space-sm py-1 rounded bg-white text-emerald-900 hover:bg-emerald-100 transition-colors font-label-sm text-label-sm font-semibold border border-emerald-200 cursor-pointer" onclick="window.showView('fields')">
-                                    <span class="material-symbols-outlined text-[16px]">domain</span>
-                                    <span>시설도감 보기</span>
-                                </button>
-                                <button type="button" class="inline-flex items-center gap-0.5 px-space-sm py-1 rounded bg-surface text-on-surface hover:bg-surface-container transition-colors font-label-sm text-label-sm font-semibold cursor-pointer" onclick="window.exportHierarchyCSV()">
-                                    <span class="material-symbols-outlined text-[16px]">download</span>
-                                    <span>CSV</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="overflow-x-auto w-full">
-                            <table class="w-full text-left border-collapse table-fixed min-w-[1080px]" id="hierarchicalMatrixTable3">
-                                <caption class="sr-only">사회복지 3단계 위계 도감 (Track 2 범부처 확장 실무 안전망)</caption>
-                                <colgroup>
-                                    <col class="w-[18%]">
-                                    <col class="w-[18%]">
-                                    <col class="w-[20%]">
-                                    <col class="w-[28%]">
-                                    <col class="w-[16%]">
-                                </colgroup>
-                                <thead>
-                                    <tr class="bg-emerald-800 text-white font-label-md text-label-md uppercase tracking-wider">
-                                        <th class="py-space-md px-space-md font-bold" scope="col">1단계: 확장분야 및 소관부처</th>
-                                        <th class="py-space-md px-space-md font-bold" scope="col">2단계: 대분류 (기능)</th>
-                                        <th class="py-space-md px-space-md font-bold" scope="col">3단계: 중분류 (사업분야)</th>
-                                        <th class="py-space-md px-space-md font-bold" scope="col">소분류 (사업 및 세부내용)</th>
-                                        <th class="py-space-md px-space-md font-bold text-center" scope="col">공식지침서 / 법정서식</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="font-body-md text-body-md divide-y divide-surface-container">
-                                    ${renderDesktopTableRows(sec3Nodes, SECTION_3_KEYS)}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- 하단 패키지 배너 -->
-                    <div class="bg-surface-container-low rounded-xl p-space-lg flex flex-col md:flex-row items-center justify-between gap-space-lg border border-surface-container">
-                        <div class="flex items-center gap-space-md">
-                            <div class="w-12 h-12 rounded-xl bg-primary text-on-primary flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined text-[28px]">library_books</span>
-                            </div>
-                            <div class="flex flex-col gap-0.5">
-                                <span class="font-headline-sm text-headline-sm font-bold text-primary">3단계 위계도감 및 업무처리지침 일체 패키지</span>
-                                <p class="font-body-sm text-body-sm text-on-surface-variant">2026년 기준 전국 218개 법정·실천단위서비스 분류체계와 연결된 지침서 70종 연계표(PDF·CSV·JSON)를 일괄 다운로드할 수 있습니다.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-space-sm shrink-0">
-                            <button type="button" class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-highest text-primary hover:bg-surface-container font-label-md text-label-md font-bold transition-colors shadow-sm cursor-pointer" onclick="window.print()">
-                                <span class="material-symbols-outlined text-[18px]">print</span>
-                                <span>인쇄용 출력</span>
-                            </button>
-                            <button type="button" class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md font-bold transition-colors shadow-sm ring-2 ring-primary/20 cursor-pointer" onclick="window.exportHierarchyCSV()">
-                                <span class="material-symbols-outlined text-[18px]">download</span>
-                                <span>일괄 데이터 다운로드</span>
-                            </button>
                         </div>
                     </div>
                 </section>
-
-                <!-- 비교 및 행정 규격 안내 카드 3종 -->
-                <section class="max-w-7xl mx-auto px-margin pb-space-xl w-full">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
-                        <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-xs">
-                            <div class="flex items-center gap-space-xs font-label-md text-label-md text-primary font-bold">
-                                <span class="material-symbols-outlined text-[20px]">gavel</span>
-                                <span>법정 근거 연계성</span>
-                            </div>
-                            <p class="font-body-sm text-body-sm text-on-surface-variant">
-                                단순 민간 실천명칭이 아닌 시행규칙 및 고시에 명시된 공식 [법정기능/대분류] 기준을 엄격 준수하여 평가 인증 지표와 100% 일치합니다.
-                            </p>
-                        </div>
-                        <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-xs">
-                            <div class="flex items-center gap-space-xs font-label-md text-label-md text-secondary font-bold">
-                                <span class="material-symbols-outlined text-[20px]">view_column</span>
-                                <span>Rowspan 행 병합 가독성</span>
-                            </div>
-                            <p class="font-body-sm text-body-sm text-on-surface-variant">
-                                기관명이 매 행 반복되어 발생하는 시각적 피로를 방지하고, 상위 분류 1개 셀에 복수의 단위서비스를 종속 정렬하여 행정 위계를 직관화했습니다.
-                            </p>
-                        </div>
-                        <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-xs">
-                            <div class="flex items-center gap-space-xs font-label-md text-label-md text-primary font-bold">
-                                <span class="material-symbols-outlined text-[20px]">folder_special</span>
-                                <span>서식 및 실무 지침 매핑</span>
-                            </div>
-                            <p class="font-body-sm text-body-sm text-on-surface-variant">
-                                각 소분류 행마다 주관 부처의 공식 업무매뉴얼 페이지 및 사용 법정 서식 번호를 직결 표기하여 실습생과 실무자의 행정 편의를 극대화했습니다.
-                            </p>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 모바일 하단 플로팅 바 (block md:hidden) -->
-                <div class="block md:hidden fixed bottom-3 left-3 right-3 z-40 bg-surface/95 backdrop-blur-md rounded-xl p-space-sm shadow-lg border border-primary/20">
-                    <div class="flex items-center justify-between gap-space-xs">
-                        <div class="flex items-center gap-space-xs flex-1">
-                            <div class="w-8 h-8 rounded-lg bg-secondary text-on-secondary flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined text-[18px]">menu_book</span>
-                            </div>
-                            <div class="flex flex-col leading-tight">
-                                <span class="font-label-sm text-label-sm font-bold text-primary">70종 지침서 연계</span>
-                                <span class="font-legal-code text-legal-code text-on-surface-variant">SCREEN_2 즉시 이동</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-space-xs shrink-0">
-                            <button type="button" onclick="window.exportHierarchyCSV()" class="px-space-sm py-1.5 rounded-lg bg-surface-container text-on-surface font-label-sm text-label-sm font-semibold flex items-center gap-0.5 cursor-pointer">
-                                <span class="material-symbols-outlined text-[16px]">download</span>
-                                <span>CSV</span>
-                            </button>
-                            <a class="px-space-sm py-1.5 rounded-lg bg-primary text-on-primary font-label-sm text-label-sm font-bold flex items-center gap-0.5 shadow-sm cursor-pointer" onclick="showView('archive'); return false;">
-                                <span>아카이브</span>
-                                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
             </div>
         `;
     }
 
-    /**
-     * Rowspan 셀 병합 계산 엔진 (데스크톱)
-     */
-    function renderDesktopTableRows(nodes, domainKeys) {
+    function renderDesktopTableRows(nodesList, isCivilSection = false) {
+        if (!nodesList || nodesList.length === 0) {
+            return `<tr><td colspan="6" class="py-10 text-center text-slate-400 font-bold">조건에 일치하는 위계 항목이 없습니다.</td></tr>`;
+        }
+
+        const enriched = nodesList.map((n, origIdx) => {
+            const orgInfo = resolveHierarchyNodeOrg(n);
+            return { node: n, orgInfo, origIdx };
+        });
+
+        enriched.sort((a, b) => {
+            if (isCivilSection) {
+                const ai = AXIS_ORDER.indexOf(a.orgInfo.axis);
+                const bi = AXIS_ORDER.indexOf(b.orgInfo.axis);
+                if (ai !== bi) return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+            } else {
+                const ai = LINEAGE_ORDER.indexOf(a.orgInfo.lineage);
+                const bi = LINEAGE_ORDER.indexOf(b.orgInfo.lineage);
+                if (ai !== bi) return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+                if (a.orgInfo.lineage === a.orgInfo.agency && b.orgInfo.lineage !== b.orgInfo.agency) return -1;
+                if (b.orgInfo.lineage === b.orgInfo.agency && a.orgInfo.lineage !== a.orgInfo.agency) return 1;
+            }
+            const ad = a.node.domainId || '';
+            const bd = b.node.domainId || '';
+            if (ad !== bd) return ad.localeCompare(bd);
+            return a.origIdx - b.origIdx;
+        });
+
+        // Build ordered tree: Group1(lineage/axis) -> Group2(agency + domainId) -> Group3(level1) -> Group4(level2) -> rows
+        const g1Map = new Map();
+        enriched.forEach(item => {
+            const { node, orgInfo } = item;
+            const g1Key = isCivilSection ? orgInfo.axis : orgInfo.lineage;
+            const g2Key = `${g1Key}||${orgInfo.agency}||${node.domainId}`;
+            const g3Key = `${g2Key}||${node.level1}`;
+            const g4Key = `${g3Key}||${node.level2 || node.level1}`;
+
+            if (!g1Map.has(g1Key)) g1Map.set(g1Key, { key: g1Key, orgInfo, children: new Map(), count: 0 });
+            const g1 = g1Map.get(g1Key);
+            g1.count++;
+
+            if (!g1.children.has(g2Key)) g1.children.set(g2Key, { key: g2Key, node, orgInfo, children: new Map(), count: 0 });
+            const g2 = g1.children.get(g2Key);
+            g2.count++;
+
+            if (!g2.children.has(g3Key)) g2.children.set(g3Key, { key: g3Key, level1: node.level1, facilityType: node.facilityType, children: new Map(), count: 0 });
+            const g3 = g2.children.get(g3Key);
+            g3.count++;
+
+            if (!g3.children.has(g4Key)) g3.children.set(g4Key, { key: g4Key, level2: node.level2 || node.level1, facilityType: node.facilityType, items: [] });
+            const g4 = g3.children.get(g4Key);
+            g4.items.push(item);
+        });
+
         let html = '';
+        g1Map.forEach(g1 => {
+            let g1Rendered = false;
+            g1.children.forEach(g2 => {
+                let g2Rendered = false;
+                const domainMeta = DOMAIN_MAP[g2.node.domainId] || { key: 'misc', icon: 'folder', short: g2.node.domainId, facilityId: g2.orgInfo.facilityId, legal: '' };
+                const dScope = g2.key;
 
-        domainKeys.forEach(domainId => {
-            const domainNodes = nodes.filter(n => n.domainId === domainId);
-            if (domainNodes.length === 0) return;
+                g2.children.forEach(g3 => {
+                    let g3Rendered = false;
+                    const l1Scope = g3.key;
 
-            const domainMeta = DOMAIN_MAP[domainId] || { key: 'misc', icon: 'corporate_fare', short: domainId, badge: `${domainNodes.length}단위`, legal: '' };
-            const domainRowspan = domainNodes.length;
+                    g3.children.forEach(g4 => {
+                        let g4Rendered = false;
+                        const l2Scope = g4.key;
+                        const g4Rowspan = g4.items.length;
 
-            // Group by level1
-            const level1Groups = {};
-            domainNodes.forEach(n => {
-                if (!level1Groups[n.level1]) level1Groups[n.level1] = [];
-                level1Groups[n.level1].push(n);
-            });
+                        g4.items.forEach(({ node, orgInfo }) => {
+                            const gRef = node.guidelineRef || { file: '공식지침서', page: '전문', chapter: '', archiveId: 'doc-001' };
+                            const rowId = `hierarchy-node-${node.id}`;
+                            const searchKeywords = localEscHtml(`${orgInfo.agency} ${orgInfo.lineageLabel} ${domainMeta.short} ${node.level1} ${node.level2} ${node.level3} ${node.facilityType || ''} ${gRef.file || ''}`);
+                            const detailsHtml = (node.details || []).slice(0, 3).map(d =>
+                                `<li class="flex items-start gap-1 text-[11px] text-slate-600 leading-snug"><span class="text-emerald-600 mt-0.5 shrink-0">•</span><span>${localEscHtml(d)}</span></li>`
+                            ).join('');
 
-            let isFirstRowOfDomain = true;
+                            html += `<tr id="${rowId}" class="domain-row group hover:bg-emerald-50/40 transition-colors" data-domain="${domainMeta.key}" data-domain-scope="${localEscHtml(dScope)}" data-l1-scope="${localEscHtml(l1Scope)}" data-l2-scope="${localEscHtml(l2Scope)}" data-keywords="${searchKeywords}">`;
 
-            Object.keys(level1Groups).forEach(l1Key => {
-                const l1Nodes = level1Groups[l1Key];
-                const level1Rowspan = l1Nodes.length;
-                let isFirstRowOfL1 = true;
-
-                // Group by level2 (중분류 Rowspan 병합)
-                const level2Groups = {};
-                const level2Order = [];
-                l1Nodes.forEach(n => {
-                    if (!level2Groups[n.level2]) {
-                        level2Groups[n.level2] = [];
-                        level2Order.push(n.level2);
-                    }
-                    level2Groups[n.level2].push(n);
-                });
-
-                level2Order.forEach(l2Key => {
-                    const l2Nodes = level2Groups[l2Key];
-                    const level2Rowspan = l2Nodes.length;
-                    let isFirstRowOfL2 = true;
-
-                    l2Nodes.forEach(node => {
-                        const rowId = `hierarchy-node-${node.id}`;
-                        const searchKeywords = `${domainMeta.short} ${node.level1} ${node.level2} ${node.level3} ${(node.details || []).join(' ')} ${(node.guidelineRef && node.guidelineRef.file) || ''}`.toLowerCase();
-                        const dScope = domainMeta.key;
-                        const l1Scope = `${domainMeta.key}___${encodeURIComponent(l1Key)}`;
-                        const l2Scope = `${domainMeta.key}___${encodeURIComponent(l1Key)}___${encodeURIComponent(l2Key)}`;
-
-                        html += `<tr id="${rowId}" class="domain-row group hover:bg-emerald-50/50 transition-colors" data-domain="${domainMeta.key}" data-domain-scope="${dScope}" data-l1-scope="${l1Scope}" data-l2-scope="${l2Scope}" data-keywords="${searchKeywords}">`;
-
-                        // 1열: 실천분야 및 법적근거 (Rowspan)
-                        if (isFirstRowOfDomain) {
-                            html += `
-                                <td class="align-top p-space-md bg-surface-container-lowest font-headline-sm text-headline-sm text-primary font-bold border-r border-outline-variant/30 transition-all duration-150" rowspan="${domainRowspan}" data-breadcrumb-target="domain" data-domain-id="${dScope}">
-                                    <div class="sticky top-36 flex flex-col gap-space-xs">
-                                        <div class="inline-flex items-center gap-space-xs text-primary">
-                                            <span class="material-symbols-outlined text-[22px]">${domainMeta.icon}</span>
-                                            <span>${domainMeta.short}</span>
+                            if (!g1Rendered) {
+                                g1Rendered = true;
+                                if (isCivilSection) {
+                                    html += `<td class="align-top p-3 bg-amber-50/60 border-r border-amber-200/70 font-extrabold text-amber-950" rowspan="${g1.count}">
+                                        <div class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-amber-100 border border-amber-300 text-[11px] font-extrabold text-amber-950 leading-snug">
+                                            <span>${orgInfo.lineageIcon || '🤝'}</span><span>${localEscHtml(g1.key)}</span>
                                         </div>
-                                        <span class="px-space-xs py-0.5 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm w-fit font-bold font-num">
-                                            ${domainMeta.badge}
-                                        </span>
-                                        <div class="font-legal-code text-legal-code text-on-surface-variant flex flex-col gap-0.5 mt-space-xs">
-                                            ${domainMeta.legal}
+                                        <div class="text-[10px] text-amber-800/80 font-medium mt-1.5">${g1.count}개 단위</div>
+                                    </td>`;
+                                } else {
+                                    html += `<td class="align-top p-3 bg-slate-50/90 border-r border-slate-200/80 font-extrabold text-slate-900" rowspan="${g1.count}">
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="text-sm">${orgInfo.lineageIcon || '🏛️'}</span>
+                                            <span class="text-xs font-extrabold text-slate-900 leading-tight">${localEscHtml(orgInfo.lineageLabel || g1.key)}</span>
                                         </div>
-                                        <!-- 3대 영역 순환 딥링크 바 -->
-                                        <div class="mt-2.5 pt-2 border-t border-outline-variant/20 flex flex-col gap-1">
-                                            <button type="button" onclick="window.jumpToFacility('${domainMeta.facilityId || 'law-welfare-center'}')"
-                                               class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-50 hover:bg-amber-500 hover:text-white text-amber-900 border border-amber-200/80 text-[11px] font-bold transition shadow-2xs group cursor-pointer"
-                                               title="${domainMeta.short} 법정시설 규정 도감으로 직결">
-                                                <span class="material-symbols-outlined text-[13px] text-amber-700 group-hover:text-white">account_balance</span>
-                                                <span>법정시설 도감 ➔</span>
-                                            </button>
-                                            <button type="button" onclick="showView('archive', { search: '${domainMeta.archiveSearch || domainMeta.short}' })" class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container hover:bg-secondary hover:text-on-secondary text-on-surface-variant text-[11px] font-bold transition shadow-2xs group cursor-pointer" title="${domainMeta.short} 관련 공식 정본 지침서로 이동">
-                                                <span class="material-symbols-outlined text-[13px] text-secondary group-hover:text-on-secondary">menu_book</span>
-                                                <span>관련 지침서 총람 ➔</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </td>
-                            `;
-                            isFirstRowOfDomain = false;
-                        }
+                                        <div class="text-[10px] text-slate-400 font-semibold mt-1">${g1.count}개 단위서비스</div>
+                                    </td>`;
+                                }
+                            }
 
-                        // 2열: 2단계 대분류 (기능) (Rowspan)
-                        if (isFirstRowOfL1) {
-                            html += `
-                                <td class="align-top p-space-md bg-surface-container-low font-headline-sm text-headline-sm text-on-surface font-bold border-r border-outline-variant/30 transition-all duration-150" rowspan="${level1Rowspan}" data-breadcrumb-target="l1" data-l1-id="${l1Scope}">
-                                    <div class="flex flex-col gap-space-xs">
-                                        <span class="text-primary font-extrabold flex items-center gap-1">
-                                            <span class="w-2 h-2 rounded-full bg-primary"></span>
-                                            ${node.level1}
-                                        </span>
-                                        <button type="button"
-                                                onclick="window.jumpToFacilityByTerm('${escapeHtml(node.facilityType || '')}'); return false;"
-                                                class="inline-flex items-center gap-1 px-2 py-0.5 mt-1 rounded bg-surface hover:bg-emerald-100 hover:text-emerald-800 text-on-surface-variant text-[11px] font-semibold transition cursor-pointer text-left w-fit border border-outline-variant/30"
-                                                title="'${escapeHtml(node.facilityType || '')}'의 법정 시설도감 행으로 이동">
-                                            <span>🏛️</span>
-                                            <span>${escapeHtml(node.facilityType || '법정 실천기준')}</span>
+                            if (!g2Rendered) {
+                                g2Rendered = true;
+                                const isSubOrg = !isCivilSection && orgInfo.agency !== orgInfo.lineage;
+                                html += `<td class="align-top p-3 bg-white border-r border-slate-200/80 transition-all duration-150" rowspan="${g2.count}" data-breadcrumb-target="domain" data-domain-id="${localEscHtml(dScope)}">
+                                    <div class="space-y-1.5">
+                                        <div class="flex flex-wrap items-center gap-1">
+                                            ${isSubOrg ? `<span class="text-[10px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded">${localEscHtml(orgInfo.orgType || '소속기관')}</span>` : ''}
+                                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50 text-blue-900 border border-blue-200 text-[11px] font-extrabold">
+                                                <span>${orgInfo.orgIcon || '🏛️'}</span><span>${localEscHtml(orgInfo.agency)}</span>
+                                            </span>
+                                        </div>
+                                        <div class="text-xs font-black text-slate-900 leading-snug">${localEscHtml(domainMeta.short)}</div>
+                                        <div class="text-[10px] text-slate-500 font-medium">${g2.count}개 단위</div>
+                                        <button type="button" onclick="window.jumpToFacility('${localEscHtml(orgInfo.facilityId || domainMeta.facilityId || 'law-welfare-center')}')"
+                                            class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-700 text-[10px] font-bold transition cursor-pointer">
+                                            <span>🏛️ 시설도감 대조</span><span>➔</span>
                                         </button>
                                     </div>
-                                </td>
-                            `;
-                            isFirstRowOfL1 = false;
-                        }
+                                </td>`;
+                            }
 
-                        // 3열: 3단계 중분류 (사업분야) (Rowspan 계층 병합)
-                        if (isFirstRowOfL2) {
+                            if (!g3Rendered) {
+                                g3Rendered = true;
+                                html += `<td class="align-top p-3 bg-slate-50/50 border-r border-slate-200/80 transition-all duration-150" rowspan="${g3.count}" data-breadcrumb-target="l1" data-l1-id="${localEscHtml(l1Scope)}">
+                                    <div class="font-extrabold text-slate-900 text-xs leading-snug">${localEscHtml(g3.level1)}</div>
+                                    <div class="text-[10px] text-slate-400 mt-1">${g3.count}개 세부단위</div>
+                                </td>`;
+                            }
+
+                            if (!g4Rendered) {
+                                g4Rendered = true;
+                                html += `<td class="align-top p-3 bg-white border-r border-slate-200/80 transition-all duration-150" rowspan="${g4Rowspan}" data-breadcrumb-target="l2" data-l2-id="${localEscHtml(l2Scope)}">
+                                    <div class="space-y-1.5">
+                                        <div class="font-bold text-slate-800 text-xs leading-snug">${localEscHtml(g4.level2)}</div>
+                                        ${node.facilityType ? `
+                                            <div>
+                                                <button type="button" onclick="window.jumpToFacilityByTerm('${localEscHtml(node.facilityType)}'); return false;"
+                                                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-800 border border-emerald-200 text-[10px] font-bold transition cursor-pointer text-left"
+                                                    title="클릭 시 탭 1 시설도감의 '${localEscHtml(node.facilityType)}' 항목으로 이동">
+                                                    <span>🏢 ${localEscHtml(node.facilityType)}</span>
+                                                </button>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                </td>`;
+                            }
+
                             html += `
-                                <td class="align-top p-space-md font-label-md text-label-md text-on-surface font-semibold bg-surface-container-lowest border-r border-outline-variant/30 transition-all duration-150" rowspan="${level2Rowspan}" data-breadcrumb-target="l2" data-l2-id="${l2Scope}">
-                                    <div class="flex flex-col gap-1.5">
-                                        <span class="text-on-surface font-bold text-[14px] leading-snug">${node.level2}</span>
-                                        ${level2Rowspan > 1 ? `<span class="inline-flex items-center gap-1 w-fit text-[11px] px-2 py-0.5 rounded-full bg-surface-container-high text-primary font-bold font-num"><span class="w-1.5 h-1.5 rounded-full bg-primary"></span>${level2Rowspan}개 세부사업</span>` : ''}
-                                    </div>
+                                <td class="align-top p-3 border-r border-slate-200/80 bg-white">
+                                    <div class="font-extrabold text-slate-900 text-xs leading-snug">${localEscHtml(node.level3)}</div>
+                                    ${node.summary ? `<p class="text-[11px] text-slate-600 mt-1 leading-relaxed">${localEscHtml(node.summary)}</p>` : ''}
+                                    ${detailsHtml ? `<ul class="mt-1.5 space-y-0.5">${detailsHtml}</ul>` : ''}
                                 </td>
-                            `;
-                            isFirstRowOfL2 = false;
-                        }
-
-                        // 4열: 소분류 (사업 및 세부내용)
-                        const bullets = (node.details && node.details.length > 0) ? node.details : [node.summary || ''];
-                        html += `
-                            <td class="align-top p-space-md text-on-surface font-body-sm text-body-sm leading-relaxed bg-surface-container-lowest border-r border-outline-variant/30">
-                                <div class="font-bold text-on-surface mb-1">${node.level3}</div>
-                                <ul class="space-y-1">
-                                    ${bullets.map(b => `
-                                        <li class="flex items-start gap-1.5">
-                                            <span class="text-primary mt-1 text-[10px]">●</span>
-                                            <span>${b}</span>
-                                        </li>
-                                    `).join('')}
-                                </ul>
-                            </td>
-                        `;
-
-                        // 5열: 공식지침서 / 법정서식
-                        const gRef = node.guidelineRef || { file: '공식 업무안내', chapter: '사업안내', page: '', archiveId: 'doc-004' };
-                        const cleanFile = gRef.file.replace(/\.(pdf|hwp|hwpx|xlsx)$/i, '').replace(/^[0-9]+_/, '');
-                        const shortFile = cleanFile.length > 18 ? cleanFile.slice(0, 18) + '…' : cleanFile;
-                        const cleanChapter = (gRef.chapter || '').split('(')[0].replace(/^[ⅠⅡⅢⅣ0-9\.\-\s]+/, '').trim();
-                        const formText = cleanChapter ? cleanChapter.slice(0, 16) : '법정서식 수록';
-
-                        html += `
-                            <td class="align-top p-space-md text-center bg-surface-container-lowest">
-                                <div class="flex flex-col items-center gap-1 font-legal-code text-legal-code text-on-surface-variant relative group/gpopover">
-                                    <span class="font-bold text-on-surface" title="${gRef.file}">${shortFile}</span>
-                                    <span class="px-space-xs py-0.5 rounded bg-surface-container text-primary font-medium">${formText}</span>
-                                    <span class="font-num text-[11px]">${gRef.page || ''}</span>
-                                    <button
-                                        type="button"
-                                        onclick="window.jumpToArchive('${gRef.archiveId || 'doc-004'}')"
-                                        class="mt-1 inline-flex items-center gap-0.5 px-2 py-0.5 rounded-md bg-primary/10 text-primary hover:bg-primary hover:text-on-primary font-label-sm text-label-sm font-semibold transition-colors cursor-pointer"
-                                        title="${gRef.file} 원문 아카이브 열람"
-                                    >
-                                        <span>지침서 열람</span>
-                                        <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                                <td class="align-top p-3 bg-slate-50/40">
+                                    <button type="button" onclick="window.jumpToArchive('${localEscHtml(gRef.archiveId || 'doc-004')}')"
+                                        class="w-full text-left p-2 rounded-lg bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-400 transition group/doc cursor-pointer shadow-2xs space-y-1">
+                                        <div class="flex items-center justify-between gap-1">
+                                            <span class="px-1.5 py-0.2 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-bold">${localEscHtml(gRef.archiveCode || 'PDF')}</span>
+                                            <span class="text-[10px] font-bold text-blue-600 group-hover/doc:translate-x-0.5 transition-transform">지침 열람 ➔</span>
+                                        </div>
+                                        <div class="text-[11px] font-bold text-slate-800 leading-snug line-clamp-2">${localEscHtml(gRef.file || '공식 지침서')}</div>
+                                        <div class="text-[10px] text-slate-500">${localEscHtml(gRef.page || '전문')}</div>
                                     </button>
-
-                                    <!-- 지침서 인터랙티브 미니 팝오버 프리뷰 -->
-                                    <div class="hidden group-hover/gpopover:flex flex-col text-left absolute z-40 bottom-full mb-1.5 right-0 w-64 p-3 rounded-xl bg-surface-container-highest/95 backdrop-blur-md text-on-surface shadow-lg border border-outline-variant/30 text-xs pointer-events-none animate-fadeIn">
-                                        <div class="flex items-center gap-1 text-primary font-bold mb-1">
-                                            <span class="material-symbols-outlined text-[15px]">menu_book</span>
-                                            <span class="truncate">${cleanFile}</span>
-                                        </div>
-                                        <div class="text-[11px] text-on-surface-variant space-y-0.5">
-                                            <p><span class="font-semibold text-on-surface">근거 챕터:</span> ${gRef.chapter || '총칙'}</p>
-                                            <p><span class="font-semibold text-on-surface">해당 면수:</span> ${gRef.page || '상세 규정'}</p>
-                                            <p class="text-secondary font-medium pt-1">클릭 시 70종 공식 아카이브 해당 지침서로 직결 이동</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        `;
-                        html += `</tr>`;
+                                </td>
+                            </tr>`;
+                        });
                     });
                 });
             });
@@ -5262,37 +5314,25 @@
         return html;
     }
 
-    /**
-     * 모바일 스마트 카드 렌더러
-     */
     function renderMobileCards(nodesList) {
         const db = getDB();
-        const domains = db.domains || (typeof window !== 'undefined' && window.WELFARE_HIERARCHY_DOMAINS) || [];
+        const domains = db.domains || [];
         return domains.map(domain => {
             const domainNodes = nodesList.filter(n => n.domainId === domain.id);
             if (domainNodes.length === 0) return '';
-            const ministryName = SECTION_1_KEYS.includes(domain.id) ? '보건복지부' : '관계부처';
-
-            // Group by level2
+            const sampleOrg = resolveHierarchyNodeOrg(domainNodes[0]);
             const level2Map = {};
             domainNodes.forEach(node => {
                 const key = node.level2 || node.level1 || '기본사업';
                 if (!level2Map[key]) {
-                    level2Map[key] = {
-                        level1: node.level1,
-                        level2: key,
-                        facilityType: node.facilityType,
-                        nodes: []
-                    };
+                    level2Map[key] = { level1: node.level1, level2: key, facilityType: node.facilityType, nodes: [] };
                 }
                 level2Map[key].nodes.push(node);
             });
-
             const groups = Object.values(level2Map);
 
             return `
                 <div class="mobile-domain-card bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden" data-domain-id="${domain.id}">
-                    <!-- 대분류 헤더 -->
                     <div class="p-3.5 bg-slate-50 flex items-center justify-between border-b border-slate-200">
                         <div class="flex items-center gap-2.5">
                             <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
@@ -5301,35 +5341,34 @@
                             <div>
                                 <div class="flex items-center gap-1.5 flex-wrap">
                                     <span class="px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">${domain.id.split('_')[0]}</span>
-                                    <span class="text-[10px] text-slate-500">${ministryName}</span>
+                                    <span class="text-[10px] text-slate-500 font-semibold">${localEscHtml(sampleOrg.lineageLabel || sampleOrg.agency)}</span>
                                 </div>
-                                <h3 class="text-sm font-black text-slate-900">${domain.name}</h3>
+                                <h3 class="text-sm font-black text-slate-900">${localEscHtml(domain.name)}</h3>
                             </div>
                         </div>
-                        <span class="px-2 py-0.5 rounded-full bg-slate-200/80 text-[10px] font-bold text-slate-700 font-num">${domainNodes.length}개 시설</span>
+                        <span class="px-2 py-0.5 rounded-full bg-slate-200/80 text-[10px] font-bold text-slate-700 font-num">${domainNodes.length}개 단위</span>
                     </div>
-
                     <div class="p-3 space-y-3">
                         ${groups.map(g => `
                             <div class="border border-slate-100 rounded-xl p-2.5 bg-slate-50/50 space-y-2">
-                                <div class="flex items-center justify-between">
+                                <div class="flex items-center justify-between gap-2">
                                     <span class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
                                         <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                                        <span>중분류: ${g.level2}</span>
+                                        <span>중분류: ${localEscHtml(g.level2)}</span>
                                     </span>
-                                    <span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-semibold">${g.facilityType || '단위시설'}</span>
+                                    <span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-semibold shrink-0">${localEscHtml(g.facilityType || '단위시설')}</span>
                                 </div>
                                 <div class="space-y-1.5">
                                     ${g.nodes.map(node => `
-                                        <div onclick="window.selectMobileHierarchyNode('${node.id}')" 
+                                        <div onclick="window.selectMobileHierarchyNode('${node.id}')"
                                              id="mobile-hierarchy-item-${node.id}"
                                              class="mobile-hierarchy-item p-2.5 rounded-lg bg-white border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/40 flex items-center justify-between cursor-pointer transition select-none">
                                             <div class="min-w-0 flex-1 pr-2">
                                                 <div class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
                                                     <span class="text-emerald-600">⦿</span>
-                                                    <span class="truncate">${node.level3}</span>
+                                                    <span class="truncate">${localEscHtml(node.level3)}</span>
                                                 </div>
-                                                <div class="text-[10px] text-slate-500 mt-0.5 truncate">${node.summary || ''}</div>
+                                                <div class="text-[10px] text-slate-500 mt-0.5 truncate">${localEscHtml(node.summary || '')}</div>
                                             </div>
                                             <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-medium flex-shrink-0 item-status-badge">분석 ➔</span>
                                         </div>
@@ -5342,13 +5381,11 @@
             `;
         }).join('');
     }
-    
+
     window.selectMobileHierarchyNode = function(nodeId) {
         const { nodes } = getDB();
         const node = nodes.find(n => n.id === nodeId);
         if (!node) return;
-
-        // Highlight active item
         document.querySelectorAll('.mobile-hierarchy-item').forEach(el => {
             el.className = 'mobile-hierarchy-item p-2.5 rounded-lg bg-white border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/40 flex items-center justify-between cursor-pointer transition select-none';
             const badge = el.querySelector('.item-status-badge');
@@ -5357,7 +5394,6 @@
                 badge.textContent = '분석 ➔';
             }
         });
-
         const activeEl = document.getElementById('mobile-hierarchy-item-' + nodeId);
         if (activeEl) {
             activeEl.className = 'mobile-hierarchy-item p-2.5 rounded-lg bg-emerald-50/80 border-2 border-emerald-500 flex items-center justify-between cursor-pointer transition select-none shadow-xs';
@@ -5367,20 +5403,17 @@
                 badge.textContent = '선택됨';
             }
         }
-
+        const orgInfo = resolveHierarchyNodeOrg(node);
         const isLiving = (node.level1 || '').includes('주거') || (node.level1 || '').includes('생활') || (node.level1 || '').includes('요양') || (node.facilityType || '').includes('양로') || (node.facilityType || '').includes('요양') || (node.facilityType || '').includes('거주');
-        const ministryName = SECTION_1_KEYS.includes(node.domainId) ? '보건복지부' : (SECTION_3_KEYS.includes(node.domainId) ? '범부처·안전망' : '관계부처');
-
         const facilityData = {
             name: `${node.level3} (${node.facilityType || '법정시설'})`,
             facilityType: isLiving ? '생활시설 (거주형 24h 케어)' : '이용시설 (통원형·주간·방문)',
-            isLiving: isLiving,
-            department: ministryName,
+            isLiving,
+            department: `${orgInfo.lineageLabel} ▸ ${orgInfo.agency}`,
             legalBasis: (node.guidelineRef && node.guidelineRef.chapter) ? node.guidelineRef.chapter : '사회복지사업법 제34조의5 및 각 개별법령',
             staffCriteria: (node.details && node.details.length > 0) ? node.details.map(d => '• ' + d).join('<br>') : (node.summary || '공식 실천 기준을 준용합니다.'),
             matchedGuideline: node.guidelineRef ? `${node.guidelineRef.file} [${node.guidelineRef.page || '전문'}]` : '2026 사회복지시설 관리안내'
         };
-
         if (typeof window.inspectFacilityDetail === 'function') {
             window.inspectFacilityDetail(facilityData);
         }
@@ -5389,38 +5422,33 @@
     function bindEvents() {
         const input = document.getElementById('matrixSearchInput');
         if (input) {
+            input.addEventListener('input', filterMatrixTable);
             input.addEventListener('keyup', filterMatrixTable);
         }
-
-        // Rowspan Breadcrumb Hover Effect (위계 상위 계층 실시간 연동 하이라이트)
-        const tables = document.querySelectorAll('#hierarchicalMatrixTable, #hierarchicalMatrixTable2, #hierarchicalMatrixTable3');
+        const tables = document.querySelectorAll('#hierarchicalMatrixTable, #hierarchyCivilTable');
         tables.forEach(table => {
             table.addEventListener('mouseover', function (e) {
                 const tr = e.target.closest('tr.domain-row');
                 if (!tr || !table.contains(tr)) return;
-
                 const dScope = tr.getAttribute('data-domain-scope');
                 const l1Scope = tr.getAttribute('data-l1-scope');
                 const l2Scope = tr.getAttribute('data-l2-scope');
-
                 table.querySelectorAll('.rowspan-breadcrumb-active').forEach(el => {
                     el.classList.remove('rowspan-breadcrumb-active', 'bg-emerald-50/90', 'ring-2', 'ring-emerald-400/80');
                 });
-
                 if (dScope) {
-                    const dCell = table.querySelector(`td[data-breadcrumb-target="domain"][data-domain-id="${dScope}"]`);
+                    const dCell = table.querySelector(`td[data-breadcrumb-target="domain"][data-domain-id="${CSS.escape(dScope)}"]`);
                     if (dCell) dCell.classList.add('rowspan-breadcrumb-active', 'bg-emerald-50/90', 'ring-2', 'ring-emerald-400/80');
                 }
                 if (l1Scope) {
-                    const l1Cell = table.querySelector(`td[data-breadcrumb-target="l1"][data-l1-id="${l1Scope}"]`);
+                    const l1Cell = table.querySelector(`td[data-breadcrumb-target="l1"][data-l1-id="${CSS.escape(l1Scope)}"]`);
                     if (l1Cell) l1Cell.classList.add('rowspan-breadcrumb-active', 'bg-emerald-50/90', 'ring-2', 'ring-emerald-400/80');
                 }
                 if (l2Scope) {
-                    const l2Cell = table.querySelector(`td[data-breadcrumb-target="l2"][data-l2-id="${l2Scope}"]`);
+                    const l2Cell = table.querySelector(`td[data-breadcrumb-target="l2"][data-l2-id="${CSS.escape(l2Scope)}"]`);
                     if (l2Cell) l2Cell.classList.add('rowspan-breadcrumb-active', 'bg-emerald-50/90', 'ring-2', 'ring-emerald-400/80');
                 }
             });
-
             table.addEventListener('mouseleave', function () {
                 table.querySelectorAll('.rowspan-breadcrumb-active').forEach(el => {
                     el.classList.remove('rowspan-breadcrumb-active', 'bg-emerald-50/90', 'ring-2', 'ring-emerald-400/80');
@@ -5429,45 +5457,59 @@
         });
     }
 
-    // 필터링 인터랙션 로직
-    window.selectDomainFilter = function (domainKey, buttonElement) {
-        currentDomainFilter = domainKey;
-        const buttons = document.querySelectorAll('.domain-tab-btn');
-        buttons.forEach(btn => {
-            btn.classList.remove('bg-primary', 'text-on-primary', 'font-bold', 'shadow-sm');
-            btn.classList.add('bg-surface-container', 'text-on-surface-variant', 'font-medium');
+    window.setHierarchyMinistryFilter = function (minKey, buttonElement) {
+        currentMinistryGroup = minKey || '전체';
+        currentDomainFilter = 'all';
+        document.querySelectorAll('.hierarchy-ministry-pill').forEach(btn => {
+            const key = btn.getAttribute('data-ministry');
+            const isCivil = key === '민간제3섹터';
+            const isActive = key === currentMinistryGroup;
+            if (isActive) {
+                btn.className = isCivil
+                    ? 'hierarchy-ministry-pill active px-3 py-1.5 rounded-full text-xs font-extrabold bg-amber-600 text-white shadow-2xs transition cursor-pointer flex items-center gap-1 ml-auto'
+                    : 'hierarchy-ministry-pill active px-3 py-1.5 rounded-full text-xs font-extrabold bg-emerald-600 text-white shadow-2xs transition cursor-pointer';
+            } else {
+                btn.className = isCivil
+                    ? 'hierarchy-ministry-pill px-3 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 transition cursor-pointer flex items-center gap-1 shadow-2xs ml-auto'
+                    : 'hierarchy-ministry-pill px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer';
+            }
         });
-        if (buttonElement) {
-            buttonElement.classList.add('bg-primary', 'text-on-primary', 'font-bold', 'shadow-sm');
-            buttonElement.classList.remove('bg-surface-container', 'text-on-surface-variant', 'font-medium');
-        }
-
+        document.querySelectorAll('.domain-tab-btn').forEach((btn, idx) => {
+            if (idx === 0) {
+                btn.classList.add('bg-primary', 'text-on-primary', 'font-bold', 'shadow-sm');
+                btn.classList.remove('bg-slate-100', 'text-slate-700');
+            } else {
+                btn.classList.remove('bg-primary', 'text-on-primary', 'font-bold', 'shadow-sm');
+                btn.classList.add('bg-slate-100', 'text-slate-700');
+            }
+        });
         applyFilters();
     };
 
-    window.selectMinistryGroup = function (minKey, buttonElement) {
-        currentMinistryGroup = minKey;
-        currentDomainFilter = 'all';
-        const minButtons = document.querySelectorAll('.ministry-btn');
-        minButtons.forEach(btn => {
-            btn.classList.remove('active', 'bg-primary', 'text-on-primary', 'shadow-sm');
-            btn.classList.add('bg-surface-container', 'text-on-surface-variant');
+    window.selectMinistryGroup = function (legacyKey, buttonElement) {
+        const legacyMap = {
+            'all': '전체',
+            'mohw': '보건복지부',
+            'mogef': '성평등가족부',
+            'moe': '교육부',
+            'moel': '고용·보훈·국방',
+            'civic': '민간제3섹터',
+            'track2': '전체'
+        };
+        const mapped = legacyMap[legacyKey] || legacyKey || '전체';
+        window.setHierarchyMinistryFilter(mapped, buttonElement);
+    };
+
+    window.selectDomainFilter = function (domainKey, buttonElement) {
+        currentDomainFilter = domainKey || 'all';
+        document.querySelectorAll('.domain-tab-btn').forEach(btn => {
+            btn.classList.remove('bg-primary', 'text-on-primary', 'font-bold', 'shadow-sm');
+            btn.classList.add('bg-slate-100', 'text-slate-700');
         });
         if (buttonElement) {
-            buttonElement.classList.add('active', 'bg-primary', 'text-on-primary', 'shadow-sm');
-            buttonElement.classList.remove('bg-surface-container', 'text-on-surface-variant');
+            buttonElement.classList.add('bg-primary', 'text-on-primary', 'font-bold', 'shadow-sm');
+            buttonElement.classList.remove('bg-slate-100', 'text-slate-700');
         }
-
-        const subgroups = document.querySelectorAll('.ministry-subgroup');
-        subgroups.forEach(sg => {
-            const sgMin = sg.getAttribute('data-ministry');
-            if (minKey === 'all' || sgMin === minKey) {
-                sg.style.display = '';
-            } else {
-                sg.style.display = 'none';
-            }
-        });
-
         applyFilters();
     };
 
@@ -5487,87 +5529,51 @@
             renderFacilityFilterBanner(null);
         }
 
-        const matchNode = (node) => {
+        const filteredNodes = baseNodes.filter(node => {
             const domainMeta = DOMAIN_MAP[node.domainId] || { key: 'misc', short: node.domainId };
-            const d = domainMeta.key;
+            const orgInfo = resolveHierarchyNodeOrg(node);
 
-            // Ministry match
-            let minMatch = true;
-            if (currentMinistryGroup === 'mohw') {
-                minMatch = ['community', 'elder', 'disabled', 'child', 'infant', 'mental', 'crisis'].includes(d);
-            } else if (currentMinistryGroup === 'mogef') {
-                minMatch = ['family', 'youth'].includes(d);
-            } else if (currentMinistryGroup === 'moe') {
-                minMatch = ['school'].includes(d);
-            } else if (currentMinistryGroup === 'moel') {
-                minMatch = ['selfhelp'].includes(d);
-            } else if (currentMinistryGroup === 'civic') {
-                minMatch = ['donation'].includes(d);
-            } else if (currentMinistryGroup === 'track2') {
-                minMatch = ['sec', 'jus', 'med', 'edu', 'lifesafe', 'rel'].includes(d);
-            }
+            const minMatch = matchHierarchyMinistryFilter(orgInfo, currentMinistryGroup);
+            const domMatch = (currentDomainFilter === 'all') || (domainMeta.key === currentDomainFilter);
 
-            // Domain match
-            let domMatch = (currentDomainFilter === 'all') || (d === currentDomainFilter);
-
-            // Search keyword match (성평등가족부 ↔ 여성가족부 상호 정규화 포함)
-            const k = `${domainMeta.short} ${node.level1} ${node.level2} ${node.level3} ${(node.details || []).join(' ')} ${(node.guidelineRef && node.guidelineRef.file) || ''}`.toLowerCase();
+            const gRef = node.guidelineRef || {};
+            const hay = `${orgInfo.lineageLabel} ${orgInfo.agency} ${domainMeta.short} ${node.facilityType || ''} ${node.level1} ${node.level2} ${node.level3} ${node.summary || ''} ${(node.details || []).join(' ')} ${gRef.file || ''}`.toLowerCase();
             const normKeyword = currentSearchKeyword ? currentSearchKeyword.replace(/성평등가족부/g, '여성가족부') : '';
-            let kwMatch = !currentSearchKeyword || k.includes(currentSearchKeyword) || (normKeyword && k.includes(normKeyword));
+            const kwMatch = !currentSearchKeyword || hay.includes(currentSearchKeyword) || (normKeyword && hay.includes(normKeyword));
 
             return minMatch && domMatch && kwMatch;
-        };
+        });
 
-        const filteredNodes = baseNodes.filter(matchNode);
+        const centralNodes = filteredNodes.filter(n => !resolveHierarchyNodeOrg(n).isCivil);
+        const civilNodes = filteredNodes.filter(n => resolveHierarchyNodeOrg(n).isCivil);
 
-        // Empty state 제어
         const emptyEl = document.getElementById('hierarchyEmptyStateContainer');
-        if (emptyEl) {
-            emptyEl.classList.toggle('hidden', filteredNodes.length > 0);
-        }
+        if (emptyEl) emptyEl.classList.toggle('hidden', filteredNodes.length > 0);
 
-        // Re-render Section 1 table
-        const tbody1 = document.querySelector('#hierarchicalMatrixTable tbody');
-        if (tbody1) {
-            tbody1.innerHTML = renderDesktopTableRows(filteredNodes, SECTION_1_KEYS);
-        }
+        const centralTbody = document.querySelector('#hierarchicalMatrixTable tbody');
+        if (centralTbody) centralTbody.innerHTML = renderDesktopTableRows(centralNodes, false);
 
-        // Re-render Section 2 table
-        const tbody2 = document.querySelector('#hierarchicalMatrixTable2 tbody');
-        if (tbody2) {
-            tbody2.innerHTML = renderDesktopTableRows(filteredNodes, SECTION_2_KEYS);
-        }
+        const civilTbody = document.querySelector('#hierarchyCivilTable tbody');
+        if (civilTbody) civilTbody.innerHTML = renderDesktopTableRows(civilNodes, true);
 
-        // Re-render Section 3 table
-        const tbody3 = document.querySelector('#hierarchicalMatrixTable3 tbody');
-        if (tbody3) {
-            tbody3.innerHTML = renderDesktopTableRows(filteredNodes, SECTION_3_KEYS);
-        }
+        const centralContainer = document.getElementById('sectionCentralHierarchyContainer');
+        if (centralContainer) centralContainer.style.display = centralNodes.length > 0 ? '' : 'none';
 
-        // Re-render mobile cards
-        const mobContainer = document.getElementById('mobile-hierarchy-cards-feed') || document.getElementById('mobileCardsContainer');
-        if (mobContainer) {
-            mobContainer.innerHTML = renderMobileCards(filteredNodes);
-        }
+        const civilSection = document.getElementById('hierarchyCivilSection');
+        if (civilSection) civilSection.style.display = civilNodes.length > 0 ? '' : 'none';
 
-        const sec1Card = document.getElementById('section1Container');
-        const sec2Card = document.getElementById('section2Container');
-        const sec3Card = document.getElementById('section3Container');
-        const sec1HasVisible = filteredNodes.some(n => SECTION_1_KEYS.includes(n.domainId));
-        const sec2HasVisible = filteredNodes.some(n => SECTION_2_KEYS.includes(n.domainId));
-        const sec3HasVisible = filteredNodes.some(n => SECTION_3_KEYS.includes(n.domainId));
+        const cBadge = document.getElementById('centralHierarchyBadge');
+        if (cBadge) cBadge.textContent = `중앙 ${centralNodes.length}단위 표시중`;
+        const civBadge = document.getElementById('civilHierarchyBadge');
+        if (civBadge) civBadge.textContent = `제3섹터 ${civilNodes.length}단위`;
 
-        if (sec1Card) sec1Card.style.display = sec1HasVisible ? '' : 'none';
-        if (sec2Card) sec2Card.style.display = sec2HasVisible ? '' : 'none';
-        if (sec3Card) sec3Card.style.display = sec3HasVisible ? '' : 'none';
+        const mobContainer = document.getElementById('mobile-hierarchy-cards-feed');
+        if (mobContainer) mobContainer.innerHTML = renderMobileCards(filteredNodes);
 
-        // Update tag
         const tag = document.getElementById('displayCountTag');
         if (tag) {
-            if (currentSearchKeyword) {
-                tag.textContent = `검색 결과: ${filteredNodes.length}개 단위서비스 일치`;
-            } else if (currentDomainFilter !== 'all' || currentMinistryGroup !== 'all') {
-                tag.textContent = `필터링 표시 중 (${filteredNodes.length}개 단위서비스)`;
+            if (currentSearchKeyword || currentFacilityFilter || currentDomainFilter !== 'all' || (currentMinistryGroup && currentMinistryGroup !== '전체')) {
+                tag.textContent = `필터 결과: 총 ${filteredNodes.length}단위 (중앙 ${centralNodes.length} · 제3섹터 ${civilNodes.length})`;
             } else {
                 tag.textContent = `전체 18개 실천분야 / ${allNodes.length}개 법정·실천단위서비스 수록`;
             }
@@ -5581,23 +5587,16 @@
         currentParentCategory = null;
         currentSearchKeyword = '';
         currentDomainFilter = 'all';
-        currentMinistryGroup = 'all';
-
-        const firstTab = document.querySelector('.domain-tab-btn');
-        if (firstTab) window.selectDomainFilter('all', firstTab);
-
-        const firstMinTab = document.querySelector('.ministry-btn');
-        if (firstMinTab) window.selectMinistryGroup('all', firstMinTab);
+        currentMinistryGroup = '전체';
+        window.setHierarchyMinistryFilter('전체');
     };
 
-    // 지침서 아카이브로 점프
     window.jumpToArchive = function (archiveId) {
         if (typeof window.showView === 'function') {
             window.showView('archive', { highlightId: archiveId });
         }
     };
 
-    // 특정 노드 하이라이트 및 스크롤
     function highlightAndScrollNode(nodeId) {
         const { nodes } = getDB();
         const targetNode = nodes.find(n => n.id === nodeId);
@@ -5607,20 +5606,14 @@
             currentSearchKeyword = '';
             const searchInput = document.getElementById('matrixSearchInput') || document.getElementById('hierarchySearchInput');
             if (searchInput) searchInput.value = '';
-
-            const domainMeta = DOMAIN_MAP[targetNode.domainId];
-            if (currentDomainFilter !== 'all' && domainMeta && domainMeta.key !== currentDomainFilter) {
-                currentDomainFilter = 'all';
-                currentMinistryGroup = 'all';
-            }
+            currentDomainFilter = 'all';
+            currentMinistryGroup = '전체';
             applyFilters();
         }
-
         setTimeout(() => {
             const desktopTr = document.getElementById(`hierarchy-node-${nodeId}`);
-            const mobileCard = document.getElementById(`mobile-card-${nodeId}`);
+            const mobileCard = document.getElementById(`mobile-hierarchy-item-${nodeId}`);
             const targetEl = (window.innerWidth >= 768) ? (desktopTr || mobileCard) : (mobileCard || desktopTr);
-
             if (targetEl) {
                 targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 if (typeof window.triggerMatchHighlight === 'function') {
@@ -5634,34 +5627,34 @@
         }, 180);
     }
 
-    // CSV 내보내기
     window.exportHierarchyCSV = function () {
         const { nodes } = getDB();
-        let csvContent = "\uFEFF1단계_실천분야,2단계_대분류_법정기능,3단계_중분류_사업체계,소분류_단위서비스실천내용,공식지침서_법정서식,지침서페이지\n";
-
+        let csvContent = "\uFEFF1열_소속계통,2열_소관기관,실천분야,3열_대분류_법정기능,4열_중분류_사업분야,시설유형,5열_소분류_단위서비스,6열_공식지침서,지침서페이지\n";
         nodes.forEach(n => {
-            const bullets = (n.details || []).join(' / ');
+            const orgInfo = resolveHierarchyNodeOrg(n);
             const gRef = n.guidelineRef || { file: '', page: '' };
+            const domainMeta = DOMAIN_MAP[n.domainId] || { short: n.domainId };
+            const esc = (v) => `"${String(v || '').replace(/"/g, '""')}"`;
             const row = [
-                `"${n.domainId}"`,
-                `"${n.level1}"`,
-                `"${n.level2}"`,
-                `"${n.level3}"`,
-                `"${bullets.replace(/"/g, '""')}"`,
-                `"${gRef.file.replace(/"/g, '""')}"`,
-                `"${gRef.page}"`
+                esc(orgInfo.lineageLabel),
+                esc(orgInfo.agency),
+                esc(domainMeta.short),
+                esc(n.level1),
+                esc(n.level2),
+                esc(n.facilityType),
+                esc(n.level3),
+                esc(gRef.file),
+                esc(gRef.page)
             ];
             csvContent += row.join(',') + "\n";
         });
-
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `대한민국_사회복지_${nodes.length}개_법정실천단위서비스_위계매트릭스_${new Date().toISOString().slice(0, 10)}.csv`;
+        a.download = `대한민국_사회복지_${nodes.length}개_단위서비스_6단계위계매트릭스_${new Date().toISOString().slice(0, 10)}.csv`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
     };
-
 })();

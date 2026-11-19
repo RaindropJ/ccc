@@ -55,7 +55,7 @@
         'law-labor-disability': ['doc-046', 'doc-047', 'doc-030'],
         'law-veterans': ['doc-052'],
         'law-justice': ['doc-057', 'doc-058'],
-        'law-ngo-csr': ['doc-034', 'doc-068'],
+        'law-ngo-csr': ['doc-048', 'doc-049', 'doc-050', 'doc-034', 'doc-068'],
     'law-public-admin': ['doc-027', 'doc-028', 'doc-031', 'doc-032', 'doc-053'],
         // Track 2 (17개)
         'ext-sec-social-enterprise': ['doc-054'],
@@ -179,1459 +179,940 @@
     }
 
     // 메인 렌더링 진입점
-    window.renderArchiveView = function (options = {}) {
-        const container = document.getElementById('view-archive');
-        if (!container) return;
+    const ARCHIVE_LINEAGE_ORDER = [
+        '보건복지부', '성평등가족부', '교육부', '법무부',
+        '고용노동부', '국가보훈부', '국방부',
+        '행정안전부', '국토교통부', '국무총리', '통일부'
+    ];
+    const ARCHIVE_AXIS_ORDER = [
+        '축 1 · 민법 제32조 비영리·공익법인',
+        '축 2 · 사회적경제·연대',
+        '축 3 · 종교법인·문화유산 공익'
+    ];
+    const ARCHIVE_FILTER_PILLS = [
+        { key: '전체', label: '전체', icon: '' },
+        { key: '보건복지부', label: '보건복지부', icon: '🏥' },
+        { key: '성평등가족부', label: '성평등가족부', icon: '👨‍👩‍👧' },
+        { key: '교육부', label: '교육부', icon: '🎓' },
+        { key: '법무부', label: '법무부', icon: '⚖️' },
+        { key: '고용·보훈·국방', label: '고용·보훈·국방', icon: '💼' },
+        { key: '행안·국토·금융', label: '행안·국토·금융', icon: '🏛️' },
+        { key: '질병청·통일부', label: '질병청·통일부', icon: '🔬' },
+        { key: '민간제3섹터', label: '민간제3섹터(6)', icon: '🤝', isCivil: true }
+    ];
 
-        currentMinistry = 'all';
-        searchQuery = '';
-        currentArchiveFacilityId = null;
-        currentArchiveFacilityName = null;
-        currentArchiveDocIds = null;
+    function escA(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
 
-        const allFiles = getAllFiles();
-        const config = getArchiveConfig();
+    function safeArchiveLineage(ministryStr) {
+        const raw = String(ministryStr || '보건복지부').split('·')[0].trim();
+        const normalized = (raw === '여성가족부') ? '성평등가족부' : raw;
+        if (normalized === '국무조정실') {
+            return {
+                primary: '국무조정실',
+                orgType: '총리소속',
+                lineage: '국무총리',
+                lineageLabel: '국무총리 소속',
+                lineageIcon: '🏛️',
+                orgIcon: '🇰🇷'
+            };
+        }
+        if (typeof window !== 'undefined' && typeof window.resolveOrgLineage === 'function') {
+            return window.resolveOrgLineage(normalized);
+        }
+        if (normalized === '금융위원회') {
+            return {
+                primary: '금융위원회',
+                orgType: '위원회',
+                lineage: '국무총리',
+                lineageLabel: '국무총리 소속',
+                lineageIcon: '🏛️',
+                orgIcon: '💳'
+            };
+        }
+        return {
+            primary: normalized,
+            orgType: '부',
+            lineage: normalized,
+            lineageLabel: normalized,
+            lineageIcon: '🏛️',
+            orgIcon: '🏛️'
+        };
+    }
 
-        const mohwFiles = allFiles.filter(f => f.section === 'SECTION_1' || (f.section !== 'SECTION_3' && f.ministry && f.ministry.includes('보건복지부')));
-        const nonMohwFiles = allFiles.filter(f => f.section === 'SECTION_2');
-        const sec3Files = allFiles.filter(f => f.section === 'SECTION_3');
-
-        // Calculate ministry counts
-        const countAll = allFiles.length;
-        const countMohw = mohwFiles.length;
-        const countMogef = allFiles.filter(f => f.section !== 'SECTION_3' && f.ministry && f.ministry.includes('여성가족부')).length;
-        const countMoe = allFiles.filter(f => f.section !== 'SECTION_3' && f.ministry && f.ministry.includes('교육부')).length;
-        const countMoel = allFiles.filter(f => f.section !== 'SECTION_3' && f.ministry && f.ministry.includes('고용노동부')).length;
-        const countSec3 = sec3Files.length;
-        const countOthers = allFiles.filter(f => {
-            if (f.section === 'SECTION_3') return false;
-            const m = f.ministry || '';
-            return m.includes('외교') || m.includes('보훈') || m.includes('통일') || m.includes('국무') || m.includes('행안') || m.includes('질병') || m.includes('법무');
-        }).length;
-        const countCivic = allFiles.filter(f => {
-            if (f.section === 'SECTION_3') return false;
-            const m = f.ministry || '';
-            return m.includes('공동모금회') || m.includes('사회공헌') || m.includes('재단') || m.includes('민간');
-        }).length;
-
-        container.innerHTML = `
-        <div class="flex flex-col w-full bg-surface min-h-[calc(100vh-160px)]">
-            <!-- ==================== 데스크톱 전용 아카이브 뷰 (hidden md:block) =================== -->
-            <div class="hidden md:block w-full">
-            <!-- Top Ministry Authority Status Bar -->
-            <div class="w-full bg-surface-container-low border-b border-outline-variant/20">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-wrap items-center justify-between gap-3 text-legal-code font-legal-code">
-                    <div class="flex items-center gap-2 text-on-surface-variant flex-wrap">
-                        <span class="material-symbols-outlined text-[16px] text-primary">policy</span>
-                        <span class="font-medium">공공행정 정본 색인: 보건복지부 · 여성가족부 · 교육부 · 고용노동부 합동 공표 기준</span>
-                        <span class="text-outline-variant hidden sm:inline">|</span>
-                        <span class="text-outline hidden sm:inline">최종 동기화: 2026.02.24 06:00 KST (공공누리 제1유형 출처표시)</span>
-                    </div>
-                    <div class="flex items-center gap-2.5 flex-wrap">
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
-                            <span class="h-1.5 w-1.5 rounded-full bg-secondary"></span>
-                            70개 전종 2026 개정판 대조 완료
-                        </span>
-                        <button type="button" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container-highest text-primary hover:bg-primary hover:text-on-primary transition-colors font-label-sm text-label-sm cursor-pointer" onclick="showView(\'hierarchy\')">
-                            <span class="material-symbols-outlined text-[14px]">account_tree</span>
-                            <span>3단계 위계도감 218개 단위서비스 실시간 상호연동 중</span>
-                        </a>
-                        <span class="text-on-surface-variant font-medium hidden md:inline">색인 문서: 24,384면</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Primary Sub-Navigation & Page Identification -->
-            <div class="w-full bg-surface-container-lowest border-b border-outline-variant/30">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-5">
-                    <!-- Section Tab Bar & Action Toolbar -->
-                    <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-outline-variant/30">
-                        <div>
-                            <div class="flex items-center gap-2 mb-1.5 flex-wrap">
-                                <span class="px-2 py-0.5 rounded-md bg-primary-container text-on-primary font-label-sm text-label-sm font-semibold">
-                                    공식 법정 지침 마스터
-                                </span>
-                                <span class="text-on-surface-variant font-legal-code text-legal-code">
-                                    분야·법령 가이드 포털 &gt; 실무 지침서 마스터 아카이브
-                                </span>
-                                <span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
-                                    <span class="inline-block w-1.5 h-1.5 rounded-full bg-secondary mr-1"></span>
-                                    2026 정부 고시 표준체계 완결본
-                                </span>
-                            </div>
-                            <h1 class="font-headline-lg text-headline-lg text-primary tracking-tight font-bold">
-                                공식 지침서 마스터 아카이브 (70종)
-                            </h1>
-                            <p class="font-body-md text-body-md text-on-surface-variant mt-1">
-                                대한민국 사회복지 12대 핵심 분야 및 6대 범부처·사회혁신 안전망 공식 사업안내·표준 매뉴얼 총람 (전문 24,384면 OCR 검색 지원)
-                            </p>
-                        </div>
-
-                        <!-- Linked Action Toolbar -->
-                        <div class="flex flex-wrap items-center gap-2">
-                            <div class="flex items-center p-1 rounded-xl bg-surface-container-low border border-outline-variant/30">
-                                <button type="button" class="px-3 py-1.5 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1.5 cursor-pointer"
-                                   onclick="showView('fields')">
-                                    <span class="material-symbols-outlined text-[18px]">account_balance</span>
-                                    <span>분야·시설 도감</span>
-                                    <span class="px-1.5 py-0.2 rounded-full font-label-sm text-label-sm bg-surface-container text-on-surface-variant">40개</span>
-                                </a>
-                                <button type="button" class="px-3 py-1.5 rounded-lg font-label-md text-label-md bg-primary text-on-primary shadow-xs flex items-center gap-1.5 font-semibold cursor-pointer" onclick="showView(\'archive\')">
-                                    <span class="material-symbols-outlined text-[18px]">folder_open</span>
-                                    <span>지침서 아카이브</span>
-                                    <span class="px-1.5 py-0.2 rounded-full font-label-sm text-label-sm bg-surface-container-lowest text-primary">70종</span>
-                                </</a>
-                                <button type="button" class="px-3 py-1.5 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1.5 cursor-pointer"
-                                   onclick="showView('hierarchy')">
-                                    <span class="material-symbols-outlined text-[18px] text-secondary">account_tree</span>
-                                    <span>3단계 위계 도감</span>
-                                    <span class="px-1.5 py-0.2 rounded-full font-label-sm text-label-sm bg-secondary-container text-on-secondary-container font-semibold">218단위</span>
-                                </a>
-                            </div>
-
-                            <div class="flex items-center gap-1.5">
-                                <button type="button" class="flex items-center gap-1 px-3 py-2 rounded-xl bg-surface-container-low hover:bg-surface-container-high border border-outline-variant/40 text-on-surface font-label-sm text-label-sm transition-all"
-                                        onclick="window.print()" title="지침서 총람 인쇄 및 PDF 저장">
-                                    <span class="material-symbols-outlined text-[18px] text-primary">print</span>
-                                    <span>인쇄 / PDF</span>
-                                </button>
-                                <button type="button" class="flex items-center gap-1 px-3 py-2 rounded-xl bg-surface-container-low hover:bg-surface-container-high border border-outline-variant/40 text-on-surface font-label-sm text-label-sm transition-all"
-                                        id="exportCsvBtn" title="70종 지침서 목록 CSV 다운로드">
-                                    <span class="material-symbols-outlined text-[18px] text-secondary">table_chart</span>
-                                    <span>Excel (.csv) 저장</span>
-                                </button>
-                                <a class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-secondary-container hover:bg-secondary hover:text-on-secondary text-on-secondary-container font-label-sm text-label-sm font-semibold transition-all shadow-xs"
-                                   id="downloadMasterZipBtn" href="${config.driveDownloadUrl}" target="_blank" title="전체 정본 일괄 다운로드(ZIP)">
-                                    <span class="material-symbols-outlined text-[18px]">download_for_offline</span>
-                                    <span>70종 전체 ZIP</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 4 Quick Metrics Ribbon Cards -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-4">
-                        <!-- Card 1 -->
-                        <div class="p-3.5 rounded-xl bg-surface-container-low flex items-start justify-between border border-outline-variant/20 shadow-xs">
-                            <div class="flex flex-col">
-                                <span class="font-legal-code text-legal-code text-on-surface-variant uppercase tracking-wider">수록 지침서 총괄</span>
-                                <span class="font-headline-md text-headline-md text-primary mt-0.5 font-bold">
-                                    70<span class="font-label-md text-label-md font-normal text-on-surface">종 정본</span>
-                                </span>
-                                <span class="font-legal-code text-legal-code text-secondary mt-1 font-medium">핵심 법정 (53) + 범부처·사회혁신 (17)</span>
-                            </div>
-                            <div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-primary shadow-xs">
-                                <span class="material-symbols-outlined text-[20px]">library_books</span>
-                            </div>
-                        </div>
-
-                        <!-- Card 2 -->
-                        <div class="p-3.5 rounded-xl bg-surface-container-low flex items-start justify-between border border-outline-variant/20 shadow-xs">
-                            <div class="flex flex-col">
-                                <span class="font-legal-code text-legal-code text-on-surface-variant uppercase tracking-wider">누적 색인 분량</span>
-                                <span class="font-headline-md text-headline-md text-primary mt-0.5 font-bold">
-                                    24,384<span class="font-label-md text-label-md font-normal text-on-surface">면</span>
-                                </span>
-                                <span class="font-legal-code text-legal-code text-outline mt-1 font-medium">PDF 본문 전문(OCR) 색인</span>
-                            </div>
-                            <div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-primary shadow-xs">
-                                <span class="material-symbols-outlined text-[20px]">manage_search</span>
-                            </div>
-                        </div>
-
-                        <!-- Card 3 -->
-                        <div class="p-3.5 rounded-xl bg-surface-container-low flex items-start justify-between border border-outline-variant/20 shadow-xs">
-                            <div class="flex flex-col">
-                                <span class="font-legal-code text-legal-code text-on-surface-variant uppercase tracking-wider">주관 정부부처</span>
-                                <span class="font-headline-md text-headline-md text-primary mt-0.5 font-bold">
-                                    6<span class="font-label-md text-label-md font-normal text-on-surface">개 부처청</span>
-                                </span>
-                                <span class="font-legal-code text-legal-code text-on-surface-variant mt-1 font-medium">복지부·여가부·교육부·노동부 등</span>
-                            </div>
-                            <div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-primary shadow-xs">
-                                <span class="material-symbols-outlined text-[20px]">domain</span>
-                            </div>
-                        </div>
-
-                        <!-- Card 4 -->
-                        <div class="p-3.5 rounded-xl bg-primary text-on-primary flex items-start justify-between shadow-xs">
-                            <div class="flex flex-col">
-                                <span class="font-legal-code text-legal-code text-inverse-on-surface/80 uppercase tracking-wider">원클릭 압축 패키지</span>
-                                <span class="font-headline-md text-headline-md text-on-primary mt-0.5 font-bold">
-                                    450<span class="font-label-md text-label-md font-normal text-inverse-on-surface">MB ZIP</span>
-                                </span>
-                                <span class="font-legal-code text-legal-code text-secondary-container mt-1 font-semibold">70종 무결성 검증 패키지</span>
-                            </div>
-                            <a href="${config.driveDownloadUrl}" target="_blank"
-                               class="w-9 h-9 rounded-lg bg-surface-container-lowest text-primary hover:bg-surface-container-high transition-colors flex items-center justify-center shadow-sm"
-                               id="topPackageDownloadBtn" title="일괄 다운로드">
-                                <span class="material-symbols-outlined text-[20px]">download</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Operational Filter & Search Section -->
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-4">
-                <div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm flex flex-col gap-4 border border-outline-variant/30">
-                    <!-- Row 1: Search and Export Tools -->
-                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
-                        <div class="relative flex-1">
-                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-outline">
-                                <span class="material-symbols-outlined text-[20px]">search</span>
-                            </span>
-                            <input type="text"
-                                   id="guidelineSearchInput" type="search" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="${countAll}종 공식 지침서명, 소관부처, 담당과, 근거법령 검색"
-                                   class="w-full pl-10 pr-28 py-2 bg-surface-container-low rounded-lg text-body-md font-body-md text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all"
-                                   placeholder="지침서명, 소관부처, 과명칭, 근거 법령, 대상 시설(예: 종합사회복지관, 지역아동센터, 노인복지법)...">
-                            <div class="absolute inset-y-0 right-0 pr-2 flex items-center gap-1.5">
-                                <button type="button" id="clearSearchBtn" class="hidden p-1 rounded-md text-outline hover:text-on-surface transition-colors" title="검색어 지우기">
-                                    <span class="material-symbols-outlined text-[16px]">close</span>
-                                </button>
-                                <span id="searchBadgeCount" class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-semibold">
-                                    ${countAll}건 표시중
-                                </span>
-                            </div>
-                        </div>
-
-                        <!-- Right Info -->
-                        <div class="flex items-center gap-2 text-legal-code font-legal-code text-on-surface-variant">
-                            <span class="material-symbols-outlined text-[16px] text-secondary">verified</span>
-                            <span>국가법령정보센터 및 보건복지부 행정자료실 2026.01.01 시행 정본 대조 완료</span>
-                        </div>
-                    </div>
-
-                    <!-- Row 2: Ministry Filter Pills -->
-                    <div class="flex flex-wrap items-center gap-1.5 pt-2 border-t border-outline-variant/20">
-                        <span class="text-legal-code font-legal-code text-outline mr-2">소관 부처별 분류:</span>
-                        <button type="button" class="ministry-pill px-3 py-1 rounded-full text-label-sm font-label-sm font-semibold bg-primary text-on-primary shadow-xs transition-all active-pill"
-                                data-ministry="all">
-                            전체 ${countAll}종
-                        </button>
-                        <button type="button" class="ministry-pill px-3 py-1 rounded-full text-label-sm font-label-sm font-medium bg-surface-container-low text-on-surface-variant hover:bg-surface-container transition-all"
-                                data-ministry="보건복지부">
-                            보건복지부 (${countMohw})
-                        </button>
-                        <button type="button" class="ministry-pill px-3 py-1 rounded-full text-label-sm font-label-sm font-medium bg-surface-container-low text-on-surface-variant hover:bg-surface-container transition-all"
-                                data-ministry="여성가족부">
-                            여성가족부 (${countMogef})
-                        </button>
-                        <button type="button" class="ministry-pill px-3 py-1 rounded-full text-label-sm font-label-sm font-medium bg-surface-container-low text-on-surface-variant hover:bg-surface-container transition-all"
-                                data-ministry="교육부">
-                            교육부 (${countMoe})
-                        </button>
-                        <button type="button" class="ministry-pill px-3 py-1 rounded-full text-label-sm font-label-sm font-medium bg-surface-container-low text-on-surface-variant hover:bg-surface-container transition-all"
-                                data-ministry="고용노동부">
-                            고용노동부 (${countMoel})
-                        </button>
-                        <button type="button" class="ministry-pill px-3 py-1 rounded-full text-label-sm font-label-sm font-medium bg-surface-container-low text-on-surface-variant hover:bg-surface-container transition-all"
-                                data-ministry="행안부/질병청/법무부">
-                            행안부·외교부·보훈부 등 (${countOthers})
-                        </button>
-                        <button type="button" class="ministry-pill px-3 py-1 rounded-full text-label-sm font-label-sm font-medium bg-surface-container-low text-on-surface-variant hover:bg-surface-container transition-all"
-                                data-ministry="공익재단·기타">
-                            공동모금회·민간공익 (${countCivic})
-                        </button>
-                        <button type="button" class="ministry-pill px-3 py-1 rounded-full text-label-sm font-label-sm font-medium bg-emerald-50 text-emerald-800 border border-emerald-200/70 hover:bg-emerald-100 transition-all"
-                                data-ministry="TRACK2">
-                            🌐 범부처·사회혁신 안전망 (${countSec3})
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Facility-Matched Guideline Banner Container (Desktop) -->
-            <div id="archiveFacilityBannerContainer" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-4"></div>
-
-            <!-- Master Administrative Classification Table Section (Desktop) -->
-            <div id="archiveTablesContainer" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-4 flex flex-col gap-6">
-                
-                <!-- Table Guidance Bar -->
-                <div class="flex items-center justify-between px-4 py-2.5 bg-surface-container-high rounded-xl text-legal-code font-legal-code text-on-surface border border-outline-variant/30">
-                    <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[18px] text-primary">gavel</span>
-                        <span class="font-semibold text-on-surface">국가법령정보센터 및 보건복지부 행정자료실 고시 기준 (2026.01.01 시행 정본)</span>
-                        <span class="text-outline-variant hidden sm:inline">|</span>
-                        <span class="hidden sm:inline">부처 및 기능별 3대 매트릭스(섹션 Ⅰ·Ⅱ·Ⅲ)로 편제됨</span>
-                    </div>
-                    <div class="hidden sm:flex items-center gap-2 text-primary font-medium">
-                        <span class="material-symbols-outlined text-[16px] text-secondary">account_tree</span>
-                        <span>각 지침서별 <strong>L1·L2 연계 위계</strong> 클릭 시 <strong>3단계 위계도감</strong> 해당 법정 서비스로 즉시 동기화 이동합니다.</span>
-                    </div>
-                </div>
-
-                <!-- Table 1: 보건복지부 핵심 법정지침서 (섹션 Ⅰ) -->
-                <section id="section1-block" class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 overflow-hidden">
-                    <div class="bg-surface-container-low px-4 py-3.5 border-b border-outline-variant/30 flex flex-wrap items-center justify-between gap-3">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-primary text-on-primary flex items-center justify-center font-bold text-[14px] shadow-xs">
-                                Ⅰ
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-2 flex-wrap">
-                                    <h2 class="font-headline-sm text-headline-sm text-primary font-bold">
-                                        섹션 Ⅰ: 중앙 정부부처 핵심 법정지침서
-                                    </h2>
-                                    <span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-label-sm text-label-sm font-semibold">
-                                        보건복지부 ${countMohw}종
-                                    </span>
-                                    <span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
-                                        2026년 정본 반영
-                                    </span>
-                                </div>
-                                <p class="text-legal-code font-legal-code text-on-surface-variant mt-0.5">
-                                    사회복지관·노인복지·장애인자립·아동돌봄·보육 등 보건복지부 주요 복지사업 핵심 지침
-                                </p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-legal-code font-legal-code text-outline hidden md:inline">수록 분량: 14,840면 (10개 주요 편제)</span>
-                            <a href="${config.driveDownloadUrl}" target="_blank"
-                               class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-lowest hover:bg-surface-container-high text-primary font-label-sm text-label-sm transition-colors border border-outline-variant/30 shadow-xs">
-                                <span class="material-symbols-outlined text-[16px]">folder_zip</span>
-                                <span>복지부 지침 일괄 (337MB)</span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                        <caption class="sr-only">공식 지침서 마스터 아카이브 (섹션 Ⅱ: 범부처 및 특화·전문 실천지침서)</caption>
-                        <caption class="sr-only">공식 지침서 마스터 아카이브 (섹션 Ⅰ: 중앙 정부부처 핵심 법정지침서)</caption>
-                            <thead class="bg-surface-container-low/60 text-on-surface-variant font-label-sm text-label-sm border-b border-surface-container">
-                                <tr class="h-10">
-                                    <th scope="col" class="py-2.5 px-3 w-32 font-semibold border-r border-surface-container text-center">소관 부처</th>
-                                    <th scope="col" class="py-2.5 px-3.5 w-36 font-semibold border-r border-surface-container">담당과</th>
-                                    <th scope="col" class="py-2.5 px-4 w-72 font-semibold border-r border-surface-container">지침서 공식 명칭 &amp; 판본</th>
-                                    <th scope="col" class="py-2.5 px-4 w-60 font-semibold border-r border-surface-container">핵심 관할 법령 &amp; 대상 시설</th>
-                                    <th scope="col" class="py-2.5 px-4 font-semibold border-r border-surface-container">주요 수록 챕터 및 핵심 지침 요약</th>
-                                    <th scope="col" class="py-2.5 px-4 w-48 text-right font-semibold">연계 위계 &amp; 원문 열람</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table1-tbody" class="divide-y divide-surface-container text-body-sm font-body-sm text-on-surface">
-                                ${renderDesktopRows(mohwFiles)}
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <!-- Table 2: 범부처 및 특화·전문 실천지침서 (섹션 Ⅱ) -->
-                <section id="section2-block" class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 overflow-hidden">
-                    <div class="bg-surface-container-low px-4 py-3.5 border-b border-outline-variant/30 flex flex-wrap items-center justify-between gap-3">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-secondary text-on-secondary flex items-center justify-center font-bold text-[14px] shadow-xs">
-                                Ⅱ
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-2 flex-wrap">
-                                    <h2 class="font-headline-sm text-headline-sm text-primary font-bold">
-                                        섹션 Ⅱ: 범부처 및 특화·전문 실천지침서
-                                    </h2>
-                                    <span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
-                                        관계부처 및 공익법인 ${nonMohwFiles.length}종
-                                    </span>
-                                    <span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-primary font-label-sm text-label-sm font-semibold">
-                                        협력행정 연동
-                                    </span>
-                                </div>
-                                <p class="text-legal-code font-legal-code text-on-surface-variant mt-0.5">
-                                    여성가족부·고용노동부·교육부·기초생활·외교통상 및 공동모금회 배분 표준안
-                                </p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-legal-code font-legal-code text-outline hidden md:inline">수록 분량: 9,340면 (10개 특화 편제)</span>
-                            <a href="${config.driveDownloadUrl}" target="_blank"
-                               class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-lowest hover:bg-surface-container-high text-primary font-label-sm text-label-sm transition-colors border border-outline-variant/30 shadow-xs">
-                                <span class="material-symbols-outlined text-[16px]">folder_zip</span>
-                                <span>범부처 지침 일괄 (114MB)</span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead class="bg-surface-container-low/60 text-on-surface-variant font-label-sm text-label-sm border-b border-surface-container">
-                                <tr class="h-10">
-                                    <th scope="col" class="py-2.5 px-3 w-32 font-semibold border-r border-surface-container text-center">소관 기관</th>
-                                    <th scope="col" class="py-2.5 px-3.5 w-36 font-semibold border-r border-surface-container">소속 부서</th>
-                                    <th scope="col" class="py-2.5 px-4 w-72 font-semibold border-r border-surface-container">지침서 공식 명칭 &amp; 판본</th>
-                                    <th scope="col" class="py-2.5 px-4 w-60 font-semibold border-r border-surface-container">핵심 관할 법령 &amp; 대상 시설</th>
-                                    <th scope="col" class="py-2.5 px-4 font-semibold border-r border-surface-container">주요 수록 챕터 및 핵심 지침 요약</th>
-                                    <th scope="col" class="py-2.5 px-4 w-48 text-right font-semibold">연계 위계 &amp; 원문 열람</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table2-tbody" class="divide-y divide-surface-container text-body-sm font-body-sm text-on-surface">
-                                ${renderDesktopRows(nonMohwFiles)}
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <!-- Table 3: Track 2 범부처·확장 안전망 실천지침서 (섹션 Ⅲ) -->
-                <section id="section3-block" class="bg-surface-container-lowest rounded-xl shadow-sm border border-emerald-200/80 overflow-hidden">
-                    <div class="bg-emerald-50/70 px-4 py-3.5 border-b border-emerald-200/70 flex flex-wrap items-center justify-between gap-3">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-emerald-700 text-white flex items-center justify-center font-bold text-[14px] shadow-xs">
-                                Ⅲ
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-2 flex-wrap">
-                                    <h2 class="font-headline-sm text-headline-sm text-emerald-950 font-bold">
-                                        섹션 Ⅲ: 범부처·사회혁신 안전망 실천지침서
-                                    </h2>
-                                    <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-900 font-label-sm text-label-sm font-semibold">
-                                        6대 확장영역 · 17종
-                                    </span>
-                                    <span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-emerald-900 font-label-sm text-label-sm font-semibold">
-                                        범부처·사회혁신 1:1 딥링킹
-                                    </span>
-                                </div>
-                                <p class="text-legal-code font-legal-code text-emerald-900/80 mt-0.5">
-                                    법무부·보건의료·교육부·국토교통부·금융위원회·행정안전부·문체부·농식품부 범부처 실무지침
-                                </p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-legal-code font-legal-code text-emerald-900/70 hidden md:inline">수록 분량: 204면 (17종 핵심요강)</span>
-                            <button type="button" onclick="window.showView('fields')"
-                               class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-emerald-100/70 text-emerald-900 font-label-sm text-label-sm transition-colors border border-emerald-200 shadow-xs cursor-pointer">
-                                <span class="material-symbols-outlined text-[16px]">domain</span>
-                                <span>분야·시설 도감 보기</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead class="bg-emerald-50/40 text-on-surface-variant font-label-sm text-label-sm border-b border-surface-container">
-                                <tr class="h-10">
-                                    <th scope="col" class="py-2.5 px-3 w-32 font-semibold border-r border-surface-container text-center">소관 기관</th>
-                                    <th scope="col" class="py-2.5 px-3.5 w-36 font-semibold border-r border-surface-container">소속 부서</th>
-                                    <th scope="col" class="py-2.5 px-4 w-72 font-semibold border-r border-surface-container">지침서 공식 명칭 &amp; 판본</th>
-                                    <th scope="col" class="py-2.5 px-4 w-60 font-semibold border-r border-surface-container">핵심 관할 법령 &amp; 대상 시설</th>
-                                    <th scope="col" class="py-2.5 px-4 font-semibold border-r border-surface-container">주요 수록 챕터 및 핵심 지침 요약</th>
-                                    <th scope="col" class="py-2.5 px-4 w-48 text-right font-semibold">연계 위계 &amp; 원문 열람</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table3-tbody" class="divide-y divide-surface-container text-body-sm font-body-sm text-on-surface">
-                                ${renderDesktopRows(sec3Files)}
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-            </div>
-
-            
-            </div><!-- /hidden md:block -->
-
-            <!-- ==================== 공식 지침서 아카이브 모바일 뷰 (Google Stitch 규격) ==================== -->
-            <div class="block md:hidden w-full pb-16" id="mobileGuidelinesView">
-                <div class="mobile-archive-container max-w-md mx-auto px-4 py-3 space-y-4 font-sans text-slate-800">
-
-                  <!-- 1. 지침서 아카이브 히어로 카드 -->
-                  <div class="bg-gradient-to-br from-blue-700 via-indigo-800 to-slate-900 rounded-2xl p-4 text-white shadow-md relative overflow-hidden">
-                    <div class="flex items-center justify-between mb-2">
-                      <span class="px-2 py-0.5 rounded-full bg-blue-500/30 text-blue-200 text-[10px] font-bold">2026 정부 공인 정본</span>
-                      <span class="text-[10px] text-blue-300">총 ${countAll}종 454MB</span>
-                    </div>
-                    <h2 class="text-base font-extrabold tracking-tight">공식 지침서 아카이브</h2>
-                    <p class="text-xs text-blue-100/90 mt-0.5">보건복지부 및 범부처 공식 사업안내서 PDF 전수 보관</p>
-                    
-                    <div class="grid grid-cols-3 gap-2 pt-3 text-center">
-                      <div class="bg-white/10 rounded-xl py-2">
-                        <div class="text-[10px] text-blue-200">지침서 확보</div>
-                        <div class="text-sm font-black text-white font-num">${countAll}종 전수</div>
-                      </div>
-                      <div class="bg-white/10 rounded-xl py-2">
-                        <div class="text-[10px] text-blue-200">중앙부처</div>
-                        <div class="text-sm font-black text-white font-num">14개 부처</div>
-                      </div>
-                      <div class="bg-white/10 rounded-xl py-2">
-                        <div class="text-[10px] text-blue-200">인건비 기준</div>
-                        <div class="text-sm font-black text-white font-num">+3.0% 반영</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- 2. 지침서 검색 & 패싯 알약 필터 -->
-                  <div class="space-y-2">
-                    <div class="relative">
-                      <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
-                      <input type="text" id="mobile-archive-search" oninput="handleMobileArchiveSearch(this.value)" placeholder="지침서명, 소관부서, 키워드 검색..." 
-                             class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-white text-xs focus:ring-2 focus:ring-blue-500 shadow-xs">
-                    </div>
-
-                    <!-- 발행연도 필터 -->
-                    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="mobile-archive-year-pills">
-                      <span class="text-[10px] font-bold text-slate-400 pl-1">발행:</span>
-                      <button type="button" onclick="filterArchiveByYear('전체', this)" class="archive-year-pill px-2.5 py-1 rounded-lg text-xs font-medium bg-white text-slate-600 border border-slate-200 flex-shrink-0 cursor-pointer">전체</button>
-                      <button type="button" onclick="filterArchiveByYear('2026', this)" class="archive-year-pill px-2.5 py-1 rounded-lg text-xs font-extrabold bg-blue-600 text-white flex-shrink-0 shadow-2xs cursor-pointer">2026 최신</button>
-                      <button type="button" onclick="filterArchiveByYear('2025', this)" class="archive-year-pill px-2.5 py-1 rounded-lg text-xs font-medium bg-white text-slate-600 border border-slate-200 flex-shrink-0 cursor-pointer">2025</button>
-                      <button type="button" onclick="filterArchiveByYear('2024', this)" class="archive-year-pill px-2.5 py-1 rounded-lg text-xs font-medium bg-white text-slate-600 border border-slate-200 flex-shrink-0 cursor-pointer">2024</button>
-                    </div>
-
-                    <!-- 소관 부처 필터 -->
-                    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="mobile-archive-ministry-pills">
-                      <span class="text-[10px] font-bold text-slate-400 pl-1">부처:</span>
-                      <button type="button" onclick="filterArchiveByMinistry('전체', this)" class="archive-ministry-pill px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-900 text-white flex-shrink-0 shadow-2xs cursor-pointer">전체 ${countAll}</button>
-                      <button type="button" onclick="filterArchiveByMinistry('TRACK2', this)" class="archive-ministry-pill px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 flex-shrink-0 cursor-pointer">Track 2 (${countSec3})</button>
-                      <button type="button" onclick="filterArchiveByMinistry('보건복지부', this)" class="archive-ministry-pill px-2.5 py-1 rounded-lg text-xs font-medium bg-white text-slate-600 border border-slate-200 flex-shrink-0 cursor-pointer">보건복지부 ${countMohw}</button>
-                      <button type="button" onclick="filterArchiveByMinistry('여성가족부', this)" class="archive-ministry-pill px-2.5 py-1 rounded-lg text-xs font-medium bg-white text-slate-600 border border-slate-200 flex-shrink-0 cursor-pointer">여성가족부 11</button>
-                      <button type="button" onclick="filterArchiveByMinistry('교육부', this)" class="archive-ministry-pill px-2.5 py-1 rounded-lg text-xs font-medium bg-white text-slate-600 border border-slate-200 flex-shrink-0 cursor-pointer">교육부 2</button>
-                      <button type="button" onclick="filterArchiveByMinistry('고용노동부', this)" class="archive-ministry-pill px-2.5 py-1 rounded-lg text-xs font-medium bg-white text-slate-600 border border-slate-200 flex-shrink-0 cursor-pointer">고용노동부</button>
-                      <button type="button" onclick="filterArchiveByMinistry('민간', this)" class="archive-ministry-pill px-2.5 py-1 rounded-lg text-xs font-medium bg-white text-slate-600 border border-slate-200 flex-shrink-0 cursor-pointer">민간제3섹터</button>
-                    </div>
-                  </div>
-
-                  <!-- 3. 모바일 지침서 카드 리스트 -->
-                  <div id="mobileArchiveFacilityBannerContainer" class="hidden"></div>
-                  <div class="space-y-3" id="mobile-archive-cards-feed">
-                    ${renderMobileCards(allFiles)}
-                  </div>
-                  
-                  <div id="mobile-archive-empty-notice" class="hidden py-8 text-center bg-white rounded-2xl border border-slate-200 p-4 space-y-1">
-                    <span class="text-2xl block">🔍</span>
-                    <div class="text-xs font-bold text-slate-700">일치하는 지침서가 없습니다.</div>
-                    <div class="text-[11px] text-slate-400">다른 연도나 부처를 선택해 보세요.</div>
-                  </div>
-                </div>
-            </div>
-
-            <!-- Empty / No Results State -->
-            <div id="noResultsState" class="hidden max-w-7xl mx-auto px-4 py-16 text-center">
-                <div class="w-16 h-16 rounded-full bg-surface-container-high text-outline flex items-center justify-center mx-auto mb-4">
-                    <span class="material-symbols-outlined text-[32px]">search_off</span>
-                </div>
-                <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">검색 결과가 없습니다</h3>
-                <p class="font-body-md text-body-md text-on-surface-variant mt-1.5 max-w-md mx-auto">
-                    입력하신 검색어 또는 선택하신 부처 필터 조건에 부합하는 공식 지침서가 존재하지 않습니다.
-                </p>
-                <button type="button" id="resetSearchFilterBtn"
-                        class="mt-4 px-4 py-2 rounded-xl bg-primary text-on-primary font-label-md text-label-md font-semibold hover:bg-primary-container transition-all">
-                    검색 필터 초기화
-                </button>
-            </div>
-
-            <!-- Bottom Official Bulk Package Banner Section -->
-            <div class="w-full bg-surface-container-low py-10 mt-6 border-t border-outline-variant/20">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="rounded-2xl bg-surface-container-lowest p-6 md:p-8 shadow-sm flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 border border-outline-variant/30">
-                        <div class="flex items-start gap-4">
-                            <div class="w-14 h-14 rounded-2xl bg-primary text-on-primary flex items-center justify-center shrink-0 shadow-md">
-                                <span class="material-symbols-outlined text-[32px]">archive</span>
-                            </div>
-                            <div class="flex flex-col">
-                                <div class="flex items-center gap-2 flex-wrap">
-                                    <span class="px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
-                                        원클릭 실무 패키지
-                                    </span>
-                                    <span class="font-legal-code text-legal-code text-outline">최종 무결성 검증: 2026-02-24</span>
-                                </div>
-                                <h3 class="font-headline-md text-headline-md text-primary mt-1 font-bold">
-                                    2026 대한민국 사회복지 공식 지침서 70종 전종 통합 패키지
-                                </h3>
-                                <p class="font-body-md text-body-md text-on-surface-variant mt-1.5 max-w-2xl">
-                                    12대 핵심 분야 및 Track 2 범부처 안전망 전 영역의 보건복지부, 여성가족부, 법무부, 교육부 등 주무부처 정본 지침서 70종(총 24,384면, OCR 텍스트 검색 가능 PDF)을 단일 ZIP 압축 아카이브로 즉시 일괄 다운로드하실 수 있습니다.
-                                </p>
-                                <div class="flex items-center gap-4 text-legal-code font-legal-code text-outline mt-3 flex-wrap">
-                                    <span>용량: 약 454.01 MB</span>
-                                    <span>•</span>
-                                    <span>포맷: PDF / HWPX 정본 원문</span>
-                                    <span>•</span>
-                                    <span>출처표시: 공공누리 제1유형</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto shrink-0">
-                            <a href="${config.driveDownloadUrl}" target="_blank"
-                               class="flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md shadow-md transition-all">
-                                <span class="material-symbols-outlined text-[20px]">download</span>
-                                <span>전종 일괄 다운로드 (ZIP, 454MB)</span>
-                            </a>
-                            <button type="button" class="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-surface-container-high hover:bg-surface-container-highest border border-outline-variant/40 text-primary font-label-md text-label-md transition-all text-center shadow-xs cursor-pointer" onclick="showView(\'hierarchy\')">
-                                <span class="material-symbols-outlined text-[20px] text-secondary">account_tree</span>
-                                <span>3단계 위계도감 218단위 연동조회</span>
-                                <span class="px-1.5 py-0.2 rounded-full font-label-sm text-label-sm bg-secondary-container text-on-secondary-container font-semibold">SCREEN_9</span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Legal Authority Attribution -->
-                    <div class="mt-6 text-center text-legal-code font-legal-code text-outline space-y-1">
-                        <p>본 아카이브는 대한민국 공공저작물 자유이용허락 공공누리 제1유형(출처표시 원칙) 기준에 의거하여 배포 및 열람 서비스를 제공합니다.</p>
-                        <p>소관 지침서의 모든 행정적·법적 권리는 대한민국 보건복지부, 여성가족부, 교육부, 고용노동부 및 각 소관 부처에 귀속됩니다.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        `;
-
-        bindArchiveEvents(allFiles);
-
-        // 0. 시설 분류 1:1 직결 필터링 (options.facilityId / options.docIds)
-        if (options.facilityId) {
-            const mappedDocIds = (Array.isArray(options.docIds) && options.docIds.length > 0)
-                ? options.docIds
-                : (FACILITY_ARCHIVE_MAP[options.facilityId] || ['doc-003']);
-            currentArchiveFacilityId = options.facilityId;
-            currentArchiveFacilityName = options.facilityName || options.facilityId;
-            currentArchiveDocIds = mappedDocIds;
-            currentMinistry = 'all';
-            searchQuery = '';
-            const searchInput = document.getElementById('guidelineSearchInput');
-            if (searchInput) searchInput.value = '';
-            const clearBtn = document.getElementById('clearSearchBtn');
-            if (clearBtn) clearBtn.classList.add('hidden');
-            document.querySelectorAll('.ministry-pill').forEach(p => {
-                if (p.getAttribute('data-ministry') === 'all') {
-                    p.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
-                    p.classList.add('bg-primary', 'text-on-primary', 'active-pill');
-                } else {
-                    p.classList.remove('bg-primary', 'text-on-primary', 'active-pill');
-                    p.classList.add('bg-surface-container-low', 'text-on-surface-variant');
-                }
-            });
-            if (typeof activeFilterGuidelines === 'function') {
-                activeFilterGuidelines();
+    function resolveArchiveOrgInfo(file) {
+        const catKey = file._categoryKey || '';
+        const fId = file.id || '';
+        if (catKey === '09_민간제3섹터_사회적경제_종교생태계') {
+            let axis = '축 1 · 민법 제32조 비영리·공익법인';
+            let icon = '🌍';
+            if (['doc-054', 'doc-055', 'doc-056'].includes(fId)) {
+                axis = '축 2 · 사회적경제·연대';
+                icon = '🌱';
+            } else if (['doc-069', 'doc-070'].includes(fId)) {
+                axis = '축 3 · 종교법인·문화유산 공익';
+                icon = '🕊️';
             }
-            setTimeout(() => {
-                const bannerEl = (window.innerWidth >= 768)
-                    ? document.getElementById('archiveFacilityBannerContainer')
-                    : document.getElementById('mobileArchiveFacilityBannerContainer');
-                if (bannerEl && !bannerEl.classList.contains('hidden')) {
-                    bannerEl.scrollIntoView({ behavior: 'instant', block: 'start' });
-                }
-                const matchedRows = document.querySelectorAll('#archiveTablesContainer .guideline-row');
-                if (typeof window.triggerMatchHighlightAll === 'function' && matchedRows.length > 0) {
-                    window.triggerMatchHighlightAll(Array.from(matchedRows));
-                }
-            }, 120);
+            return {
+                isCivil: true,
+                axis,
+                primary: file.ministry || '민간제3섹터',
+                orgType: '제3섹터·공익',
+                lineage: axis,
+                lineageLabel: axis,
+                lineageIcon: icon,
+                orgIcon: icon
+            };
         }
 
-        // 1. Search keyword filter request handling (options.search)
-        if (options.search) {
-            currentArchiveFacilityId = null;
-            currentArchiveFacilityName = null;
-            currentArchiveDocIds = null;
-            const searchInput = document.getElementById('guidelineSearchInput');
-            if (searchInput) {
-                searchInput.value = options.search;
-                searchQuery = options.search.toLowerCase();
-                const clearBtn = document.getElementById('clearSearchBtn');
-                if (clearBtn) clearBtn.classList.remove('hidden');
-                setTimeout(() => {
-                    const pills = document.querySelectorAll('.ministry-pill');
-                    pills.forEach(p => {
-                        if (p.getAttribute('data-ministry') === 'all') {
-                            p.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
-                            p.classList.add('bg-primary', 'text-on-primary', 'active-pill');
-                        } else {
-                            p.classList.remove('bg-primary', 'text-on-primary', 'active-pill');
-                            p.classList.add('bg-surface-container-low', 'text-on-surface-variant');
-                        }
+        const L = safeArchiveLineage(file.ministry);
+        return {
+            isCivil: false,
+            axis: null,
+            primary: L.primary || file.ministry,
+            orgType: L.orgType || '부',
+            lineage: L.lineage || file.ministry,
+            lineageLabel: L.lineageLabel || file.ministry,
+            lineageIcon: L.lineageIcon || '🏛️',
+            orgIcon: L.orgIcon || '🏛️'
+        };
+    }
+
+    function matchArchiveMinistryFilter(file, orgInfo, filterKey) {
+        if (!filterKey || filterKey === '전체' || filterKey === 'all') return true;
+        if (filterKey === '민간제3섹터') return !!orgInfo.isCivil;
+        if (orgInfo.isCivil) return false;
+
+        const m = String(file.ministry || '');
+        if (filterKey === '행안·국토·금융') {
+            return m.includes('행정안전부') || m.includes('행안') || m.includes('국토교통부') || m.includes('금융위원회') || m.includes('국무조정실');
+        }
+        if (typeof window !== 'undefined' && typeof window.matchMinistryFilter === 'function') {
+            return window.matchMinistryFilter(m, filterKey);
+        }
+        if (filterKey === '성평등가족부' || filterKey === '여성가족부') {
+            return m.includes('성평등가족부') || m.includes('여성가족부');
+        }
+        if (filterKey === '고용·보훈·국방') {
+            return m.includes('고용노동부') || m.includes('국가보훈부') || m.includes('국방부');
+        }
+        if (filterKey === '질병청·통일부') {
+            return m.includes('질병관리청') || m.includes('통일부');
+        }
+        return m.includes(filterKey);
+    }
+
+    function collectArchiveFiles() {
+        const db = (typeof GUIDELINES_ARCHIVE_DB !== 'undefined') ? GUIDELINES_ARCHIVE_DB : [];
+        const allFiles = [];
+        db.forEach(cat => {
+            (cat.sources || []).forEach(src => {
+                (src.files || []).forEach(file => {
+                    allFiles.push({
+                        ...file,
+                        _categoryKey: cat.categoryKey,
+                        _categoryName: cat.categoryName,
+                        _categoryIcon: cat.icon,
+                        _driveFolderUrl: cat.driveFolderUrl || '',
+                        _sourceName: src.sourceName
                     });
-                    currentMinistry = 'all';
-                    if (typeof activeFilterGuidelines === 'function') {
-                        activeFilterGuidelines();
-                    }
+                });
+            });
+        });
+        return allFiles;
+    }
 
-                    // 1:1 매칭 지침서 행 및 카드 외곽선 초록 테두리 발광
-                    setTimeout(() => {
-                        const matchedRows = document.querySelectorAll('.guideline-row');
-                        const matchedCards = document.querySelectorAll('#guidelinesMobileList > div');
-                        const targets = (window.innerWidth >= 768) ? matchedRows : matchedCards;
-                        if (targets && targets.length > 0) {
-                            if (typeof window.triggerMatchHighlight === 'function') {
-                                window.triggerMatchHighlight(targets[0]);
-                            }
-                            targets[0].scrollIntoView({ behavior: 'instant', block: 'center' });
-                        }
-                    }, 120);
-                }, 50);
-            }
-        }
-
-        // 2. Highlight request handling
-        if (options.highlightId) {
-            setTimeout(() => {
-                highlightAndScrollGuideline(options.highlightId);
-            }, 220);
-        }
-    };
-
-    function renderArchiveFacilityBanner(facilityId, facilityName, matchedFiles) {
+    function renderArchiveFacilityBanner(facilityId, facilityName, filteredFiles) {
         const desktopBanner = document.getElementById('archiveFacilityBannerContainer');
         const mobileBanner = document.getElementById('mobileArchiveFacilityBannerContainer');
-        if (!facilityId || !currentArchiveDocIds) {
-            if (desktopBanner) { desktopBanner.innerHTML = ''; desktopBanner.classList.add('hidden'); }
-            if (mobileBanner) { mobileBanner.innerHTML = ''; mobileBanner.classList.add('hidden'); }
+        if (!facilityId && !facilityName) {
+            [desktopBanner, mobileBanner].forEach(el => {
+                if (el) {
+                    el.innerHTML = '';
+                    el.classList.add('hidden');
+                }
+            });
             return;
         }
-        const count = (matchedFiles || []).length;
-        const desktopHtml = `
-            <div id="archive-facility-filter-banner" class="p-4 bg-gradient-to-r from-blue-50 via-indigo-50 to-emerald-50 border border-blue-300/80 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-xs animate-fadeIn">
+        const docCount = (filteredFiles || []).length;
+        const bannerHtml = `
+            <div class="mb-5 p-4 bg-gradient-to-r from-blue-50 via-indigo-50 to-sky-50 border border-blue-300/80 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-xs animate-fadeIn">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-lg shadow-2xs shrink-0">📚</div>
+                    <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-lg shrink-0">📖</div>
                     <div>
                         <div class="flex items-center gap-2 flex-wrap">
-                            <span class="text-xs font-bold text-blue-800 uppercase tracking-wider">📚 시설 맞춤 공식 지침서</span>
-                            <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-900 font-extrabold border border-blue-200">정본 지침서 ${count}종</span>
+                            <span class="text-xs font-bold text-blue-800 uppercase tracking-wider">시설 1:1 매칭 공식 지침서</span>
+                            <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-900 font-extrabold border border-blue-200">${docCount}종 매칭</span>
                         </div>
-                        <h3 class="text-base font-black text-slate-900 mt-1">
-                            <span class="text-blue-700 font-black">${escapeHtml(facilityName)}</span> 직결 공식 사업안내·운영지침
+                        <h3 class="text-base font-black text-slate-900 mt-0.5">
+                            <span class="text-blue-700">${escA(facilityName || facilityId)}</span> 관련 소관부처 정본 지침서
                         </h3>
                     </div>
                 </div>
-                <div class="flex items-center gap-2 shrink-0 self-end md:self-auto">
-                    <button type="button" onclick="window.clearArchiveFacilityFilter()" class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-100 border border-slate-300 rounded-xl shadow-2xs transition cursor-pointer">
-                        <span>✕</span><span>전체 70종 보기</span>
+                <div class="flex items-center gap-2 shrink-0">
+                    <button type="button" onclick="window.clearArchiveFacilityFilter()" class="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-xs font-bold text-slate-700 cursor-pointer transition">
+                        ✕ 70종 전체 보기
                     </button>
-                    <button type="button" onclick="window.jumpToFacility('${escapeHtml(facilityId)}'); return false;" class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-2xs transition cursor-pointer">
-                        <span>🏛️</span><span>시설도감으로 복귀</span>
+                    <button type="button" onclick="window.jumpToFacility('${escA(facilityId || '')}'); return false;" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold cursor-pointer transition">
+                        🏛️ 시설도감 복귀
                     </button>
                 </div>
             </div>
         `;
-        const mobileHtml = `
-            <div class="p-3 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-300 rounded-2xl space-y-2 shadow-2xs">
-                <div class="flex items-center justify-between gap-2">
-                    <span class="text-[11px] font-extrabold text-blue-800">📚 시설 맞춤 공식 지침서 · 정본 ${count}종</span>
-                    <button type="button" onclick="window.clearArchiveFacilityFilter()" class="px-2 py-0.5 rounded-lg bg-white border border-slate-300 text-[10px] font-bold text-slate-700 cursor-pointer">✕ 전체 70종</button>
-                </div>
-                <div class="text-xs font-black text-slate-900">${escapeHtml(facilityName)} 직결 사업안내</div>
-                <button type="button" onclick="window.jumpToFacility('${escapeHtml(facilityId)}'); return false;" class="w-full py-1.5 rounded-xl bg-blue-600 text-white font-bold text-[11px] cursor-pointer">🏛️ 시설도감으로 복귀</button>
-            </div>
-        `;
-        if (desktopBanner) { desktopBanner.innerHTML = desktopHtml; desktopBanner.classList.remove('hidden'); }
-        if (mobileBanner) { mobileBanner.innerHTML = mobileHtml; mobileBanner.classList.remove('hidden'); }
+        [desktopBanner, mobileBanner].forEach(el => {
+            if (el) {
+                el.innerHTML = bannerHtml;
+                el.classList.remove('hidden');
+            }
+        });
     }
 
     window.clearArchiveFacilityFilter = function () {
         currentArchiveFacilityId = null;
         currentArchiveFacilityName = null;
         currentArchiveDocIds = null;
-        currentMinistry = 'all';
+        currentMinistry = '전체';
         searchQuery = '';
-        const searchInput = document.getElementById('guidelineSearchInput');
-        if (searchInput) searchInput.value = '';
-        const clearBtn = document.getElementById('clearSearchBtn');
-        if (clearBtn) clearBtn.classList.add('hidden');
-        document.querySelectorAll('.ministry-pill').forEach(p => {
-            if (p.getAttribute('data-ministry') === 'all') {
-                p.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
-                p.classList.add('bg-primary', 'text-on-primary', 'active-pill');
+        const input = document.getElementById('guidelineSearchInput');
+        if (input) input.value = '';
+        if (typeof activeFilterGuidelines === 'function') activeFilterGuidelines();
+    };
+
+    window.renderArchiveView = function (options = {}) {
+        const container = document.getElementById('view-archive');
+        if (!container) return;
+
+        const config = (typeof GOOGLE_DRIVE_ARCHIVE_CONFIG !== 'undefined') ? GOOGLE_DRIVE_ARCHIVE_CONFIG : {};
+        const db = (typeof GUIDELINES_ARCHIVE_DB !== 'undefined') ? GUIDELINES_ARCHIVE_DB : [];
+        const allFiles = collectArchiveFiles();
+
+        currentMinistry = '전체';
+        searchQuery = '';
+        currentArchiveFacilityId = null;
+        currentArchiveFacilityName = null;
+        currentArchiveDocIds = null;
+
+        if (options && options.facilityId) {
+            const aliasMap = (typeof window !== 'undefined' && window.FACILITY_ROW_ID_ALIASES) ? window.FACILITY_ROW_ID_ALIASES : {};
+            const resolvedId = aliasMap[options.facilityId] || options.facilityId;
+            currentArchiveFacilityId = resolvedId;
+            currentArchiveFacilityName = options.facilityName || resolvedId;
+            const mapped = FACILITY_ARCHIVE_MAP[options.facilityId] || FACILITY_ARCHIVE_MAP[resolvedId];
+            if (mapped && mapped.length > 0) {
+                currentArchiveDocIds = mapped;
+            }
+        }
+
+        const centralFiles = allFiles.filter(f => !resolveArchiveOrgInfo(f).isCivil);
+        const civilFiles = allFiles.filter(f => resolveArchiveOrgInfo(f).isCivil);
+        const totalPagesSum = allFiles.reduce((acc, f) => acc + (Number(f.totalPages) || 0), 0);
+
+        const pillCounts = {};
+        ARCHIVE_FILTER_PILLS.forEach(p => {
+            if (p.key === '전체') {
+                pillCounts[p.key] = allFiles.length;
             } else {
-                p.classList.remove('bg-primary', 'text-on-primary', 'active-pill');
-                p.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+                pillCounts[p.key] = allFiles.filter(f => matchArchiveMinistryFilter(f, resolveArchiveOrgInfo(f), p.key)).length;
             }
         });
-        window.location.hash = '#archive';
-        if (typeof activeFilterGuidelines === 'function') {
-            activeFilterGuidelines();
+
+        const pillsHtml = ARCHIVE_FILTER_PILLS.map(p => {
+            const cnt = pillCounts[p.key] || 0;
+            if (p.key === '전체') {
+                return `<button type="button" data-ministry="전체" onclick="window.setArchiveMinistryFilter('전체', this)" class="archive-ministry-pill active-pill px-3 py-1.5 rounded-full text-xs font-extrabold bg-primary text-on-primary shadow-2xs transition cursor-pointer">전체 (${cnt}종)</button>`;
+            }
+            if (p.isCivil) {
+                return `<button type="button" data-ministry="${p.key}" onclick="window.setArchiveMinistryFilter('${p.key}', this)" class="archive-ministry-pill px-3 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 transition cursor-pointer flex items-center gap-1 shadow-2xs ml-auto"><span>${p.icon}</span><span>${p.label}</span><span class="px-1.5 py-0.2 bg-white/80 rounded-full text-[10px]">${cnt}</span></button>`;
+            }
+            return `<button type="button" data-ministry="${p.key}" onclick="window.setArchiveMinistryFilter('${p.key}', this)" class="archive-ministry-pill px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">${p.icon} ${p.label} (${cnt})</button>`;
+        }).join('');
+
+        const driveCategoryStripHtml = db.map(cat => {
+            const folderUrl = cat.driveFolderUrl || config.driveFolderUrl || 'https://drive.google.com/drive/folders/1xWxy_TsQicTWTuZpoNTBl7-26KirLZe-?usp=sharing';
+            return `
+                <a href="${escA(folderUrl)}" target="_blank" rel="noopener noreferrer"
+                   class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white hover:bg-blue-600 hover:text-white border border-slate-200 text-[11px] font-bold text-slate-700 transition shadow-2xs">
+                    <span>${cat.icon || '📁'}</span>
+                    <span>${escA(cat.categoryName)}</span>
+                    <span class="px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 text-[10px] font-extrabold">${cat.fileCount || 0}</span>
+                    <span class="text-[10px] opacity-70">↗</span>
+                </a>
+            `;
+        }).join('');
+
+        container.innerHTML = `
+            <div class="flex flex-col w-full animate-fadeIn pb-16">
+                <!-- 1. Hero & Master Package Header -->
+                <section class="w-full bg-surface-container-low py-8 md:py-10 border-b border-outline-variant/20 hidden md:block">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+                        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                            <div class="space-y-2 max-w-3xl">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="px-2.5 py-1 rounded-full bg-blue-100 text-blue-900 text-xs font-extrabold border border-blue-200">PURE PDF STANDARD v3.5</span>
+                                    <span class="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">✓ 70종 100% 순수 PDF 정본 단일화 (${totalPagesSum.toLocaleString()}면)</span>
+                                </div>
+                                <h1 class="text-3xl font-black text-primary tracking-tight">공식 지침서 아카이브 70종 마스터 통합표</h1>
+                                <p class="text-sm text-on-surface-variant leading-relaxed">
+                                    상단 탭 1(45개 시설체계) · 탭 2(219개 위계도감)와 동일한 <strong class="text-slate-900">9대 원클릭 부처·섹터 필터</strong> 및 <strong class="text-slate-900">6단계 소속계통-소관기관 체계</strong>로 각 부처·공공기관의 최신 공식 사업안내 PDF 원문을 즉시 열람·다운로드합니다.
+                                </p>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5 shrink-0">
+                                <a href="${escA(config.driveFolderUrl || 'https://drive.google.com/drive/folders/1xWxy_TsQicTWTuZpoNTBl7-26KirLZe-?usp=sharing')}" target="_blank" rel="noopener noreferrer"
+                                   class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-blue-50 text-blue-800 border border-blue-300 font-bold text-xs shadow-2xs transition">
+                                    <span>☁️</span><span>Google Drive 70종 정본 폴더 ↗</span>
+                                </a>
+                                <a href="${escA(config.driveDownloadUrl || 'https://drive.google.com/uc?export=download&id=1SYOUxXgZxwmW-5FlJf4iQJUmMF9JgkdF')}" target="_blank" rel="noopener noreferrer"
+                                   class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-bold text-xs shadow-sm transition">
+                                    <span>📦</span><span>Drive 전체 ZIP 내려받기 (${escA(config.zipSizeStr || config.totalSizeStr || '366.3 MB')})</span>
+                                </a>
+                                <a href="${escA(config.localZipUrl || 'docs/2026_사회복지_공식지침서_마스터_풀패키지.zip')}" download="2026_사회복지_공식지침서_70종_마스터_풀패키지.zip"
+                                   class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs shadow-sm transition">
+                                    <span>💾</span><span>로컬 ZIP 바로받기</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- 9개 부처·섹터별 Google Drive 원클릭 폴더 스트립 -->
+                        <div class="bg-white/90 rounded-xl p-3.5 border border-slate-200/80 space-y-2">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
+                                    <span>📂</span><span>9대 분야별 Google Drive 정본 폴더 직통 연결 (로컬 아카이브 1:1 미러링)</span>
+                                </span>
+                                <span class="text-[11px] text-slate-500 font-semibold">전 파일 100% 순수 PDF · 비정형 HWP/XLSX 변환 완료</span>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-1.5">
+                                ${driveCategoryStripHtml}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. Unified Search & 9-Pill Filter Toolbar -->
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 w-full hidden md:block">
+                    <div id="archiveFacilityBannerContainer" class="hidden"></div>
+                    <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 space-y-3">
+                        <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+                            <div class="relative flex-1">
+                                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">search</span>
+                                <input type="text" id="guidelineSearchInput" placeholder="지침서명, 소관기관, 근거법령, 핵심 챕터 검색 (예: 노인보건복지, 발달장애, 스마일센터, KOICA)..."
+                                       class="w-full pl-9 pr-10 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition">
+                                <button type="button" id="clearSearchBtn" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-700 font-bold cursor-pointer">✕</button>
+                            </div>
+                            <div class="flex items-center gap-2 shrink-0">
+                                <span id="searchBadgeCount" class="text-xs font-bold text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200">
+                                    ${allFiles.length}건 표시중
+                                </span>
+                                <button type="button" id="exportCsvBtn" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold cursor-pointer transition">
+                                    <span>📊</span><span>Excel (.csv)</span>
+                                </button>
+                                <button type="button" id="resetArchiveTopBtn" onclick="window.clearArchiveFacilityFilter()" class="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-600 cursor-pointer transition">
+                                    초기화
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 탭 1·2·3 공통 9대 원클릭 부처·섹터 필터 바 -->
+                        <div class="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-100">
+                            ${pillsHtml}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Desktop Unified Tables Container -->
+                <div id="archiveTablesContainer" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 w-full hidden md:flex flex-col gap-8">
+                    <!-- 단일 중앙행정기관 6단계 마스터 아카이브 표 (62종) -->
+                    <div id="archiveCentralSection" class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
+                        <div class="px-5 py-3.5 bg-gradient-to-r from-slate-900 to-slate-800 text-white flex items-center justify-between gap-4">
+                            <div class="flex items-center gap-2.5">
+                                <span class="text-lg">🏛️</span>
+                                <div>
+                                    <h2 class="text-sm font-extrabold tracking-tight">중앙행정기관 소관 공식 지침서 6단계 마스터 통합표</h2>
+                                    <p class="text-[11px] text-slate-300">11개 소속 계통 · 12개 부처·청·위원회 · 중앙부처 정본 PDF ${centralFiles.length}종 (탭 1·2 동일 기준)</p>
+                                </div>
+                            </div>
+                            <span id="archiveCentralCountBadge" class="px-2.5 py-1 rounded-lg bg-white/10 text-xs font-bold text-sky-300">
+                                중앙 ${centralFiles.length}종
+                            </span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table id="archiveCentralTable" class="w-full text-left border-collapse table-fixed min-w-[960px]">
+                                <colgroup>
+                                    <col class="w-[10%]">
+                                    <col class="w-[15%]">
+                                    <col class="w-[24%]">
+                                    <col class="w-[17%]">
+                                    <col class="w-[16%]">
+                                    <col class="w-[18%]">
+                                </colgroup>
+                                <thead>
+                                    <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-extrabold text-slate-600 uppercase tracking-wider">
+                                        <th class="py-3 px-3 border-r border-slate-200/80">1열 소속 계통<br><span class="text-[10px] font-normal text-slate-400">(부 / 국무총리)</span></th>
+                                        <th class="py-3 px-3 border-r border-slate-200/80">2열 소관기관 · 담당과<br><span class="text-[10px] font-normal text-slate-400">(Drive 폴더 직통)</span></th>
+                                        <th class="py-3 px-3 border-r border-slate-200/80">3열 지침서 공식 명칭 · 판본<br><span class="text-[10px] font-normal text-slate-400">(순수 PDF · 면수 · 용량)</span></th>
+                                        <th class="py-3 px-3 border-r border-slate-200/80">4열 핵심 관할 법령 · 대상시설<br><span class="text-[10px] font-normal text-slate-400">(시설도감 1:1 직결)</span></th>
+                                        <th class="py-3 px-3 border-r border-slate-200/80">5열 주요 수록 챕터<br><span class="text-[10px] font-normal text-slate-400">(핵심 지침 요약)</span></th>
+                                        <th class="py-3 px-3">6열 연계 위계 · 원문 열람/다운로드<br><span class="text-[10px] font-normal text-slate-400">(위계도감 · 로컬PDF · Drive)</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="archiveCentralTbody" class="divide-y divide-slate-200 text-xs">
+                                    ${renderDesktopRows(centralFiles, false)}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 하단 민간 제3섹터 · 사회적경제 · 종교공익 생태계 지침서 섹션 (8종) -->
+                    <div id="archiveCivilSection" class="bg-white rounded-2xl shadow-md border-2 border-amber-200/80 overflow-hidden">
+                        <div class="px-5 py-4 bg-gradient-to-r from-amber-50 via-orange-50/70 to-emerald-50/70 border-b border-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-amber-600 text-white flex items-center justify-center text-xl shadow-xs">🤝</div>
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="px-2 py-0.5 rounded bg-amber-600 text-white text-[10px] font-extrabold">민간·사회적경제·종교공익</span>
+                                        <h2 class="text-sm font-extrabold text-amber-950">민간 제3섹터 · 사회적경제 · 종교공익 생태계 공식 지침서 (${civilFiles.length}종)</h2>
+                                    </div>
+                                    <p class="text-xs text-amber-900/80 mt-0.5">
+                                        축 1(사랑의열매·KOICA·ESG) · 축 2(사회적기업·협동조합·사회적농업) · 축 3(종교법인·전통사찰 템플스테이)
+                                    </p>
+                                </div>
+                            </div>
+                            <span id="archiveCivilCountBadge" class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-xs font-extrabold shrink-0">
+                                제3섹터 ${civilFiles.length}종
+                            </span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table id="archiveCivilTable" class="w-full text-left border-collapse table-fixed min-w-[960px]">
+                                <colgroup>
+                                    <col class="w-[10%]">
+                                    <col class="w-[15%]">
+                                    <col class="w-[24%]">
+                                    <col class="w-[17%]">
+                                    <col class="w-[16%]">
+                                    <col class="w-[18%]">
+                                </colgroup>
+                                <thead>
+                                    <tr class="bg-amber-50/70 border-b border-amber-200/80 text-[11px] font-extrabold text-amber-950 uppercase tracking-wider">
+                                        <th class="py-3 px-3 border-r border-amber-200/60">1열 생태계 축</th>
+                                        <th class="py-3 px-3 border-r border-amber-200/60">2열 주무기관 · 담당부서</th>
+                                        <th class="py-3 px-3 border-r border-amber-200/60">3열 지침서 공식 명칭 · 판본</th>
+                                        <th class="py-3 px-3 border-r border-amber-200/60">4열 근거법령 · 대상시설</th>
+                                        <th class="py-3 px-3 border-r border-amber-200/60">5열 주요 수록 챕터</th>
+                                        <th class="py-3 px-3">6열 연계 위계 · 원문 열람/다운로드</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="archiveCivilTbody" class="divide-y divide-amber-100 text-xs">
+                                    ${renderDesktopRows(civilFiles, true)}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Mobile Archive View -->
+                <div class="block md:hidden w-full pb-28" id="mobileArchiveView">
+                    <div class="max-w-md mx-auto px-4 py-3 space-y-4">
+                        <div class="bg-gradient-to-r from-blue-700 to-indigo-800 rounded-2xl p-4 text-white shadow-md space-y-2.5">
+                            <div class="flex items-center justify-between">
+                                <span class="px-2 py-0.5 rounded-full bg-white/20 text-[10px] font-extrabold">2026 순수 PDF 아카이브</span>
+                                <span class="text-[10px] text-blue-200 font-bold">70종 정본 완결</span>
+                            </div>
+                            <h2 class="text-base font-extrabold tracking-tight">공식 지침서 아카이브 (70종 · ${totalPagesSum.toLocaleString()}면)</h2>
+                            <div class="flex items-center gap-2 pt-1">
+                                <a href="${escA(config.driveFolderUrl || 'https://drive.google.com/drive/folders/1xWxy_TsQicTWTuZpoNTBl7-26KirLZe-?usp=sharing')}" target="_blank" rel="noopener noreferrer"
+                                   class="flex-1 py-2 rounded-xl bg-white text-blue-900 text-center text-[11px] font-extrabold shadow-xs">☁️ Drive 폴더 열기 ↗</a>
+                                <a href="${escA(config.localZipUrl || 'docs/2026_사회복지_공식지침서_마스터_풀패키지.zip')}" download
+                                   class="flex-1 py-2 rounded-xl bg-blue-500 text-white text-center text-[11px] font-extrabold shadow-xs">📦 ZIP 다운로드</a>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <div class="relative">
+                                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
+                                <input type="text" id="mobile-archive-search" oninput="window.handleMobileArchiveSearch(this.value)" placeholder="지침서명, 소관부처, 키워드 검색..."
+                                       class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-white text-xs focus:ring-2 focus:ring-blue-500 shadow-xs">
+                            </div>
+                            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="mobile-archive-ministry-pills">
+                                ${ARCHIVE_FILTER_PILLS.map(p => {
+                                    const cnt = pillCounts[p.key] || 0;
+                                    const cls = p.key === '전체'
+                                        ? 'archive-mobile-pill px-2.5 py-1.5 rounded-lg text-xs font-extrabold bg-slate-900 text-white flex-shrink-0 cursor-pointer'
+                                        : 'archive-mobile-pill px-2.5 py-1.5 rounded-lg text-xs font-medium bg-white text-slate-700 border border-slate-200 flex-shrink-0 cursor-pointer';
+                                    return `<button type="button" data-ministry="${p.key}" onclick="window.setArchiveMinistryFilter('${p.key}', this)" class="${cls}">${p.icon ? p.icon + ' ' : ''}${p.label} (${cnt})</button>`;
+                                }).join('')}
+                            </div>
+                        </div>
+
+                        <div id="mobileArchiveFacilityBannerContainer" class="hidden"></div>
+                        <div class="space-y-3" id="mobile-archive-cards-feed">
+                            ${renderMobileCards(allFiles)}
+                        </div>
+                        <div id="mobile-archive-empty-notice" class="hidden py-8 text-center bg-white rounded-2xl border border-slate-200 p-4 space-y-1">
+                            <span class="text-2xl block">🔍</span>
+                            <div class="text-xs font-bold text-slate-700">일치하는 지침서가 없습니다.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Empty State -->
+                <div id="noResultsState" class="hidden max-w-7xl mx-auto px-4 py-16 text-center">
+                    <h3 class="text-lg font-extrabold text-slate-800">조건에 일치하는 지침서가 없습니다</h3>
+                    <p class="text-xs text-slate-500 mt-1">검색어나 부처 필터를 초기화해 보세요.</p>
+                    <button type="button" id="resetSearchFilterBtn" class="mt-4 px-4 py-2 rounded-xl bg-primary text-on-primary text-xs font-bold cursor-pointer">필터 초기화</button>
+                </div>
+            </div>
+        `;
+
+        bindArchiveEvents(allFiles);
+
+        if (options && (options.facilityId || options.search || options.highlightId || options.ministry)) {
+            if (options.ministry) {
+                currentMinistry = options.ministry;
+            }
+            if (options.search) {
+                searchQuery = options.search;
+                const sInput = document.getElementById('guidelineSearchInput');
+                if (sInput) sInput.value = options.search;
+            }
+            if (typeof activeFilterGuidelines === 'function') {
+                activeFilterGuidelines();
+            }
+            if (options.highlightId) {
+                setTimeout(() => {
+                    highlightAndScrollGuideline(options.highlightId);
+                }, 180);
+            }
         }
     };
 
-    // 데스크톱 테이블 행(Row) 생성 (소관부처/소관기관, 담당과/소속부서 Rowspan 계층 병합)
-    function renderDesktopRows(files) {
-        if (!files || files.length === 0) {
-            return `<tr><td colspan="6" class="py-12 text-center text-on-surface-variant font-medium">검색 조건에 일치하는 지침서가 없습니다.</td></tr>`;
+    function renderDesktopRows(filesList, isCivilSection = false) {
+        if (!filesList || filesList.length === 0) {
+            return `<tr><td colspan="6" class="py-10 text-center text-slate-400 font-bold">일치하는 공식 지침서가 없습니다.</td></tr>`;
         }
 
-        // 1. 소관 부처별 -> 담당과별 계층 그룹핑 (순서 보존)
-        const ministryGroups = {};
-        const ministryOrder = [];
+        const enriched = filesList.map((f, idx) => ({
+            file: f,
+            orgInfo: resolveArchiveOrgInfo(f),
+            idx
+        }));
 
-        files.forEach(f => {
-            const m = (f.ministry || '관계부처').split('(')[0].trim();
-            const d = f.department || '총괄부서';
+        enriched.sort((a, b) => {
+            if (isCivilSection) {
+                const ai = ARCHIVE_AXIS_ORDER.indexOf(a.orgInfo.axis);
+                const bi = ARCHIVE_AXIS_ORDER.indexOf(b.orgInfo.axis);
+                if (ai !== bi) return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+            } else {
+                const ai = ARCHIVE_LINEAGE_ORDER.indexOf(a.orgInfo.lineage);
+                const bi = ARCHIVE_LINEAGE_ORDER.indexOf(b.orgInfo.lineage);
+                if (ai !== bi) return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+                if (a.orgInfo.primary === a.orgInfo.lineage && b.orgInfo.primary !== b.orgInfo.lineage) return -1;
+                if (b.orgInfo.primary === b.orgInfo.lineage && a.orgInfo.primary !== a.orgInfo.lineage) return 1;
+            }
+            return a.idx - b.idx;
+        });
 
-            if (!ministryGroups[m]) {
-                ministryGroups[m] = {};
-                ministryOrder.push(m);
-            }
-            if (!ministryGroups[m][d]) {
-                ministryGroups[m][d] = [];
-            }
-            ministryGroups[m][d].push(f);
+        // Build Group1(lineage/axis) -> Group2(primary agency) -> items
+        const g1Map = new Map();
+        enriched.forEach(item => {
+            const { orgInfo } = item;
+            const g1Key = isCivilSection ? orgInfo.axis : orgInfo.lineage;
+            const g2Key = `${g1Key}||${orgInfo.primary}`;
+            if (!g1Map.has(g1Key)) g1Map.set(g1Key, { key: g1Key, orgInfo, children: new Map(), count: 0 });
+            const g1 = g1Map.get(g1Key);
+            g1.count++;
+            if (!g1.children.has(g2Key)) g1.children.set(g2Key, { key: g2Key, orgInfo, items: [] });
+            g1.children.get(g2Key).items.push(item);
         });
 
         let html = '';
+        g1Map.forEach(g1 => {
+            let g1Done = false;
+            g1.children.forEach(g2 => {
+                let g2Done = false;
+                const g2Span = g2.items.length;
 
-        ministryOrder.forEach(m => {
-            const deptMap = ministryGroups[m];
-            const deptKeys = Object.keys(deptMap);
-            const ministryTotal = deptKeys.reduce((acc, d) => acc + deptMap[d].length, 0);
-            let isFirstRowOfMinistry = true;
+                g2.items.forEach(({ file: f, orgInfo }) => {
+                    const facilityMatch = resolveFacilityTarget(f.legalTarget, f);
+                    const targetFacId = f.facilityTargetId || (facilityMatch && facilityMatch.id) || 'law-welfare-center';
+                    const targetFacLabel = (facilityMatch && facilityMatch.name) || f.category || '법정시설 대조';
+                    const hLink = f.hierarchyLink || { targetId: 'comm-case-intake', label: '위계도감 보기' };
+                    const cleanHLabel = String(hLink.label || '위계도감').replace(/^(L1|Track2)\s*>\s*/i, '');
+                    const isSubOrg = !isCivilSection && orgInfo.primary !== orgInfo.lineage;
+                    const driveFolderUrl = f._driveFolderUrl || '';
+                    const driveViewUrl = f.driveViewUrl || driveFolderUrl || '#';
+                    const chaptersHtml = (f.keyChapters || []).map(ch =>
+                        `<span class="inline-block px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200/80 text-[10px] font-semibold leading-tight">${escA(ch)}</span>`
+                    ).join(' ');
 
-            deptKeys.forEach(d => {
-                const deptFiles = deptMap[d];
-                const deptTotal = deptFiles.length;
-                let isFirstRowOfDept = true;
+                    html += `<tr id="guideline-row-${escA(f.id)}" class="guideline-row hover:bg-blue-50/40 transition-colors" data-doc-id="${escA(f.id)}">`;
 
-                deptFiles.forEach(f => {
-                    const badgeClass = getMinistryBadgeClass(f.ministry);
-                    const hl = f.hierarchyLink || { targetId: "comm-case-intake", label: "L1 종합복지 > L2 운영" };
-                    const tags = f.keyChapters || ["법정지침", "운영서식"];
-                    const tagsHtml = tags.map(t => `<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant text-[11px] font-medium">${t}</span>`).join(' ');
-
-                    const legalBasis = (f.legalTarget || '').split('·')[0].trim() || '사회복지사업법 관련';
-                    const targetFacilities = (f.legalTarget || '').includes('·') ? (f.legalTarget || '').split('·').slice(1).join('·').trim() : (f.department || '관련 시설');
-
-                    const keywords = [
-                        f.title,
-                        f.ministry,
-                        f.department,
-                        f.code,
-                        f.legalTarget,
-                        ...(f.keyChapters || [])
-                    ].filter(Boolean).join(' ').toLowerCase();
-
-                    html += `
-                    <tr class="guideline-row hover:bg-surface-container-low/70 transition-colors"
-                        id="guideline-row-${f.id}"
-                        data-ministry="${f.ministry || '기타'}"
-                        data-section="${f.section || 'SECTION_1'}"
-                        data-keywords="${keywords}">`;
-
-                    // 1열: 소관 부처 / 소관 기관 (Rowspan 병합)
-                    if (isFirstRowOfMinistry) {
-                        html += `
-                        <td class="py-3.5 px-3 align-top border-r border-surface-container bg-surface-container-lowest/90 text-center" rowspan="${ministryTotal}">
-                            <div class="sticky top-28 flex flex-col items-center gap-1.5 py-1">
-                                <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-md ${badgeClass} font-label-sm text-label-sm font-bold shadow-2xs whitespace-nowrap">
-                                    ${m}
-                                </span>
-                                <span class="text-[11px] text-on-surface-variant font-medium">${ministryTotal}종 지침</span>
-                            </div>
-                        </td>`;
-                        isFirstRowOfMinistry = false;
+                    if (!g1Done) {
+                        g1Done = true;
+                        if (isCivilSection) {
+                            html += `<td class="align-top p-3 bg-amber-50/60 border-r border-amber-200/70 font-extrabold text-amber-950" rowspan="${g1.count}">
+                                <div class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-amber-100 border border-amber-300 text-[11px] font-extrabold text-amber-950 leading-snug">
+                                    <span>${orgInfo.lineageIcon}</span><span>${escA(g1.key)}</span>
+                                </div>
+                                <div class="text-[10px] text-amber-800/80 font-medium mt-1.5">${g1.count}종 지침서</div>
+                            </td>`;
+                        } else {
+                            html += `<td class="align-top p-3 bg-slate-50/90 border-r border-slate-200/80 font-extrabold text-slate-900" rowspan="${g1.count}">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-sm">${orgInfo.lineageIcon}</span>
+                                    <span class="text-xs font-extrabold text-slate-900 leading-tight">${escA(orgInfo.lineageLabel)}</span>
+                                </div>
+                                <div class="text-[10px] text-slate-400 font-semibold mt-1">${g1.count}종 정본</div>
+                            </td>`;
+                        }
                     }
 
-                    // 2열: 담당과 / 소속 부서 (Rowspan 병합)
-                    if (isFirstRowOfDept) {
-                        html += `
-                        <td class="py-3.5 px-3.5 align-top border-r border-surface-container bg-surface-container-lowest/50" rowspan="${deptTotal}">
-                            <div class="sticky top-28 flex flex-col gap-1 py-1">
-                                <span class="font-label-sm text-label-sm text-on-surface font-bold leading-snug">${d}</span>
-                                <span class="font-legal-code text-legal-code text-outline text-[11px]">${deptTotal}건 수록</span>
+                    if (!g2Done) {
+                        g2Done = true;
+                        html += `<td class="align-top p-3 bg-white border-r border-slate-200/80" rowspan="${g2Span}">
+                            <div class="space-y-1.5">
+                                <div class="flex flex-wrap items-center gap-1">
+                                    ${isSubOrg ? `<span class="text-[10px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded">${escA(orgInfo.orgType)}</span>` : ''}
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50 text-blue-900 border border-blue-200 text-[11px] font-extrabold">
+                                        <span>${orgInfo.orgIcon}</span><span>${escA(orgInfo.primary)}</span>
+                                    </span>
+                                </div>
+                                ${f.department ? `<div class="text-[11px] text-slate-600 font-semibold">담당: ${escA(f.department)}</div>` : ''}
+                                ${driveFolderUrl ? `
+                                    <a href="${escA(driveFolderUrl)}" target="_blank" rel="noopener noreferrer"
+                                       class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-700 text-[10px] font-bold transition">
+                                        <span>📂 Drive 폴더 열기</span><span>↗</span>
+                                    </a>
+                                ` : ''}
                             </div>
                         </td>`;
-                        isFirstRowOfDept = false;
                     }
 
-                    // 3열: 지침서 공식 명칭 & 판본
                     html += `
-                    <td class="py-3.5 px-4 align-top border-r border-surface-container">
-                        <div class="flex flex-col gap-1">
+                        <td class="align-top p-3 bg-white border-r border-slate-200/80 space-y-1.5">
                             <div class="flex items-center gap-1.5 flex-wrap">
-                                <span class="font-legal-code text-legal-code text-outline font-semibold bg-surface-container px-1.5 py-0.2 rounded">${f.code || f.id}</span>
-                                <span class="px-1.5 py-0.2 rounded bg-error-container text-on-error-container font-semibold text-[11px]">PDF 정본</span>
+                                <span class="px-1.5 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200 text-[10px] font-extrabold">${escA(f.code || f.id)}</span>
+                                <span class="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold">PDF</span>
+                                <span class="text-[10px] text-slate-500 font-semibold">${escA(f.edition || (f.year + '판'))}</span>
                             </div>
-                            <span class="font-label-md text-label-md font-bold text-on-surface leading-snug">${f.title}</span>
-                            <div class="flex items-center gap-2 text-legal-code font-legal-code text-on-surface-variant flex-wrap mt-0.5">
-                                <span>발간: ${f.year || '2026'}.01</span>
+                            <div class="font-extrabold text-slate-900 text-xs leading-snug">${escA(f.title)}</div>
+                            <div class="flex items-center gap-2 text-[10px] text-slate-500 font-medium">
+                                <span>📄 ${Number(f.totalPages || 0).toLocaleString()}면</span>
                                 <span>•</span>
-                                <span>${f.totalPages || 250}쪽</span>
-                                <span>•</span>
-                                <span>${f.sizeStr || '14.2 MB'}</span>
+                                <span>💾 ${escA(f.sizeStr || '')}</span>
                             </div>
-                        </div>
-                    </td>
-
-                    <!-- 4열: 핵심 관할 법령 & 대상 시설 (스마트 시설 직결 칩) -->
-                    <td class="py-3.5 px-4 align-top border-r border-surface-container">
-                        <div class="flex flex-col gap-1.5">
-                            <span class="font-label-sm text-label-sm text-primary font-medium">${legalBasis}</span>
-                            <div class="flex flex-wrap items-center gap-1">
-                                <span class="text-[11px] text-on-surface-variant font-medium">대상:</span>
-                                ${renderTargetFacilityChips(targetFacilities, f)}
-                            </div>
-                        </div>
-                    </td>
-
-                    <!-- 5열: 주요 수록 챕터 및 핵심 지침 요약 -->
-                    <td class="py-3.5 px-4 align-top border-r border-surface-container">
-                        <div class="flex flex-col gap-1">
-                            <div class="flex flex-wrap gap-1">
-                                ${tagsHtml}
-                            </div>
-                            <p class="text-on-surface-variant text-[12px] line-clamp-2 mt-0.5">
-                                ${targetFacilities} 및 실천기관 표준 운영 매뉴얼, 주요 행정 서식, 현장 실무 가이드라인 수록.
-                            </p>
-                        </div>
-                    </td>
-
-                    <!-- 6열: 연계 위계 & 원문 열람 -->
-                    <td class="py-3.5 px-4 align-top text-right">
-                        <div class="flex flex-col items-end gap-1.5">
-                            <button type="button" class="inline-flex items-center gap-1 font-legal-code text-legal-code text-secondary hover:text-primary hover:underline font-semibold bg-surface-container px-2 py-0.5 rounded transition-colors cursor-pointer"
-                               onclick="showView('hierarchy', { targetNodeId: '${hl.targetId}' })"
-                               title="3단계 위계도감(${hl.label})으로 연계 이동">
-                                <span class="material-symbols-outlined text-[14px]">account_tree</span>
-                                <span>${hl.label}</span>
-                                <span class="material-symbols-outlined text-[12px]">arrow_forward</span>
+                        </td>
+                        <td class="align-top p-3 bg-white border-r border-slate-200/80 space-y-1.5">
+                            <div class="text-[11px] text-slate-700 leading-snug font-medium">${escA(f.legalTarget || '')}</div>
+                            <button type="button" onclick="window.jumpToFacility('${escA(targetFacId)}'); return false;"
+                                class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-slate-100 hover:bg-indigo-600 hover:text-white text-slate-700 text-[10px] font-bold transition cursor-pointer">
+                                <span>🏛️ ${escA(targetFacLabel)}</span><span>➔</span>
                             </button>
-                            <div class="flex items-center gap-1">
-                                <button type="button" class="px-2.5 py-1 rounded bg-surface-container-high hover:bg-primary hover:text-on-primary text-primary font-label-sm text-label-sm transition-colors cursor-pointer"
-                                        onclick="window.viewGuidelineModal('${f.id}'); return false;">
-                                    즉시열람
+                        </td>
+                        <td class="align-top p-3 bg-slate-50/40 border-r border-slate-200/80">
+                            <div class="flex flex-wrap gap-1">${chaptersHtml}</div>
+                        </td>
+                        <td class="align-top p-3 bg-slate-50/60 space-y-1.5">
+                            <div class="grid grid-cols-2 gap-1">
+                                <button type="button" onclick="window.viewGuidelineModal('${escA(f.id)}'); return false;"
+                                    class="py-1.5 px-2 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-[10px] font-bold transition cursor-pointer">
+                                    👁️ 요약
                                 </button>
-                                <button type="button" class="px-2 py-1 rounded bg-surface-container text-on-surface-variant hover:bg-surface-container-highest transition-colors cursor-pointer"
-                                        onclick="window.downloadGuidelineDirect('${f.id}'); return false;"
-                                        title="지침서 다운로드">
-                                    <span class="material-symbols-outlined text-[16px]">download</span>
+                                <button type="button" onclick="window.downloadGuidelineDirect('${escA(f.id)}'); return false;"
+                                    class="py-1.5 px-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold transition cursor-pointer">
+                                    ⬇️ PDF
                                 </button>
                             </div>
-                        </div>
-                    </td>
-                </tr>`;
+                            ${driveViewUrl && driveViewUrl !== '#' ? `
+                                <a href="${escA(driveViewUrl)}" target="_blank" rel="noopener noreferrer"
+                                   class="w-full py-1 px-2 rounded-lg bg-sky-50 hover:bg-sky-600 hover:text-white text-sky-800 border border-sky-200 text-[10px] font-bold flex items-center justify-center gap-1 transition">
+                                    <span>☁️ Google Drive 원문</span><span>↗</span>
+                                </a>
+                            ` : ''}
+                            <button type="button" onclick="showView('hierarchy', { targetNodeId: '${escA(hLink.targetId)}' }); return false;"
+                                class="w-full py-1 px-2 rounded-lg bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-800 border border-emerald-200 text-[10px] font-bold flex items-center justify-center gap-1 transition cursor-pointer truncate">
+                                <span>🌳 ${escA(cleanHLabel)}</span><span>➔</span>
+                            </button>
+                        </td>
+                    </tr>`;
                 });
             });
         });
-
         return html;
     }
 
-    // 모바일 카드 생성
     function renderMobileCards(files) {
-        return files.map(f => {
-            const ministryClean = (f.ministry || '관계부처').split('(')[0].trim();
-            const yearClean = f.year || '2026';
-            const keywords = (f.keyChapters || ["법정지침", "운영서식"]);
-            const hl = f.hierarchyLink || { targetId: "comm-case-intake", label: "L1 종합복지 > L2 운영" };
-
+        return (files || []).map(f => {
+            const orgInfo = resolveArchiveOrgInfo(f);
+            const hLink = f.hierarchyLink || { targetId: 'comm-case-intake', label: '위계도감 보기' };
             return `
-            <div class="guideline-card bg-white rounded-2xl border border-slate-200 p-4 shadow-sm space-y-2.5 transition-all duration-200"
-                 id="mobile-card-${f.id}"
-                 data-ministry="${f.ministry || '기타'}"
-                 data-year="${yearClean}"
-                 data-section="${f.section || 'SECTION_1'}"
-                 data-keywords="${(f.title + ' ' + f.ministry + ' ' + (f.department || '') + ' ' + keywords.join(' ')).toLowerCase()}">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-1.5 flex-wrap">
-                  <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-700 text-[10px] font-bold">${ministryClean}</span>
-                  <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-medium">${f.department || '사업안내'}</span>
-                  <span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 text-[10px] font-semibold">${f.category || '사회복지'}</span>
+                <div id="mobile-card-${escA(f.id)}" class="guideline-card bg-white rounded-2xl border border-slate-200 p-4 shadow-2xs space-y-2.5" data-doc-id="${escA(f.id)}">
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <span class="px-2 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200 text-[10px] font-extrabold">${escA(orgInfo.primary)}</span>
+                            <span class="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 text-[10px] font-bold">PDF · ${Number(f.totalPages || 0)}면</span>
+                        </div>
+                        <span class="text-[10px] text-slate-400 font-semibold shrink-0">${escA(f.sizeStr || '')}</span>
+                    </div>
+                    <h4 class="text-sm font-black text-slate-900 leading-snug">${escA(f.title)}</h4>
+                    <p class="text-[11px] text-slate-500 line-clamp-2">${escA(f.legalTarget || '')}</p>
+                    <div class="grid grid-cols-3 gap-1.5 pt-1">
+                        <button type="button" onclick="window.downloadGuidelineDirect('${escA(f.id)}')" class="py-1.5 rounded-xl bg-blue-600 text-white text-[11px] font-bold cursor-pointer">⬇️ PDF</button>
+                        <button type="button" onclick="window.viewGuidelineModal('${escA(f.id)}')" class="py-1.5 rounded-xl bg-slate-100 text-slate-800 text-[11px] font-bold cursor-pointer">👁️ 요약</button>
+                        <button type="button" onclick="showView('hierarchy', { targetNodeId: '${escA(hLink.targetId)}' })" class="py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-bold cursor-pointer">🌳 위계</button>
+                    </div>
                 </div>
-                <span class="text-[10px] text-slate-400 font-medium">PDF 정본</span>
-              </div>
-              <div>
-                <h3 class="text-sm font-black text-slate-900 leading-snug">${f.title}</h3>
-                <p class="text-xs text-slate-600 mt-1 leading-relaxed">
-                  ${f.summary || f.legalTarget || '보건복지부 및 중앙부처 공식 2026 지침서 정본'}
-                </p>
-              </div>
-              ${keywords.length > 0 ? `
-                <div class="flex flex-wrap gap-1 text-[10px] text-blue-600 font-medium">
-                  ${keywords.map(k => `<span class="px-1.5 py-0.5 bg-blue-50 rounded">#${k}</span>`).join('')}
-                </div>
-              ` : ''}
-              <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
-                <span>${f.sizeStr || 'PDF'} · 최종개정 ${f.year || '2026'}</span>
-              </div>
-              <div class="grid grid-cols-3 gap-1.5 pt-1">
-                <button type="button" onclick="downloadGuidelineDirect('${f.id}')" class="py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-1 transition shadow-2xs cursor-pointer">
-                  <span>⬇ 다운로드</span>
-                </button>
-                <button type="button" onclick="viewGuidelineModal('${f.id}')" class="py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1 transition cursor-pointer">
-                  <span>👁 목차/뷰어</span>
-                </button>
-                <button type="button" onclick="showView('hierarchy', {targetNodeId: '${hl.targetId}'})" class="py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-center gap-1 border border-emerald-200 transition cursor-pointer">
-                  <span>🌳 위계도감</span>
-                </button>
-              </div>
-            </div>
             `;
         }).join('');
     }
 
-    // 인터랙티브 이벤트 바인딩
     function bindArchiveEvents(allFiles) {
         const searchInput = document.getElementById('guidelineSearchInput');
         const clearBtn = document.getElementById('clearSearchBtn');
         const badgeCount = document.getElementById('searchBadgeCount');
-        const pills = document.querySelectorAll('.ministry-pill');
-        const rows = document.querySelectorAll('.guideline-row');
-        const cards = document.querySelectorAll('.guideline-card');
         const noResults = document.getElementById('noResultsState');
         const resetBtn = document.getElementById('resetSearchFilterBtn');
         const tablesContainer = document.getElementById('archiveTablesContainer');
-        const sec1Block = document.getElementById('section1-block');
-        const sec2Block = document.getElementById('section2-block');
-        const sec3Block = document.getElementById('section3-block');
-        const mobTabSec1 = document.getElementById('mobTabSec1');
-        const mobTabSec2 = document.getElementById('mobTabSec2');
         const exportCsvBtn = document.getElementById('exportCsvBtn');
 
         function filterGuidelines() {
-            let visibleCount = 0;
-            let sec1Count = 0;
-            let sec2Count = 0;
-            let sec3Count = 0;
-            const q = searchQuery.trim().toLowerCase();
+            const q = String(searchQuery || '').trim().toLowerCase();
             const normQ = q.replace(/성평등가족부/g, '여성가족부');
-
-            // Rowspan 계층 구조 완결성을 위한 데이터 기반 필터링 및 동적 렌더링
             const basePool = (currentArchiveDocIds && currentArchiveDocIds.length > 0)
                 ? allFiles.filter(f => currentArchiveDocIds.includes(f.id))
                 : allFiles;
 
-            const filteredFiles = basePool.filter(f => {
-                const keywords = [
-                    f.title,
-                    f.ministry,
-                    f.department,
-                    f.code,
-                    f.legalTarget,
-                    ...(f.keyChapters || [])
-                ].filter(Boolean).join(' ').toLowerCase();
-
-                let ministryMatch = checkMinistryMatch(f.ministry || '', keywords, currentMinistry, f.section || '');
-                let queryMatch = (q.length === 0) || keywords.includes(q) || (normQ && keywords.includes(normQ)) || (f.title || '').toLowerCase().includes(q) || (f.department || '').toLowerCase().includes(q);
-
-                return ministryMatch && queryMatch;
+            const filtered = basePool.filter(f => {
+                const orgInfo = resolveArchiveOrgInfo(f);
+                const minMatch = matchArchiveMinistryFilter(f, orgInfo, currentMinistry);
+                const hay = [f.title, f.ministry, orgInfo.lineageLabel, f.department, f.code, f.legalTarget, ...(f.keyChapters || [])].filter(Boolean).join(' ').toLowerCase();
+                const qMatch = !q || hay.includes(q) || (normQ && hay.includes(normQ));
+                return minMatch && qMatch;
             });
 
-            renderArchiveFacilityBanner(currentArchiveFacilityId, currentArchiveFacilityName, filteredFiles);
+            renderArchiveFacilityBanner(currentArchiveFacilityId, currentArchiveFacilityName, filtered);
 
-            const sec1Filtered = filteredFiles.filter(f => f.section === 'SECTION_1' || (f.section !== 'SECTION_3' && f.ministry && f.ministry.includes('보건복지부')));
-            const sec2Filtered = filteredFiles.filter(f => f.section === 'SECTION_2');
-            const sec3Filtered = filteredFiles.filter(f => f.section === 'SECTION_3');
+            const centralFiltered = filtered.filter(f => !resolveArchiveOrgInfo(f).isCivil);
+            const civilFiltered = filtered.filter(f => resolveArchiveOrgInfo(f).isCivil);
 
-            visibleCount = filteredFiles.length;
-            sec1Count = sec1Filtered.length;
-            sec2Count = sec2Filtered.length;
-            sec3Count = sec3Filtered.length;
+            const cTbody = document.getElementById('archiveCentralTbody');
+            const civTbody = document.getElementById('archiveCivilTbody');
+            if (cTbody) cTbody.innerHTML = renderDesktopRows(centralFiltered, false);
+            if (civTbody) civTbody.innerHTML = renderDesktopRows(civilFiltered, true);
 
-            const t1 = document.getElementById('table1-tbody');
-            const t2 = document.getElementById('table2-tbody');
-            const t3 = document.getElementById('table3-tbody');
-            if (t1) t1.innerHTML = renderDesktopRows(sec1Filtered);
-            if (t2) t2.innerHTML = renderDesktopRows(sec2Filtered);
-            if (t3) t3.innerHTML = renderDesktopRows(sec3Filtered);
+            const cSec = document.getElementById('archiveCentralSection');
+            const civSec = document.getElementById('archiveCivilSection');
+            if (cSec) cSec.style.display = centralFiltered.length > 0 ? '' : 'none';
+            if (civSec) civSec.style.display = civilFiltered.length > 0 ? '' : 'none';
 
-            // Filter Mobile Cards
-            cards.forEach(card => {
-                const cardId = (card.id || '').replace('mobile-card-', '');
-                const cardMinistry = card.getAttribute('data-ministry') || '';
-                const cardSection = card.getAttribute('data-section') || 'SECTION_1';
-                const keywords = (card.getAttribute('data-keywords') || '').toLowerCase();
-                const textContent = card.textContent.toLowerCase();
+            const cBadge = document.getElementById('archiveCentralCountBadge');
+            const civBadge = document.getElementById('archiveCivilCountBadge');
+            if (cBadge) cBadge.textContent = `중앙 ${centralFiltered.length}종`;
+            if (civBadge) civBadge.textContent = `제3섹터 ${civilFiltered.length}종`;
 
-                let docMatch = !currentArchiveDocIds || currentArchiveDocIds.includes(cardId);
-                let ministryMatch = checkMinistryMatch(cardMinistry, keywords, currentMinistry, cardSection);
-                let queryMatch = (q.length === 0) || textContent.includes(q) || (normQ && textContent.includes(normQ)) || keywords.includes(q) || (normQ && keywords.includes(normQ));
-                let sectionMatch = (currentArchiveDocIds && currentArchiveDocIds.length > 0) || (mobileActiveSection === 'ALL') || (cardSection === mobileActiveSection);
+            const mobFeed = document.getElementById('mobile-archive-cards-feed');
+            const mobEmpty = document.getElementById('mobile-archive-empty-notice');
+            if (mobFeed) mobFeed.innerHTML = renderMobileCards(filtered);
+            if (mobEmpty) mobEmpty.classList.toggle('hidden', filtered.length > 0);
 
-                if (docMatch && ministryMatch && queryMatch && sectionMatch) {
-                    card.style.display = '';
-                    card.classList.remove('hidden');
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-
-            // Toggle table section blocks
-            if (sec1Block) sec1Block.style.display = (sec1Count > 0) ? '' : 'none';
-            if (sec2Block) sec2Block.style.display = (sec2Count > 0) ? '' : 'none';
-            if (sec3Block) sec3Block.style.display = (sec3Count > 0) ? '' : 'none';
-
-            // Badge count
-            if (badgeCount) badgeCount.textContent = `${visibleCount}건 표시중`;
-
-            // No results state
-            if (visibleCount === 0) {
-                if (noResults) noResults.classList.remove('hidden');
-                if (tablesContainer) tablesContainer.classList.add('hidden');
-            } else {
-                if (noResults) noResults.classList.add('hidden');
-                if (tablesContainer) tablesContainer.classList.remove('hidden');
-            }
+            if (badgeCount) badgeCount.textContent = `${filtered.length}건 표시중`;
+            if (noResults) noResults.classList.toggle('hidden', filtered.length > 0);
+            if (tablesContainer) tablesContainer.classList.toggle('hidden', filtered.length === 0);
         }
         activeFilterGuidelines = filterGuidelines;
 
-        function checkMinistryMatch(rowMinistry, keywords, target, section) {
-            if (target === 'all') return true;
-            if (target === 'TRACK2') return section === 'SECTION_3';
-            if (target === '행안부/질병청/법무부') {
-                return section !== 'SECTION_3' && (rowMinistry.includes('행안') || rowMinistry.includes('질병') || rowMinistry.includes('법무') ||
-                       rowMinistry.includes('외교') || rowMinistry.includes('보훈') || rowMinistry.includes('통일') ||
-                       rowMinistry.includes('국무') || keywords.includes('행정안전부') || keywords.includes('질병관리청'));
-            }
-            if (target === '공익재단·기타') {
-                return section !== 'SECTION_3' && (rowMinistry.includes('공동모금회') || rowMinistry.includes('사회공헌') ||
-                       rowMinistry.includes('재단') || rowMinistry.includes('공익') || keywords.includes('사회복지공동모금회'));
-            }
-            return section !== 'SECTION_3' && rowMinistry.includes(target);
-        }
-
-        // Ministry Pill Clicks
-        pills.forEach(pill => {
-            pill.addEventListener('click', function () {
-                currentArchiveFacilityId = null;
-                currentArchiveFacilityName = null;
-                currentArchiveDocIds = null;
-                pills.forEach(p => {
-                    p.classList.remove('bg-primary', 'text-on-primary', 'active-pill');
-                    p.classList.add('bg-surface-container-low', 'text-on-surface-variant');
-                });
-                this.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
-                this.classList.add('bg-primary', 'text-on-primary', 'active-pill');
-
-                currentMinistry = this.getAttribute('data-ministry');
-                if (typeof activeFilterGuidelines === 'function') {
-            activeFilterGuidelines();
-        }
-            });
-        });
-
-        // Search Input
         if (searchInput) {
             searchInput.addEventListener('input', function () {
                 currentArchiveFacilityId = null;
                 currentArchiveFacilityName = null;
                 currentArchiveDocIds = null;
                 searchQuery = this.value;
-                if (clearBtn) {
-                    if (searchQuery.length > 0) clearBtn.classList.remove('hidden');
-                    else clearBtn.classList.add('hidden');
-                }
-                if (typeof activeFilterGuidelines === 'function') {
-            activeFilterGuidelines();
-        }
+                if (clearBtn) clearBtn.classList.toggle('hidden', !searchQuery);
+                filterGuidelines();
             });
         }
-
-        // Clear Search
         if (clearBtn) {
             clearBtn.addEventListener('click', function () {
-                if (searchInput) {
-                    searchInput.value = '';
-                    searchQuery = '';
-                    clearBtn.classList.add('hidden');
-                    if (typeof activeFilterGuidelines === 'function') {
-            activeFilterGuidelines();
-        }
-                    searchInput.focus();
-                }
+                if (searchInput) searchInput.value = '';
+                searchQuery = '';
+                clearBtn.classList.add('hidden');
+                filterGuidelines();
             });
         }
-
-        // Reset Filter
         if (resetBtn) {
-            resetBtn.addEventListener('click', function () {
-                currentArchiveFacilityId = null;
-                currentArchiveFacilityName = null;
-                currentArchiveDocIds = null;
-                if (searchInput) {
-                    searchInput.value = '';
-                    searchQuery = '';
-                }
-                if (clearBtn) clearBtn.classList.add('hidden');
-                currentMinistry = 'all';
-
-                pills.forEach(p => {
-                    if (p.getAttribute('data-ministry') === 'all') {
-                        p.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
-                        p.classList.add('bg-primary', 'text-on-primary', 'active-pill');
-                    } else {
-                        p.classList.remove('bg-primary', 'text-on-primary', 'active-pill');
-                        p.classList.add('bg-surface-container-low', 'text-on-surface-variant');
-                    }
-                });
-
-                if (typeof activeFilterGuidelines === 'function') {
-            activeFilterGuidelines();
+            resetBtn.addEventListener('click', window.clearArchiveFacilityFilter);
         }
-            });
-        }
-
-        // Mobile Tabs Toggle
-        if (mobTabSec1 && mobTabSec2) {
-            mobTabSec1.addEventListener('click', function () {
-                mobileActiveSection = 'SECTION_1';
-                mobTabSec1.className = 'flex-1 py-2 text-center rounded-lg bg-primary text-on-primary font-label-sm text-label-sm font-semibold shadow-xs transition-all';
-                mobTabSec2.className = 'flex-1 py-2 text-center rounded-lg text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm font-medium transition-all';
-                if (typeof activeFilterGuidelines === 'function') {
-            activeFilterGuidelines();
-        }
-            });
-
-            mobTabSec2.addEventListener('click', function () {
-                mobileActiveSection = 'SECTION_2';
-                mobTabSec2.className = 'flex-1 py-2 text-center rounded-lg bg-primary text-on-primary font-label-sm text-label-sm font-semibold shadow-xs transition-all';
-                mobTabSec1.className = 'flex-1 py-2 text-center rounded-lg text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm font-medium transition-all';
-                if (typeof activeFilterGuidelines === 'function') {
-            activeFilterGuidelines();
-        }
-            });
-        }
-
-        // CSV Export
         if (exportCsvBtn) {
-            exportCsvBtn.addEventListener('click', function (e) {
-                e.preventDefault();
+            exportCsvBtn.addEventListener('click', function () {
                 exportGuidelinesToCsv(allFiles);
             });
         }
     }
 
-    // CSV 파일 내보내기 (UTF-8 BOM 포함)
-    function exportGuidelinesToCsv(files) {
-        let csvContent = "\uFEFF"; // UTF-8 BOM
-        csvContent += "일련번호,관리코드,섹션,소관부처,담당부서,지침서 공식 명칭,발간연도,총페이지,파일용량,관할법령 및 대상시설,주요수록챕터,위계도감연계ID\n";
-
-        files.forEach((f, idx) => {
-            const sectionName = f.section === 'SECTION_1' ? '섹션Ⅰ:중앙부처' : '섹션Ⅱ:범부처특화';
-            const cleanTitle = `"${(f.title || '').replace(/"/g, '""')}"`;
-            const cleanLegal = `"${(f.legalTarget || '').replace(/"/g, '""')}"`;
-            const cleanChapters = `"${(f.keyChapters || []).join('; ').replace(/"/g, '""')}"`;
-            const targetId = (f.hierarchyLink && f.hierarchyLink.targetId) ? f.hierarchyLink.targetId : '';
-
-            csvContent += `${idx + 1},${f.code || f.id},${sectionName},${f.ministry || ''},${f.department || ''},${cleanTitle},${f.year || '2026'},${f.totalPages || 0},${f.sizeStr || ''},${cleanLegal},${cleanChapters},${targetId}\n`;
-        });
-
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement("a");
-        const url = URL.createObjectURL(blob);
-        link.setAttribute("href", url);
-        link.setAttribute("download", `2026_대한민국_사회복지_공식지침서_70종_목록_${new Date().toISOString().slice(0, 10)}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-    }
-
-    // 지침서 상세 열람 모달
-    window.viewGuidelineModal = function (docId) {
-        const allFiles = getAllFiles();
-        const f = allFiles.find(item => item.id === docId);
-        if (!f) return;
-
-        const config = getArchiveConfig();
-        const badgeClass = getMinistryBadgeClass(f.ministry);
-        const tagsHtml = (f.keyChapters || []).map(t => `<span class="px-2 py-1 rounded bg-surface-container text-on-surface text-xs font-medium">${t}</span>`).join(' ');
-
-        // Check if modal exists
-        let modal = document.getElementById('guidelineDetailModal');
-        if (!modal) {
-            modal = document.createElement('div');
-            modal.id = 'guidelineDetailModal';
-            document.body.appendChild(modal);
-        }
-
-        modal.className = "fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs transition-opacity";
-        modal.innerHTML = `
-        <div class="bg-surface-container-lowest rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-outline-variant/30 flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200">
-            <!-- Modal Header -->
-            <div class="flex items-start justify-between pb-3 border-b border-surface-container">
-                <div class="flex items-center gap-2 flex-wrap">
-                    <span class="px-2.5 py-0.5 rounded ${badgeClass} font-label-sm text-label-sm font-semibold">${f.ministry}</span>
-                    <span class="font-label-md text-label-md text-on-surface font-semibold">${f.department || '총괄부서'}</span>
-                    <span class="font-legal-code text-legal-code text-outline">(${f.code || f.id})</span>
-                </div>
-                <button type="button" onclick="document.getElementById('guidelineDetailModal').remove()" class="p-1 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container transition">
-                    <span class="material-symbols-outlined text-[20px]">close</span>
-                </button>
-            </div>
-
-            <!-- Title & Basic Info -->
-            <div>
-                <h3 class="font-headline-md text-headline-md text-primary font-bold leading-snug">${f.title}</h3>
-                <div class="flex items-center gap-3 text-legal-code font-legal-code text-on-surface-variant mt-2 flex-wrap">
-                    <span class="px-2 py-0.5 rounded bg-error-container text-on-error-container font-semibold">정부 공인 정본</span>
-                    <span>발간: ${f.year || '2026'}.01</span>
-                    <span>•</span>
-                    <span>분량: ${f.totalPages || 250}쪽</span>
-                    <span>•</span>
-                    <span>용량: ${f.sizeStr}</span>
-                    <span>•</span>
-                    <span>공공누리 제1유형</span>
-                </div>
-            </div>
-
-            <!-- Details Box -->
-            <div class="bg-surface-container-low rounded-xl p-4 flex flex-col gap-2.5 border border-outline-variant/20">
-                <div>
-                    <span class="font-label-sm text-label-sm text-primary font-semibold block mb-0.5">관할 법령 및 대상 기관</span>
-                    <p class="text-body-sm font-body-sm text-on-surface">${f.legalTarget || '사회복지사업법 관련 시설'}</p>
-                </div>
-                <div>
-                    <span class="font-label-sm text-label-sm text-primary font-semibold block mb-1">핵심 수록 챕터 및 가이드</span>
-                    <div class="flex flex-wrap gap-1.5">
-                        ${tagsHtml}
-                    </div>
-                </div>
-                <div>
-                    <span class="font-label-sm text-label-sm text-primary font-semibold block mb-0.5">3단계 위계도감 연계</span>
-                    <p class="text-body-sm font-body-sm text-secondary font-medium flex items-center gap-1">
-                        <span class="material-symbols-outlined text-[16px]">account_tree</span>
-                        ${f.hierarchyLink ? f.hierarchyLink.label : '종합사회복지관 3대기능 연동'}
-                    </p>
-                </div>
-            </div>
-
-            <!-- Actions -->
-            <div class="flex items-center justify-between pt-2 border-t border-surface-container flex-wrap gap-2">
-                <button type="button" onclick="document.getElementById('guidelineDetailModal').remove(); showView('hierarchy', { targetNodeId: '${f.hierarchyLink ? f.hierarchyLink.targetId : ''}' });"
-                   class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface-container text-primary hover:bg-surface-container-high font-label-md text-label-md font-semibold transition cursor-pointer">
-                    <span class="material-symbols-outlined text-[18px]">account_tree</span>
-                    <span>위계도감 해당 노드로 이동</span>
-                </button>
-                <div class="flex items-center gap-2">
-                    <button type="button" onclick="document.getElementById('guidelineDetailModal').remove()"
-                            class="px-4 py-2 rounded-xl bg-surface-container text-on-surface-variant font-label-md text-label-md font-medium hover:bg-surface-container-high transition">
-                        닫기
-                    </button>
-                    <a href="${config.driveDownloadUrl}" target="_blank"
-                       class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-on-primary font-label-md text-label-md font-semibold hover:bg-primary-container transition shadow-xs">
-                        <span class="material-symbols-outlined text-[18px]">download</span>
-                        <span>원문 다운로드</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-        `;
-    };
-
-    // 지침서 다운로드 핸들러
-    window.downloadGuidelineDirect = function (docId) {
-        const config = getArchiveConfig();
-        const files = getAllFiles();
-        const target = files.find(f => f.id === docId);
-        if (target && target.relPath) {
-            // 로컬 정본 PDF 직접 열람 및 다운로드
-            const localUrl = 'docs/지침서_공식_아카이브/' + encodeURI(target.relPath);
-            const link = document.createElement('a');
-            link.href = localUrl;
-            link.download = target.filename || (target.title + '.pdf');
-            link.target = '_blank';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        } else {
-            window.open(config.driveDownloadUrl, '_blank');
-        }
-    };
-
-    // 위계도감 등 외부에서 특정 지침서로 포커스 요청 시
-    function highlightAndScrollGuideline(docId) {
-        // Reset filters so the row is guaranteed visible
+    window.setArchiveMinistryFilter = function (ministryKey, btnEl) {
         currentArchiveFacilityId = null;
         currentArchiveFacilityName = null;
         currentArchiveDocIds = null;
-        searchQuery = '';
-        currentMinistry = 'all';
-        const searchInput = document.getElementById('guidelineSearchInput');
-        if (searchInput) searchInput.value = '';
-        const clearBtn = document.getElementById('clearSearchBtn');
-        if (clearBtn) clearBtn.classList.add('hidden');
-        const pills = document.querySelectorAll('.ministry-pill');
-        pills.forEach(p => {
-            if (p.getAttribute('data-ministry') === 'all') {
-                p.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
-                p.classList.add('bg-primary', 'text-on-primary', 'active-pill');
+        currentMinistry = ministryKey || '전체';
+
+        document.querySelectorAll('.archive-ministry-pill').forEach(p => {
+            const key = p.getAttribute('data-ministry');
+            const isCivil = key === '민간제3섹터';
+            const isActive = key === currentMinistry;
+            if (isActive) {
+                p.className = isCivil
+                    ? 'archive-ministry-pill active-pill px-3 py-1.5 rounded-full text-xs font-extrabold bg-amber-600 text-white shadow-2xs transition cursor-pointer flex items-center gap-1 ml-auto'
+                    : 'archive-ministry-pill active-pill px-3 py-1.5 rounded-full text-xs font-extrabold bg-primary text-on-primary shadow-2xs transition cursor-pointer';
             } else {
-                p.classList.remove('bg-primary', 'text-on-primary', 'active-pill');
-                p.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+                p.className = isCivil
+                    ? 'archive-ministry-pill px-3 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 transition cursor-pointer flex items-center gap-1 shadow-2xs ml-auto'
+                    : 'archive-ministry-pill px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer';
             }
         });
-        if (typeof activeFilterGuidelines === 'function') {
-            activeFilterGuidelines();
+        document.querySelectorAll('.archive-mobile-pill').forEach(p => {
+            const isActive = p.getAttribute('data-ministry') === currentMinistry;
+            p.className = isActive
+                ? 'archive-mobile-pill px-2.5 py-1.5 rounded-lg text-xs font-extrabold bg-slate-900 text-white flex-shrink-0 cursor-pointer'
+                : 'archive-mobile-pill px-2.5 py-1.5 rounded-lg text-xs font-medium bg-white text-slate-700 border border-slate-200 flex-shrink-0 cursor-pointer';
+        });
+
+        if (typeof activeFilterGuidelines === 'function') activeFilterGuidelines();
+    };
+
+    window.filterArchiveByMinistry = function (minKey, el) {
+        window.setArchiveMinistryFilter(minKey, el);
+    };
+
+    window.handleMobileArchiveSearch = function (val) {
+        searchQuery = val || '';
+        const desktopInput = document.getElementById('guidelineSearchInput');
+        if (desktopInput) desktopInput.value = searchQuery;
+        if (typeof activeFilterGuidelines === 'function') activeFilterGuidelines();
+    };
+
+    function exportGuidelinesToCsv(files) {
+        let csv = '\uFEFF1열_소속계통,2열_소관기관,담당부서,3열_지침서코드,지침서명,포맷,면수,용량,4열_근거법령_대상시설,5열_주요챕터,6열_Drive링크\n';
+        const q = (v) => `"${String(v || '').replace(/"/g, '""')}"`;
+        files.forEach(f => {
+            const orgInfo = resolveArchiveOrgInfo(f);
+            csv += [
+                q(orgInfo.lineageLabel),
+                q(orgInfo.primary),
+                q(f.department),
+                q(f.code),
+                q(f.title),
+                q('PDF'),
+                q(f.totalPages),
+                q(f.sizeStr),
+                q(f.legalTarget),
+                q((f.keyChapters || []).join(' / ')),
+                q(f.driveViewUrl || f._driveFolderUrl || '')
+            ].join(',') + '\n';
+        });
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `2026_사회복지_공식지침서_70종_마스터목록_${new Date().toISOString().slice(0, 10)}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    window.viewGuidelineModal = function (docId) {
+        const allFiles = collectArchiveFiles();
+        const f = allFiles.find(x => x.id === docId);
+        if (!f) return;
+        const orgInfo = resolveArchiveOrgInfo(f);
+        const old = document.getElementById('guideline-detail-modal');
+        if (old) old.remove();
+
+        const facilityMatch = resolveFacilityTarget(f.legalTarget, f);
+        const targetFacId = f.facilityTargetId || (facilityMatch && facilityMatch.id) || 'law-welfare-center';
+        const hLink = f.hierarchyLink || { targetId: 'comm-case-intake', label: '위계도감 보기' };
+
+        const modal = document.createElement('div');
+        modal.id = 'guideline-detail-modal';
+        modal.className = 'fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn';
+        modal.innerHTML = `
+            <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden max-h-[90vh] flex flex-col">
+                <div class="p-5 bg-gradient-to-r from-slate-900 to-blue-900 text-white flex items-start justify-between gap-4">
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap mb-1.5">
+                            <span class="px-2 py-0.5 rounded bg-white/15 text-[11px] font-bold">${escA(orgInfo.lineageLabel)} ▸ ${escA(orgInfo.primary)}</span>
+                            <span class="px-2 py-0.5 rounded bg-emerald-500 text-white text-[11px] font-extrabold">순수 PDF · ${Number(f.totalPages || 0)}면 · ${escA(f.sizeStr)}</span>
+                        </div>
+                        <h3 class="text-lg font-black leading-snug">${escA(f.title)}</h3>
+                    </div>
+                    <button type="button" onclick="document.getElementById('guideline-detail-modal').remove()" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold cursor-pointer shrink-0">✕</button>
+                </div>
+                <div class="p-5 space-y-4 overflow-y-auto text-xs text-slate-700">
+                    <div class="grid grid-cols-2 gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                        <div><span class="text-slate-400 font-bold block text-[10px]">문서 코드 / 판본</span><strong class="text-slate-900">${escA(f.code)} · ${escA(f.edition)}</strong></div>
+                        <div><span class="text-slate-400 font-bold block text-[10px]">소관부처 / 담당부서</span><strong class="text-slate-900">${escA(f.ministry)} (${escA(f.department || '-')})</strong></div>
+                        <div class="col-span-2"><span class="text-slate-400 font-bold block text-[10px]">근거 법령 및 대상 시설</span><strong class="text-slate-900">${escA(f.legalTarget)}</strong></div>
+                    </div>
+                    <div>
+                        <h4 class="font-extrabold text-slate-900 mb-2">📌 주요 수록 챕터 및 지침 핵심</h4>
+                        <div class="flex flex-wrap gap-1.5">
+                            ${(f.keyChapters || []).map(c => `<span class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-900 border border-blue-200 font-bold">${escA(c)}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-[11px] text-slate-600">
+                        <strong class="text-slate-800 block mb-0.5">📁 저장 경로 (아카이브 정본):</strong>
+                        <code class="text-[10px] break-all">${escA('docs/지침서_공식_아카이브/' + f.relPath)}</code>
+                    </div>
+                </div>
+                <div class="p-4 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="document.getElementById('guideline-detail-modal').remove(); window.jumpToFacility('${escA(targetFacId)}')" class="px-3 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-800 border border-indigo-200 text-xs font-bold cursor-pointer transition">🏛️ 시설도감 보기</button>
+                        <button type="button" onclick="document.getElementById('guideline-detail-modal').remove(); showView('hierarchy', { targetNodeId: '${escA(hLink.targetId)}' })" class="px-3 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-800 border border-emerald-200 text-xs font-bold cursor-pointer transition">🌳 위계도감 보기</button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        ${f.driveViewUrl ? `<a href="${escA(f.driveViewUrl)}" target="_blank" rel="noopener noreferrer" class="px-3 py-2 rounded-xl bg-sky-50 hover:bg-sky-600 hover:text-white text-sky-800 border border-sky-200 text-xs font-bold transition">☁️ Drive 열람 ↗</a>` : ''}
+                        <button type="button" onclick="window.downloadGuidelineDirect('${escA(f.id)}')" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold cursor-pointer shadow-xs transition">⬇️ PDF 다운로드</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+        document.body.appendChild(modal);
+    };
+
+    window.downloadGuidelineDirect = function (docId) {
+        const allFiles = collectArchiveFiles();
+        const f = allFiles.find(x => x.id === docId);
+        if (!f) return;
+        const localUrl = encodeURI('docs/지침서_공식_아카이브/' + String(f.relPath || '').replace(/^\/+/, ''));
+        if (window.location.protocol === 'file:' && f.driveDownloadUrl) {
+            window.open(f.driveDownloadUrl, '_blank', 'noopener,noreferrer');
+            return;
         }
+        const a = document.createElement('a');
+        a.href = localUrl;
+        a.download = f.filename || (f.title + '.pdf');
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    };
 
-        setTimeout(() => {
-            const row = document.getElementById(`guideline-row-${docId}`);
-            const card = document.getElementById(`mobile-card-${docId}`);
-
-            const targetEl = (window.innerWidth >= 768) ? row : card;
-            if (!targetEl) return;
-
-            targetEl.scrollIntoView({ behavior: 'instant', block: 'center' });
-
-            // Highlight ring pulse animation (통합 초록 테두리 인터랙티브 강조)
+    function highlightAndScrollGuideline(docId) {
+        const target = document.getElementById(`guideline-row-${docId}`) || document.getElementById(`mobile-card-${docId}`);
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
             if (typeof window.triggerMatchHighlight === 'function') {
-                window.triggerMatchHighlight(targetEl);
+                window.triggerMatchHighlight(target);
             }
-            targetEl.classList.add('ring-4', 'ring-secondary', 'transition-all', 'duration-500');
+            target.classList.add('ring-4', 'ring-blue-500', 'bg-blue-50/70', 'transition-all', 'duration-500');
             setTimeout(() => {
-                targetEl.classList.remove('ring-4', 'ring-secondary');
-            }, 2800);
-        }, 220);
+                target.classList.remove('ring-4', 'ring-blue-500', 'bg-blue-50/70');
+            }, 3000);
+        }
     }
-
 })();
-    // ==========================================================================
-    // 공식 지침서 아카이브 모바일 전용 핸들러 (Google Stitch 모바일 인터랙션)
-    // ==========================================================================
-    let mobileArchiveYear = '전체';
-    let mobileArchiveMinistry = '전체';
-    let mobileArchiveQuery = '';
-
-    window.handleMobileArchiveSearch = function(query) {
-        mobileArchiveQuery = (query || '').trim().toLowerCase();
-        filterMobileArchiveCards();
-    };
-
-    window.filterArchiveByYear = function(year, buttonElement) {
-        mobileArchiveYear = year || '전체';
-        const container = document.getElementById('mobile-archive-year-pills');
-        if (container) {
-            container.querySelectorAll('.archive-year-pill').forEach(btn => {
-                btn.className = 'archive-year-pill px-2.5 py-1 rounded-lg text-xs font-medium bg-white text-slate-600 border border-slate-200 flex-shrink-0 cursor-pointer';
-            });
-        }
-        if (buttonElement) {
-            buttonElement.className = 'archive-year-pill px-2.5 py-1 rounded-lg text-xs font-extrabold bg-blue-600 text-white flex-shrink-0 shadow-2xs cursor-pointer';
-        }
-        filterMobileArchiveCards();
-    };
-
-    window.filterArchiveByMinistry = function(ministry, buttonElement) {
-        mobileArchiveMinistry = ministry || '전체';
-        const container = document.getElementById('mobile-archive-ministry-pills');
-        if (container) {
-            container.querySelectorAll('.archive-ministry-pill').forEach(btn => {
-                btn.className = 'archive-ministry-pill px-2.5 py-1 rounded-lg text-xs font-medium bg-white text-slate-600 border border-slate-200 flex-shrink-0 cursor-pointer';
-            });
-        }
-        if (buttonElement) {
-            buttonElement.className = 'archive-ministry-pill px-2.5 py-1 rounded-lg text-xs font-extrabold bg-slate-900 text-white flex-shrink-0 shadow-2xs cursor-pointer';
-        }
-        filterMobileArchiveCards();
-    };
-
-    function filterMobileArchiveCards() {
-        const cards = document.querySelectorAll('#mobile-archive-cards-feed > .guideline-card, #mobileGuidelinesView .guideline-card');
-        let visibleCount = 0;
-        cards.forEach(card => {
-            const text = (card.textContent || '').toLowerCase();
-            const cardYear = (card.getAttribute('data-year') || '').toLowerCase();
-            const cardMinistry = (card.getAttribute('data-ministry') || '').toLowerCase();
-            const cardKeywords = (card.getAttribute('data-keywords') || '').toLowerCase();
-
-            const matchSearch = !mobileArchiveQuery || text.includes(mobileArchiveQuery) || cardKeywords.includes(mobileArchiveQuery);
-            const matchYear = (mobileArchiveYear === '전체') || cardYear.includes(mobileArchiveYear.toLowerCase());
-            const cardSection = card.getAttribute('data-section') || '';
-            const matchMinistry = (mobileArchiveMinistry === '전체')
-                || (mobileArchiveMinistry === 'TRACK2' && cardSection === 'SECTION_3')
-                || (mobileArchiveMinistry !== 'TRACK2' && (cardMinistry.includes(mobileArchiveMinistry.toLowerCase()) || text.includes(mobileArchiveMinistry.toLowerCase())));
-
-            if (matchSearch && matchYear && matchMinistry) {
-                card.classList.remove('hidden');
-                visibleCount++;
-            } else {
-                card.classList.add('hidden');
-            }
-        });
-
-        const emptyNotice = document.getElementById('mobile-archive-empty-notice');
-        if (emptyNotice) {
-            emptyNotice.classList.toggle('hidden', visibleCount > 0);
-        }
-    }
-
-    

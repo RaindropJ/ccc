@@ -21,12 +21,11 @@
     <script src="src/data/practicum-postings-db.js?v=20261112"></script>
     <script src="src/data/practicum-direct-db.js?v=20261112"></script>
     <script src="src/data/national-practicum-db.js?v=20261112" defer></script>
-    <script src="src/data/guidelines-archive-db.js?v=20261116"></script>
-    <script src="src/js/archive.js?v=20261116_v4"></script>
-    <script src="src/data/welfare-hierarchy-db.js?v=20261116"></script>
-    <script src="src/js/hierarchy.js?v=20261116_v4"></script>
+    <script src="src/data/guidelines-archive-db.js?v=20261119_v5"></script>
+    <script src="src/js/archive.js?v=20261119_v5"></script>
+    <script src="src/data/welfare-hierarchy-db.js?v=20261119_v5"></script>
+    <script src="src/js/hierarchy.js?v=20261119_v5"></script>
     <script src="src/js/mobile-stitch-controller.js?v=20261116"></script>
-    <script src="src/js/demo-tour.js?v=20261116"></script>
 
     <!-- file:// 프로토콜 및 SPA 단일 페이지 브라우저 히스토리(popstate/pushState) 라우팅 엔진 -->
     <script>
@@ -557,7 +556,7 @@
                             </button>
                             <button type="button" onclick="showView('hierarchy')" class="w-full text-left flex items-center justify-between px-3.5 py-2.5 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 font-semibold border-t border-slate-100 cursor-pointer">
                                 <span>🌳 3단계 위계 도감</span>
-                                <span class="px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 font-bold font-num text-[10px]">218</span>
+                                <span class="px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 font-bold font-num text-[10px]">219</span>
                             </button>
                             <button type="button" onclick="showView('archive')" class="w-full text-left flex items-center justify-between px-3.5 py-2.5 hover:bg-blue-50 text-slate-700 hover:text-blue-600 font-semibold border-t border-slate-100 cursor-pointer">
                                 <span>📁 공식 지침서 아카이브</span>
@@ -566,12 +565,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- 75초 3대 플랫폼 자동 시연 모드 퀵 버튼 -->
-                <button type="button" onclick="if(typeof startAutoDemoTour==='function') startAutoDemoTour();" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-blue-300/80 bg-gradient-to-r from-blue-50 to-emerald-50 hover:from-blue-100 hover:to-emerald-100 text-blue-900 text-xs font-bold shadow-2xs transition cursor-pointer group" title="화면 캡처 녹화 및 3대 핵심 체계 75초 자동 시연 투어">
-                    <span class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
-                    <span>🎬 75초 시연 투어</span>
-                </button>
 
                 <!-- 내 준비함 퀵 버튼 -->
                 <button type="button" onclick="if(typeof toggleWorkspaceDrawer === 'function') toggleWorkspaceDrawer();" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-2xs cursor-pointer">
@@ -596,7 +589,7 @@
 
                 <button type="button" onclick="showView('hierarchy')" data-view="hierarchy" class="subnav-tab flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 flex items-center gap-1.5 whitespace-nowrap cursor-pointer transition">
                     <span>3단계 위계 도감</span>
-                    <span class="px-1.5 py-0.2 rounded-full bg-emerald-600 text-white text-[10px] font-num">218</span>
+                    <span class="px-1.5 py-0.2 rounded-full bg-emerald-600 text-white text-[10px] font-num">219</span>
                 </button>
                 
                 <button type="button" onclick="showView('archive')" data-view="archive" class="subnav-tab flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 flex items-center gap-1.5 whitespace-nowrap cursor-pointer transition">
@@ -632,7 +625,7 @@
             </button>
             <button type="button" onclick="showView('hierarchy'); document.getElementById('mobile-subnav-menu').classList.add('hidden');" class="w-full text-left py-2 px-3 rounded-lg hover:bg-emerald-50 text-emerald-800 flex items-center justify-between">
                 <span>🌳 3단계 위계 도감</span>
-                <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold font-num">218건</span>
+                <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold font-num">219건</span>
             </button>
             <button type="button" onclick="showView('archive'); document.getElementById('mobile-subnav-menu').classList.add('hidden');" class="w-full text-left py-2 px-3 rounded-lg hover:bg-blue-50 text-blue-700 flex items-center justify-between">
                 <span>📁 공식 지침서 아카이브</span>
@@ -652,7 +645,7 @@
             </button>
             <button type="button" data-view="hierarchy" onclick="showView('hierarchy')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
                 <span>🌳 3단계 위계</span>
-                <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-emerald-100 text-emerald-700 rounded-full font-bold">218</span>
+                <span class="nav-badge px-1.5 py-0.2 text-[10px] bg-emerald-100 text-emerald-700 rounded-full font-bold">219</span>
             </button>
             <button type="button" data-view="archive" onclick="showView('archive')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
                 <span>📁 아카이브</span>
@@ -695,7 +688,7 @@
                 <!-- 1. 퀵 네비게이션 탭 버튼 -->
                 <div class="grid grid-cols-2 gap-2">
                     <button type="button" onclick="showView('hierarchy')" class="p-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition cursor-pointer">
-                        <span>🌳 3단계 위계 도감 (218)</span>
+                        <span>🌳 3단계 위계 도감 (219)</span>
                     </button>
                     <button type="button" onclick="showView('archive')" class="p-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition cursor-pointer">
                         <span>📁 지침서 아카이브 (70)</span>
@@ -817,7 +810,7 @@
                             3단계 위계 도감 (숲에서 나무로) →
                         </h3>
                         <p class="text-xs text-emerald-100/90 leading-snug">
-                            18대 분야 218개 법정·실천단위서비스 [대-중-소분류] 및 70종 공식 지침서 원문 매칭 바로가기
+                            18대 분야 219개 법정·실천단위서비스 [대-중-소분류] 및 70종 공식 지침서 원문 매칭 바로가기
                         </p>
                     </div>
                     <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-2xl flex-shrink-0 group-hover:scale-110 transition">
@@ -1063,25 +1056,25 @@
                       <span class="px-2 py-0.5 rounded-full bg-white/20 text-[10px] font-extrabold text-emerald-100">사회복지사업법 제2조 법정체계</span>
                       <span class="text-[10px] text-emerald-200">2026 개정판 반영</span>
                     </div>
-                    <h2 class="text-base font-extrabold tracking-tight">3단계 위계 도감 (18대 분야 · 218개 단위서비스)</h2>
+                    <h2 class="text-base font-extrabold tracking-tight">3단계 위계 도감 (18대 분야 · 219개 단위서비스)</h2>
                     <p class="text-xs text-emerald-100/90 mt-0.5">대분류 ➔ 중분류 ➔ 소분류 법정시설 연계망</p>
 
                     <div class="grid grid-cols-4 gap-2 pt-3 text-center">
                       <div class="bg-white/10 rounded-xl py-2">
                         <div class="text-[10px] text-emerald-200 font-medium">대분류</div>
-                        <div class="text-base font-black text-white font-num">12</div>
+                        <div class="text-base font-black text-white font-num">18</div>
                       </div>
                       <div class="bg-white/10 rounded-xl py-2">
                         <div class="text-[10px] text-emerald-200 font-medium">중분류</div>
-                        <div class="text-base font-black text-white font-num">48</div>
+                        <div class="text-base font-black text-white font-num">66</div>
                       </div>
                       <div class="bg-white/10 rounded-xl py-2">
                         <div class="text-[10px] text-emerald-200 font-medium">소분류</div>
-                        <div class="text-base font-black text-white font-num">167</div>
+                        <div class="text-base font-black text-white font-num">219</div>
                       </div>
                       <div class="bg-white/10 rounded-xl py-2">
                         <div class="text-[10px] text-emerald-200 font-medium">지침서</div>
-                        <div class="text-base font-black text-white font-num">38</div>
+                        <div class="text-base font-black text-white font-num">70</div>
                       </div>
                     </div>
                   </div>
@@ -1094,25 +1087,31 @@
                              class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-white text-xs focus:ring-2 focus:ring-emerald-500 shadow-xs">
                     </div>
                     <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="mobile-hierarchy-domain-pills">
-                      <button type="button" onclick="filterMobileHierarchyByDomain('all', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-extrabold bg-emerald-600 text-white flex-shrink-0 cursor-pointer shadow-2xs">전체 167</button>
-                      <button type="button" onclick="filterMobileHierarchyByDomain('01_사회복지관', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">01. 복지관 (4)</button>
-                      <button type="button" onclick="filterMobileHierarchyByDomain('02_노인복지', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">02. 노인 (38)</button>
-                      <button type="button" onclick="filterMobileHierarchyByDomain('03_장애인복지', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">03. 장애인 (22)</button>
-                      <button type="button" onclick="filterMobileHierarchyByDomain('04_아동돌봄복지', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">04. 아동 (19)</button>
+                      <button type="button" onclick="filterMobileHierarchyByDomain('all', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-extrabold bg-emerald-600 text-white flex-shrink-0 cursor-pointer shadow-2xs">전체 219</button>
+                      <button type="button" onclick="filterMobileHierarchyByDomain('01_사회복지관', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">01. 복지관 (22)</button>
+                      <button type="button" onclick="filterMobileHierarchyByDomain('02_노인복지', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">02. 노인 (20)</button>
+                      <button type="button" onclick="filterMobileHierarchyByDomain('03_장애인복지', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">03. 장애인 (19)</button>
+                      <button type="button" onclick="filterMobileHierarchyByDomain('04_아동돌봄복지', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">04. 아동 (16)</button>
                       <button type="button" onclick="filterMobileHierarchyByDomain('05_영유아보육', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">05. 보육 (10)</button>
-                      <button type="button" onclick="filterMobileHierarchyByDomain('06_가족복지', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">06. 가족 (8)</button>
-                      <button type="button" onclick="filterMobileHierarchyByDomain('07_청소년여성권익', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">07. 청소년 (14)</button>
+                      <button type="button" onclick="filterMobileHierarchyByDomain('06_가족복지', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">06. 가족 (13)</button>
+                      <button type="button" onclick="filterMobileHierarchyByDomain('07_청소년여성권익', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">07. 청소년 (15)</button>
                       <button type="button" onclick="filterMobileHierarchyByDomain('08_정신건강자살예방', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">08. 정신건강 (12)</button>
                       <button type="button" onclick="filterMobileHierarchyByDomain('09_자활고용지원', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">09. 자활 (10)</button>
-                      <button type="button" onclick="filterMobileHierarchyByDomain('10_학교사회복지', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">10. 학교 (6)</button>
-                      <button type="button" onclick="filterMobileHierarchyByDomain('11_지역보호긴급돌봄', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">11. 돌봄 (14)</button>
-                      <button type="button" onclick="filterMobileHierarchyByDomain('12_배분모금국제', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">12. 배분·국제 (10)</button>
+                      <button type="button" onclick="filterMobileHierarchyByDomain('10_학교사회복지', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">10. 학교 (8)</button>
+                      <button type="button" onclick="filterMobileHierarchyByDomain('11_지역보호긴급돌봄', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">11. 돌봄 (13)</button>
+                      <button type="button" onclick="filterMobileHierarchyByDomain('12_배분모금국제', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">12. 배분·국제 (9)</button>
+                      <button type="button" onclick="filterMobileHierarchyByDomain('13_사회적경제연대', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 flex-shrink-0 cursor-pointer">13. 사회적경제 (9)</button>
+                      <button type="button" onclick="filterMobileHierarchyByDomain('14_사법교정법무보호', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 flex-shrink-0 cursor-pointer">14. 사법·법무 (9)</button>
+                      <button type="button" onclick="filterMobileHierarchyByDomain('15_보건의료전문케어', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 flex-shrink-0 cursor-pointer">15. 보건의료 (12)</button>
+                      <button type="button" onclick="filterMobileHierarchyByDomain('16_정규특수평생교육', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 flex-shrink-0 cursor-pointer">16. 교육·특수 (9)</button>
+                      <button type="button" onclick="filterMobileHierarchyByDomain('17_주거금융자원봉사', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 flex-shrink-0 cursor-pointer">17. 주거·금융 (7)</button>
+                      <button type="button" onclick="filterMobileHierarchyByDomain('18_종교기반복지체계', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 flex-shrink-0 cursor-pointer">18. 종교복지 (6)</button>
                     </div>
                   </div>
 
                   <!-- 3. 위계 트리 카드 목록 -->
                   <div id="mobile-hierarchy-cards-feed" class="space-y-3">
-                    <!-- 167개 단위시설 위계 트리 동적 렌더링 (hierarchy.js 연동) -->
+                    <!-- 219개 단위시설 위계 트리 동적 렌더링 (hierarchy.js 연동) -->
                   </div>
 
                   <!-- 4. 하단 모바일 바텀시트 인스펙터 -->
@@ -2310,8 +2309,8 @@
         facilityCategory: '노인복지시설',
         fieldId: 'elderly',
         livingFacilities: ['노인주거복지시설 (양로시설·노인공동생활가정·노인복지주택)', '노인의료복지시설 (노인요양시설·노인요양공동생활가정)', '학대피해노인전용쉼터'],
-        usingFacilities: ['재가노인복지시설 (방문요양·주야간보호·단기보호)', '노인여가복지시설 (노인복지관·경로당·노인교실)', '노인보호전문기관', '노인일자리지원기관 (시니어클럽 등)', '복합노인복지시설 (농어촌 지역 통합형)'],
-        laws: ['「노인복지법」', '「노인장기요양보험법」', '「농어촌주민의 보건복지증진을 위한 특별법」'],
+        usingFacilities: ['재가노인복지시설 (방문요양·주야간보호·단기보호)', '노인여가복지시설 (노인복지관·경로당·노인교실)', '노인보호전문기관', '노인일자리지원기관 (시니어클럽 등)', '복합노인복지시설 (농어촌 지역 통합형)', '대한노인회 (경로당·노인자원봉사·취업지원)'],
+        laws: ['「노인복지법」', '「노인장기요양보험법」', '「농어촌주민의 보건복지증진을 위한 특별법」', '「대한노인회 지원에 관한 법률」'],
         articles: '노인복지법 제31조~제39조; 노인장기요양보험법 제31조; 농어촌복지법 제21조',
         note: '양로·요양·재가·여가복지 및 농어촌 복합노인복지시설 포함'
     },
@@ -2338,8 +2337,8 @@
         facilityCategory: '아동복지시설',
         fieldId: 'child',
         livingFacilities: ['아동양육시설', '아동일시보호시설', '아동보호치료시설', '자립지원시설', '공동생활가정 (그룹홈)', '학대피해아동쉼터'],
-        usingFacilities: ['아동상담소', '아동전용시설', '지역아동센터', '다함께돌봄센터 (학교돌봄터 포함)', '아동보호전문기관', '가정위탁지원센터', '자립지원전담기관'],
-        laws: ['「아동복지법」'],
+        usingFacilities: ['아동상담소', '아동전용시설', '지역아동센터', '다함께돌봄센터 (학교돌봄터 포함)', '아동보호전문기관', '가정위탁지원센터', '자립지원전담기관', '아동권리보장원 · 입양기관 (국내·국제입양 상담·사후관리)'],
+        laws: ['「아동복지법」', '「국내입양에 관한 특별법」'],
         articles: '아동복지법 제44조의2·제45조·제50조·제52조',
         note: ''
     },
@@ -2394,7 +2393,7 @@
         facilityCategory: '사회복지관 · 모금/기부',
         fieldId: 'community-selfreliance',
         livingFacilities: [],
-        usingFacilities: ['사회복지관 (종합사회복지관)', '푸드뱅크·푸드마켓 (기부식품등 제공사업장)'],
+        usingFacilities: ['사회복지관 (종합사회복지관)', '푸드뱅크·푸드마켓 (기부식품등 제공사업장)', '한국사회복지협의회(SSN) · 한국사회복지사협회(KASW) (법정 사회복지단체)'],
         laws: ['「사회복지사업법」', '「식품등 기부 활성화에 관한 법률」'],
         articles: '사회복지사업법 제16조·제34조·제34조의5; 식품기부법 제3조',
         note: ''
@@ -2423,7 +2422,7 @@
         hierarchyFacility: '의료사회복지 · 병원 사회사업팀',
         fieldId: 'medical',
         livingFacilities: [],
-        usingFacilities: ['상급종합병원 · 종합병원 의료사회복지실', '공공의료원 공공보건의료사업실 (301네트워크)', '시·군·구 의료급여관리사 (의료급여 사례관리)'],
+        usingFacilities: ['상급종합병원 · 종합병원 의료사회복지실', '재난적의료비 지원 · 희귀·중증난치질환 의료비 지원 전담창구', '시·군·구 의료급여관리사 (의료급여 사례관리)'],
         laws: ['「사회복지사업법」', '「의료법」', '「재난적의료비 지원에 관한 법률」'],
         articles: '사회복지사업법 제11조(의료사회복지사); 의료법 시행규칙 제38조',
         note: '법정 「의료사회복지사」 수련병원 및 퇴원환자 지역사회 연계·의료급여 사례관리 수행'
@@ -2439,9 +2438,9 @@
         archiveDocId: 'doc-060',
         fieldId: 'medical',
         livingFacilities: ['요양병원 장기입원병동', '입원형 호스피스 병동', '권역응급의료센터 (응급병동)'],
-        usingFacilities: ['상급종합병원 / 종합병원 (공공의료사업단·퇴원연계팀)', '가정형·자문형 호스피스 전문기관', '요양병원 낮병동 · 외래재활실'],
-        laws: ['「의료법」', '「호스피스·완화의료 및 임종과정에 있는 환자의 연명의료결정에 관한 법률」', '「암관리법」'],
-        articles: '의료법 시행규칙 제38조; 연명의료결정법 제25조; 암관리법 제20조',
+        usingFacilities: ['응급의료센터 · 권역외상센터 (응급실 기반 자살시도자·위기환자 사후관리)', '가정형·자문형 호스피스 전문기관', '요양병원 낮병동 · 외래재활실'],
+        laws: ['「의료법」', '「호스피스·완화의료 및 임종과정에 있는 환자의 연명의료결정에 관한 법률」', '「응급의료에 관한 법률」', '「암관리법」'],
+        articles: '의료법 시행규칙 제38조; 연명의료결정법 제25조; 응급의료법 제26조; 암관리법 제20조',
         note: ''
     },
     {
@@ -2557,8 +2556,8 @@
         facilityCategory: '가족센터 (다문화·건강가정 통합)',
         fieldId: 'family-gender',
         livingFacilities: [],
-        usingFacilities: ['가족센터 (구 건강가정지원센터·다문화가족지원센터 통합)', '공동육아나눔터 · 여성새로일하기센터(새일센터)'],
-        laws: ['「건강가정기본법」', '「다문화가족지원법」'],
+        usingFacilities: ['가족센터 (구 건강가정지원센터·다문화가족지원센터 통합)', '공동육아나눔터 · 여성새로일하기센터(새일센터)', '아이돌봄지원센터 (아이돌봄서비스 제공기관) · 여성인력개발센터'],
+        laws: ['「건강가정기본법」', '「다문화가족지원법」', '「아이돌봄 지원법」'],
         articles: '건강가정기본법 제35조; 다문화가족지원법 제12조',
         note: '보편적 가족지원과 다문화가족 지원 서비스를 지자체 「가족센터」로 통합 운영'
     },
@@ -2618,7 +2617,7 @@
         livingFacilities: [],
         usingFacilities: ['초·중·고교 내 교육복지실 · 학교사회복지실', '교육지원청 학교사회복지 전담팀'],
         laws: ['「사회복지사업법」', '「초·중등교육법」', '「학생맞춤통합지원법」'],
-        articles: '사회복지사업법 제11조(학교사회복지사); 초·중등교육법 제28조',
+        articles: '사회복지사업법 제11조(학교사회복지사); 초·중등교육법 시행령 제54조(교육복지우선지원); 학생맞춤통합지원법 제7조',
         note: '법정 「학교사회복지사」 수련 및 시·도 교육청 학교사회복지·교육복지우선지원 전담 영역'
     },
     {
@@ -2632,9 +2631,9 @@
         archiveDocId: 'doc-064',
         fieldId: 'school',
         livingFacilities: ['기숙형 공립고 기숙사', '기숙형 대안학교 · Wee 스쿨'],
-        usingFacilities: ['초·중·고등학교 (늘봄학교, 방과후학교, 학교돌봄터)', '교육복지우선지원사업 학교 (교육복지사 배치)', 'Wee 클래스 (학교 단위) · Wee 센터 (교육지원청 학생위기상담) · 학생맞춤통합지원센터', '대안학교 · 대안교육위탁교육기관'],
+        usingFacilities: ['초·중·고등학교 (늘봄학교, 방과후학교, 학교돌봄터)', 'Wee 클래스 (학교 단위) · Wee 센터 (교육지원청 학생위기상담) · 학생맞춤통합지원센터', '대안학교 · 대안교육위탁교육기관', '다문화교육지원센터 · 다문화예비학교 (한국어학급)'],
         laws: ['「초·중등교육법」', '「학생맞춤통합지원법」'],
-        articles: '초·중등교육법 제28조·제60조의3; 시행령 제54조',
+        articles: '초·중등교육법 제28조·제60조의3',
         note: ''
     },
     {
@@ -2680,7 +2679,7 @@
         hierarchyFacility: '교정시설 · 소년보호 · 치료감호',
         archiveDocId: 'doc-057',
         fieldId: 'public-justice',
-        livingFacilities: ['교도소 · 구치소 · 교도소 지소 (사회복귀과)', '소년원 · 소년분류심사원 (법무부 직영 교정시설)', '치료감호소 (국립법무병원)', '군교도소 · 군구금시설 (국방부)'],
+        livingFacilities: ['교도소 · 구치소 · 교도소 지소 (사회복귀과)', '소년원 · 소년분류심사원 (법무부 직영 교정시설)', '치료감호소 (국립법무병원)'],
         usingFacilities: ['교정 심리치료센터 · 교정 직업훈련·취업지원 시설', '소년원학교 · 청소년꿈키움센터 (청소년 비행예방센터)', '치료명령 외래 연계'],
         laws: ['「형의 집행 및 수용자의 처우에 관한 법률」', '「보호소년 등의 처우에 관한 법률」', '「치료감호 등에 관한 법률」'],
         articles: '형집행법 제2조·제3조·제55조; 보호소년법 제32조; 치료감호법 제16조',
@@ -2728,7 +2727,7 @@
         facilityCategory: '장애인 고용 · 직업재활 · 국민취업지원',
         fieldId: 'disability',
         livingFacilities: ['장애인직업능력개발원 기숙생활관'],
-        usingFacilities: ['한국장애인고용공단 지사 · 발달장애인훈련센터 · 맞춤훈련센터', '장애인직업능력개발원 · 장애인고용지원센터', '고용복지플러스센터 (국민취업지원제도 전담기관)'],
+        usingFacilities: ['한국장애인고용공단 지사 · 발달장애인훈련센터 · 맞춤훈련센터', '장애인직업능력개발원 · 장애인고용지원센터', '장애인표준사업장 (장애인고용촉진법 제22조의4 인증 고용사업장)', '고용복지플러스센터 (국민취업지원제도 전담기관)'],
         laws: ['「장애인고용촉진 및 직업재활법」', '「구직자 취업촉진 및 생활안정지원에 관한 법률」'],
         articles: '장애인고용촉진법 제15조·제21조·제43조; 구직자취업촉진법 제6조',
         note: '장애인 의무고용·직업훈련 및 국민취업지원제도 고용-복지 연계 전담'
@@ -2755,7 +2754,7 @@
         ministryIcon: '💼',
         tag: '특수직역의료',
         facilityCategory: '산재병원',
-        hierarchyFacility: '산재병원 · 보훈병원 · 국군병원',
+        hierarchyFacility: '산재병원',
         archiveDocId: 'doc-063',
         fieldId: 'medical',
         livingFacilities: ['근로복지공단 산재병원 입원병동'],
@@ -2771,7 +2770,7 @@
         ministryIcon: '🎖️',
         tag: '특수직역의료',
         facilityCategory: '보훈병원',
-        hierarchyFacility: '산재병원 · 보훈병원 · 국군병원',
+        hierarchyFacility: '보훈병원',
         archiveDocId: 'doc-063',
         fieldId: 'medical',
         livingFacilities: ['중앙·권역 보훈병원 입원병동'],
@@ -2787,14 +2786,14 @@
         ministryIcon: '🪖',
         tag: '특수직역의료',
         facilityCategory: '국군병원',
-        hierarchyFacility: '산재병원 · 보훈병원 · 국군병원',
+        hierarchyFacility: '국군병원',
         archiveDocId: 'doc-063',
         fieldId: 'medical',
         livingFacilities: ['국군병원 · 국군외상센터 입원병동'],
         usingFacilities: ['군 의무시설 외래 · 장병심리회복지원팀'],
         laws: ['「군보건의료에 관한 법률」'],
         articles: '군보건의료법 제6조',
-        note: ''
+        note: '군 의무·외상 의료사회사업 및 병영생활전문상담·군교정 복지 연계'
     },
     // --- 8. 행정안전부 · 국토교통부 · 금융위원회 (3개 법정분류) ---
     {
@@ -2819,7 +2818,7 @@
         ministryIcon: '🏘️',
         tag: '주거복지',
         facilityCategory: '주거복지센터 · 사회주택',
-        hierarchyFacility: '주거복지센터 · 사회주택 · 재난구호시설',
+        hierarchyFacility: '주거복지센터 · 사회주택',
         archiveDocId: 'doc-067',
         fieldId: 'community-selfreliance',
         livingFacilities: ['사회주택 / 자립지원임대주택 (케어안심주택)', '영구임대주택 · 국민임대주택 · 매입·전세임대주택'],
@@ -2835,11 +2834,11 @@
         ministryIcon: '🏛️',
         tag: '재난구호',
         facilityCategory: '재난구호시설',
-        hierarchyFacility: '주거복지센터 · 사회주택 · 재난구호시설',
+        hierarchyFacility: '재난구호시설',
         archiveDocId: 'doc-067',
         fieldId: 'community-selfreliance',
         livingFacilities: ['전국재해구호협회 (이재민 임시주거시설·임시조립주택·대피소)'],
-        usingFacilities: ['재난심리회복지원센터 · 재해구호협회 거점'],
+        usingFacilities: ['재난심리회복지원센터 · 재해구호협회 거점', '대한적십자사 (재난구호·이재민지원·공공의료 - 「대한적십자사 조직법」)'],
         laws: ['「재해구호법」'],
         articles: '재해구호법 제4조의2',
         note: ''
@@ -2851,7 +2850,7 @@
         ministryIcon: '💳',
         tag: '서민금융',
         facilityCategory: '서민금융 · 채무조정',
-        hierarchyFacility: '서민금융 · 채무조정 · 자원봉사 · NPO',
+        hierarchyFacility: '서민금융 · 채무조정',
         archiveDocId: 'doc-068',
         fieldId: 'community-selfreliance',
         livingFacilities: [],
@@ -2867,7 +2866,7 @@
         ministryIcon: '🏛️',
         tag: '자원봉사',
         facilityCategory: '자원봉사센터',
-        hierarchyFacility: '서민금융 · 채무조정 · 자원봉사 · NPO',
+        hierarchyFacility: '자원봉사센터',
         archiveDocId: 'doc-068',
         fieldId: 'community-selfreliance',
         livingFacilities: [],
@@ -2883,7 +2882,7 @@
         ministryIcon: '🏛️',
         tag: 'NPO',
         facilityCategory: '비영리민간단체 (NPO)',
-        hierarchyFacility: '서민금융 · 채무조정 · 자원봉사 · NPO',
+        hierarchyFacility: '비영리민간단체 (NPO)',
         archiveDocId: 'doc-068',
         fieldId: 'community-selfreliance',
         livingFacilities: [],
@@ -12528,17 +12527,5 @@
             updateWorkspaceBadge();
         });
     </script>
-
-    <!-- 75초 3대 핵심 체계 자동 시연 모드 플로팅 퀵 버튼 -->
-    <aside aria-label="자동 시연 모드 컨트롤" class="fixed bottom-6 right-6 z-40">
-        <button type="button" 
-                onclick="if(typeof startAutoDemoTour==='function') startAutoDemoTour();" 
-                class="bg-gradient-to-r from-blue-700 via-indigo-700 to-emerald-700 hover:from-blue-600 hover:to-emerald-600 text-white px-4 py-3 rounded-full shadow-2xl hover:shadow-emerald-500/30 hover:scale-105 transition-all flex items-center gap-2.5 font-black text-xs ring-4 ring-white/90 cursor-pointer group"
-                title="클릭 시 마우스가 자동으로 움직이며 75초 동안 3대 핵심 체계를 완벽 시연합니다 (화면 캡처용)">
-            <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
-            <span>🎬 3대 플랫폼 75초 자동 시연</span>
-            <span class="px-1.5 py-0.5 rounded-full bg-white/20 text-[10px] font-bold font-num group-hover:bg-white group-hover:text-slate-900 transition-colors">REC</span>
-        </button>
-    </aside>
 </body>
 </html>
