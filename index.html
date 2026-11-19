@@ -21,10 +21,10 @@
     <script src="src/data/practicum-postings-db.js?v=20261112"></script>
     <script src="src/data/practicum-direct-db.js?v=20261112"></script>
     <script src="src/data/national-practicum-db.js?v=20261112" defer></script>
-    <script src="src/data/guidelines-archive-db.js?v=20261119_v5"></script>
-    <script src="src/js/archive.js?v=20261119_v5"></script>
-    <script src="src/data/welfare-hierarchy-db.js?v=20261119_v5"></script>
-    <script src="src/js/hierarchy.js?v=20261119_v5"></script>
+    <script src="src/data/guidelines-archive-db.js?v=20261119_v6"></script>
+    <script src="src/js/archive.js?v=20261119_v6"></script>
+    <script src="src/data/welfare-hierarchy-db.js?v=20261119_v6"></script>
+    <script src="src/js/hierarchy.js?v=20261119_v6"></script>
     <script src="src/js/mobile-stitch-controller.js?v=20261116"></script>
 
     <!-- file:// 프로토콜 및 SPA 단일 페이지 브라우저 히스토리(popstate/pushState) 라우팅 엔진 -->
@@ -508,6 +508,83 @@
     
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* A4 가로 인쇄 최적화 스타일시트 (3대 핵심 탭 공통) */
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 10mm;
+            }
+            body {
+                background: #ffffff !important;
+                color: #0f172a !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            header,
+            footer,
+            nav,
+            .no-print,
+            #mobile-fields-view,
+            #mobileHierarchyView,
+            #mobileArchiveView,
+            #mobile-sticky-tabs,
+            #mobile-subnav-menu,
+            #workspace-drawer,
+            #guideline-detail-modal,
+            #career-quiz-modal,
+            #pdf-binder-modal,
+            .view-section.hidden {
+                display: none !important;
+            }
+            main {
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .view-section:not(.hidden) {
+                display: block !important;
+                width: 100% !important;
+                max-width: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .view-section:not(.hidden) .hidden.md\:block {
+                display: block !important;
+            }
+            .overflow-x-auto {
+                overflow: visible !important;
+            }
+            table {
+                width: 100% !important;
+                min-width: 0 !important;
+                border-collapse: collapse !important;
+                font-size: 9px !important;
+            }
+            thead {
+                display: table-header-group !important;
+            }
+            tr {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+            th, td {
+                border: 1px solid #cbd5e1 !important;
+                padding: 4px 5px !important;
+            }
+            button, a {
+                text-decoration: none !important;
+            }
+            #fields-table-container,
+            #section-ngo-impact,
+            #sectionCentralHierarchyContainer,
+            #hierarchyCivilSection,
+            #archiveCentralSection,
+            #archiveCivilSection {
+                box-shadow: none !important;
+                border-color: #94a3b8 !important;
+                margin-top: 8px !important;
+            }
+        }
 </style>
 </head>
 <body class="antialiased bg-[#F8FAFC] text-[#0F172A] min-h-screen flex flex-col font-sans selection:bg-blue-600 selection:text-white">
@@ -519,7 +596,7 @@
         <div class="max-w-[1600px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
             <!-- 좌측: 로고 + 타이틀 + 실시간 동기화 뱃지 -->
             <div class="flex items-center gap-3 sm:gap-4">
-                <button type="button" onclick="showView('fields')" class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-sm hover:bg-blue-700 transition flex-shrink-0 cursor-pointer" title="현장 나침반 홈 (12대 분야·법령)" aria-label="현장 나침반 홈으로 이동">
+                <button type="button" onclick="showView('fields')" class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-sm hover:bg-blue-700 transition flex-shrink-0 cursor-pointer" title="현장 나침반 홈 (18대 분야·45개 시설체계)" aria-label="현장 나침반 홈으로 이동">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"></circle>
                         <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
@@ -551,8 +628,9 @@
                     </button>
                     <div class="absolute right-0 top-full pt-1.5 w-60 hidden group-hover:block z-50">
                         <div class="bg-white rounded-xl shadow-xl border border-slate-200 py-1 overflow-hidden text-xs">
-                            <button type="button" onclick="showView('fields')" class="w-full text-left flex items-center gap-2 px-3.5 py-2.5 hover:bg-blue-50 text-slate-700 hover:text-blue-600 font-semibold cursor-pointer">
-                                <span>🏛️ 12대 분야·시설 도감</span>
+                            <button type="button" onclick="showView('fields')" class="w-full text-left flex items-center justify-between px-3.5 py-2.5 hover:bg-blue-50 text-slate-700 hover:text-blue-600 font-semibold cursor-pointer">
+                                <span>🏛️ 18대 분야·시설 도감</span>
+                                <span class="px-1.5 py-0.2 rounded-full bg-blue-100 text-blue-800 font-bold font-num text-[10px]">45</span>
                             </button>
                             <button type="button" onclick="showView('hierarchy')" class="w-full text-left flex items-center justify-between px-3.5 py-2.5 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 font-semibold border-t border-slate-100 cursor-pointer">
                                 <span>🌳 3단계 위계 도감</span>
@@ -585,7 +663,10 @@
         <!-- 2단: 서브 네비게이션 가로 탭 바 (글자 세로 꺾임 방지 whitespace-nowrap) -->
         <div class="border-t border-slate-100 bg-slate-50/70">
             <div class="max-w-[1600px] mx-auto px-4 sm:px-6 flex items-center gap-1.5 overflow-x-auto flex-nowrap no-scrollbar py-1" id="sub-nav-tabs">
-                <button type="button" onclick="showView('fields')" data-view="fields" class="subnav-tab flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold text-slate-900 bg-white border border-slate-200/90 whitespace-nowrap shadow-2xs cursor-pointer transition">12대 분야·시설 도감</button>
+                <button type="button" onclick="showView('fields')" data-view="fields" class="subnav-tab flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold text-slate-900 bg-white border border-slate-200/90 flex items-center gap-1.5 whitespace-nowrap shadow-2xs cursor-pointer transition">
+                    <span>18대 분야·시설 도감</span>
+                    <span class="px-1.5 py-0.2 rounded-full bg-slate-800 text-white text-[10px] font-num">45</span>
+                </button>
 
                 <button type="button" onclick="showView('hierarchy')" data-view="hierarchy" class="subnav-tab flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 flex items-center gap-1.5 whitespace-nowrap cursor-pointer transition">
                     <span>3단계 위계 도감</span>
@@ -621,7 +702,8 @@
         <!-- 모바일 드롭다운 메뉴 -->
         <div id="mobile-subnav-menu" class="hidden md:hidden bg-white border-t border-slate-200 p-3 space-y-1.5 text-xs font-semibold shadow-lg">
             <button type="button" onclick="showView('fields'); document.getElementById('mobile-subnav-menu').classList.add('hidden');" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-800 flex items-center justify-between">
-                <span>🏛️ 12대 분야·시설 도감</span>
+                <span>🏛️ 18대 분야·시설 도감</span>
+                <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-800 font-bold font-num">45건</span>
             </button>
             <button type="button" onclick="showView('hierarchy'); document.getElementById('mobile-subnav-menu').classList.add('hidden');" class="w-full text-left py-2 px-3 rounded-lg hover:bg-emerald-50 text-emerald-800 flex items-center justify-between">
                 <span>🌳 3단계 위계 도감</span>
@@ -641,7 +723,7 @@
     <div class="md:hidden sticky top-16 z-30 px-3 py-2 bg-slate-50/95 backdrop-blur-md border-b border-slate-200/80">
         <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="mobile-sticky-tabs">
             <button type="button" data-view="fields" onclick="showView('fields')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-blue-600 shadow-sm shadow-blue-200 flex items-center gap-1 transition cursor-pointer">
-                <span>분야·법령</span>
+                <span>18대 분야·시설 (45)</span>
             </button>
             <button type="button" data-view="hierarchy" onclick="showView('hierarchy')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white shadow-xs hover:bg-slate-100 transition-colors flex items-center gap-1 transition cursor-pointer">
                 <span>🌳 3단계 위계</span>
@@ -681,10 +763,10 @@
     <!-- 메인 컨테이너 -->
     <main class="flex-grow pt-8 pb-16">
         
-        <!-- ==================== VIEW 1: 12대 분야와 법령 도감 ==================== -->
+        <!-- ==================== VIEW 1: 18대 분야·시설 및 사회안전망 도감 (45) ==================== -->
         <section id="view-fields" class="view-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- [구글 스티치 리디자인: 12대 분야·시설 도감 모바일 뷰 (block md:hidden)] -->
-            <div class="block md:hidden space-y-4 pt-1 font-sans text-slate-800">
+            <!-- [모바일 뷰 (block md:hidden)] -->
+            <div id="mobile-fields-view" class="no-print block md:hidden space-y-4 pt-1 font-sans text-slate-800">
                 <!-- 1. 퀵 네비게이션 탭 버튼 -->
                 <div class="grid grid-cols-2 gap-2">
                     <button type="button" onclick="showView('hierarchy')" class="p-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition cursor-pointer">
@@ -703,7 +785,7 @@
                             <span>🏛️</span><span>2026 현행 정부부처 법정 체계</span>
                         </div>
                         <h2 class="text-lg font-black tracking-tight leading-snug">
-                            법령별 · 12대 분야별 기관 도감
+                            법령별 · 18대 분야별 기관 도감 (45개 체계)
                         </h2>
                         <p class="text-xs text-blue-100/90 leading-relaxed">
                             거주형 <strong>생활시설</strong>과 통원형 <strong>이용시설</strong>의 법적 구분 및 근거법령을 카드별로 손쉽게 확인하세요.
@@ -787,20 +869,20 @@
 
             <!-- [데스크톱/태블릿 전용 뷰 (hidden md:block)] -->
             <div class="hidden md:block space-y-6">
-<div class="text-center mb-8">
+<div class="no-print text-center mb-8">
                 <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold mb-3">
-                    2026 현행 복지법령 종합 안내
+                    2026 현행 45개 법정·민간 사회안전망 종합 안내
                 </div>
                 <h1 class="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight mb-3">
-                    사회복지 법령별 · 12대 분야별 기관 도감
+                    18대 실천분야 · 45개 법정시설 및 사회안전망 도감
                 </h1>
                 <p class="text-xs sm:text-sm text-slate-500 max-w-2xl mx-auto leading-relaxed">
-                    보건복지부·성평등가족부·교육부·통일부·질병관리청 등 현행 법령상 생활/이용시설 체계를 한눈에 비교하고 실습·수련·취업처로 바로 연결하세요.
+                    11개 중앙행정 계통(39개 법정분야)과 민간 제3섹터·사회적경제·종교공익 생태계(6개 영역)의 거주형 생활시설·이용시설 체계를 6단계 통합표로 대조하고 위계도감·공식지침서로 바로 연결하세요.
                 </p>
             </div>
 
             <!-- 신규 추천: 3단계 위계 도감 & 공식 지침서 아카이브 추천 배너 -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="no-print grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div onclick="showView('hierarchy')" class="bg-gradient-to-r from-emerald-900 to-teal-800 text-white p-5 rounded-2xl shadow-md hover:shadow-lg transition cursor-pointer flex items-center justify-between gap-4 border border-emerald-700/50 group">
                     <div class="space-y-1">
                         <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-extrabold">
@@ -837,7 +919,7 @@
             </div>
 
             <!-- 빠른 안내 3대 배너 -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-xs">
+            <div class="no-print grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-xs">
                 <div onclick="document.getElementById('fields-table-container').scrollIntoView({behavior:'smooth'})" class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-2xs hover:border-blue-400 transition cursor-pointer">
                     <div class="font-extrabold text-blue-600 mb-1">1. 법령·부처별 한눈에 비교 ↓</div>
                     <p class="text-slate-500 leading-snug">소관부처별 법정 생활/이용시설 구분 및 근거법령 원문을 확인합니다.</p>
@@ -853,7 +935,7 @@
             </div>
 
                         <!-- 소관부처별 원클릭 퀵 필터 뱃지 (39개 중앙부처 법정분류 + 6대 민간·사회적경제·종교 생태계) -->
-            <div id="fields-ministry-filters-box" class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-xs mb-4">
+            <div id="fields-ministry-filters-box" class="no-print bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-xs mb-4">
                 <div class="text-[11px] font-bold text-slate-500 mb-2 flex items-center justify-between">
                     <span class="flex items-center gap-1.5">🏛️ 소관부처 및 섹터별 원클릭 필터 (단일 마스터 통합표):</span>
                     <span class="text-[10px] text-slate-400">클릭 시 해당 부처 소관 법정시설(39개) 또는 민간·사회적경제·종교 생태계(6개)로 즉시 필터링됩니다.</span>
@@ -874,7 +956,7 @@
             </div>
 
             <!-- 시설명 클릭 시 3단계 위계도감 인터랙티브 연동 안내 팁 배너 -->
-            <div id="fields-tip-banner" class="bg-gradient-to-r from-emerald-50 via-teal-50 to-blue-50/70 border border-emerald-200/90 rounded-2xl p-3.5 sm:p-4 mb-4 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div id="fields-tip-banner" class="no-print bg-gradient-to-r from-emerald-50 via-teal-50 to-blue-50/70 border border-emerald-200/90 rounded-2xl p-3.5 sm:p-4 mb-4 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                 <div class="flex items-center gap-2.5 min-w-0">
                     <span class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-sm font-bold shadow-2xs shrink-0">💡</span>
                     <div class="min-w-0">
@@ -893,18 +975,24 @@
             </div>
 
             <!-- 검색 및 필터 바 -->
-            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="no-print bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs mb-6 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
                 <div class="flex items-center gap-2 flex-wrap">
                     <span id="fields-table-title" class="text-base font-extrabold text-slate-800">🏛️ 중앙정부 소관 법정시설 분류표</span>
                     <span id="fields-count-badge" class="text-xs text-slate-400 font-medium">총 39개 정부부처 법정분야 (11개 소속계통 · 12개 소관기관)</span>
                 </div>
-                <div class="flex items-center gap-2 w-full sm:w-auto">
-                    <div class="relative flex-1 sm:w-64">
+                <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto">
+                    <div class="relative flex-1 sm:w-56">
                         <input id="fields-search-input" type="search" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="법정 분야 및 소관부처 검색" oninput="filterFieldsTable(this.value)" placeholder="시설명, 법령(예: 노인복지법, 의료법)..." class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 text-xs bg-slate-50 focus:bg-white focus:outline-none focus:border-blue-500">
                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs">🔍</span>
                     </div>
-                    <button type="button" onclick="copyCurrentFieldsTableAsTsv()" class="px-3 py-2 rounded-xl bg-slate-900 hover:bg-blue-700 text-white text-xs font-bold transition shadow-2xs shrink-0 flex items-center gap-1.5 cursor-pointer" title="현재 화면의 도감 표를 엑셀/구글시트 붙여넣기용(TSV)으로 클립보드에 복사">
+                    <button type="button" onclick="copyCurrentFieldsTableAsTsv()" class="px-3 py-2 rounded-xl bg-slate-900 hover:bg-blue-700 text-white text-xs font-bold transition shadow-2xs shrink-0 flex items-center gap-1.5 cursor-pointer" title="현재 화면의 도감 표(중앙부처+민간생태계)를 엑셀/구글시트 붙여넣기용(TSV)으로 복사">
                         <span>📋</span><span>표 복사 (TSV)</span>
+                    </button>
+                    <button type="button" onclick="exportCurrentFieldsTableAsCsv()" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs font-bold transition shadow-2xs shrink-0 flex items-center gap-1.5 cursor-pointer" title="현재 화면의 도감 표(중앙부처+민간생태계)를 Excel (.csv) 파일로 저장">
+                        <span>📊</span><span>Excel (.csv) 저장</span>
+                    </button>
+                    <button type="button" onclick="window.print()" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs font-bold transition shadow-2xs shrink-0 flex items-center gap-1.5 cursor-pointer" title="현재 화면의 표를 A4 가로 인쇄 또는 PDF로 저장">
+                        <span>🖨️</span><span>표 인쇄 / PDF</span>
                     </button>
                 </div>
             </div>
@@ -956,21 +1044,40 @@
                     </div>
                 </div>
 
-                <div class="p-4 rounded-xl bg-white/90 border border-amber-200/90 text-xs text-slate-700 leading-relaxed space-y-1.5">
+                <div class="no-print p-4 rounded-xl bg-white/90 border border-amber-200/90 text-xs text-slate-700 leading-relaxed space-y-1.5">
                     <div class="font-extrabold text-amber-900 flex items-center gap-1.5 text-xs sm:text-sm">
                         <span>📜</span>
                         <span>왜 중앙부처 6열 시설 표와 경계를 분리했나요? (민법 제32조 비영리법인 및 사회적경제 특별법 체계)</span>
                     </div>
                     <p class="text-slate-600">
                         상단 6열 마스터 표의 39개 중앙부처 법정시설(거주형 생활시설 vs 이용시설)과 달리,
-                        <strong>축 1(국제구호 NGO·모금배분 공익재단·기업 CSR·종교법인·전통사찰 치유생태계)</strong>은 <strong>「민법」 제32조</strong> 및 공익법인·전통사찰 법령에 따른 민간 공익 영역이며,
+                        <strong>축 1(국제구호 NGO·모금배분 공익재단·기업 CSR)</strong>·<strong>축 3(종교법인·전통사찰 치유생태계)</strong>은 <strong>「민법」 제32조</strong> 및 공익법인·전통사찰 법령에 따른 민간 공익 영역이며,
                         <strong>축 2(사회적기업·소셜벤처·사회적협동조합·마을기업·자활기업·사회적농장)</strong>는 <strong>사회적경제·농촌돌봄 특별법</strong>에 기반한 연대경제 조직입니다.
-                        각 카드에서도 동일하게 <strong>📌 근거조문 확인, 세부 기관 클릭 시 🌳 3단계 위계도감 직결, 📚 정본 지침서 1:1 필터링</strong>을 지원합니다.
+                        탭 2(위계도감)·탭 3(지침서 아카이브)과 동일한 <strong>6열 표 형식</strong>으로 <strong>📌 근거조문, 세부 기관 클릭 시 🌳 위계도감 직결, 📚 지침서 1:1 필터링</strong>을 지원합니다.
                     </p>
                 </div>
 
-                <!-- 6대 민간·사회적경제·종교공익 카드 그리드 (renderCivilImpactCards()에 의해 동적 렌더링) -->
-                <div id="civil-impact-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+                <!-- 6대 민간·사회적경제·종교공익 6열 마스터 표 (renderCivilImpactCards()에 의해 동적 렌더링) -->
+                <div id="civil-impact-table-wrapper" class="bg-white rounded-2xl border border-amber-200/90 shadow-xs overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table id="civil-impact-table" class="w-full text-left border-collapse table-fixed min-w-[960px] text-xs">
+                            <caption class="sr-only">민간 제3섹터 · 사회적경제 · 종교공익 생태계 6대 영역 6단계 분류표</caption>
+                            <thead>
+                                <tr class="bg-amber-50/90 text-amber-950 border-b border-amber-200 font-extrabold">
+                                    <th scope="col" class="py-3 px-3 text-center w-[11%] border-r border-amber-200/70">생태계 축</th>
+                                    <th scope="col" class="py-3 px-3 text-center w-[12%] border-r border-amber-200/70">설립근거 · 주무관청</th>
+                                    <th scope="col" class="py-3 px-3 text-center w-[17%] border-r border-amber-200/70">분야 · 조직 종류</th>
+                                    <th scope="col" class="py-3 px-4 text-center w-[21%] border-r border-amber-200/70">🏠 거주·공동체 시설 (생활형)</th>
+                                    <th scope="col" class="py-3 px-4 text-center w-[21%] border-r border-amber-200/70">🏢 이용·수행기관 및 조직</th>
+                                    <th scope="col" class="py-3 px-4 text-center w-[18%]">근거 법령 &amp; 탐색</th>
+                                </tr>
+                            </thead>
+                            <tbody id="civil-impact-table-body" class="divide-y divide-amber-100 text-slate-600">
+                                <!-- Populated dynamically by renderCivilImpactCards() -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
             </div>
         </section>
@@ -2279,7 +2386,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="pb-6 border-b border-slate-100">
                 <strong class="text-sm font-black text-slate-800 block mb-1">사회복지 현장 나침반 에디토리얼 포털</strong>
-                <p class="text-slate-400">대학생을 위한 12대 분야별 법령 도감 · 실습 · 수련 · 75선 취업 큐레이션</p>
+                <p class="text-slate-400">대학생·실무자를 위한 18대 실천분야 · 45개 법정시설 도감 · 219단위 위계 · 70종 지침서 아카이브</p>
             </div>
             
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 pt-6 text-[11px]">
@@ -2943,17 +3050,17 @@
         window.FACILITY_ROW_ID_ALIASES = FACILITY_ROW_ID_ALIASES;
 
         const CIVIL_IMPACT_ECOSYSTEM = [
-    // --- 축 1. 민법 제32조 비영리 공익법인 · 종교공익 생태계 (3대 영역) ---
+    // --- 축 1. 민법 제32조 비영리 공익법인 생태계 ---
     {
         id: 'law-ngo-csr',
         axisGroup: '축 1 · 민법 제32조 비영리·공익법인',
         trackGroup: '민법 제32조 비영리·공익법인',
-        ministry: '민법 제32조 · 주무관청',
+        ministry: '민법 제32조 · 외교부 · 주무관청',
         ministryBadge: 'bg-blue-50 text-blue-800 border-blue-200',
         ministryIcon: '🌍',
         facilityCategory: '국제구호 NGO · 공익재단 · 기업 CSR',
         hierarchyFacility: '국제구호 NGO · 공익재단 · 기업 CSR',
-        archiveDocId: 'doc-034',
+        archiveDocId: 'doc-048',
         tag: 'NGO·모금재단·CSR',
         livingFacilities: [],
         usingFacilities: [
@@ -2964,9 +3071,71 @@
         laws: ['「민법」 제32조', '「사회복지공동모금회법」', '「국제개발협력기본법」', '「공익법인의 설립·운영에 관한 법률」'],
         articles: '민법 제32조; 사회복지공동모금회법 제20조; 공익법인법 제4조'
     },
+    // --- 축 2. 사회적경제 · 연대경제 특별법 생태계 ---
+    {
+        id: 'ext-sec-social-enterprise',
+        axisGroup: '축 2 · 사회적경제·연대',
+        trackGroup: '사회적경제 및 연대경제',
+        ministry: '고용노동부·중기부',
+        ministryBadge: 'bg-teal-50 text-teal-800 border-teal-200',
+        ministryIcon: '🌱',
+        facilityCategory: '사회적기업 · 예비사회적기업 · 소셜벤처',
+        hierarchyFacility: '사회적기업 · 예비사회적기업 · 소셜벤처',
+        archiveDocId: 'doc-054',
+        tag: '사회적기업·소셜벤처',
+        livingFacilities: [],
+        usingFacilities: [
+            '인증 사회적기업 (일자리제공형·사회서비스제공형·지역사회공헌형·혼합형)',
+            '부처형 · 지역형 예비사회적기업',
+            '소셜벤처 (중소벤처기업부 판별)',
+            '한국사회적기업진흥원'
+        ],
+        laws: ['「사회적기업 육성법」', '「벤처기업육성에 관한 특별법」'],
+        articles: '사회적기업육성법 제2조·제7조·제20조'
+    },
+    {
+        id: 'ext-sec-coop-village',
+        axisGroup: '축 2 · 사회적경제·연대',
+        trackGroup: '사회적경제 및 연대경제',
+        ministry: '기재부·행안부·복지부',
+        ministryBadge: 'bg-teal-50 text-teal-800 border-teal-200',
+        ministryIcon: '🤝',
+        facilityCategory: '협동조합 · 마을기업 · 자활기업',
+        hierarchyFacility: '협동조합 · 마을기업 · 자활기업',
+        archiveDocId: 'doc-055',
+        tag: '협동조합·마을·자활',
+        livingFacilities: [],
+        usingFacilities: [
+            '일반협동조합 · 사회적협동조합 (기재부/관계부처 인가, 돌봄·복지형)',
+            '지정 마을기업 (행정안전부 지정 지역공동체 비즈니스)',
+            '인정 자활기업 (기초수급자·차상위계층 기반 자활공동체)'
+        ],
+        laws: ['「협동조합 기본법」', '「국민기초생활 보장법」'],
+        articles: '협동조합기본법 제15조·제85조; 기초보장법 제18조'
+    },
+    {
+        id: 'ext-sec-social-farm',
+        axisGroup: '축 2 · 사회적경제·연대',
+        trackGroup: '사회적경제 및 연대경제',
+        ministry: '농림축산식품부',
+        ministryBadge: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+        ministryIcon: '🌾',
+        facilityCategory: '사회적농장 · 농어촌공동체회사',
+        hierarchyFacility: '사회적농장 · 농어촌공동체회사',
+        archiveDocId: 'doc-056',
+        tag: '사회적농장·농촌돌봄',
+        livingFacilities: ['농촌 돌봄공동체 숙식거주시설'],
+        usingFacilities: [
+            '사회적농장 (장애인·고령자 주간 농촌돌봄·교육·고용)',
+            '농어촌공동체회사 (농식품부 육성)'
+        ],
+        laws: ['「농어촌주민의 보건복지증진을 위한 특별법」', '「치유농업 연구개발 및 육성에 관한 법률」'],
+        articles: '농어촌복지법 및 농식품부 사회적농업 활성화 지원지침'
+    },
+    // --- 축 3. 종교법인 · 문화유산 공익 생태계 ---
     {
         id: 'ext-rel-welfare',
-        axisGroup: '축 1 · 민법 제32조 비영리·공익법인',
+        axisGroup: '축 3 · 종교법인·문화유산 공익',
         trackGroup: '민법 제32조 비영리·종교공익',
         ministry: '문화체육관광부·복지부·지자체',
         ministryBadge: 'bg-orange-50 text-orange-800 border-orange-200',
@@ -2988,7 +3157,7 @@
     },
     {
         id: 'ext-rel-heritage',
-        axisGroup: '축 1 · 민법 제32조 비영리·공익법인',
+        axisGroup: '축 3 · 종교법인·문화유산 공익',
         trackGroup: '민법 제32조 비영리·종교공익',
         ministry: '문화체육관광부·국가유산청·국토부',
         ministryBadge: 'bg-orange-50 text-orange-800 border-orange-200',
@@ -3005,67 +3174,6 @@
         ],
         laws: ['「전통사찰의 보존 및 지원에 관한 법률」', '「국가유산기본법」', '「건축법 시행령」'],
         articles: '전통사찰법 제2조; 건축법 시행령 별표 1 제6호'
-    },
-    // --- 축 2. 사회적경제 · 연대경제 · 농촌돌봄 특별법 생태계 (3대 영역) ---
-    {
-        id: 'ext-sec-social-enterprise',
-        axisGroup: '축 2 · 사회적경제 · 연대경제 특별법',
-        trackGroup: '사회적경제 및 연대경제',
-        ministry: '고용노동부·중기부',
-        ministryBadge: 'bg-teal-50 text-teal-800 border-teal-200',
-        ministryIcon: '🌱',
-        facilityCategory: '사회적기업 · 예비사회적기업 · 소셜벤처',
-        hierarchyFacility: '사회적기업 · 예비사회적기업 · 소셜벤처',
-        archiveDocId: 'doc-054',
-        tag: '사회적기업·소셜벤처',
-        livingFacilities: [],
-        usingFacilities: [
-            '인증 사회적기업 (일자리제공형·사회서비스제공형·지역사회공헌형·혼합형)',
-            '부처형 · 지역형 예비사회적기업',
-            '소셜벤처 (중소벤처기업부 판별)',
-            '한국사회적기업진흥원'
-        ],
-        laws: ['「사회적기업 육성법」', '「벤처기업육성에 관한 특별법」'],
-        articles: '사회적기업육성법 제2조·제7조·제20조'
-    },
-    {
-        id: 'ext-sec-coop-village',
-        axisGroup: '축 2 · 사회적경제 · 연대경제 특별법',
-        trackGroup: '사회적경제 및 연대경제',
-        ministry: '기재부·행안부·복지부',
-        ministryBadge: 'bg-teal-50 text-teal-800 border-teal-200',
-        ministryIcon: '🤝',
-        facilityCategory: '협동조합 · 마을기업 · 자활기업',
-        hierarchyFacility: '협동조합 · 마을기업 · 자활기업',
-        archiveDocId: 'doc-055',
-        tag: '협동조합·마을·자활',
-        livingFacilities: [],
-        usingFacilities: [
-            '일반협동조합 · 사회적협동조합 (기재부/관계부처 인가, 돌봄·복지형)',
-            '지정 마을기업 (행정안전부 지정 지역공동체 비즈니스)',
-            '인정 자활기업 (기초수급자·차상위계층 기반 자활공동체)'
-        ],
-        laws: ['「협동조합 기본법」', '「국민기초생활 보장법」'],
-        articles: '협동조합기본법 제15조·제85조; 기초보장법 제18조'
-    },
-    {
-        id: 'ext-sec-social-farm',
-        axisGroup: '축 2 · 사회적경제 · 연대경제 특별법',
-        trackGroup: '사회적경제 및 연대경제',
-        ministry: '농림축산식품부',
-        ministryBadge: 'bg-emerald-50 text-emerald-800 border-emerald-200',
-        ministryIcon: '🌾',
-        facilityCategory: '사회적농장 · 농어촌공동체회사',
-        hierarchyFacility: '사회적농장 · 농어촌공동체회사',
-        archiveDocId: 'doc-056',
-        tag: '사회적농장·농촌돌봄',
-        livingFacilities: ['농촌 돌봄공동체 숙식거주시설'],
-        usingFacilities: [
-            '사회적농장 (장애인·고령자 주간 농촌돌봄·교육·고용)',
-            '농어촌공동체회사 (농식품부 육성)'
-        ],
-        laws: ['「농어촌주민의 보건복지증진을 위한 특별법」', '「치유농업 연구개발 및 육성에 관한 법률」'],
-        articles: '농어촌복지법 및 농식품부 사회적농업 활성화 지원지침'
     }
 ];
         window.CIVIL_IMPACT_ECOSYSTEM = CIVIL_IMPACT_ECOSYSTEM;
@@ -9283,9 +9391,9 @@
             if (menu) menu.classList.toggle('hidden');
         }
 
-        // 4. View 1: 12대 분야와 법령 테이블 렌더링 & 소관부처별 그룹화
+        // 4. View 1: 18대 분야·시설(45) 마스터 표 렌더링 & 소관부처별 그룹화
         
-        // ==================== View 1: 모바일 법령 도감 아코디언 피드 (구글 스티치 리디자인) ====================
+        // ==================== View 1: 모바일 법령 도감 아코디언 피드 ====================
         const STATUTORY_DATA = STATUTORY_MATRIX;
 
         let openCardMap = { 'law-elderly': true, 'law-child': true, 'ext-sec-social-enterprise': true, 'ext-jus-probation': true };
@@ -9293,6 +9401,7 @@
         let currentFieldsTrack = 'core'; // 'core' | 'extended'
         let currentExtendedGroupFilter = '전체';
         let currentDisplayedDesktopRows = STATUTORY_MATRIX;
+        let currentDisplayedCivilRows = CIVIL_IMPACT_ECOSYSTEM;
 
         function renderMobileCards(list = currentFilteredMobileData) {
             const feed = document.getElementById('mobile-cards-feed');
@@ -9523,7 +9632,7 @@
         }
 
         function renderFieldsTable(rows = STATUTORY_MATRIX) {
-            if (typeof renderCivilImpactCards === 'function' && (!document.getElementById('civil-impact-cards-grid') || !document.getElementById('civil-impact-cards-grid').children.length)) { renderCivilImpactCards(); }
+            if (typeof renderCivilImpactCards === 'function' && (!document.getElementById('civil-impact-table-body') || !document.getElementById('civil-impact-table-body').children.length)) { renderCivilImpactCards(); }
             const tbody = document.getElementById('fields-table-body');
             if (!tbody) return;
             currentDisplayedDesktopRows = rows || [];
@@ -9766,110 +9875,170 @@
             applyFieldsFilter();
         }
 
-        function copyCurrentFieldsTableAsTsv() {
-            const rows = currentDisplayedDesktopRows || [];
-            if (rows.length === 0) {
-                alert('복사할 데이터가 없습니다.');
-                return;
-            }
-            const isExtended = (currentFieldsTrack === 'extended');
-            const header = isExtended
-                ? ['구분', '소관부처', '시설 분야, 종류', '생활시설', '이용시설, 전담기관', '근거법', '근거조문']
-                : ['구분', '소속계통', '기관유형', '소관기관', '시설·분야 종류', '생활시설 (거주형)', '이용시설·전담기관', '근거법령', '근거조문', '실무비고'];
+        function buildCurrentFieldsExportData() {
+            const tableContainer = document.getElementById('fields-table-container');
+            const ngoSection = document.getElementById('section-ngo-impact');
+            const showCentral = !tableContainer || !tableContainer.classList.contains('hidden');
+            const showCivil = !ngoSection || !ngoSection.classList.contains('hidden');
 
-            const lines = [header.join('\t')];
-            rows.forEach(r => {
-                const living = (r.livingFacilities && r.livingFacilities.length > 0) ? r.livingFacilities.join(', ') : '-';
-                const using = (r.usingFacilities && r.usingFacilities.length > 0) ? r.usingFacilities.join(', ') : '-';
-                const laws = (r.laws && r.laws.length > 0) ? r.laws.join(', ') : '-';
-                if (isExtended) {
-                    lines.push([
-                        r.trackGroup || '확장영역',
-                        r.ministry || '-',
-                        r.facilityCategory || '-',
-                        living,
-                        using,
-                        laws,
-                        r.articles || '-'
-                    ].map(v => String(v).replace(/[\t\r\n]+/g, ' ')).join('\t'));
-                } else {
+            const header = ['구분', '1열_소속계통_생태계축', '기관유형', '2열_소관기관_주무관청', '3열_시설분야종류', '4열_생활거주시설', '5열_이용수행기관', '6열_근거법령', '근거조문', '실무비고'];
+            const exportRows = [];
+
+            if (showCentral) {
+                (currentDisplayedDesktopRows || []).forEach(r => {
                     const L = resolveOrgLineage(r.ministry);
-                    lines.push([
-                        'Ⅰ. 핵심 법정시설',
+                    exportRows.push([
+                        '중앙정부 법정분야',
                         L.lineageLabel || '-',
                         L.orgType || '-',
                         L.primary || r.ministry || '-',
                         r.facilityCategory || '-',
-                        living,
-                        using,
-                        laws,
+                        (r.livingFacilities && r.livingFacilities.length > 0) ? r.livingFacilities.join(', ') : '-',
+                        (r.usingFacilities && r.usingFacilities.length > 0) ? r.usingFacilities.join(', ') : '-',
+                        (r.laws && r.laws.length > 0) ? r.laws.join(', ') : '-',
                         r.articles || '-',
                         r.note || '-'
-                    ].map(v => String(v).replace(/[\t\r\n]+/g, ' ')).join('\t'));
-                }
-            });
+                    ]);
+                });
+            }
 
-            const tsvText = lines.join('\n');
-            navigator.clipboard.writeText(tsvText).then(() => {
-                alert(`📋 중앙부처 법정시설·안전망 도감 ${rows.length}개 항목이 엑셀·스프레드시트 붙여넣기용(TSV)으로 복사되었습니다!`);
+            if (showCivil) {
+                (currentDisplayedCivilRows || []).forEach(r => {
+                    exportRows.push([
+                        '민간·사회적경제·종교 생태계',
+                        r.axisGroup || r.trackGroup || '-',
+                        '제3섹터·공익',
+                        r.ministry || '-',
+                        r.facilityCategory || '-',
+                        (r.livingFacilities && r.livingFacilities.length > 0) ? r.livingFacilities.join(', ') : '-',
+                        (r.usingFacilities && r.usingFacilities.length > 0) ? r.usingFacilities.join(', ') : '-',
+                        (r.laws && r.laws.length > 0) ? r.laws.join(', ') : '-',
+                        r.articles || '-',
+                        r.tag || '-'
+                    ]);
+                });
+            }
+
+            return { header, exportRows };
+        }
+
+        function copyCurrentFieldsTableAsTsv() {
+            const { header, exportRows } = buildCurrentFieldsExportData();
+            if (exportRows.length === 0) {
+                alert('복사할 데이터가 없습니다.');
+                return;
+            }
+            const clean = v => String(v || '-').replace(/[\t\r\n]+/g, ' ').trim();
+            const lines = [header.join('\t'), ...exportRows.map(row => row.map(clean).join('\t'))];
+            navigator.clipboard.writeText(lines.join('\n')).then(() => {
+                alert(`📋 18대 분야·시설 도감 ${exportRows.length}개 항목(중앙정부+민간생태계)이 엑셀·스프레드시트 붙여넣기용(TSV)으로 복사되었습니다!`);
             }).catch(() => {
                 alert('클립보드 복사 권한을 허용해 주세요.');
             });
         }
 
-                function renderCivilImpactCards(items = CIVIL_IMPACT_ECOSYSTEM) {
-            const deskGrid = document.getElementById('civil-impact-cards-grid');
+        function exportCurrentFieldsTableAsCsv() {
+            const { header, exportRows } = buildCurrentFieldsExportData();
+            if (exportRows.length === 0) {
+                alert('저장할 데이터가 없습니다.');
+                return;
+            }
+            const escCsv = v => `"${String(v || '').replace(/"/g, '""')}"`;
+            let csv = '\uFEFF' + header.map(escCsv).join(',') + '\n';
+            exportRows.forEach(row => {
+                csv += row.map(escCsv).join(',') + '\n';
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `2026_18대분야_법정시설안전망_${exportRows.length}개항목_${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function renderCivilImpactCards(items = CIVIL_IMPACT_ECOSYSTEM) {
+            const tbody = document.getElementById('civil-impact-table-body');
             const mobGrid = document.getElementById('mobile-civil-impact-grid');
             const list = items || [];
+            currentDisplayedCivilRows = list;
 
-            if (deskGrid) {
-                deskGrid.innerHTML = list.map(r => {
-                    const hierarchyTarget = r.hierarchyFacility || r.facilityCategory.replace(/\s*\(.*?\)/g, '').trim();
-                    const allOrgs = [...(r.livingFacilities || []), ...(r.usingFacilities || [])];
-                    const orgsHtml = allOrgs.map(f => `
-                        <div class="flex items-start gap-1.5 py-0.5 leading-snug">
-                            <span class="text-slate-400 text-xs mt-0.5">•</span>
-                            <div class="text-xs text-slate-800 min-w-0">${renderFacilityInteractiveText(f)}</div>
-                        </div>
-                    `).join('');
-                    const lawsHtml = (r.laws || []).map(l => {
-                        const query = encodeURIComponent(l.replace(/[「」]/g, '').trim());
-                        return `<a href="https://www.law.go.kr/LSW/lsSc.do?menuId=1&subMenuId=15&query=${query}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-slate-100 hover:bg-blue-600 hover:text-white font-bold transition text-[10px] border border-slate-200">${escapeHtml(l)} ↗</a>`;
-                    }).join(' ');
-                    return `
-                        <div id="facility-row-${r.id}" class="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-2xs flex flex-col justify-between hover:border-amber-400 transition space-y-3">
-                            <div class="space-y-2.5">
-                                <div class="flex items-center justify-between gap-2">
-                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold ${r.ministryBadge || 'bg-amber-50 text-amber-800 border-amber-200'} border">${escapeHtml(r.axisGroup || r.trackGroup)}</span>
-                                    <span class="text-sm">${r.ministryIcon || '🤝'}</span>
+            if (tbody) {
+                if (list.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="py-10 text-center text-slate-400 font-bold">검색 조건에 일치하는 민간 제3섹터·사회적경제·종교 생태계 영역이 없습니다.</td></tr>`;
+                } else {
+                    const axisCounts = new Map();
+                    list.forEach(r => {
+                        const ax = r.axisGroup || r.trackGroup || '기타 생태계';
+                        axisCounts.set(ax, (axisCounts.get(ax) || 0) + 1);
+                    });
+                    const axisRendered = new Set();
+
+                    tbody.innerHTML = list.map(r => {
+                        const ax = r.axisGroup || r.trackGroup || '기타 생태계';
+                        const hierarchyTarget = r.hierarchyFacility || r.facilityCategory.replace(/\s*\(.*?\)/g, '').trim();
+                        const livingArr = r.livingFacilities || [];
+                        const usingArr = r.usingFacilities || [];
+
+                        const livingHtml = livingArr.length > 0
+                            ? livingArr.map(f => `<div class="flex items-start gap-1.5 leading-snug"><span class="text-amber-500 mt-0.5 shrink-0">•</span><div class="min-w-0">${renderFacilityInteractiveText(f)}</div></div>`).join('')
+                            : `<div class="text-[11px] text-slate-400 italic">별도 거주형 시설 없음 (이용·활동 조직 중심)</div>`;
+
+                        const usingHtml = usingArr.length > 0
+                            ? usingArr.map(f => `<div class="flex items-start gap-1.5 leading-snug"><span class="text-blue-500 mt-0.5 shrink-0">•</span><div class="min-w-0">${renderFacilityInteractiveText(f)}</div></div>`).join('')
+                            : `<div class="text-[11px] text-slate-400 italic">-</div>`;
+
+                        const lawsHtml = (r.laws || []).map(l => {
+                            const query = encodeURIComponent(l.replace(/[「」]/g, '').trim());
+                            return `<a href="https://www.law.go.kr/LSW/lsSc.do?menuId=1&subMenuId=15&query=${query}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-slate-100 hover:bg-blue-600 hover:text-white font-bold transition text-[10px] border border-slate-200">${escapeHtml(l)} ↗</a>`;
+                        }).join(' ');
+
+                        let axisTd = '';
+                        if (!axisRendered.has(ax)) {
+                            axisRendered.add(ax);
+                            const span = axisCounts.get(ax) || 1;
+                            axisTd = `<td rowspan="${span}" class="py-3.5 px-3 align-top bg-amber-50/60 border-r border-amber-200/70 font-extrabold text-amber-950 text-center">
+                                <div class="inline-flex flex-col items-center gap-1 px-2 py-1.5 rounded-lg bg-amber-100/90 border border-amber-300 text-[11px] leading-snug">
+                                    <span>${escapeHtml(ax)}</span>
                                 </div>
-                                <div>
-                                    <h4 class="text-sm font-extrabold text-slate-900">${escapeHtml(r.facilityCategory)}</h4>
-                                    <div class="text-[11px] font-semibold text-slate-500 mt-0.5">소관·설립근거: ${escapeHtml(r.ministry)}</div>
-                                </div>
-                                <div class="space-y-1 pt-1 border-t border-slate-100">
-                                    <div class="text-[10px] font-bold text-slate-400">주요 기관·조직 (클릭 시 3단계 위계도감 직결):</div>
-                                    ${orgsHtml}
-                                </div>
-                            </div>
-                            <div class="pt-3 border-t border-slate-100 space-y-2">
-                                <div class="flex flex-wrap gap-1">${lawsHtml}</div>
-                                ${r.articles ? `<div class="text-[11px] text-slate-600 bg-slate-50 px-2 py-1 rounded-md border border-slate-200/80 leading-snug"><strong class="text-slate-800">📌 근거조문:</strong> ${escapeHtml(r.articles)}</div>` : ''}
-                                <div class="pt-1 flex items-center gap-1.5">
-                                    <button type="button" onclick="jumpToFacilityHierarchy('${escapeHtml(hierarchyTarget)}', '${escapeHtml(r.facilityCategory)}'); return false;" class="flex-1 inline-flex items-center justify-center gap-1 px-2 py-1.5 rounded-md bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-800 border border-emerald-200 text-[10px] font-bold transition cursor-pointer">
-                                        <span>🌳 위계도감 ➔</span>
-                                    </button>
-                                    <button type="button" onclick="showView('archive', { facilityId: '${escapeHtml(r.id)}', facilityName: '${escapeHtml(r.facilityCategory)}' }); return false;" class="flex-1 inline-flex items-center justify-center gap-1 px-2 py-1.5 rounded-md bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-800 border border-blue-200 text-[10px] font-bold transition cursor-pointer">
-                                        <span>📚 지침서 ➔</span>
-                                    </button>
-                                    <button type="button" onclick="saveToWorkspace('laws', '${escapeHtml(r.id)}', '${escapeHtml(r.ministry)}', '${escapeHtml(r.facilityCategory)}', '민간·사회혁신 생태계')" class="px-2.5 py-1.5 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold border border-amber-200 text-[10px] cursor-pointer shrink-0">
-                                        ⭐ 찜
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
+                                <div class="text-[10px] text-amber-800/80 font-semibold mt-1.5">${span}개 영역</div>
+                            </td>`;
+                        }
+
+                        return `
+                            <tr id="facility-row-${r.id}" class="hover:bg-amber-50/40 transition-colors">
+                                ${axisTd}
+                                <td class="py-3.5 px-3 align-top border-r border-amber-100 text-center">
+                                    <div class="inline-flex flex-col items-center gap-1">
+                                        <span class="text-base">${r.ministryIcon || '🤝'}</span>
+                                        <span class="px-2 py-0.5 rounded-md border ${r.ministryBadge || 'bg-amber-50 text-amber-800 border-amber-200'} font-extrabold text-[11px] leading-snug">${escapeHtml(r.ministry)}</span>
+                                    </div>
+                                </td>
+                                <td class="py-3.5 px-3 align-top border-r border-amber-100 space-y-1.5">
+                                    <div class="font-extrabold text-slate-900 text-xs leading-snug">${escapeHtml(r.facilityCategory)}</div>
+                                    ${r.tag ? `<span class="inline-block px-2 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-200 text-[10px] font-bold">${escapeHtml(r.tag)}</span>` : ''}
+                                </td>
+                                <td class="py-3.5 px-3 align-top border-r border-amber-100 space-y-1">${livingHtml}</td>
+                                <td class="py-3.5 px-3 align-top border-r border-amber-100 space-y-1">${usingHtml}</td>
+                                <td class="py-3.5 px-3 align-top space-y-2">
+                                    <div class="flex flex-wrap gap-1">${lawsHtml}</div>
+                                    ${r.articles ? `<div class="text-[10px] text-slate-600 bg-slate-50 px-2 py-1 rounded border border-slate-200/80 leading-snug"><strong>📌 근거:</strong> ${escapeHtml(r.articles)}</div>` : ''}
+                                    <div class="flex flex-wrap items-center gap-1 pt-0.5">
+                                        <button type="button" onclick="jumpToFacilityHierarchy('${escapeHtml(hierarchyTarget)}', '${escapeHtml(r.facilityCategory)}'); return false;" class="flex-1 inline-flex items-center justify-center gap-0.5 px-2 py-1 rounded-md bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-800 border border-emerald-200 text-[10px] font-bold transition cursor-pointer">
+                                            <span>🌳 위계 ➔</span>
+                                        </button>
+                                        <button type="button" onclick="showView('archive', { facilityId: '${escapeHtml(r.id)}', facilityName: '${escapeHtml(r.facilityCategory)}' }); return false;" class="flex-1 inline-flex items-center justify-center gap-0.5 px-2 py-1 rounded-md bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-800 border border-blue-200 text-[10px] font-bold transition cursor-pointer">
+                                            <span>📚 지침서 ➔</span>
+                                        </button>
+                                        <button type="button" onclick="saveToWorkspace('laws', '${escapeHtml(r.id)}', '${escapeHtml(r.ministry)}', '${escapeHtml(r.facilityCategory)}', '민간·사회혁신 생태계')" class="px-2 py-1 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold border border-amber-200 text-[10px] cursor-pointer shrink-0">⭐</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
             }
 
             if (mobGrid) {
@@ -12364,6 +12533,8 @@
         window.setExtendedGroupFilter = setExtendedGroupFilter;
         window.filterFieldsTable = filterFieldsTable;
         window.copyCurrentFieldsTableAsTsv = copyCurrentFieldsTableAsTsv;
+        window.exportCurrentFieldsTableAsCsv = exportCurrentFieldsTableAsCsv;
+        window.renderCivilImpactCards = renderCivilImpactCards;
         window.renderMobileCards = renderMobileCards;
         window.toggleCard = toggleCard;
         window.toggleAllCards = toggleAllCards;

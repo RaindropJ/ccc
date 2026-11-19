@@ -9,6 +9,7 @@
     let currentSearchKeyword = '';
     let currentFacilityFilter = null;
     let currentParentCategory = null;
+    let currentFilteredHierarchyNodes = [];
 
     const FACILITY_MAPPING_RULES = {
     "노인주거복지시설": {
@@ -4857,7 +4858,7 @@
         return `
             <div class="flex flex-col w-full animate-fadeIn font-body-md text-on-surface pb-16">
                 <!-- Top Statutory Context Banner -->
-                <section class="w-full bg-surface-container-low py-space-md border-b border-surface-container hidden md:block">
+                <section class="no-print w-full bg-surface-container-low py-space-md border-b border-surface-container hidden md:block">
                     <div class="max-w-7xl mx-auto px-margin flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
                         <div class="flex flex-wrap items-center gap-space-sm">
                             <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-700 text-white font-headline-sm">
@@ -4873,7 +4874,7 @@
                         </div>
                         <div class="flex flex-wrap items-center gap-space-sm font-legal-code text-legal-code">
                             <a class="inline-flex items-center gap-space-xs px-space-sm py-0.5 rounded-full bg-surface-container text-primary font-bold border border-primary/20 hover:bg-primary hover:text-on-primary transition-colors cursor-pointer" onclick="showView('fields'); return false;">
-                                <span>🏛️ 12대 분야·시설도감 (45)</span>
+                                <span>🏛️ 18대 분야·시설 도감 (45)</span>
                             </a>
                             <a class="inline-flex items-center gap-space-xs px-space-sm py-0.5 rounded-full bg-surface-container text-primary font-bold border border-primary/20 hover:bg-primary hover:text-on-primary transition-colors cursor-pointer" onclick="showView('archive'); return false;">
                                 <span class="material-symbols-outlined text-[14px] text-secondary">auto_stories</span>
@@ -4885,7 +4886,7 @@
                 </section>
 
                 <!-- Header & 4 Summary Cards -->
-                <section class="max-w-7xl mx-auto px-margin pt-space-lg w-full hidden md:block">
+                <section class="no-print max-w-7xl mx-auto px-margin pt-space-lg w-full hidden md:block">
                     <div id="facilityFilterBannerContainer" class="hidden mb-6"></div>
                     <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-lg border border-slate-200/80">
                         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
@@ -4899,14 +4900,17 @@
                                     상단 탭 1(45개 시설체계) · 탭 3(70종 지침서)과 동일한 <strong class="text-on-surface font-semibold">9대 원클릭 부처·섹터 필터</strong> 및 <strong class="text-on-surface font-semibold">6단계 소속계통-소관기관 마스터 그리드</strong>로 1:1 딥링킹됩니다.
                                 </p>
                             </div>
-                            <div class="flex flex-wrap items-center gap-space-sm shrink-0">
-                                <button type="button" class="inline-flex items-center gap-space-xs h-[38px] px-space-md rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors font-label-md text-label-md font-semibold shadow-sm cursor-pointer" onclick="window.print()">
-                                    <span class="material-symbols-outlined text-[18px]">print</span>
-                                    <span>표 인쇄 / PDF</span>
+                            <div class="flex flex-wrap items-center gap-2 shrink-0">
+                                <button type="button" class="inline-flex items-center gap-1.5 h-[38px] px-3.5 rounded-lg bg-slate-900 text-white hover:bg-blue-700 transition-colors text-xs font-bold shadow-sm cursor-pointer" onclick="window.copyHierarchyTSV()" title="현재 화면의 위계 목록을 엑셀/구글시트 붙여넣기용(TSV)으로 복사">
+                                    <span>📋</span><span>표 복사 (TSV)</span>
                                 </button>
                                 <button type="button" class="inline-flex items-center gap-space-xs h-[38px] px-space-md rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors font-label-md text-label-md font-semibold shadow-sm cursor-pointer" onclick="window.exportHierarchyCSV()">
                                     <span class="material-symbols-outlined text-[18px]">table_view</span>
                                     <span>Excel (.csv) 저장</span>
+                                </button>
+                                <button type="button" class="inline-flex items-center gap-space-xs h-[38px] px-space-md rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors font-label-md text-label-md font-semibold shadow-sm cursor-pointer" onclick="window.print()">
+                                    <span class="material-symbols-outlined text-[18px]">print</span>
+                                    <span>표 인쇄 / PDF</span>
                                 </button>
                                 <a class="inline-flex items-center gap-space-xs h-[38px] px-space-md rounded-lg bg-primary text-on-primary hover:bg-primary-container transition-all font-label-md text-label-md font-semibold shadow-sm cursor-pointer" onclick="showView('archive'); return false;">
                                     <span class="material-symbols-outlined text-[18px]">menu_book</span>
@@ -4957,7 +4961,7 @@
                 </section>
 
                 <!-- Unified Filter Strip (Identical 9 Pills + Sub-domain Chips + Search) -->
-                <section class="max-w-7xl mx-auto px-margin pt-space-md w-full hidden md:block">
+                <section class="no-print max-w-7xl mx-auto px-margin pt-space-md w-full hidden md:block">
                     <div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-slate-200/80 space-y-3">
                         <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
                             <div class="relative flex-1">
@@ -5000,7 +5004,7 @@
                     </div>
 
                     <!-- Mobile View -->
-                    <div class="block md:hidden w-full pb-36" id="mobileHierarchyView">
+                    <div class="no-print block md:hidden w-full pb-36" id="mobileHierarchyView">
                         <div class="mobile-hierarchy-container max-w-md mx-auto px-4 py-3 space-y-4 font-sans text-slate-800">
                           <div class="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-2xl p-4 text-white shadow-md">
                             <div class="flex items-center justify-between mb-2">
@@ -5544,6 +5548,7 @@
             return minMatch && domMatch && kwMatch;
         });
 
+        currentFilteredHierarchyNodes = filteredNodes;
         const centralNodes = filteredNodes.filter(n => !resolveHierarchyNodeOrg(n).isCivil);
         const civilNodes = filteredNodes.filter(n => resolveHierarchyNodeOrg(n).isCivil);
 
@@ -5627,15 +5632,54 @@
         }, 180);
     }
 
+    window.copyHierarchyTSV = function () {
+        const nodes = (currentFilteredHierarchyNodes && currentFilteredHierarchyNodes.length > 0)
+            ? currentFilteredHierarchyNodes
+            : getDB().nodes;
+        if (!nodes.length) {
+            alert('복사할 위계 데이터가 없습니다.');
+            return;
+        }
+        const header = ['구분', '1열_소속계통', '2열_소관기관', '실천분야', '3열_대분류_법정기능', '4열_중분류_사업분야', '시설유형', '5열_소분류_단위서비스', '세부실천내용', '6열_공식지침서', '지침서페이지'];
+        const clean = (v) => String(v || '-').replace(/[\t\r\n]+/g, ' ').trim();
+        const lines = [header.join('\t')];
+        nodes.forEach(n => {
+            const orgInfo = resolveHierarchyNodeOrg(n);
+            const gRef = n.guidelineRef || { file: '', page: '' };
+            const domainMeta = DOMAIN_MAP[n.domainId] || { short: n.domainId };
+            lines.push([
+                orgInfo.isCivil ? '민간·제3섹터' : '중앙행정기관',
+                orgInfo.lineageLabel,
+                orgInfo.agency,
+                domainMeta.short,
+                n.level1,
+                n.level2,
+                n.facilityType,
+                n.level3,
+                (n.details || []).join(' / '),
+                gRef.file,
+                gRef.page
+            ].map(clean).join('\t'));
+        });
+        navigator.clipboard.writeText(lines.join('\n')).then(() => {
+            alert(`📋 3단계 위계도감 ${nodes.length}개 단위서비스가 엑셀·스프레드시트 붙여넣기용(TSV)으로 복사되었습니다!`);
+        }).catch(() => {
+            alert('클립보드 복사 권한을 허용해 주세요.');
+        });
+    };
+
     window.exportHierarchyCSV = function () {
-        const { nodes } = getDB();
-        let csvContent = "\uFEFF1열_소속계통,2열_소관기관,실천분야,3열_대분류_법정기능,4열_중분류_사업분야,시설유형,5열_소분류_단위서비스,6열_공식지침서,지침서페이지\n";
+        const nodes = (currentFilteredHierarchyNodes && currentFilteredHierarchyNodes.length > 0)
+            ? currentFilteredHierarchyNodes
+            : getDB().nodes;
+        let csvContent = "\uFEFF구분,1열_소속계통,2열_소관기관,실천분야,3열_대분류_법정기능,4열_중분류_사업분야,시설유형,5열_소분류_단위서비스,세부실천내용,6열_공식지침서,지침서페이지\n";
         nodes.forEach(n => {
             const orgInfo = resolveHierarchyNodeOrg(n);
             const gRef = n.guidelineRef || { file: '', page: '' };
             const domainMeta = DOMAIN_MAP[n.domainId] || { short: n.domainId };
             const esc = (v) => `"${String(v || '').replace(/"/g, '""')}"`;
             const row = [
+                esc(orgInfo.isCivil ? '민간·제3섹터' : '중앙행정기관'),
                 esc(orgInfo.lineageLabel),
                 esc(orgInfo.agency),
                 esc(domainMeta.short),
@@ -5643,6 +5687,7 @@
                 esc(n.level2),
                 esc(n.facilityType),
                 esc(n.level3),
+                esc((n.details || []).join(' / ')),
                 esc(gRef.file),
                 esc(gRef.page)
             ];
@@ -5656,5 +5701,6 @@
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     };
 })();

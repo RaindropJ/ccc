@@ -1,24 +1,20 @@
 /**
- * 대한민국 사회복지 현장 나침반 - 공식 지침서 마스터 아카이브 (SCREEN_2)
- * Google Stitch Material Design 3 규격 100% 통합 컨트롤러
- * 
- * - 53종 정본 전종 (총 24,180면, 450.95MB)
- * - 섹션 Ⅰ: 중앙 정부부처 핵심 법정지침서 (보건복지부 34종, 337.25MB)
- * - 섹션 Ⅱ: 범부처 및 특화·전문 실천지침서 (관계부처 및 공익법인 19종, 113.70MB)
- * - 3단계 위계도감 (SCREEN_9) 167개 단위서비스 1:1 양방향 딥링킹(Deep-linking)
- * - 실시간 텍스트 검색 (제목, 부처, 과명, 근거법령, 챕터) + 7개 소관부처 필터
- * - 데스크톱(매트릭스 테이블) + 모바일(반응형 스마트 카드) 완전 지원
- * - Excel (.csv) 전종 내보내기 & Google Drive 원클릭 일괄 다운로드
+ * 대한민국 사회복지 현장 나침반 - 공식 지침서 마스터 아카이브 (70종 순수 PDF 정본)
+ * - 중앙행정기관 62종 + 민간 제3섹터·사회적경제·종교공익 8종 (총 70종 18,556면)
+ * - 18대 분야·시설 도감(45) ⇄ 3단계 위계도감(219) ⇄ 공식 지침서(70) 1:1 양방향 딥링킹
+ * - 전 파일 Google Drive 클라우드 정본 1:1 연동 (PDF 배지 클릭 시 즉시 다운로드)
+ * - Excel (.csv) · 클립보드 (TSV) · A4 가로 표 인쇄 완비
  */
 
 (function () {
-    let currentMinistry = 'all';
+    let currentMinistry = '전체';
     let searchQuery = '';
     let mobileActiveSection = 'SECTION_1';
     let activeFilterGuidelines = null;
     let currentArchiveFacilityId = null;
     let currentArchiveFacilityName = null;
     let currentArchiveDocIds = null;
+    let currentFilteredArchiveFiles = [];
 
     function escapeHtml(str) {
         if (!str) return '';
@@ -378,6 +374,7 @@
         currentArchiveFacilityId = null;
         currentArchiveFacilityName = null;
         currentArchiveDocIds = null;
+        currentFilteredArchiveFiles = collectArchiveFiles();
         currentMinistry = '전체';
         searchQuery = '';
         const input = document.getElementById('guidelineSearchInput');
@@ -398,6 +395,7 @@
         currentArchiveFacilityId = null;
         currentArchiveFacilityName = null;
         currentArchiveDocIds = null;
+        currentFilteredArchiveFiles = allFiles.slice();
 
         if (options && options.facilityId) {
             const aliasMap = (typeof window !== 'undefined' && window.FACILITY_ROW_ID_ALIASES) ? window.FACILITY_ROW_ID_ALIASES : {};
@@ -450,7 +448,7 @@
         container.innerHTML = `
             <div class="flex flex-col w-full animate-fadeIn pb-16">
                 <!-- 1. Hero & Master Package Header -->
-                <section class="w-full bg-surface-container-low py-8 md:py-10 border-b border-outline-variant/20 hidden md:block">
+                <section class="no-print w-full bg-surface-container-low py-8 md:py-10 border-b border-outline-variant/20 hidden md:block">
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
                         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                             <div class="space-y-2 max-w-3xl">
@@ -460,7 +458,7 @@
                                 </div>
                                 <h1 class="text-3xl font-black text-primary tracking-tight">공식 지침서 아카이브 70종 마스터 통합표</h1>
                                 <p class="text-sm text-on-surface-variant leading-relaxed">
-                                    상단 탭 1(45개 시설체계) · 탭 2(219개 위계도감)와 동일한 <strong class="text-slate-900">9대 원클릭 부처·섹터 필터</strong> 및 <strong class="text-slate-900">6단계 소속계통-소관기관 체계</strong>로 각 부처·공공기관의 최신 공식 사업안내 PDF 원문을 즉시 열람·다운로드합니다.
+                                    상단 탭 1(45개 시설체계) · 탭 2(219개 위계도감)와 동일한 <strong class="text-slate-900">9대 원클릭 부처·섹터 필터</strong> 및 <strong class="text-slate-900">6단계 소속계통-소관기관 체계</strong>로 각 부처·공공기관의 최신 공식 사업안내 PDF 원문을 Google Drive에서 즉시 열람·다운로드합니다.
                                 </p>
                             </div>
 
@@ -471,11 +469,7 @@
                                 </a>
                                 <a href="${escA(config.driveDownloadUrl || 'https://drive.google.com/uc?export=download&id=1SYOUxXgZxwmW-5FlJf4iQJUmMF9JgkdF')}" target="_blank" rel="noopener noreferrer"
                                    class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-bold text-xs shadow-sm transition">
-                                    <span>📦</span><span>Drive 전체 ZIP 내려받기 (${escA(config.zipSizeStr || config.totalSizeStr || '366.3 MB')})</span>
-                                </a>
-                                <a href="${escA(config.localZipUrl || 'docs/2026_사회복지_공식지침서_마스터_풀패키지.zip')}" download="2026_사회복지_공식지침서_70종_마스터_풀패키지.zip"
-                                   class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs shadow-sm transition">
-                                    <span>💾</span><span>로컬 ZIP 바로받기</span>
+                                    <span>📦</span><span>Drive 전체 ZIP 내려받기 (${escA(config.zipSizeStr || '366.3 MB')})</span>
                                 </a>
                             </div>
                         </div>
@@ -484,7 +478,7 @@
                         <div class="bg-white/90 rounded-xl p-3.5 border border-slate-200/80 space-y-2">
                             <div class="flex items-center justify-between gap-2">
                                 <span class="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
-                                    <span>📂</span><span>9대 분야별 Google Drive 정본 폴더 직통 연결 (로컬 아카이브 1:1 미러링)</span>
+                                    <span>📂</span><span>9대 분야별 Google Drive 정본 폴더 직통 연결 (전 파일 클릭 즉시 다운로드)</span>
                                 </span>
                                 <span class="text-[11px] text-slate-500 font-semibold">전 파일 100% 순수 PDF · 비정형 HWP/XLSX 변환 완료</span>
                             </div>
@@ -496,7 +490,7 @@
                 </section>
 
                 <!-- 2. Unified Search & 9-Pill Filter Toolbar -->
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 w-full hidden md:block">
+                <div class="no-print max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 w-full hidden md:block">
                     <div id="archiveFacilityBannerContainer" class="hidden"></div>
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 space-y-3">
                         <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
@@ -506,12 +500,18 @@
                                        class="w-full pl-9 pr-10 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition">
                                 <button type="button" id="clearSearchBtn" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-700 font-bold cursor-pointer">✕</button>
                             </div>
-                            <div class="flex items-center gap-2 shrink-0">
+                            <div class="flex flex-wrap items-center gap-1.5 shrink-0">
                                 <span id="searchBadgeCount" class="text-xs font-bold text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200">
                                     ${allFiles.length}건 표시중
                                 </span>
-                                <button type="button" id="exportCsvBtn" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold cursor-pointer transition">
-                                    <span>📊</span><span>Excel (.csv)</span>
+                                <button type="button" id="copyArchiveTsvBtn" onclick="window.copyArchiveTSV()" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-blue-700 text-white text-xs font-bold cursor-pointer transition shadow-2xs" title="현재 필터링된 지침서 목록을 엑셀/구글시트 붙여넣기용(TSV)으로 복사">
+                                    <span>📋</span><span>표 복사 (TSV)</span>
+                                </button>
+                                <button type="button" id="exportCsvBtn" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold cursor-pointer transition border border-slate-200" title="현재 필터링된 지침서 목록을 Excel (.csv) 파일로 다운로드">
+                                    <span>📊</span><span>Excel (.csv) 저장</span>
+                                </button>
+                                <button type="button" onclick="window.print()" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold cursor-pointer transition border border-slate-200" title="현재 화면의 표를 A4 가로 인쇄 또는 PDF로 저장">
+                                    <span>🖨️</span><span>표 인쇄 / PDF</span>
                                 </button>
                                 <button type="button" id="resetArchiveTopBtn" onclick="window.clearArchiveFacilityFilter()" class="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-600 cursor-pointer transition">
                                     초기화
@@ -617,7 +617,7 @@
                 </div>
 
                 <!-- 4. Mobile Archive View -->
-                <div class="block md:hidden w-full pb-28" id="mobileArchiveView">
+                <div class="no-print block md:hidden w-full pb-28" id="mobileArchiveView">
                     <div class="max-w-md mx-auto px-4 py-3 space-y-4">
                         <div class="bg-gradient-to-r from-blue-700 to-indigo-800 rounded-2xl p-4 text-white shadow-md space-y-2.5">
                             <div class="flex items-center justify-between">
@@ -628,8 +628,8 @@
                             <div class="flex items-center gap-2 pt-1">
                                 <a href="${escA(config.driveFolderUrl || 'https://drive.google.com/drive/folders/1xWxy_TsQicTWTuZpoNTBl7-26KirLZe-?usp=sharing')}" target="_blank" rel="noopener noreferrer"
                                    class="flex-1 py-2 rounded-xl bg-white text-blue-900 text-center text-[11px] font-extrabold shadow-xs">☁️ Drive 폴더 열기 ↗</a>
-                                <a href="${escA(config.localZipUrl || 'docs/2026_사회복지_공식지침서_마스터_풀패키지.zip')}" download
-                                   class="flex-1 py-2 rounded-xl bg-blue-500 text-white text-center text-[11px] font-extrabold shadow-xs">📦 ZIP 다운로드</a>
+                                <a href="${escA(config.driveDownloadUrl || 'https://drive.google.com/uc?export=download&id=1SYOUxXgZxwmW-5FlJf4iQJUmMF9JgkdF')}" target="_blank" rel="noopener noreferrer"
+                                   class="flex-1 py-2 rounded-xl bg-blue-500 text-white text-center text-[11px] font-extrabold shadow-xs">📦 Drive ZIP 다운로드</a>
                             </div>
                         </div>
 
@@ -798,7 +798,9 @@
                         <td class="align-top p-3 bg-white border-r border-slate-200/80 space-y-1.5">
                             <div class="flex items-center gap-1.5 flex-wrap">
                                 <span class="px-1.5 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200 text-[10px] font-extrabold">${escA(f.code || f.id)}</span>
-                                <span class="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold">PDF</span>
+                                <a href="${escA(f.driveDownloadUrl || driveViewUrl)}" target="_blank" rel="noopener noreferrer"
+                                   title="클릭 시 Google Drive에서 '${escA(f.title)}' PDF 파일 즉시 다운로드"
+                                   class="archive-pdf-badge-link inline-flex items-center gap-0.5 px-2 py-0.5 rounded bg-emerald-50 hover:bg-emerald-600 text-emerald-800 hover:text-white border border-emerald-300 text-[10px] font-extrabold transition cursor-pointer shadow-2xs">⬇ PDF</a>
                                 <span class="text-[10px] text-slate-500 font-semibold">${escA(f.edition || (f.year + '판'))}</span>
                             </div>
                             <div class="font-extrabold text-slate-900 text-xs leading-snug">${escA(f.title)}</div>
@@ -856,7 +858,8 @@
                     <div class="flex items-start justify-between gap-2">
                         <div class="flex items-center gap-1.5 flex-wrap">
                             <span class="px-2 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200 text-[10px] font-extrabold">${escA(orgInfo.primary)}</span>
-                            <span class="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 text-[10px] font-bold">PDF · ${Number(f.totalPages || 0)}면</span>
+                            <a href="${escA(f.driveDownloadUrl || f.driveViewUrl || '#')}" target="_blank" rel="noopener noreferrer"
+                               class="archive-pdf-badge-link inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-emerald-50 hover:bg-emerald-600 text-emerald-800 hover:text-white border border-emerald-300 text-[10px] font-extrabold transition">⬇ PDF · ${Number(f.totalPages || 0)}면</a>
                         </div>
                         <span class="text-[10px] text-slate-400 font-semibold shrink-0">${escA(f.sizeStr || '')}</span>
                     </div>
@@ -896,6 +899,7 @@
                 return minMatch && qMatch;
             });
 
+            currentFilteredArchiveFiles = filtered;
             renderArchiveFacilityBanner(currentArchiveFacilityId, currentArchiveFacilityName, filtered);
 
             const centralFiltered = filtered.filter(f => !resolveArchiveOrgInfo(f).isCivil);
@@ -950,7 +954,7 @@
         }
         if (exportCsvBtn) {
             exportCsvBtn.addEventListener('click', function () {
-                exportGuidelinesToCsv(allFiles);
+                exportGuidelinesToCsv(currentFilteredArchiveFiles.length > 0 ? currentFilteredArchiveFiles : allFiles);
             });
         }
     }
@@ -959,6 +963,7 @@
         currentArchiveFacilityId = null;
         currentArchiveFacilityName = null;
         currentArchiveDocIds = null;
+        currentFilteredArchiveFiles = allFiles.slice();
         currentMinistry = ministryKey || '전체';
 
         document.querySelectorAll('.archive-ministry-pill').forEach(p => {
@@ -996,33 +1001,73 @@
         if (typeof activeFilterGuidelines === 'function') activeFilterGuidelines();
     };
 
-    function exportGuidelinesToCsv(files) {
-        let csv = '\uFEFF1열_소속계통,2열_소관기관,담당부서,3열_지침서코드,지침서명,포맷,면수,용량,4열_근거법령_대상시설,5열_주요챕터,6열_Drive링크\n';
-        const q = (v) => `"${String(v || '').replace(/"/g, '""')}"`;
+    window.copyArchiveTSV = function () {
+        const files = (currentFilteredArchiveFiles && currentFilteredArchiveFiles.length > 0) ? currentFilteredArchiveFiles : collectArchiveFiles();
+        if (!files.length) {
+            alert('복사할 지침서 데이터가 없습니다.');
+            return;
+        }
+        const header = ['구분', '소속계통_생태계축', '소관기관', '담당부서', '지침서코드', '지침서명', '판본', '포맷', '면수', '용량', '근거법령_대상시설', '주요챕터', 'Drive_열람링크', 'PDF_다운로드링크'];
+        const clean = (v) => String(v || '-').replace(/[\t\r\n]+/g, ' ').trim();
+        const lines = [header.join('\t')];
         files.forEach(f => {
             const orgInfo = resolveArchiveOrgInfo(f);
+            lines.push([
+                orgInfo.isCivil ? '민간·제3섹터' : '중앙행정기관',
+                orgInfo.lineageLabel,
+                orgInfo.primary,
+                f.department,
+                f.code,
+                f.title,
+                f.edition || (f.year + '판'),
+                'PDF',
+                f.totalPages || 0,
+                f.sizeStr,
+                f.legalTarget,
+                (f.keyChapters || []).join(' / '),
+                f.driveViewUrl || '',
+                f.driveDownloadUrl || ''
+            ].map(clean).join('\t'));
+        });
+        navigator.clipboard.writeText(lines.join('\n')).then(() => {
+            alert(`📋 공식 지침서 아카이브 ${files.length}종 목록이 엑셀·스프레드시트 붙여넣기용(TSV)으로 복사되었습니다!`);
+        }).catch(() => {
+            alert('클립보드 복사 권한을 허용해 주세요.');
+        });
+    };
+
+    function exportGuidelinesToCsv(files) {
+        const targetFiles = (files && files.length > 0) ? files : collectArchiveFiles();
+        let csv = '\uFEFF구분,1열_소속계통,2열_소관기관,담당부서,3열_지침서코드,지침서명,판본,포맷,면수,용량,4열_근거법령_대상시설,5열_주요챕터,6열_Drive열람링크,6열_PDF다운로드링크\n';
+        const q = (v) => `"${String(v || '').replace(/"/g, '""')}"`;
+        targetFiles.forEach(f => {
+            const orgInfo = resolveArchiveOrgInfo(f);
             csv += [
+                q(orgInfo.isCivil ? '민간·제3섹터' : '중앙행정기관'),
                 q(orgInfo.lineageLabel),
                 q(orgInfo.primary),
                 q(f.department),
                 q(f.code),
                 q(f.title),
+                q(f.edition || (f.year + '판')),
                 q('PDF'),
                 q(f.totalPages),
                 q(f.sizeStr),
                 q(f.legalTarget),
                 q((f.keyChapters || []).join(' / ')),
-                q(f.driveViewUrl || f._driveFolderUrl || '')
+                q(f.driveViewUrl || f._driveFolderUrl || ''),
+                q(f.driveDownloadUrl || '')
             ].join(',') + '\n';
         });
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `2026_사회복지_공식지침서_70종_마스터목록_${new Date().toISOString().slice(0, 10)}.csv`;
+        a.download = `2026_사회복지_공식지침서_${targetFiles.length}종_마스터목록_${new Date().toISOString().slice(0, 10)}.csv`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     }
 
     window.viewGuidelineModal = function (docId) {
@@ -1064,9 +1109,14 @@
                             ${(f.keyChapters || []).map(c => `<span class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-900 border border-blue-200 font-bold">${escA(c)}</span>`).join('')}
                         </div>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-[11px] text-slate-600">
-                        <strong class="text-slate-800 block mb-0.5">📁 저장 경로 (아카이브 정본):</strong>
-                        <code class="text-[10px] break-all">${escA('docs/지침서_공식_아카이브/' + f.relPath)}</code>
+                    <div class="bg-sky-50/70 p-3.5 rounded-xl border border-sky-200 text-[11px] text-slate-700 space-y-2">
+                        <div class="flex items-center justify-between gap-2 flex-wrap">
+                            <strong class="text-sky-950 flex items-center gap-1"><span>☁️</span><span>Google Drive 공식 클라우드 정본 (즉시 다운로드 가능)</span></strong>
+                            ${f._driveFolderUrl ? `<a href="${escA(f._driveFolderUrl)}" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline font-bold">📂 소관부처 폴더 열기 ↗</a>` : ''}
+                        </div>
+                        <div class="text-[10px] text-slate-600">
+                            파일명: <strong class="text-slate-800">${escA(f.filename || (f.title + '.pdf'))}</strong>
+                        </div>
                     </div>
                 </div>
                 <div class="p-4 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
@@ -1076,7 +1126,7 @@
                     </div>
                     <div class="flex items-center gap-2">
                         ${f.driveViewUrl ? `<a href="${escA(f.driveViewUrl)}" target="_blank" rel="noopener noreferrer" class="px-3 py-2 rounded-xl bg-sky-50 hover:bg-sky-600 hover:text-white text-sky-800 border border-sky-200 text-xs font-bold transition">☁️ Drive 열람 ↗</a>` : ''}
-                        <button type="button" onclick="window.downloadGuidelineDirect('${escA(f.id)}')" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold cursor-pointer shadow-xs transition">⬇️ PDF 다운로드</button>
+                        <a href="${escA(f.driveDownloadUrl || f.driveViewUrl || '#')}" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold cursor-pointer shadow-xs transition inline-flex items-center gap-1">⬇️ PDF 다운로드</a>
                     </div>
                 </div>
             </div>
@@ -1089,17 +1139,10 @@
         const allFiles = collectArchiveFiles();
         const f = allFiles.find(x => x.id === docId);
         if (!f) return;
-        const localUrl = encodeURI('docs/지침서_공식_아카이브/' + String(f.relPath || '').replace(/^\/+/, ''));
-        if (window.location.protocol === 'file:' && f.driveDownloadUrl) {
-            window.open(f.driveDownloadUrl, '_blank', 'noopener,noreferrer');
-            return;
+        const targetUrl = f.driveDownloadUrl || f.driveViewUrl || f._driveFolderUrl;
+        if (targetUrl) {
+            window.open(targetUrl, '_blank', 'noopener,noreferrer');
         }
-        const a = document.createElement('a');
-        a.href = localUrl;
-        a.download = f.filename || (f.title + '.pdf');
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
     };
 
     function highlightAndScrollGuideline(docId) {
