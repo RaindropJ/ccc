@@ -1,19 +1,19 @@
 {
   "status": "success",
-  "timestamp": "2026.11.20 06:00",
-  "last_sync": "2026-11-20 21:39:26",
+  "timestamp": "2026.11.21 06:00",
+  "last_sync": "2026-11-21 21:29:54",
   "counts": {
-    "practicum": 172,
+    "practicum": 204,
     "residency": 284,
     "hospital_jobs": 35,
     "youth_internships": 13,
     "internships": 13,
     "ngo_csr": 35,
-    "work24_jobs": 316,
-    "total_jobs": 656,
-    "regular_jobs": 531,
-    "contract_jobs": 125,
+    "work24_jobs": 202,
+    "total_jobs": 522,
+    "regular_jobs": 403,
+    "contract_jobs": 118,
     "duplicates_removed": 0,
-    "expired_purged": 130
+    "expired_purged": 150
   }
 }
