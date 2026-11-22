@@ -15,6 +15,7 @@
     let currentArchiveFacilityName = null;
     let currentArchiveDocIds = null;
     let currentFilteredArchiveFiles = [];
+    let archiveSearchDebounceTimer = null;
 
     function escapeHtml(str) {
         if (!str) return '';
@@ -125,11 +126,11 @@
         const match = resolveFacilityTarget(targetFacilities, file);
         return `
             <button type="button"
-                    onclick="window.jumpToFacility('${match.id}'); return false;"
+                    onclick="window.jumpToFacility('${escJsArg(match.id)}'); return false;"
                     class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 hover:bg-amber-500 hover:text-white text-amber-900 border border-amber-200 text-[11px] font-bold transition shadow-2xs cursor-pointer group"
-                    title="${match.name} 법정시설 규정 도감으로 직결">
+                    title="${escA(match.name)} 법정시설 규정 도감으로 직결">
                 <span class="material-symbols-outlined text-[13px] text-amber-700 group-hover:text-white">account_balance</span>
-                <span>${targetFacilities}</span>
+                <span>${escA(targetFacilities)}</span>
                 <span class="material-symbols-outlined text-[11px]">arrow_forward</span>
             </button>
         `;
@@ -205,6 +206,21 @@
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#39;');
+    }
+
+    function escJsArg(str) {
+        if (str === null || str === undefined) return '';
+        return escA(String(str)
+            .replace(/\\/g, '\\\\')
+            .replace(/'/g, "\\'")
+            .replace(/\r/g, '')
+            .replace(/\n/g, ' '));
+    }
+
+    function safeUrl(url) {
+        if (!url) return '#';
+        const s = String(url).trim();
+        return /^https?:\/\//i.test(s) ? s : '#';
     }
 
     function safeArchiveLineage(ministryStr) {
@@ -356,7 +372,7 @@
                     <button type="button" onclick="window.clearArchiveFacilityFilter()" class="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-xs font-bold text-slate-700 cursor-pointer transition">
                         ✕ 70종 전체 보기
                     </button>
-                    <button type="button" onclick="window.jumpToFacility('${escA(facilityId || '')}'); return false;" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold cursor-pointer transition">
+                    <button type="button" onclick="window.jumpToFacility('${escJsArg(facilityId || '')}'); return false;" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold cursor-pointer transition">
                         🏛️ 시설도감 복귀
                     </button>
                 </div>
@@ -377,8 +393,16 @@
         currentFilteredArchiveFiles = collectArchiveFiles();
         currentMinistry = '전체';
         searchQuery = '';
+        if (archiveSearchDebounceTimer) {
+            clearTimeout(archiveSearchDebounceTimer);
+            archiveSearchDebounceTimer = null;
+        }
         const input = document.getElementById('guidelineSearchInput');
         if (input) input.value = '';
+        const mobInput = document.getElementById('mobile-archive-search');
+        if (mobInput) mobInput.value = '';
+        const clearBtn = document.getElementById('clearSearchBtn');
+        if (clearBtn) clearBtn.classList.add('hidden');
         if (typeof activeFilterGuidelines === 'function') activeFilterGuidelines();
     };
 
@@ -423,17 +447,19 @@
 
         const pillsHtml = ARCHIVE_FILTER_PILLS.map(p => {
             const cnt = pillCounts[p.key] || 0;
+            const safeKeyAttr = escA(p.key);
+            const safeKeyJs = escJsArg(p.key);
             if (p.key === '전체') {
                 return `<button type="button" data-ministry="전체" onclick="window.setArchiveMinistryFilter('전체', this)" class="archive-ministry-pill active-pill px-3 py-1.5 rounded-full text-xs font-extrabold bg-primary text-on-primary shadow-2xs transition cursor-pointer">전체 (${cnt}종)</button>`;
             }
             if (p.isCivil) {
-                return `<button type="button" data-ministry="${p.key}" onclick="window.setArchiveMinistryFilter('${p.key}', this)" class="archive-ministry-pill px-3 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 transition cursor-pointer flex items-center gap-1 shadow-2xs ml-auto"><span>${p.icon}</span><span>${p.label}</span><span class="px-1.5 py-0.2 bg-white/80 rounded-full text-[10px]">${cnt}</span></button>`;
+                return `<button type="button" data-ministry="${safeKeyAttr}" onclick="window.setArchiveMinistryFilter('${safeKeyJs}', this)" class="archive-ministry-pill px-3 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 transition cursor-pointer flex items-center gap-1 shadow-2xs ml-auto"><span>${p.icon}</span><span>${escA(p.label)}</span><span class="px-1.5 py-0.2 bg-white/80 rounded-full text-[10px]">${cnt}</span></button>`;
             }
-            return `<button type="button" data-ministry="${p.key}" onclick="window.setArchiveMinistryFilter('${p.key}', this)" class="archive-ministry-pill px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">${p.icon} ${p.label} (${cnt})</button>`;
+            return `<button type="button" data-ministry="${safeKeyAttr}" onclick="window.setArchiveMinistryFilter('${safeKeyJs}', this)" class="archive-ministry-pill px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">${p.icon} ${escA(p.label)} (${cnt})</button>`;
         }).join('');
 
         const driveCategoryStripHtml = db.map(cat => {
-            const folderUrl = cat.driveFolderUrl || config.driveFolderUrl || 'https://drive.google.com/drive/folders/1xWxy_TsQicTWTuZpoNTBl7-26KirLZe-?usp=sharing';
+            const folderUrl = safeUrl(cat.driveFolderUrl || config.driveFolderUrl || 'https://drive.google.com/drive/folders/1xWxy_TsQicTWTuZpoNTBl7-26KirLZe-?usp=sharing');
             return `
                 <a href="${escA(folderUrl)}" target="_blank" rel="noopener noreferrer"
                    class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white hover:bg-blue-600 hover:text-white border border-slate-200 text-[11px] font-bold text-slate-700 transition shadow-2xs">
@@ -463,11 +489,11 @@
                             </div>
 
                             <div class="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5 shrink-0">
-                                <a href="${escA(config.driveFolderUrl || 'https://drive.google.com/drive/folders/1xWxy_TsQicTWTuZpoNTBl7-26KirLZe-?usp=sharing')}" target="_blank" rel="noopener noreferrer"
+                                <a href="${escA(safeUrl(config.driveFolderUrl || 'https://drive.google.com/drive/folders/1xWxy_TsQicTWTuZpoNTBl7-26KirLZe-?usp=sharing'))}" target="_blank" rel="noopener noreferrer"
                                    class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-blue-50 text-blue-800 border border-blue-300 font-bold text-xs shadow-2xs transition">
                                     <span>☁️</span><span>Google Drive 70종 정본 폴더 ↗</span>
                                 </a>
-                                <a href="${escA(config.driveDownloadUrl || 'https://drive.google.com/uc?export=download&id=1SYOUxXgZxwmW-5FlJf4iQJUmMF9JgkdF')}" target="_blank" rel="noopener noreferrer"
+                                <a href="${escA(safeUrl(config.driveDownloadUrl || 'https://drive.google.com/uc?export=download&id=1SYOUxXgZxwmW-5FlJf4iQJUmMF9JgkdF'))}" target="_blank" rel="noopener noreferrer"
                                    class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-bold text-xs shadow-sm transition">
                                     <span>📦</span><span>Drive 전체 ZIP 내려받기 (${escA(config.zipSizeStr || '366.3 MB')})</span>
                                 </a>
@@ -626,9 +652,9 @@
                             </div>
                             <h2 class="text-base font-extrabold tracking-tight">공식 지침서 아카이브 (70종 · ${totalPagesSum.toLocaleString()}면)</h2>
                             <div class="flex items-center gap-2 pt-1">
-                                <a href="${escA(config.driveFolderUrl || 'https://drive.google.com/drive/folders/1xWxy_TsQicTWTuZpoNTBl7-26KirLZe-?usp=sharing')}" target="_blank" rel="noopener noreferrer"
+                                <a href="${escA(safeUrl(config.driveFolderUrl || 'https://drive.google.com/drive/folders/1xWxy_TsQicTWTuZpoNTBl7-26KirLZe-?usp=sharing'))}" target="_blank" rel="noopener noreferrer"
                                    class="flex-1 py-2 rounded-xl bg-white text-blue-900 text-center text-[11px] font-extrabold shadow-xs">☁️ Drive 폴더 열기 ↗</a>
-                                <a href="${escA(config.driveDownloadUrl || 'https://drive.google.com/uc?export=download&id=1SYOUxXgZxwmW-5FlJf4iQJUmMF9JgkdF')}" target="_blank" rel="noopener noreferrer"
+                                <a href="${escA(safeUrl(config.driveDownloadUrl || 'https://drive.google.com/uc?export=download&id=1SYOUxXgZxwmW-5FlJf4iQJUmMF9JgkdF'))}" target="_blank" rel="noopener noreferrer"
                                    class="flex-1 py-2 rounded-xl bg-blue-500 text-white text-center text-[11px] font-extrabold shadow-xs">📦 Drive ZIP 다운로드</a>
                             </div>
                         </div>
@@ -645,7 +671,7 @@
                                     const cls = p.key === '전체'
                                         ? 'archive-mobile-pill px-2.5 py-1.5 rounded-lg text-xs font-extrabold bg-slate-900 text-white flex-shrink-0 cursor-pointer'
                                         : 'archive-mobile-pill px-2.5 py-1.5 rounded-lg text-xs font-medium bg-white text-slate-700 border border-slate-200 flex-shrink-0 cursor-pointer';
-                                    return `<button type="button" data-ministry="${p.key}" onclick="window.setArchiveMinistryFilter('${p.key}', this)" class="${cls}">${p.icon ? p.icon + ' ' : ''}${p.label} (${cnt})</button>`;
+                                    return `<button type="button" data-ministry="${escA(p.key)}" onclick="window.setArchiveMinistryFilter('${escJsArg(p.key)}', this)" class="${cls}">${p.icon ? p.icon + ' ' : ''}${escA(p.label)} (${cnt})</button>`;
                                 }).join('')}
                             </div>
                         </div>
@@ -680,6 +706,10 @@
                 searchQuery = options.search;
                 const sInput = document.getElementById('guidelineSearchInput');
                 if (sInput) sInput.value = options.search;
+                const mInput = document.getElementById('mobile-archive-search');
+                if (mInput) mInput.value = options.search;
+                const cBtn = document.getElementById('clearSearchBtn');
+                if (cBtn) cBtn.classList.remove('hidden');
             }
             if (typeof activeFilterGuidelines === 'function') {
                 activeFilterGuidelines();
@@ -785,7 +815,7 @@
                                 </div>
                                 ${f.department ? `<div class="text-[11px] text-slate-600 font-semibold">담당: ${escA(f.department)}</div>` : ''}
                                 ${driveFolderUrl ? `
-                                    <a href="${escA(driveFolderUrl)}" target="_blank" rel="noopener noreferrer"
+                                    <a href="${escA(safeUrl(driveFolderUrl))}" target="_blank" rel="noopener noreferrer"
                                        class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-700 text-[10px] font-bold transition">
                                         <span>📂 Drive 폴더 열기</span><span>↗</span>
                                     </a>
@@ -798,7 +828,7 @@
                         <td class="align-top p-3 bg-white border-r border-slate-200/80 space-y-1.5">
                             <div class="flex items-center gap-1.5 flex-wrap">
                                 <span class="px-1.5 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200 text-[10px] font-extrabold">${escA(f.code || f.id)}</span>
-                                <a href="${escA(f.driveDownloadUrl || driveViewUrl)}" target="_blank" rel="noopener noreferrer"
+                                <a href="${escA(safeUrl(f.driveDownloadUrl || driveViewUrl))}" target="_blank" rel="noopener noreferrer"
                                    title="클릭 시 Google Drive에서 '${escA(f.title)}' PDF 파일 즉시 다운로드"
                                    class="archive-pdf-badge-link inline-flex items-center gap-0.5 px-2 py-0.5 rounded bg-emerald-50 hover:bg-emerald-600 text-emerald-800 hover:text-white border border-emerald-300 text-[10px] font-extrabold transition cursor-pointer shadow-2xs">⬇ PDF</a>
                                 <span class="text-[10px] text-slate-500 font-semibold">${escA(f.edition || (f.year + '판'))}</span>
@@ -812,7 +842,7 @@
                         </td>
                         <td class="align-top p-3 bg-white border-r border-slate-200/80 space-y-1.5">
                             <div class="text-[11px] text-slate-700 leading-snug font-medium">${escA(f.legalTarget || '')}</div>
-                            <button type="button" onclick="window.jumpToFacility('${escA(targetFacId)}'); return false;"
+                            <button type="button" onclick="window.jumpToFacility('${escJsArg(targetFacId)}'); return false;"
                                 class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-slate-100 hover:bg-indigo-600 hover:text-white text-slate-700 text-[10px] font-bold transition cursor-pointer">
                                 <span>🏛️ ${escA(targetFacLabel)}</span><span>➔</span>
                             </button>
@@ -822,22 +852,22 @@
                         </td>
                         <td class="align-top p-3 bg-slate-50/60 space-y-1.5">
                             <div class="grid grid-cols-2 gap-1">
-                                <button type="button" onclick="window.viewGuidelineModal('${escA(f.id)}'); return false;"
+                                <button type="button" onclick="window.viewGuidelineModal('${escJsArg(f.id)}'); return false;"
                                     class="py-1.5 px-2 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-[10px] font-bold transition cursor-pointer">
                                     👁️ 요약
                                 </button>
-                                <button type="button" onclick="window.downloadGuidelineDirect('${escA(f.id)}'); return false;"
+                                <button type="button" onclick="window.downloadGuidelineDirect('${escJsArg(f.id)}'); return false;"
                                     class="py-1.5 px-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold transition cursor-pointer">
                                     ⬇️ PDF
                                 </button>
                             </div>
-                            ${driveViewUrl && driveViewUrl !== '#' ? `
-                                <a href="${escA(driveViewUrl)}" target="_blank" rel="noopener noreferrer"
+                            ${safeUrl(driveViewUrl) !== '#' ? `
+                                <a href="${escA(safeUrl(driveViewUrl))}" target="_blank" rel="noopener noreferrer"
                                    class="w-full py-1 px-2 rounded-lg bg-sky-50 hover:bg-sky-600 hover:text-white text-sky-800 border border-sky-200 text-[10px] font-bold flex items-center justify-center gap-1 transition">
                                     <span>☁️ Google Drive 원문</span><span>↗</span>
                                 </a>
                             ` : ''}
-                            <button type="button" onclick="showView('hierarchy', { targetNodeId: '${escA(hLink.targetId)}' }); return false;"
+                            <button type="button" onclick="showView('hierarchy', { targetNodeId: '${escJsArg(hLink.targetId)}' }); return false;"
                                 class="w-full py-1 px-2 rounded-lg bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-800 border border-emerald-200 text-[10px] font-bold flex items-center justify-center gap-1 transition cursor-pointer truncate">
                                 <span>🌳 ${escA(cleanHLabel)}</span><span>➔</span>
                             </button>
@@ -858,7 +888,7 @@
                     <div class="flex items-start justify-between gap-2">
                         <div class="flex items-center gap-1.5 flex-wrap">
                             <span class="px-2 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200 text-[10px] font-extrabold">${escA(orgInfo.primary)}</span>
-                            <a href="${escA(f.driveDownloadUrl || f.driveViewUrl || '#')}" target="_blank" rel="noopener noreferrer"
+                            <a href="${escA(safeUrl(f.driveDownloadUrl || f.driveViewUrl || '#'))}" target="_blank" rel="noopener noreferrer"
                                class="archive-pdf-badge-link inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-emerald-50 hover:bg-emerald-600 text-emerald-800 hover:text-white border border-emerald-300 text-[10px] font-extrabold transition">⬇ PDF · ${Number(f.totalPages || 0)}면</a>
                         </div>
                         <span class="text-[10px] text-slate-400 font-semibold shrink-0">${escA(f.sizeStr || '')}</span>
@@ -866,9 +896,9 @@
                     <h4 class="text-sm font-black text-slate-900 leading-snug">${escA(f.title)}</h4>
                     <p class="text-[11px] text-slate-500 line-clamp-2">${escA(f.legalTarget || '')}</p>
                     <div class="grid grid-cols-3 gap-1.5 pt-1">
-                        <button type="button" onclick="window.downloadGuidelineDirect('${escA(f.id)}')" class="py-1.5 rounded-xl bg-blue-600 text-white text-[11px] font-bold cursor-pointer">⬇️ PDF</button>
-                        <button type="button" onclick="window.viewGuidelineModal('${escA(f.id)}')" class="py-1.5 rounded-xl bg-slate-100 text-slate-800 text-[11px] font-bold cursor-pointer">👁️ 요약</button>
-                        <button type="button" onclick="showView('hierarchy', { targetNodeId: '${escA(hLink.targetId)}' })" class="py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-bold cursor-pointer">🌳 위계</button>
+                        <button type="button" onclick="window.downloadGuidelineDirect('${escJsArg(f.id)}')" class="py-1.5 rounded-xl bg-blue-600 text-white text-[11px] font-bold cursor-pointer">⬇️ PDF</button>
+                        <button type="button" onclick="window.viewGuidelineModal('${escJsArg(f.id)}')" class="py-1.5 rounded-xl bg-slate-100 text-slate-800 text-[11px] font-bold cursor-pointer">👁️ 요약</button>
+                        <button type="button" onclick="showView('hierarchy', { targetNodeId: '${escJsArg(hLink.targetId)}' })" class="py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-bold cursor-pointer">🌳 위계</button>
                     </div>
                 </div>
             `;
@@ -937,13 +967,26 @@
                 currentArchiveFacilityName = null;
                 currentArchiveDocIds = null;
                 searchQuery = this.value;
+                const mobInput = document.getElementById('mobile-archive-search');
+                if (mobInput && mobInput.value !== searchQuery) mobInput.value = searchQuery;
                 if (clearBtn) clearBtn.classList.toggle('hidden', !searchQuery);
-                filterGuidelines();
+                if (archiveSearchDebounceTimer) clearTimeout(archiveSearchDebounceTimer);
+                if (!searchQuery.trim()) {
+                    filterGuidelines();
+                } else {
+                    archiveSearchDebounceTimer = setTimeout(filterGuidelines, 120);
+                }
             });
         }
         if (clearBtn) {
             clearBtn.addEventListener('click', function () {
+                if (archiveSearchDebounceTimer) {
+                    clearTimeout(archiveSearchDebounceTimer);
+                    archiveSearchDebounceTimer = null;
+                }
                 if (searchInput) searchInput.value = '';
+                const mobInput = document.getElementById('mobile-archive-search');
+                if (mobInput) mobInput.value = '';
                 searchQuery = '';
                 clearBtn.classList.add('hidden');
                 filterGuidelines();
@@ -963,7 +1006,7 @@
         currentArchiveFacilityId = null;
         currentArchiveFacilityName = null;
         currentArchiveDocIds = null;
-        currentFilteredArchiveFiles = allFiles.slice();
+        currentFilteredArchiveFiles = collectArchiveFiles();
         currentMinistry = ministryKey || '전체';
 
         document.querySelectorAll('.archive-ministry-pill').forEach(p => {
@@ -995,16 +1038,41 @@
     };
 
     window.handleMobileArchiveSearch = function (val) {
+        currentArchiveFacilityId = null;
+        currentArchiveFacilityName = null;
+        currentArchiveDocIds = null;
         searchQuery = val || '';
         const desktopInput = document.getElementById('guidelineSearchInput');
-        if (desktopInput) desktopInput.value = searchQuery;
-        if (typeof activeFilterGuidelines === 'function') activeFilterGuidelines();
+        if (desktopInput && desktopInput.value !== searchQuery) desktopInput.value = searchQuery;
+        const clearBtn = document.getElementById('clearSearchBtn');
+        if (clearBtn) clearBtn.classList.toggle('hidden', !searchQuery);
+        if (archiveSearchDebounceTimer) clearTimeout(archiveSearchDebounceTimer);
+        if (!searchQuery.trim()) {
+            if (typeof activeFilterGuidelines === 'function') activeFilterGuidelines();
+        } else {
+            archiveSearchDebounceTimer = setTimeout(() => {
+                if (typeof activeFilterGuidelines === 'function') activeFilterGuidelines();
+            }, 120);
+        }
     };
+
+    function notifyArchiveCopySuccess(count) {
+        const msg = `📋 공식 지침서 아카이브 ${count}종 목록이 엑셀·스프레드시트 붙여넣기용(TSV)으로 복사되었습니다!`;
+        if (typeof window.showToast === 'function') window.showToast(msg);
+        else alert(msg);
+    }
+
+    function notifyArchiveCopyFailure() {
+        const msg = '클립보드 복사 권한을 허용해 주세요.';
+        if (typeof window.showToast === 'function') window.showToast(msg);
+        else alert(msg);
+    }
 
     window.copyArchiveTSV = function () {
         const files = (currentFilteredArchiveFiles && currentFilteredArchiveFiles.length > 0) ? currentFilteredArchiveFiles : collectArchiveFiles();
         if (!files.length) {
-            alert('복사할 지침서 데이터가 없습니다.');
+            if (typeof window.showToast === 'function') window.showToast('복사할 지침서 데이터가 없습니다.');
+            else alert('복사할 지침서 데이터가 없습니다.');
             return;
         }
         const header = ['구분', '소속계통_생태계축', '소관기관', '담당부서', '지침서코드', '지침서명', '판본', '포맷', '면수', '용량', '근거법령_대상시설', '주요챕터', 'Drive_열람링크', 'PDF_다운로드링크'];
@@ -1029,11 +1097,13 @@
                 f.driveDownloadUrl || ''
             ].map(clean).join('\t'));
         });
-        navigator.clipboard.writeText(lines.join('\n')).then(() => {
-            alert(`📋 공식 지침서 아카이브 ${files.length}종 목록이 엑셀·스프레드시트 붙여넣기용(TSV)으로 복사되었습니다!`);
-        }).catch(() => {
-            alert('클립보드 복사 권한을 허용해 주세요.');
-        });
+        const tsvText = lines.join('\n');
+        const copyPromise = (typeof window.copyTextSafely === 'function')
+            ? window.copyTextSafely(tsvText)
+            : (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext
+                ? navigator.clipboard.writeText(tsvText)
+                : Promise.reject(new Error('Clipboard unavailable')));
+        copyPromise.then(() => notifyArchiveCopySuccess(files.length)).catch(notifyArchiveCopyFailure);
     };
 
     function exportGuidelinesToCsv(files) {
@@ -1067,7 +1137,7 @@
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
 
     window.viewGuidelineModal = function (docId) {
@@ -1075,15 +1145,26 @@
         const f = allFiles.find(x => x.id === docId);
         if (!f) return;
         const orgInfo = resolveArchiveOrgInfo(f);
-        const old = document.getElementById('guideline-detail-modal');
-        if (old) old.remove();
+        if (typeof window.closeGuidelineModal === 'function') {
+            window.closeGuidelineModal(false);
+        } else {
+            const old = document.getElementById('guideline-detail-modal');
+            if (old) old.remove();
+        }
 
+        const prevFocus = document.activeElement;
         const facilityMatch = resolveFacilityTarget(f.legalTarget, f);
         const targetFacId = f.facilityTargetId || (facilityMatch && facilityMatch.id) || 'law-welfare-center';
         const hLink = f.hierarchyLink || { targetId: 'comm-case-intake', label: '위계도감 보기' };
+        const safeFolderHref = safeUrl(f._driveFolderUrl);
+        const safeViewHref = safeUrl(f.driveViewUrl);
+        const safeDownloadHref = safeUrl(f.driveDownloadUrl || f.driveViewUrl || '#');
 
         const modal = document.createElement('div');
         modal.id = 'guideline-detail-modal';
+        modal.setAttribute('role', 'dialog');
+        modal.setAttribute('aria-modal', 'true');
+        modal.setAttribute('aria-labelledby', 'guideline-detail-modal-title');
         modal.className = 'fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn';
         modal.innerHTML = `
             <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden max-h-[90vh] flex flex-col">
@@ -1093,11 +1174,11 @@
                             <span class="px-2 py-0.5 rounded bg-white/15 text-[11px] font-bold">${escA(orgInfo.lineageLabel)} ▸ ${escA(orgInfo.primary)}</span>
                             <span class="px-2 py-0.5 rounded bg-emerald-500 text-white text-[11px] font-extrabold">순수 PDF · ${Number(f.totalPages || 0)}면 · ${escA(f.sizeStr)}</span>
                         </div>
-                        <h3 class="text-lg font-black leading-snug">${escA(f.title)}</h3>
+                        <h3 id="guideline-detail-modal-title" class="text-lg font-black leading-snug">${escA(f.title)}</h3>
                     </div>
-                    <button type="button" onclick="document.getElementById('guideline-detail-modal').remove()" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold cursor-pointer shrink-0">✕</button>
+                    <button type="button" id="guideline-modal-close-btn" aria-label="모달 닫기" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold cursor-pointer shrink-0">✕</button>
                 </div>
-                <div class="p-5 space-y-4 overflow-y-auto text-xs text-slate-700">
+                <div class="p-5 space-y-4 overflow-y-auto overscroll-contain text-xs text-slate-700">
                     <div class="grid grid-cols-2 gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
                         <div><span class="text-slate-400 font-bold block text-[10px]">문서 코드 / 판본</span><strong class="text-slate-900">${escA(f.code)} · ${escA(f.edition)}</strong></div>
                         <div><span class="text-slate-400 font-bold block text-[10px]">소관부처 / 담당부서</span><strong class="text-slate-900">${escA(f.ministry)} (${escA(f.department || '-')})</strong></div>
@@ -1112,7 +1193,7 @@
                     <div class="bg-sky-50/70 p-3.5 rounded-xl border border-sky-200 text-[11px] text-slate-700 space-y-2">
                         <div class="flex items-center justify-between gap-2 flex-wrap">
                             <strong class="text-sky-950 flex items-center gap-1"><span>☁️</span><span>Google Drive 공식 클라우드 정본 (즉시 다운로드 가능)</span></strong>
-                            ${f._driveFolderUrl ? `<a href="${escA(f._driveFolderUrl)}" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline font-bold">📂 소관부처 폴더 열기 ↗</a>` : ''}
+                            ${safeFolderHref !== '#' ? `<a href="${escA(safeFolderHref)}" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline font-bold">📂 소관부처 폴더 열기 ↗</a>` : ''}
                         </div>
                         <div class="text-[10px] text-slate-600">
                             파일명: <strong class="text-slate-800">${escA(f.filename || (f.title + '.pdf'))}</strong>
@@ -1121,34 +1202,58 @@
                 </div>
                 <div class="p-4 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
                     <div class="flex items-center gap-2">
-                        <button type="button" onclick="document.getElementById('guideline-detail-modal').remove(); window.jumpToFacility('${escA(targetFacId)}')" class="px-3 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-800 border border-indigo-200 text-xs font-bold cursor-pointer transition">🏛️ 시설도감 보기</button>
-                        <button type="button" onclick="document.getElementById('guideline-detail-modal').remove(); showView('hierarchy', { targetNodeId: '${escA(hLink.targetId)}' })" class="px-3 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-800 border border-emerald-200 text-xs font-bold cursor-pointer transition">🌳 위계도감 보기</button>
+                        <button type="button" onclick="window.closeGuidelineModal && window.closeGuidelineModal(false); window.jumpToFacility('${escJsArg(targetFacId)}')" class="px-3 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-800 border border-indigo-200 text-xs font-bold cursor-pointer transition">🏛️ 시설도감 보기</button>
+                        <button type="button" onclick="window.closeGuidelineModal && window.closeGuidelineModal(false); showView('hierarchy', { targetNodeId: '${escJsArg(hLink.targetId)}' })" class="px-3 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-800 border border-emerald-200 text-xs font-bold cursor-pointer transition">🌳 위계도감 보기</button>
                     </div>
                     <div class="flex items-center gap-2">
-                        ${f.driveViewUrl ? `<a href="${escA(f.driveViewUrl)}" target="_blank" rel="noopener noreferrer" class="px-3 py-2 rounded-xl bg-sky-50 hover:bg-sky-600 hover:text-white text-sky-800 border border-sky-200 text-xs font-bold transition">☁️ Drive 열람 ↗</a>` : ''}
-                        <a href="${escA(f.driveDownloadUrl || f.driveViewUrl || '#')}" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold cursor-pointer shadow-xs transition inline-flex items-center gap-1">⬇️ PDF 다운로드</a>
+                        ${safeViewHref !== '#' ? `<a href="${escA(safeViewHref)}" target="_blank" rel="noopener noreferrer" class="px-3 py-2 rounded-xl bg-sky-50 hover:bg-sky-600 hover:text-white text-sky-800 border border-sky-200 text-xs font-bold transition">☁️ Drive 열람 ↗</a>` : ''}
+                        <a href="${escA(safeDownloadHref)}" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold cursor-pointer shadow-xs transition inline-flex items-center gap-1">⬇️ PDF 다운로드</a>
                     </div>
                 </div>
             </div>
         `;
-        modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+
+        const onModalKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                closeModal(true);
+            }
+        };
+        const closeModal = (restoreFocus = true) => {
+            document.removeEventListener('keydown', onModalKeyDown);
+            if (modal.parentNode) modal.remove();
+            if (window.closeGuidelineModal === closeModal) window.closeGuidelineModal = null;
+            if (restoreFocus && prevFocus && typeof prevFocus.focus === 'function' && document.contains(prevFocus)) {
+                prevFocus.focus();
+            }
+        };
+        window.closeGuidelineModal = closeModal;
+
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(true); });
+        const closeBtn = modal.querySelector('#guideline-modal-close-btn');
+        if (closeBtn) closeBtn.addEventListener('click', () => closeModal(true));
+        document.addEventListener('keydown', onModalKeyDown);
         document.body.appendChild(modal);
+        if (closeBtn) closeBtn.focus();
     };
 
     window.downloadGuidelineDirect = function (docId) {
         const allFiles = collectArchiveFiles();
         const f = allFiles.find(x => x.id === docId);
         if (!f) return;
-        const targetUrl = f.driveDownloadUrl || f.driveViewUrl || f._driveFolderUrl;
-        if (targetUrl) {
-            window.open(targetUrl, '_blank', 'noopener,noreferrer');
+        const safeTarget = safeUrl(f.driveDownloadUrl || f.driveViewUrl || f._driveFolderUrl);
+        if (safeTarget && safeTarget !== '#') {
+            window.open(safeTarget, '_blank', 'noopener,noreferrer');
         }
     };
 
     function highlightAndScrollGuideline(docId) {
         const target = document.getElementById(`guideline-row-${docId}`) || document.getElementById(`mobile-card-${docId}`);
         if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            const behavior = (typeof window.getPreferredScrollBehavior === 'function')
+                ? window.getPreferredScrollBehavior()
+                : ((window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) ? 'auto' : 'smooth');
+            target.scrollIntoView({ behavior, block: 'center' });
             if (typeof window.triggerMatchHighlight === 'function') {
                 window.triggerMatchHighlight(target);
             }

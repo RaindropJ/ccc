@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>사회복지 현장 나침반 | 법령별 기관 도감 · 실습 · 수련 · 취업 통합 포털</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
     
@@ -22,13 +22,68 @@
     <script src="src/data/practicum-direct-db.js?v=20261112"></script>
     <script src="src/data/national-practicum-db.js?v=20261112" defer></script>
     <script src="src/data/guidelines-archive-db.js?v=20261119_v7"></script>
-    <script src="src/js/archive.js?v=20261119_v7"></script>
+    <script src="src/js/archive.js?v=20261122_v8"></script>
     <script src="src/data/welfare-hierarchy-db.js?v=20261119_v7"></script>
-    <script src="src/js/hierarchy.js?v=20261119_v7"></script>
-    <script src="src/js/mobile-stitch-controller.js?v=20261116"></script>
+    <script src="src/js/hierarchy.js?v=20261122_v8"></script>
+    <script src="src/js/mobile-stitch-controller.js?v=20261122_v8"></script>
 
-    <!-- file:// 프로토콜 및 SPA 단일 페이지 브라우저 히스토리(popstate/pushState) 라우팅 엔진 -->
+    <!-- file:// 프로토콜 및 SPA 단일 페이지 브라우저 히스토리(popstate/pushState) + 공용 보안/UX 헬퍼 -->
     <script>
+        window.escapeHtml = function(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        };
+
+        window.escapeJsArg = function(str) {
+            if (str === null || str === undefined) return '';
+            return window.escapeHtml(String(str)
+                .replace(/\\/g, '\\\\')
+                .replace(/'/g, "\\'")
+                .replace(/\r/g, '')
+                .replace(/\n/g, ' '));
+        };
+
+        window.safeExternalUrl = function(url, fallback = '#') {
+            if (!url) return fallback;
+            const s = String(url).trim();
+            return /^https?:\/\//i.test(s) ? s : fallback;
+        };
+
+        window.getPreferredScrollBehavior = function() {
+            return (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) ? 'auto' : 'smooth';
+        };
+
+        window.copyTextSafely = function(text) {
+            const str = String(text ?? '');
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function' && window.isSecureContext) {
+                return navigator.clipboard.writeText(str);
+            }
+            return new Promise((resolve, reject) => {
+                try {
+                    const ta = document.createElement('textarea');
+                    ta.value = str;
+                    ta.setAttribute('readonly', '');
+                    ta.style.position = 'fixed';
+                    ta.style.opacity = '0';
+                    ta.style.left = '-9999px';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    ta.setSelectionRange(0, str.length);
+                    const ok = document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    if (ok) resolve();
+                    else reject(new Error('Clipboard copy failed'));
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        };
+
         // 전역 해시 빌더 (9대 뷰 + 딥링크 쿼리 파라미터 매핑)
         function getHashForView(viewId, options = {}) {
             const validViews = ['fields', 'archive', 'hierarchy', 'practicum', 'residency', 'internship', 'jobs', 'useful-sites', 'news'];
@@ -49,112 +104,61 @@
         }
         window.getHashForView = getHashForView;
 
-        if (typeof window.showView !== 'function') {
-            window.showView = function(viewId, options = {}) {
-                if (viewId === 'encyclopedia') viewId = 'fields';
-                const sections = ['fields', 'archive', 'hierarchy', 'practicum', 'residency', 'internship', 'jobs', 'useful-sites', 'news'];
-                if (!sections.includes(viewId)) viewId = 'fields';
-
-                // URL Hash & History 동기화
-                const targetHash = getHashForView(viewId, options);
-                const currentHash = window.location.hash || '';
-
-                if (!options.skipHistory) {
-                    if (currentHash !== targetHash) {
-                        window.__isRoutingInternally = true;
-                        try {
-                            window.history.pushState({ viewId, options }, '', targetHash);
-                        } catch (e) {
-                            window.location.hash = targetHash;
-                        }
-                        window.__lastRoutedHash = targetHash;
-                        setTimeout(() => { window.__isRoutingInternally = false; }, 80);
-                    }
-                } else {
-                    window.__lastRoutedHash = targetHash;
-                }
-
-                document.querySelectorAll('section[id^="view-"], .view-section').forEach(el => el.classList.add('hidden'));
-                const target = document.getElementById(`view-${viewId}`);
-                if (target) target.classList.remove('hidden');
-
-                const mobileMenu = document.getElementById('mobile-menu');
-                if (mobileMenu) mobileMenu.classList.add('hidden');
-                const mobilePanel = document.getElementById('mobile-nav-panel');
-                if (mobilePanel) mobilePanel.classList.add('hidden');
-
-                if (viewId === 'hierarchy') {
-                    if (typeof window.renderHierarchyView === 'function') {
-                        window.renderHierarchyView(options);
-                    }
-                } else if (viewId === 'archive') {
-                    if (typeof window.renderArchiveView === 'function') {
-                        window.renderArchiveView(options);
-                    }
-                } else if (viewId === 'fields') {
-                    if (options.track === 'extended' || (options.facilityId && String(options.facilityId).startsWith('ext-'))) {
-                        if (typeof switchFieldsTrack === 'function') switchFieldsTrack('extended');
-                    } else if (options.track === 'core' || (options.facilityId && String(options.facilityId).startsWith('law-'))) {
-                        if (typeof switchFieldsTrack === 'function') switchFieldsTrack('core');
-                    }
-                    if (typeof window.renderFieldsView === 'function') {
-                        window.renderFieldsView(options);
-                    } else if (typeof renderFieldsTable === 'function') {
-                        if (typeof applyFieldsFilter === 'function') applyFieldsFilter();
-                        else renderFieldsTable();
-                    }
-                    if (options.search) {
-                        const searchInput = document.getElementById('fields-search-input');
-                        if (searchInput) {
-                            searchInput.value = options.search;
-                            if (typeof filterFieldsTable === 'function') {
-                                filterFieldsTable(options.search);
-                            }
-                        }
-                    }
-                }
-                
-                // 서브 네비게이션 탭 액티브 상태 동적 갱신
-                document.querySelectorAll('.subnav-tab').forEach(tab => {
-                    const tv = tab.getAttribute('data-view');
-                    if (tv === viewId) {
-                        if (tv === 'hierarchy') {
-                            tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-bold text-emerald-800 bg-emerald-50/90 border border-emerald-200/80 flex items-center gap-1.5 whitespace-nowrap shadow-2xs cursor-pointer';
-                        } else if (tv === 'archive') {
-                            tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-bold text-blue-700 bg-blue-50/90 border border-blue-200/80 flex items-center gap-1.5 whitespace-nowrap shadow-2xs cursor-pointer';
-                        } else {
-                            tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-900 bg-white border border-slate-200/90 flex items-center gap-1.5 whitespace-nowrap shadow-2xs cursor-pointer';
-                        }
-                    } else {
-                        tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 flex items-center gap-1.5 whitespace-nowrap transition cursor-pointer';
-                    }
-                });
-
-                if (!options.preventScroll && !options.facilityId && !options.highlightId && !options.facility && !options.targetNodeId) {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            };
-        }
-
-        // Modern Web Standard: Global ESC key modal dismissal (WCAG 2.1)
+        // Modern Web Standard: Global ESC key modal/drawer dismissal (WCAG 2.1)
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                const gModal = document.getElementById('guidelineDetailModal');
-                if (gModal) {
-                    gModal.remove();
-                    return;
-                }
-                document.querySelectorAll('.modal-backdrop:not(.hidden), [id$="-modal"]:not(.hidden), [id^="modal-"]:not(.hidden)').forEach(m => {
-                    if (typeof m.close === 'function') m.close();
-                    else m.classList.add('hidden');
-                });
+            if (e.key !== 'Escape') return;
+
+            if (typeof window.closeGuidelineModal === 'function') {
+                window.closeGuidelineModal(true);
+                return;
             }
+            const gModal = document.getElementById('guideline-detail-modal') || document.getElementById('guidelineDetailModal');
+            if (gModal) {
+                gModal.remove();
+                return;
+            }
+
+            const drawer = document.getElementById('workspace-drawer');
+            if (drawer && !drawer.classList.contains('hidden')) {
+                if (typeof toggleWorkspaceDrawer === 'function') toggleWorkspaceDrawer();
+                else drawer.classList.add('hidden');
+                return;
+            }
+
+            const pracModal = document.getElementById('practicum-guide-modal');
+            if (pracModal && !pracModal.classList.contains('hidden')) {
+                if (typeof closePracticumGuideModal === 'function') closePracticumGuideModal();
+                else pracModal.classList.add('hidden');
+                return;
+            }
+
+            const pdfModal = document.getElementById('pdf-binder-modal');
+            if (pdfModal && !pdfModal.classList.contains('hidden')) {
+                if (typeof closePdfBinderModal === 'function') closePdfBinderModal();
+                else pdfModal.classList.add('hidden');
+                return;
+            }
+
+            const mobSubnav = document.getElementById('mobile-subnav-menu');
+            if (mobSubnav && !mobSubnav.classList.contains('hidden')) {
+                mobSubnav.classList.add('hidden');
+                const mToggle = document.getElementById('mobile-menu-toggle-btn');
+                if (mToggle) mToggle.setAttribute('aria-expanded', 'false');
+                return;
+            }
+
+            document.querySelectorAll('.modal-backdrop:not(.hidden), [id$="-modal"]:not(.hidden), [id^="modal-"]:not(.hidden)').forEach(m => {
+                if (typeof m.close === 'function') m.close();
+                else m.classList.add('hidden');
+            });
         });
 
         // 3단계 위계도감 단일 진입점: showView 직접 호출로 히스토리 자동 적재
         window.jumpToFacilityHierarchy = function(facilityName, parentCategory) {
             if (!facilityName) return;
-            showView('hierarchy', { facility: facilityName, parentCategory: parentCategory });
+            if (typeof window.showView === 'function') {
+                window.showView('hierarchy', { facility: facilityName, parentCategory: parentCategory });
+            }
         };
 
         window.jumpToFacilityByTerm = function(term) {
@@ -164,9 +168,11 @@
             const clean = rawTerm.replace(/\s*\(.*?\)\s*/g, '').trim();
             const compactClean = clean.replace(/[·\s]+/g, '');
 
+            const coreRows = window.STATUTORY_MATRIX || [];
+            const extRows = window.EXTENDED_STATUTORY_MATRIX || window.CIVIL_IMPACT_ECOSYSTEM || [];
             const pool = (typeof currentFieldsTrack !== 'undefined' && currentFieldsTrack === 'extended')
-                ? [...(EXTENDED_STATUTORY_MATRIX || []), ...(STATUTORY_MATRIX || [])]
-                : [...(STATUTORY_MATRIX || []), ...(EXTENDED_STATUTORY_MATRIX || [])];
+                ? [...extRows, ...coreRows]
+                : [...coreRows, ...extRows];
 
             const normalizeHay = (r) => `${r.facilityCategory || ''} ${r.hierarchyFacility || ''} ${(r.livingFacilities || []).join(' ')} ${(r.usingFacilities || []).join(' ')}`;
 
@@ -177,7 +183,7 @@
             });
             // 2. Track 2 multi-keyword full category / compact match
             if (!targetRow) {
-                targetRow = (EXTENDED_STATUTORY_MATRIX || []).find(r => {
+                targetRow = extRows.find(r => {
                     const c = (r.facilityCategory || '').replace(/[·\s()]+/g, '');
                     return compactRaw === c || (compactRaw.length >= 6 && c.includes(compactClean) && (rawTerm.includes('늘봄') || rawTerm.includes('특수') || rawTerm.includes('보훈') || rawTerm.includes('산재') || rawTerm.includes('사회적') || rawTerm.includes('자활') || rawTerm.includes('주거') || rawTerm.includes('종교') || rawTerm.includes('사찰') || rawTerm.includes('교정') || rawTerm.includes('보호관찰') || rawTerm.includes('외국인') || rawTerm.includes('상급종합') || rawTerm.includes('재활의료') || rawTerm.includes('치매안심') || rawTerm.includes('서민금융') || rawTerm.includes('대학')));
                 });
@@ -275,19 +281,21 @@
             }
 
             const options = { skipHistory: true };
-            if (params.get('facility')) options.facility = decodeURIComponent(params.get('facility'));
-            if (params.get('facilityId')) options.facilityId = decodeURIComponent(params.get('facilityId'));
+            if (params.get('facility')) options.facility = params.get('facility');
+            if (params.get('facilityId')) options.facilityId = params.get('facilityId');
             if (options.facilityId && window.FACILITY_ROW_ID_ALIASES && window.FACILITY_ROW_ID_ALIASES[options.facilityId]) options.facilityId = window.FACILITY_ROW_ID_ALIASES[options.facilityId];
-            if (params.get('facilityName')) options.facilityName = decodeURIComponent(params.get('facilityName'));
-            if (params.get('search')) options.search = decodeURIComponent(params.get('search'));
-            if (params.get('category')) options.category = decodeURIComponent(params.get('category'));
-            if (params.get('parentCategory')) options.parentCategory = decodeURIComponent(params.get('parentCategory'));
-            if (params.get('targetNodeId')) options.targetNodeId = decodeURIComponent(params.get('targetNodeId'));
-            if (params.get('highlightId')) options.highlightId = decodeURIComponent(params.get('highlightId'));
-            if (params.get('domainKey')) options.domainKey = decodeURIComponent(params.get('domainKey'));
-            if (params.get('track')) options.track = decodeURIComponent(params.get('track'));
+            if (params.get('facilityName')) options.facilityName = params.get('facilityName');
+            if (params.get('search')) options.search = params.get('search');
+            if (params.get('category')) options.category = params.get('category');
+            if (params.get('parentCategory')) options.parentCategory = params.get('parentCategory');
+            if (params.get('targetNodeId')) options.targetNodeId = params.get('targetNodeId');
+            if (params.get('highlightId')) options.highlightId = params.get('highlightId');
+            if (params.get('domainKey')) options.domainKey = params.get('domainKey');
+            if (params.get('track')) options.track = params.get('track');
 
-            showView(viewId, options);
+            if (typeof window.showView === 'function') {
+                window.showView(viewId, options);
+            }
 
             if (viewId === 'fields' && options.facilityId) {
                 setTimeout(() => {
@@ -295,7 +303,7 @@
                     const targetCard = document.getElementById(`facility-card-${options.facilityId}`);
                     const targetEl = (window.innerWidth >= 768) ? (targetRow || targetCard) : (targetCard || targetRow);
                     if (targetEl) {
-                        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        targetEl.scrollIntoView({ behavior: window.getPreferredScrollBehavior(), block: 'center' });
                         if (typeof window.triggerMatchHighlight === 'function') {
                             window.triggerMatchHighlight(targetEl);
                         }
@@ -358,7 +366,7 @@
                 const targetEl = (window.innerWidth >= 768) ? (targetRow || targetCard) : (targetCard || targetRow);
 
                 if (targetEl) {
-                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    targetEl.scrollIntoView({ behavior: window.getPreferredScrollBehavior(), block: 'center' });
                     if (typeof window.triggerMatchHighlight === 'function') window.triggerMatchHighlight(targetEl);
                     targetEl.classList.add('ring-4', 'ring-emerald-500', 'transition-all', 'duration-500');
                     setTimeout(() => {
@@ -612,6 +620,35 @@
                 margin-top: 8px !important;
             }
         }
+
+        /* Baseline Widely Available: 대용량 카드 피드 렌더링 최적화 & 모던 접근성/터치 표준 */
+        #mobile-cards-feed > div,
+        #mobile-civil-impact-grid > div,
+        #mobile-hierarchy-cards-feed > .mobile-domain-card,
+        #mobile-archive-cards-feed > div {
+            content-visibility: auto;
+            contain-intrinsic-size: auto 180px;
+        }
+        button, a, [role="tab"], [role="button"] {
+            touch-action: manipulation;
+        }
+        :is(button, a, input, select, [tabindex]):focus-visible {
+            outline: 2px solid #2563eb;
+            outline-offset: 2px;
+        }
+        #inspector-content,
+        #workspace-items-list,
+        #pdf-binder-preview {
+            overscroll-behavior: contain;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
 </style>
 </head>
 <body class="antialiased bg-[#F8FAFC] text-[#0F172A] min-h-screen flex flex-col font-sans selection:bg-blue-600 selection:text-white">
@@ -647,13 +684,13 @@
             <div class="flex items-center gap-2">
                 <!-- 분야·법령 가이드 드롭다운 퀵 메뉴 -->
                 <div class="relative group" id="nav-dropdown-quick">
-                    <button type="button" class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold transition flex items-center gap-1 cursor-pointer">
+                    <button type="button" aria-haspopup="true" class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold transition flex items-center gap-1 cursor-pointer">
                         <span>분야·법령 가이드</span>
-                        <svg class="w-3.5 h-3.5 text-slate-400 group-hover:rotate-180 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <svg class="w-3.5 h-3.5 text-slate-400 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                         </svg>
                     </button>
-                    <div class="absolute right-0 top-full pt-1.5 w-60 hidden group-hover:block z-50">
+                    <div class="absolute right-0 top-full pt-1.5 w-60 hidden group-hover:block group-focus-within:block z-50">
                         <div class="bg-white rounded-xl shadow-xl border border-slate-200 py-1 overflow-hidden text-xs">
                             <button type="button" onclick="showView('fields')" class="w-full text-left flex items-center justify-between px-3.5 py-2.5 hover:bg-blue-50 text-slate-700 hover:text-blue-600 font-semibold cursor-pointer">
                                 <span>🏛️ 18대 분야·시설 도감</span>
@@ -681,7 +718,7 @@
                 </button>
 
                 <!-- 모바일 햄버거 토글 -->
-                <button type="button" onclick="const m=document.getElementById('mobile-subnav-menu'); if(m) m.classList.toggle('hidden');" class="md:hidden p-1.5 text-slate-700 hover:bg-slate-100 rounded-lg text-lg cursor-pointer" title="메뉴 열기">
+                <button type="button" id="mobile-menu-toggle-btn" aria-label="모바일 메뉴 열기" aria-controls="mobile-subnav-menu" aria-expanded="false" onclick="const m=document.getElementById('mobile-subnav-menu'); if(m){ const open=m.classList.toggle('hidden'); this.setAttribute('aria-expanded', String(!open)); }" class="md:hidden p-1.5 text-slate-700 hover:bg-slate-100 rounded-lg text-lg cursor-pointer" title="메뉴 열기">
                     ☰
                 </button>
             </div>
@@ -1245,69 +1282,7 @@
 
                   <!-- 3. 위계 트리 카드 목록 -->
                   <div id="mobile-hierarchy-cards-feed" class="space-y-3">
-                    <!-- 219개 단위시설 위계 트리 동적 렌더링 (hierarchy.js 연동) -->
-                  </div>
-
-                  <!-- 4. 하단 모바일 바텀시트 인스펙터 -->
-                  <div id="mobile-hierarchy-inspector" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/95 backdrop-blur-xl border-t-2 border-slate-200 shadow-2xl z-40 rounded-t-2xl transition-all duration-300">
-                    <div onclick="toggleMobileInspector()" class="pt-2.5 pb-2 px-4 flex flex-col items-center cursor-pointer select-none border-b border-slate-100">
-                      <div class="w-10 h-1 rounded-full bg-slate-300 mb-2"></div>
-                      <div class="w-full flex items-center justify-between text-xs font-extrabold text-slate-900">
-                        <div class="flex items-center gap-2">
-                          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                          <span>실시간 세부 도감 인스펙터</span>
-                          <span class="px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">LIVE</span>
-                        </div>
-                        <div class="flex items-center gap-1 text-slate-500 font-medium text-[11px]" id="inspector-toggle-label">
-                          <span>접기</span>
-                          <span id="inspector-toggle-icon">▼</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div id="inspector-content" class="p-4 space-y-3 max-h-80 overflow-y-auto">
-                      <div>
-                        <div class="flex items-center gap-2">
-                          <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-700 text-[10px] font-bold">이용시설 (통원형)</span>
-                          <span class="text-[11px] text-slate-500">보건복지부 노인정책과</span>
-                        </div>
-                        <h4 class="text-base font-black text-slate-900 mt-1">노인복지관 (Senior Welfare Center)</h4>
-                        <div class="text-[11px] text-emerald-700 font-semibold mt-0.5">✔ 근거: 노인복지법 제36조 제1항 제1호</div>
-                      </div>
-
-                      <div class="bg-amber-50 rounded-xl p-3 border border-amber-200/80 text-xs">
-                        <div class="font-extrabold text-amber-950 flex items-center gap-1.5 mb-1">
-                          <span>⚡</span><span>사회복지사업법 시행규칙 제11조 법정 인력배치</span>
-                        </div>
-                        <p class="text-[11px] text-amber-900 leading-relaxed">
-                          관장 1인, 사회복지사 정규직 6인 이상 필수 (일반 이용인원 및 사업 규모에 따른 가산 규정 적용)
-                        </p>
-                      </div>
-
-                      <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 flex items-center justify-between gap-2">
-                        <div class="flex items-center gap-2 min-w-0">
-                          <span class="text-lg flex-shrink-0">📖</span>
-                          <div class="min-w-0">
-                            <div class="text-[10px] text-slate-500 font-medium">보건복지부 발간 공식 지침서 매칭</div>
-                            <div class="text-xs font-extrabold text-slate-900 truncate">2026 노인보건복지사업안내 (1권)</div>
-                          </div>
-                        </div>
-                        <button type="button" onclick="showView('archive', {search: '노인보건복지사업안내'})" class="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1 transition flex-shrink-0 shadow-2xs cursor-pointer">
-                          <span>원문</span>
-                        </button>
-                      </div>
-
-                      <div class="grid grid-cols-2 gap-2 pt-1">
-                        <button type="button" onclick="showView('archive', {search: '노인'})" class="p-2.5 rounded-xl bg-blue-50 border border-blue-200 text-center hover:bg-blue-100 transition cursor-pointer">
-                          <div class="text-[10px] text-blue-600 font-bold">공식 지침서 70종</div>
-                          <div class="text-[11px] text-blue-900 font-extrabold">지침서 아카이브 열람 ➔</div>
-                        </button>
-                        <button type="button" onclick="showView('fields', {search: '노인복지'})" class="p-2.5 rounded-xl bg-indigo-50 border border-indigo-200 text-center hover:bg-indigo-100 transition cursor-pointer">
-                          <div class="text-[10px] text-indigo-600 font-bold">39개 법정 시설분류</div>
-                          <div class="text-[11px] text-indigo-900 font-extrabold">시설도감 상세대조 ➔</div>
-                        </button>
-                      </div>
-                    </div>
+                    <!-- 219개 단위시설 위계 트리 및 하단 바텀시트 인스펙터 동적 렌더링 (hierarchy.js 연동) -->
                   </div>
 
                 </div>
@@ -2196,43 +2171,43 @@
                     <span class="text-[11px] text-slate-400">클릭 시 각 기관 공식 브리핑센터로 연결됩니다</span>
                 </div>
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 text-xs">
-                    <a href="http://www.welfarenews.net" target="_blank" class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 group transition">
+                    <a href="http://www.welfarenews.net" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 group transition">
                         <span class="font-bold text-slate-700 group-hover:text-blue-700">웰페어뉴스</span>
                         <span class="text-[10px] text-slate-400 group-hover:text-blue-500">복지종합</span>
                     </a>
-                    <a href="http://www.ablenews.co.kr" target="_blank" class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 group transition">
+                    <a href="http://www.ablenews.co.kr" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 group transition">
                         <span class="font-bold text-slate-700 group-hover:text-blue-700">에이블뉴스</span>
                         <span class="text-[10px] text-slate-400 group-hover:text-blue-500">장애인</span>
                     </a>
-                    <a href="https://www.ibabynews.com" target="_blank" class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 group transition">
+                    <a href="https://www.ibabynews.com" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 group transition">
                         <span class="font-bold text-slate-700 group-hover:text-blue-700">베이비뉴스</span>
                         <span class="text-[10px] text-slate-400 group-hover:text-blue-500">아동·보육</span>
                     </a>
-                    <a href="http://www.mindpost.or.kr" target="_blank" class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 group transition">
+                    <a href="http://www.mindpost.or.kr" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 group transition">
                         <span class="font-bold text-slate-700 group-hover:text-blue-700">마인드포스트</span>
                         <span class="text-[10px] text-slate-400 group-hover:text-blue-500">정신건강</span>
                     </a>
-                    <a href="https://www.kamsw.or.kr" target="_blank" class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 group transition">
+                    <a href="https://www.kamsw.or.kr" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 group transition">
                         <span class="font-bold text-slate-700 group-hover:text-blue-700">대한의료사회복지사</span>
                         <span class="text-[10px] text-slate-400 group-hover:text-blue-500">의료보건</span>
                     </a>
-                    <a href="https://www.bokjiro.go.kr" target="_blank" class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 group transition">
+                    <a href="https://www.bokjiro.go.kr" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 group transition">
                         <span class="font-bold text-slate-700 group-hover:text-blue-700">복지로</span>
                         <span class="text-[10px] text-slate-400 group-hover:text-blue-500">정부정책</span>
                     </a>
-                    <a href="https://www.mohw.go.kr" target="_blank" class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 group transition">
+                    <a href="https://www.mohw.go.kr" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 group transition">
                         <span class="font-bold text-slate-700 group-hover:text-blue-700">보건복지부</span>
                         <span class="text-[10px] text-slate-400 group-hover:text-blue-500">정책발표</span>
                     </a>
-                    <a href="https://www.welfare.net" target="_blank" class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 group transition">
+                    <a href="https://www.welfare.net" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 group transition">
                         <span class="font-bold text-slate-700 group-hover:text-blue-700">한국사회복지사협회</span>
                         <span class="text-[10px] text-slate-400 group-hover:text-blue-500">협회·자격</span>
                     </a>
-                    <a href="http://www.bokjitimes.com" target="_blank" class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 group transition">
+                    <a href="http://www.bokjitimes.com" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 group transition">
                         <span class="font-bold text-slate-700 group-hover:text-blue-700">복지타임즈</span>
                         <span class="text-[10px] text-slate-400 group-hover:text-blue-500">사협회보</span>
                     </a>
-                    <a href="https://www.welfare.seoul.kr" target="_blank" class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 group transition">
+                    <a href="https://www.welfare.seoul.kr" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 group transition">
                         <span class="font-bold text-slate-700 group-hover:text-blue-700">서울시복지재단</span>
                         <span class="text-[10px] text-slate-400 group-hover:text-blue-500">현장연구</span>
                     </a>
@@ -2264,16 +2239,16 @@
     </main>
 
     <!-- ==================== 슬라이드 서랍: 내 준비함 (마이 워크스페이스) ==================== -->
-    <div id="workspace-drawer" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs hidden justify-end transition-opacity" onclick="if(event.target===this) toggleWorkspaceDrawer()">
-        <aside class="w-full max-w-md bg-white h-full shadow-2xl flex flex-col p-6 overflow-y-auto">
+    <div id="workspace-drawer" role="dialog" aria-modal="true" aria-labelledby="workspace-drawer-title" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs hidden justify-end transition-opacity" onclick="if(event.target===this) toggleWorkspaceDrawer()">
+        <aside class="w-full max-w-md bg-white h-full shadow-2xl flex flex-col p-6 overflow-y-auto overscroll-contain">
             <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
                 <div>
-                    <h3 class="font-extrabold text-lg text-slate-900 flex items-center gap-1.5">
+                    <h3 id="workspace-drawer-title" class="font-extrabold text-lg text-slate-900 flex items-center gap-1.5">
                         ⭐ 내 실습 · 취업 준비함
                     </h3>
                     <p id="drawer-subtitle" class="text-xs text-slate-500">보관된 항목 관리</p>
                 </div>
-                <button type="button" onclick="toggleWorkspaceDrawer()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-600">✕</button>
+                <button type="button" aria-label="내 준비함 닫기" onclick="toggleWorkspaceDrawer()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-600 cursor-pointer">✕</button>
             </div>
 
             <!-- 서랍 4대 카테고리 탭 (design.md 5.4 규격) -->
@@ -2307,17 +2282,17 @@
     </div>
 
     <!-- 현장실습 합격 가이드 STEP 1~3 팝업 모달 -->
-    <div id="practicum-guide-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden items-center justify-center p-4 transition-opacity" onclick="if(event.target===this) closePracticumGuideModal()">
-        <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+    <div id="practicum-guide-modal" role="dialog" aria-modal="true" aria-labelledby="practicum-guide-modal-title" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden items-center justify-center p-4 transition-opacity" onclick="if(event.target===this) closePracticumGuideModal()">
+        <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto overscroll-contain">
             <div class="flex justify-between items-center pb-3 border-b border-slate-100">
                 <div class="flex items-center gap-2">
                     <span class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-sm">🧭</span>
                     <div>
-                        <h3 class="font-black text-slate-900 text-base">현장실습 합격 가이드 STEP 1~3</h3>
+                        <h3 id="practicum-guide-modal-title" class="font-black text-slate-900 text-base">현장실습 합격 가이드 STEP 1~3</h3>
                         <p class="text-[11px] text-slate-500">강남대학교 사회복지학부 천덕희 교수님 교육 프로토콜</p>
                     </div>
                 </div>
-                <button type="button" onclick="closePracticumGuideModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-600">✕</button>
+                <button type="button" aria-label="가이드 모달 닫기" onclick="closePracticumGuideModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-600 cursor-pointer">✕</button>
             </div>
 
             <div class="space-y-3 text-xs leading-relaxed text-slate-600">
@@ -2355,12 +2330,12 @@
     </div>
 
     <!-- A4 PDF 및 인쇄 바인더 모달 (Stitch pdf/code.html 규격) -->
-    <div id="pdf-binder-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs hidden items-center justify-center p-4 transition-opacity" onclick="if(event.target===this) closePdfBinderModal()">
+    <div id="pdf-binder-modal" role="dialog" aria-modal="true" aria-labelledby="pdf-binder-modal-title" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs hidden items-center justify-center p-4 transition-opacity" onclick="if(event.target===this) closePdfBinderModal()">
         <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[92vh] flex flex-col">
             <!-- 모달 상단 툴바 -->
             <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200">
                 <div>
-                    <h3 class="font-black text-slate-900 text-base flex items-center gap-2">
+                    <h3 id="pdf-binder-modal-title" class="font-black text-slate-900 text-base flex items-center gap-2">
                         <span>📄 나만의 시사 스크랩 & 면접 대비 노트</span>
                         <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-600 border border-blue-200">A4 PDF 미리보기</span>
                     </h3>
@@ -2370,7 +2345,7 @@
                     <button type="button" onclick="window.print()" class="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition flex items-center gap-1 cursor-pointer">
                         <span>🖨️ 바로 인쇄 (Ctrl+P)</span>
                     </button>
-                    <button type="button" onclick="closePdfBinderModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-600 cursor-pointer">✕</button>
+                    <button type="button" aria-label="PDF 바인더 닫기" onclick="closePdfBinderModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-600 cursor-pointer">✕</button>
                 </div>
             </div>
 
@@ -9214,21 +9189,24 @@
             try {
                 const raw = localStorage.getItem('user_saved_workspace');
                 if (!raw) {
-                    localStorage.setItem('user_saved_workspace', JSON.stringify(DEFAULT_WORKSPACE));
-                    return DEFAULT_WORKSPACE;
+                    const fallback = DEFAULT_WORKSPACE.map(x => ({ ...x }));
+                    try { localStorage.setItem('user_saved_workspace', JSON.stringify(fallback)); } catch (e) {}
+                    return fallback;
                 }
-                return JSON.parse(raw);
+                const parsed = JSON.parse(raw);
+                return Array.isArray(parsed) ? parsed : DEFAULT_WORKSPACE.map(x => ({ ...x }));
             } catch (e) {
-                return DEFAULT_WORKSPACE;
+                return DEFAULT_WORKSPACE.map(x => ({ ...x }));
             }
         }
 
-        
         function showToast(msg) {
             let toast = document.getElementById('app-global-toast');
             if (!toast) {
                 toast = document.createElement('div');
                 toast.id = 'app-global-toast';
+                toast.setAttribute('role', 'status');
+                toast.setAttribute('aria-live', 'polite');
                 toast.className = 'fixed bottom-6 right-6 z-[9999] px-4 py-3 rounded-xl bg-slate-900/95 text-white text-xs font-semibold shadow-2xl backdrop-blur-md border border-slate-700/50 flex items-center gap-2 transform transition-all duration-300 translate-y-12 opacity-0 pointer-events-none';
                 document.body.appendChild(toast);
             }
@@ -9252,7 +9230,9 @@
         }
     
         function setWorkspaceItems(items) {
-            localStorage.setItem('user_saved_workspace', JSON.stringify(items));
+            try {
+                localStorage.setItem('user_saved_workspace', JSON.stringify(items));
+            } catch (e) {}
             updateWorkspaceBadge();
             renderWorkspaceDrawer();
         }
@@ -9267,6 +9247,7 @@
 
         // 3. 뷰 전환 및 서랍 인터랙션 스크립트 (SPA 브라우저 히스토리 완벽 연동)
         function showView(viewId, options = {}) {
+            if (viewId === 'encyclopedia') viewId = 'fields';
             const sections = ['fields', 'archive', 'hierarchy', 'practicum', 'residency', 'internship', 'jobs', 'useful-sites', 'news'];
             if (!sections.includes(viewId)) viewId = 'fields';
 
@@ -9311,24 +9292,31 @@
                 }
                 if (typeof renderFieldsView === 'function') {
                     renderFieldsView(options);
+                } else if (typeof renderFieldsTable === 'function') {
+                    if (typeof applyFieldsFilter === 'function') applyFieldsFilter();
+                    else renderFieldsTable();
                 }
                 if (options.search) {
                     const searchInput = document.getElementById('fields-search-input');
-                    if (searchInput) {
-                        searchInput.value = options.search;
-                        if (typeof filterFieldsTable === 'function') {
-                            filterFieldsTable(options.search);
-                        }
+                    if (searchInput) searchInput.value = options.search;
+                    const mobSearchInput = document.getElementById('mobile-field-search');
+                    if (mobSearchInput) mobSearchInput.value = options.search;
+                    const clearBtn = document.getElementById('search-clear-btn');
+                    if (clearBtn) clearBtn.classList.toggle('hidden', !options.search);
+                    if (typeof filterFieldsTable === 'function') {
+                        filterFieldsTable(options.search);
                     }
                 }
             }
 
-            // 탭 버튼 활성 스타일 업데이트 (스티치 GNB 데스크톱 및 모바일 스티치 바 일체화)
+            // 탭 버튼 활성 스타일 & aria-current 업데이트 (스티치 GNB 데스크톱 및 모바일 스티치 바 일체화)
             document.querySelectorAll('.nav-tab-btn').forEach(btn => {
                 const btnView = btn.getAttribute('data-view');
                 const isMobile = btn.closest('#mobile-sticky-tabs') !== null;
                 const isCurrent = isMobile ? (btnView === viewId) : (btnView === viewId || (btnView === 'fields' && (viewId === 'fields' || viewId === 'archive' || viewId === 'hierarchy')));
                 const badge = btn.querySelector('.nav-badge');
+                if (isCurrent) btn.setAttribute('aria-current', 'page');
+                else btn.removeAttribute('aria-current');
 
                 if (isMobile) {
                     if (isCurrent) {
@@ -9351,26 +9339,34 @@
 
             const mobileMenu = document.getElementById('mobile-menu');
             if (mobileMenu) mobileMenu.classList.add('hidden');
-            
-                // 서브 네비게이션 탭 액티브 상태 동적 갱신
-                document.querySelectorAll('.subnav-tab').forEach(tab => {
-                    const tv = tab.getAttribute('data-view');
-                    if (tv === viewId) {
-                        if (tv === 'hierarchy') {
-                            tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-bold text-emerald-800 bg-emerald-50/90 border border-emerald-200/80 flex items-center gap-1.5 whitespace-nowrap shadow-2xs cursor-pointer';
-                        } else if (tv === 'archive') {
-                            tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-bold text-blue-700 bg-blue-50/90 border border-blue-200/80 flex items-center gap-1.5 whitespace-nowrap shadow-2xs cursor-pointer';
-                        } else {
-                            tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-900 bg-white border border-slate-200/90 flex items-center gap-1.5 whitespace-nowrap shadow-2xs cursor-pointer';
-                        }
-                    } else {
-                        tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 flex items-center gap-1.5 whitespace-nowrap transition cursor-pointer';
-                    }
-                });
+            const mobilePanel = document.getElementById('mobile-nav-panel');
+            if (mobilePanel) mobilePanel.classList.add('hidden');
+            const mobileSubnav = document.getElementById('mobile-subnav-menu');
+            if (mobileSubnav) mobileSubnav.classList.add('hidden');
+            const mobileMenuBtn = document.getElementById('mobile-menu-toggle-btn');
+            if (mobileMenuBtn) mobileMenuBtn.setAttribute('aria-expanded', 'false');
 
-                if (!options.preventScroll && !options.facilityId && !options.highlightId && !options.facility && !options.targetNodeId) {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+            // 서브 네비게이션 탭 액티브 상태 & aria-current 동적 갱신
+            document.querySelectorAll('.subnav-tab').forEach(tab => {
+                const tv = tab.getAttribute('data-view');
+                if (tv === viewId) {
+                    tab.setAttribute('aria-current', 'page');
+                    if (tv === 'hierarchy') {
+                        tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-bold text-emerald-800 bg-emerald-50/90 border border-emerald-200/80 flex items-center gap-1.5 whitespace-nowrap shadow-2xs cursor-pointer';
+                    } else if (tv === 'archive') {
+                        tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-bold text-blue-700 bg-blue-50/90 border border-blue-200/80 flex items-center gap-1.5 whitespace-nowrap shadow-2xs cursor-pointer';
+                    } else {
+                        tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-900 bg-white border border-slate-200/90 flex items-center gap-1.5 whitespace-nowrap shadow-2xs cursor-pointer';
+                    }
+                } else {
+                    tab.removeAttribute('aria-current');
+                    tab.className = 'subnav-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 flex items-center gap-1.5 whitespace-nowrap transition cursor-pointer';
                 }
+            });
+
+            if (!options.preventScroll && !options.facilityId && !options.highlightId && !options.facility && !options.targetNodeId) {
+                window.scrollTo({ top: 0, behavior: window.getPreferredScrollBehavior() });
+            }
         }
         window.showView = showView;
 
@@ -9441,14 +9437,15 @@
                 feed.innerHTML = `
                     <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 text-center space-y-1">
                         <span class="text-xl">🤝</span>
-                        <h4 class="text-xs font-bold text-amber-950">민간 제3섹터 전용 안내</h4>
-                        <p class="text-[11px] text-amber-800">아래 특별 섹션에 정리된 3대 임팩트 영역을 확인하세요.</p>
+                        <h4 class="text-xs font-bold text-amber-950">민간 제3섹터 · 사회적경제 · 종교공익 안내</h4>
+                        <p class="text-[11px] text-amber-800">아래 특별 섹션에 정리된 6대 생태계 영역을 확인하세요.</p>
                     </div>
                 `;
-                if (countEl) countEl.innerText = '3 (민간섹터)';
+                if (countEl) countEl.innerText = `${(window.CIVIL_IMPACT_ECOSYSTEM || []).length} (민간생태계)`;
                 if (ngoSection) {
                     ngoSection.classList.remove('hidden');
-                    ngoSection.scrollIntoView({ behavior: 'smooth' });
+                    const behavior = (typeof window.getPreferredScrollBehavior === 'function') ? window.getPreferredScrollBehavior() : 'smooth';
+                    ngoSection.scrollIntoView({ behavior });
                 }
                 return;
             }
@@ -9480,9 +9477,9 @@
                 const usingCount = (item.usingFacilities || []).length;
 
                 return `
-                    <div id="facility-card-${item.id}" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all duration-200" data-ministry="${escapeHtml(item.ministry || '')}">
+                    <div id="facility-card-${escapeHtml(item.id)}" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all duration-200" data-ministry="${escapeHtml(item.ministry || '')}">
                         <!-- 카드 헤더 (원클릭 아코디언 트리거) -->
-                        <div onclick="toggleCard('${item.id}')" class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/70 cursor-pointer select-none">
+                        <div role="button" tabindex="0" aria-expanded="${isOpen}" onclick="toggleCard('${escapeJsArg(item.id)}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCard('${escapeJsArg(item.id)}');}" class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/70 cursor-pointer select-none">
                             <div class="flex items-center gap-2.5">
                                 <div class="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm flex-shrink-0">
                                     ${item.ministryIcon || '🏛️'}
@@ -9570,16 +9567,16 @@
                             <!-- 5. 카드 하단 액션 버튼 -->
                             <div class="pt-2 space-y-1.5">
                                 <div class="flex items-center gap-2">
-                                    <button type="button" onclick="jumpToFacilityHierarchy('${escapeHtml(item.hierarchyFacility || item.facilityCategory.replace(/\s*\(.*?\)/g, '').trim())}', '${escapeHtml(item.facilityCategory)}')" 
+                                    <button type="button" onclick="jumpToFacilityHierarchy('${escapeJsArg(item.hierarchyFacility || item.facilityCategory.replace(/\s*\(.*?\)/g, '').trim())}', '${escapeJsArg(item.facilityCategory)}')" 
                                             class="flex-1 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-800 border border-emerald-200 font-bold text-xs flex items-center justify-center gap-1 transition cursor-pointer">
                                         <span>🌳 위계도감 보기</span>
                                     </button>
-                                    <button type="button" onclick="showView('archive', { facilityId: '${escapeHtml(item.id)}', facilityName: '${escapeHtml(item.facilityCategory)}' })" 
+                                    <button type="button" onclick="showView('archive', { facilityId: '${escapeJsArg(item.id)}', facilityName: '${escapeJsArg(item.facilityCategory)}' })" 
                                             class="flex-1 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-1 transition shadow-xs cursor-pointer">
                                         <span>📖 지침서 열람</span>
                                     </button>
                                 </div>
-                                <button type="button" onclick="saveToWorkspace('laws', '${escapeHtml(item.id)}', '${escapeHtml(item.ministry)}', '${escapeHtml(item.facilityCategory)}', '${isExtended ? '범부처 확장도감' : '법령 도감'}')" 
+                                <button type="button" onclick="saveToWorkspace('laws', '${escapeJsArg(item.id)}', '${escapeJsArg(item.ministry)}', '${escapeJsArg(item.facilityCategory)}', '${isExtended ? '범부처 확장도감' : '법령 도감'}')" 
                                         class="w-full py-1.5 px-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 font-bold text-[11px] transition cursor-pointer">
                                     <span>⭐ 찜하기</span>
                                 </button>
@@ -9640,18 +9637,18 @@
 
             if (!match) {
                 const mainName = clean_f;
-                return `<button type="button" onclick="window.jumpToFacilityHierarchy('${escapeHtml(mainName)}'); return false;" class="${btnBaseClass}" title="'${escapeHtml(mainName)}'의 법정 기능 및 사업 위계 탐색">${escapeHtml(mainName)}</button>`;
+                return `<button type="button" onclick="window.jumpToFacilityHierarchy('${escapeJsArg(mainName)}'); return false;" class="${btnBaseClass}" title="'${escapeHtml(mainName)}'의 법정 기능 및 사업 위계 탐색">${escapeHtml(mainName)}</button>`;
             }
 
             const mainName = match[1].trim();
             const subRaw = match[2].trim();
             const rawSubs = subRaw.split(/[,·/]/).map(s => s.trim()).filter(Boolean);
 
-            const mainHtml = `<button type="button" onclick="window.jumpToFacilityHierarchy('${escapeHtml(mainName)}'); return false;" class="${btnBaseClass}" title="'${escapeHtml(mainName)}'의 법정 기능 및 사업 위계 탐색">${escapeHtml(mainName)}</button>`;
+            const mainHtml = `<button type="button" onclick="window.jumpToFacilityHierarchy('${escapeJsArg(mainName)}'); return false;" class="${btnBaseClass}" title="'${escapeHtml(mainName)}'의 법정 기능 및 사업 위계 탐색">${escapeHtml(mainName)}</button>`;
 
             const subButtons = rawSubs.map(s => {
                 const cleanTarget = s.replace(/(등|포함|연계|제공사업장)\s*$/g, '').trim() || s;
-                return `<button type="button" onclick="window.jumpToFacilityHierarchy('${escapeHtml(cleanTarget)}', '${escapeHtml(mainName)}'); return false;" class="text-slate-600 hover:text-emerald-600 hover:underline cursor-pointer transition font-medium" title="'${escapeHtml(cleanTarget)}'의 세부 기능 및 단위서비스 탐색">${escapeHtml(s)}</button>`;
+                return `<button type="button" onclick="window.jumpToFacilityHierarchy('${escapeJsArg(cleanTarget)}', '${escapeJsArg(mainName)}'); return false;" class="text-slate-600 hover:text-emerald-600 hover:underline cursor-pointer transition font-medium" title="'${escapeHtml(cleanTarget)}'의 세부 기능 및 단위서비스 탐색">${escapeHtml(s)}</button>`;
             });
 
             const subsHtml = `<span class="text-slate-400 font-normal text-xs">(${subButtons.join(' · ')})</span>`;
@@ -9830,19 +9827,19 @@
                     const actionButtonsHtml = `
                         <div class="pt-1.5 border-t border-slate-100 flex flex-col sm:flex-row items-center gap-1.5">
                             <button type="button"
-                                    onclick="jumpToFacilityHierarchy('${escapeHtml(hierarchyTarget)}', '${escapeHtml(r.facilityCategory)}'); return false;"
+                                    onclick="jumpToFacilityHierarchy('${escapeJsArg(hierarchyTarget)}', '${escapeJsArg(r.facilityCategory)}'); return false;"
                                     class="w-full sm:flex-1 inline-flex items-center justify-center gap-1 px-2 py-1 rounded-md bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-800 border border-emerald-200 text-[10px] font-bold transition shadow-2xs cursor-pointer"
                                     title="${escapeHtml(r.facilityCategory)}의 3단계 위계도감 단위서비스로 직결">
                                 <span>🌳 위계도감 ➔</span>
                             </button>
                             <button type="button"
-                                    onclick="showView('archive', { facilityId: '${escapeHtml(r.id)}', facilityName: '${escapeHtml(r.facilityCategory)}' }); return false;"
+                                    onclick="showView('archive', { facilityId: '${escapeJsArg(r.id)}', facilityName: '${escapeJsArg(r.facilityCategory)}' }); return false;"
                                     class="w-full sm:flex-1 inline-flex items-center justify-center gap-1 px-2 py-1 rounded-md bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-800 border border-blue-200 text-[10px] font-bold transition shadow-2xs cursor-pointer"
                                     title="${escapeHtml(r.facilityCategory)} 관련 공식 정본 지침서로 직결">
                                 <span>📚 지침서 ➔</span>
                             </button>
                         </div>
-                        <button type="button" onclick="saveToWorkspace('laws', '${escapeHtml(r.id)}', '${escapeHtml(r.ministry)}', '${escapeHtml(r.facilityCategory)}', '${isExtended ? '범부처 확장도감' : '법령 도감'}')" class="w-full text-center py-1 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold border border-amber-200 text-[11px] cursor-pointer">
+                        <button type="button" onclick="saveToWorkspace('laws', '${escapeJsArg(r.id)}', '${escapeJsArg(r.ministry)}', '${escapeJsArg(r.facilityCategory)}', '${isExtended ? '범부처 확장도감' : '법령 도감'}')" class="w-full text-center py-1 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold border border-amber-200 text-[11px] cursor-pointer">
                             ⭐ 찜하기
                         </button>
                     `;
@@ -9952,22 +9949,26 @@
         function copyCurrentFieldsTableAsTsv() {
             const { header, exportRows } = buildCurrentFieldsExportData();
             if (exportRows.length === 0) {
-                alert('복사할 데이터가 없습니다.');
+                showToast('복사할 데이터가 없습니다.');
                 return;
             }
             const clean = v => String(v || '-').replace(/[\t\r\n]+/g, ' ').trim();
             const lines = [header.join('\t'), ...exportRows.map(row => row.map(clean).join('\t'))];
-            navigator.clipboard.writeText(lines.join('\n')).then(() => {
-                alert(`📋 18대 분야·시설 도감 ${exportRows.length}개 항목(중앙정부+민간생태계)이 엑셀·스프레드시트 붙여넣기용(TSV)으로 복사되었습니다!`);
+            const tsvText = lines.join('\n');
+            const copyPromise = (typeof window.copyTextSafely === 'function')
+                ? window.copyTextSafely(tsvText)
+                : navigator.clipboard.writeText(tsvText);
+            copyPromise.then(() => {
+                showToast(`📋 18대 분야·시설 도감 ${exportRows.length}개 항목(TSV)이 클립보드에 복사되었습니다.`);
             }).catch(() => {
-                alert('클립보드 복사 권한을 허용해 주세요.');
+                showToast('클립보드 복사 권한을 허용해 주세요.');
             });
         }
 
         function exportCurrentFieldsTableAsCsv() {
             const { header, exportRows } = buildCurrentFieldsExportData();
             if (exportRows.length === 0) {
-                alert('저장할 데이터가 없습니다.');
+                showToast('저장할 데이터가 없습니다.');
                 return;
             }
             const escCsv = v => `"${String(v || '').replace(/"/g, '""')}"`;
@@ -9983,7 +9984,7 @@
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
         }
 
         function renderCivilImpactCards(items = CIVIL_IMPACT_ECOSYSTEM) {
@@ -10053,13 +10054,13 @@
                                     <div class="flex flex-wrap gap-1">${lawsHtml}</div>
                                     ${r.articles ? `<div class="text-[10px] text-slate-600 bg-slate-50 px-2 py-1 rounded border border-slate-200/80 leading-snug"><strong>📌 근거:</strong> ${escapeHtml(r.articles)}</div>` : ''}
                                     <div class="flex flex-wrap items-center gap-1 pt-0.5">
-                                        <button type="button" onclick="jumpToFacilityHierarchy('${escapeHtml(hierarchyTarget)}', '${escapeHtml(r.facilityCategory)}'); return false;" class="flex-1 inline-flex items-center justify-center gap-0.5 px-2 py-1 rounded-md bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-800 border border-emerald-200 text-[10px] font-bold transition cursor-pointer">
+                                        <button type="button" onclick="jumpToFacilityHierarchy('${escapeJsArg(hierarchyTarget)}', '${escapeJsArg(r.facilityCategory)}'); return false;" class="flex-1 inline-flex items-center justify-center gap-0.5 px-2 py-1 rounded-md bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-800 border border-emerald-200 text-[10px] font-bold transition cursor-pointer">
                                             <span>🌳 위계 ➔</span>
                                         </button>
-                                        <button type="button" onclick="showView('archive', { facilityId: '${escapeHtml(r.id)}', facilityName: '${escapeHtml(r.facilityCategory)}' }); return false;" class="flex-1 inline-flex items-center justify-center gap-0.5 px-2 py-1 rounded-md bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-800 border border-blue-200 text-[10px] font-bold transition cursor-pointer">
+                                        <button type="button" onclick="showView('archive', { facilityId: '${escapeJsArg(r.id)}', facilityName: '${escapeJsArg(r.facilityCategory)}' }); return false;" class="flex-1 inline-flex items-center justify-center gap-0.5 px-2 py-1 rounded-md bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-800 border border-blue-200 text-[10px] font-bold transition cursor-pointer">
                                             <span>📚 지침서 ➔</span>
                                         </button>
-                                        <button type="button" onclick="saveToWorkspace('laws', '${escapeHtml(r.id)}', '${escapeHtml(r.ministry)}', '${escapeHtml(r.facilityCategory)}', '민간·사회혁신 생태계')" class="px-2 py-1 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold border border-amber-200 text-[10px] cursor-pointer shrink-0">⭐</button>
+                                        <button type="button" onclick="saveToWorkspace('laws', '${escapeJsArg(r.id)}', '${escapeJsArg(r.ministry)}', '${escapeJsArg(r.facilityCategory)}', '민간·사회혁신 생태계')" class="px-2 py-1 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold border border-amber-200 text-[10px] cursor-pointer shrink-0">⭐</button>
                                     </div>
                                 </td>
                             </tr>
@@ -10073,7 +10074,7 @@
                     const hierarchyTarget = r.hierarchyFacility || r.facilityCategory.replace(/\s*\(.*?\)/g, '').trim();
                     const allOrgs = [...(r.livingFacilities || []), ...(r.usingFacilities || [])];
                     return `
-                        <div id="facility-card-${r.id}" class="bg-white rounded-xl p-3.5 border border-slate-200/90 shadow-2xs space-y-2">
+                        <div id="facility-card-${escapeHtml(r.id)}" class="bg-white rounded-xl p-3.5 border border-slate-200/90 shadow-2xs space-y-2">
                             <div class="flex items-center justify-between gap-2">
                                 <strong class="text-xs font-extrabold text-slate-900 flex items-center gap-1">
                                     <span>${r.ministryIcon || '🤝'}</span><span>${escapeHtml(r.facilityCategory)}</span>
@@ -10085,8 +10086,8 @@
                             </div>
                             ${r.articles ? `<div class="text-[10px] text-slate-600 bg-slate-50 px-2 py-1 rounded border border-slate-200/80"><strong>📌 근거조문:</strong> ${escapeHtml(r.articles)}</div>` : ''}
                             <div class="pt-1 flex items-center gap-1.5">
-                                <button type="button" onclick="jumpToFacilityHierarchy('${escapeHtml(hierarchyTarget)}', '${escapeHtml(r.facilityCategory)}')" class="flex-1 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-[11px] cursor-pointer">🌳 위계도감 보기</button>
-                                <button type="button" onclick="showView('archive', { facilityId: '${escapeHtml(r.id)}', facilityName: '${escapeHtml(r.facilityCategory)}' })" class="flex-1 py-1.5 rounded-lg bg-blue-600 text-white font-bold text-[11px] cursor-pointer">📖 지침서 열람</button>
+                                <button type="button" onclick="jumpToFacilityHierarchy('${escapeJsArg(hierarchyTarget)}', '${escapeJsArg(r.facilityCategory)}')" class="flex-1 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-[11px] cursor-pointer">🌳 위계도감 보기</button>
+                                <button type="button" onclick="showView('archive', { facilityId: '${escapeJsArg(r.id)}', facilityName: '${escapeJsArg(r.facilityCategory)}' })" class="flex-1 py-1.5 rounded-lg bg-blue-600 text-white font-bold text-[11px] cursor-pointer">📖 지침서 열람</button>
                             </div>
                         </div>
                     `;
@@ -10536,7 +10537,7 @@
                         </td>
                         <td class="py-2.5 px-3 text-center text-[11px] text-slate-500 font-bold">${escapeHtml(inst.supervisors || '보유')}</td>
                         <td class="py-2.5 px-3 text-center">
-                            <a href="${searchLink}" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-600 text-blue-700 hover:text-white font-bold text-[11px] transition border border-blue-200 hover:border-transparent">
+                            <a href="${escapeHtml(safeExternalUrl(searchLink))}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-600 text-blue-700 hover:text-white font-bold text-[11px] transition border border-blue-200 hover:border-transparent">
                                 실습공고 바로가기 ↗
                             </a>
                         </td>
@@ -11137,8 +11138,8 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
-                        <a href="${r.url || '#'}" target="_blank" class="flex-1 py-2 rounded-xl bg-blue-600 text-white font-bold text-xs hover:bg-blue-700 transition text-center">공고 원문 ↗</a>
-                        <button type="button" onclick="saveToWorkspace('postings', '${r.id}', '${escapeHtml(r.institution || '')}', '${escapeHtml(r.title || '')}', '${escapeHtml(r.dday || '')}')" class="px-3 py-2 rounded-xl bg-amber-50 text-amber-900 font-bold text-xs border border-amber-200 hover:bg-amber-100 transition cursor-pointer">⭐ 찜하기</button>
+                        <a href="${escapeHtml(safeExternalUrl(r.url))}" target="_blank" rel="noopener noreferrer" class="flex-1 py-2 rounded-xl bg-blue-600 text-white font-bold text-xs hover:bg-blue-700 transition text-center">공고 원문 ↗</a>
+                        <button type="button" onclick="saveToWorkspace('postings', '${escapeJsArg(r.id)}', '${escapeJsArg(r.institution || '')}', '${escapeJsArg(r.title || '')}', '${escapeJsArg(r.dday || '')}')" class="px-3 py-2 rounded-xl bg-amber-50 text-amber-900 font-bold text-xs border border-amber-200 hover:bg-amber-100 transition cursor-pointer">⭐ 찜하기</button>
                     </div>
                 </div>
             `).join('');
@@ -11360,7 +11361,7 @@
                         </td>
                         <td class="py-2.5 px-3 text-center text-[11px] text-slate-500 font-bold">${escapeHtml(inst.supervisors || '보유')}</td>
                         <td class="py-2.5 px-3 text-center">
-                            <a href="${searchLink}" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-600 text-blue-700 hover:text-white font-bold text-[11px] transition border border-blue-200 hover:border-transparent">
+                            <a href="${escapeHtml(safeExternalUrl(searchLink))}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-600 text-blue-700 hover:text-white font-bold text-[11px] transition border border-blue-200 hover:border-transparent">
                                 채용공고 바로가기 ↗
                             </a>
                         </td>
@@ -12133,8 +12134,8 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
-                        <a href="${n.url || 'https://www.bokji.net'}" target="_blank" class="flex-1 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition text-center">공식 원문 ↗</a>
-                        <button type="button" onclick="saveToWorkspace('news', '${n.id}', '${escapeHtml(n.source||'공식브리핑')}', '${escapeHtml(n.title)}', '${escapeHtml(n.date)}')" class="px-3 py-2 rounded-xl bg-amber-500 text-white font-bold text-xs hover:bg-amber-600 transition cursor-pointer">⭐ 저장하기</button>
+                        <a href="${escapeHtml(safeExternalUrl(n.url, 'https://www.bokji.net'))}" target="_blank" rel="noopener noreferrer" class="flex-1 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition text-center">공식 원문 ↗</a>
+                        <button type="button" onclick="saveToWorkspace('news', '${escapeJsArg(n.id)}', '${escapeJsArg(n.source || '공식브리핑')}', '${escapeJsArg(n.title)}', '${escapeJsArg(n.date)}')" class="px-3 py-2 rounded-xl bg-amber-500 text-white font-bold text-xs hover:bg-amber-600 transition cursor-pointer">⭐ 저장하기</button>
                     </div>
                 </div>
             `).join('');
@@ -12171,12 +12172,14 @@
             try {
                 const raw = localStorage.getItem('user_statutory_checklist');
                 if (!raw) {
-                    localStorage.setItem('user_statutory_checklist', JSON.stringify(DEFAULT_CHECKLIST));
-                    return DEFAULT_CHECKLIST;
+                    const fallback = DEFAULT_CHECKLIST.map(x => ({ ...x }));
+                    try { localStorage.setItem('user_statutory_checklist', JSON.stringify(fallback)); } catch (e) {}
+                    return fallback;
                 }
-                return JSON.parse(raw);
+                const parsed = JSON.parse(raw);
+                return Array.isArray(parsed) ? parsed : DEFAULT_CHECKLIST.map(x => ({ ...x }));
             } catch (e) {
-                return DEFAULT_CHECKLIST;
+                return DEFAULT_CHECKLIST.map(x => ({ ...x }));
             }
         }
 
@@ -12227,7 +12230,7 @@
 
             if (activeDrawerCategory === 'checklist') {
                 const doneCount = chkItems.filter(i => i.checked).length;
-                const pct = Math.round((doneCount / chkItems.length) * 100);
+                const pct = chkItems.length > 0 ? Math.round((doneCount / chkItems.length) * 100) : 0;
                 list.innerHTML = `
                     <div class="space-y-3">
                         <div class="p-3 bg-blue-50/70 border border-blue-200 rounded-xl text-xs text-blue-900">
@@ -12379,10 +12382,13 @@
 
             text += "\n—\n사회복지 현장 나침반 포털 (제작: 정다운 | 지도: 강남대학교 사회복지학부 천덕희 교수님)";
 
-            navigator.clipboard.writeText(text).then(() => {
-                alert("내 준비함 보관 내용 및 점검 현황이 클립보드에 복사되었습니다!");
+            const copyPromise = (typeof window.copyTextSafely === 'function')
+                ? window.copyTextSafely(text)
+                : navigator.clipboard.writeText(text);
+            copyPromise.then(() => {
+                showToast("내 준비함 보관 내용 및 점검 현황이 클립보드에 복사되었습니다!");
             }).catch(() => {
-                alert("클립보드 복사 권한이 필요합니다.");
+                showToast("클립보드 복사 권한이 필요합니다.");
             });
         }
 
@@ -12511,15 +12517,7 @@
             container.innerHTML = html;
         }
 
-        function escapeHtml(str) {
-            if (!str) return '';
-            return String(str)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
-        }
+        const escapeHtml = window.escapeHtml;
 
         // Window global aliases for compatibility & external automation
         window.renderPracticumHubTable = renderPracticumHubTable;
@@ -12679,7 +12677,7 @@
                         </div>
 
                         <h3 class="text-base font-extrabold text-slate-900 group-hover:text-blue-600 transition leading-snug">
-                            <a href="${site.url}" target="_blank" rel="noopener noreferrer" class="hover:underline">
+                            <a href="${escapeHtml(safeExternalUrl(site.url))}" target="_blank" rel="noopener noreferrer" class="hover:underline">
                                 ${escapeHtml(site.name)}
                             </a>
                         </h3>
@@ -12698,9 +12696,9 @@
 
                     <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between">
                         <span class="text-[10px] text-slate-400 truncate font-mono">
-                            ${escapeHtml(site.url.replace('https://', ''))}
+                            ${escapeHtml(String(site.url || '').replace(/^https?:\/\//i, ''))}
                         </span>
-                        <a href="${site.url}" target="_blank" rel="noopener noreferrer"
+                        <a href="${escapeHtml(safeExternalUrl(site.url))}" target="_blank" rel="noopener noreferrer"
                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-600 text-blue-700 hover:text-white font-bold text-xs transition shadow-2xs hover:shadow-xs">
                             <span>${escapeHtml(site.officialBadge || '공식 사이트 ↗')}</span>
                         </a>

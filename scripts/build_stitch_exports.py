@@ -77,43 +77,7 @@ def extract_index_parts(idx_html):
     assert m_vf, "<section id='view-fields'> not found in index.html"
     view_fields_html = m_vf.group(1)
 
-    # 4. Mobile hierarchy inspector HTML (#mobile-hierarchy-inspector)
-    m_insp = re.search(
-        r'(<div id="mobile-hierarchy-inspector".*?</div>\s*\n\s*</div>\s*\n\s*</div>\s*</section>\s*\n\s*<!-- ==================== VIEW 2: 실습처)',
-        idx_html,
-        re.S,
-    )
-    assert m_insp, "#mobile-hierarchy-inspector not found in index.html"
-    raw_insp = m_insp.group(1)
-    idx_close = raw_insp.rfind("</section>")
-    raw_insp = raw_insp[:idx_close].rstrip()
-    for _ in range(2):
-        pos = raw_insp.rfind("</div>")
-        raw_insp = raw_insp[:pos].rstrip()
-
-    # Start mobile inspector collapsed so domain tree cards are visible immediately in Stitch mobile preview
-    raw_insp = raw_insp.replace("<span>접기</span>", "<span>펼치기</span>", 1)
-    raw_insp = raw_insp.replace('<span id="inspector-toggle-icon">▼</span>', '<span id="inspector-toggle-icon">▲</span>', 1)
-    raw_insp = raw_insp.replace(
-        '<div id="inspector-content" class="p-4 space-y-3 max-h-80 overflow-y-auto">',
-        '<div id="inspector-content" class="hidden p-4 space-y-3 max-h-80 overflow-y-auto">',
-        1,
-    )
-    assert 'class="hidden p-4 space-y-3 max-h-80 overflow-y-auto"' in raw_insp, "Failed to collapse #inspector-content"
-
-    # Upgrade bottom-sheet handle into an accessible button with aria-expanded & Enter/Space support
-    old_handle = '<div onclick="toggleMobileInspector()" class="pt-2.5 pb-2 px-4 flex flex-col items-center cursor-pointer select-none border-b border-slate-100">'
-    new_handle = (
-        '<div id="inspector-toggle-btn" role="button" tabindex="0" aria-expanded="false" aria-controls="inspector-content" '
-        'onclick="toggleMobileInspector()" '
-        'onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();toggleMobileInspector();}" '
-        'class="pt-2.5 pb-2 px-4 flex flex-col items-center cursor-pointer select-none border-b border-slate-100">'
-    )
-    raw_insp = raw_insp.replace(old_handle, new_handle, 1)
-    assert 'id="inspector-toggle-btn"' in raw_insp, "Failed to add #inspector-toggle-btn accessibility attributes"
-    inspector_html = raw_insp
-
-    # 5. Embedded datasets: STATUTORY_MATRIX + resolveOrgLineage + FACILITY_ROW_ID_ALIASES + CIVIL_IMPACT_ECOSYSTEM
+    # 4. Embedded datasets: STATUTORY_MATRIX + resolveOrgLineage + FACILITY_ROW_ID_ALIASES + CIVIL_IMPACT_ECOSYSTEM
     m_data = re.search(
         r"(const STATUTORY_MATRIX = \[.*?window\.EXTENDED_STATUTORY_MATRIX = EXTENDED_STATUTORY_MATRIX;)",
         idx_html,
@@ -122,7 +86,7 @@ def extract_index_parts(idx_html):
     assert m_data, "STATUTORY_MATRIX..EXTENDED_STATUTORY_MATRIX block not found in index.html"
     view1_datasets_js = m_data.group(1)
 
-    # 6. View 1 logic: // 4. View 1: ... up to right before // 5. View 2:
+    # 5. View 1 logic: // 4. View 1: ... up to right before // 5. View 2:
     m_v1 = re.search(
         r"(// 4\. View 1:.*?)(?=\s*// 5\. View 2:)",
         idx_html,
@@ -135,7 +99,6 @@ def extract_index_parts(idx_html):
         "tailwind_cfg": tailwind_cfg,
         "custom_style": custom_style,
         "view_fields_html": view_fields_html,
-        "inspector_html": inspector_html,
         "view1_datasets_js": view1_datasets_js,
         "view1_logic_js": view1_logic_js,
     }
@@ -188,20 +151,9 @@ def build_common_head(title, parts):
         body.stitch-mobile-mode #view-archive .hidden.md\\:flex {{
             display: none !important;
         }}
-        body:not(.stitch-mobile-mode) #mobile-hierarchy-inspector {{
-            display: none !important;
-        }}
-        @media (max-width: 767px) {{
-            body:not(.stitch-mobile-mode) #mobile-hierarchy-inspector:not(.stitch-inspector-hidden) {{
-                display: block !important;
-            }}
-        }}
-        body.stitch-mobile-mode #mobile-hierarchy-inspector:not(.stitch-inspector-hidden) {{
+        body.stitch-mobile-mode #mobile-hierarchy-inspector {{
             display: block !important;
             max-width: 430px !important;
-        }}
-        .stitch-inspector-hidden {{
-            display: none !important;
         }}
 
         /* Baseline Widely Available: Rendering performance for large unified single-file DOM */
@@ -253,7 +205,7 @@ def build_viewport_toggle_bar():
 def build_shared_runtime_js():
     return r"""
         function escapeHtml(str) {
-            if (!str) return '';
+            if (str === null || str === undefined) return '';
             return String(str)
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
@@ -262,6 +214,55 @@ def build_shared_runtime_js():
                 .replace(/'/g, '&#039;');
         }
         window.escapeHtml = escapeHtml;
+
+        function escapeJsArg(str) {
+            if (str === null || str === undefined) return '';
+            return escapeHtml(String(str)
+                .replace(/\\/g, '\\\\')
+                .replace(/'/g, "\\'")
+                .replace(/\r/g, '')
+                .replace(/\n/g, ' '));
+        }
+        window.escapeJsArg = escapeJsArg;
+
+        function safeExternalUrl(url, fallback = '#') {
+            if (!url) return fallback;
+            const s = String(url).trim();
+            return /^https?:\/\//i.test(s) ? s : fallback;
+        }
+        window.safeExternalUrl = safeExternalUrl;
+
+        function getPreferredScrollBehavior() {
+            return (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) ? 'auto' : 'smooth';
+        }
+        window.getPreferredScrollBehavior = getPreferredScrollBehavior;
+
+        function copyTextSafely(text) {
+            const str = String(text ?? '');
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function' && window.isSecureContext) {
+                return navigator.clipboard.writeText(str);
+            }
+            return new Promise((resolve, reject) => {
+                try {
+                    const ta = document.createElement('textarea');
+                    ta.value = str;
+                    ta.setAttribute('readonly', '');
+                    ta.style.position = 'fixed';
+                    ta.style.opacity = '0';
+                    ta.style.left = '-9999px';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    ta.setSelectionRange(0, str.length);
+                    const ok = document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    if (ok) resolve();
+                    else reject(new Error('Clipboard copy failed'));
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        }
+        window.copyTextSafely = copyTextSafely;
 
         function showToast(msg) {
             const old = document.getElementById('stitch-toast');
@@ -349,8 +350,6 @@ def build_shared_runtime_js():
                 const el = document.getElementById('view-' + id);
                 if (el) el.classList.toggle('hidden', id !== viewId);
             });
-            const insp = document.getElementById('mobile-hierarchy-inspector');
-            if (insp) insp.classList.toggle('stitch-inspector-hidden', viewId !== 'hierarchy');
             updateStitchTabButtons(viewId);
 
             if (viewId === 'fields') {
@@ -366,8 +365,7 @@ def build_shared_runtime_js():
                 if (typeof window.renderArchiveView === 'function') window.renderArchiveView(options);
             }
             if (!options.preventScroll && !options.facilityId && !options.highlightId && !options.facility && !options.targetNodeId) {
-                const scrollBehavior = (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) ? 'auto' : 'smooth';
-                window.scrollTo({ top: 0, behavior: scrollBehavior });
+                window.scrollTo({ top: 0, behavior: getPreferredScrollBehavior() });
             }
         };
 
@@ -434,13 +432,6 @@ def assemble_html_files():
     )
     assert 'role="tabpanel" aria-labelledby="tab-btn-fields"' in vf_html, "Failed to add ARIA attributes to #view-fields"
 
-    inspector_portal_html = parts["inspector_html"].replace(
-        "z-40 rounded-t-2xl",
-        "z-40 rounded-t-2xl stitch-inspector-hidden",
-        1,
-    )
-    assert "stitch-inspector-hidden" in inspector_portal_html, "Failed to apply initial .stitch-inspector-hidden"
-
     toggle_bar = build_viewport_toggle_bar()
 
     p_html = build_common_head("Google Stitch - 3대 핵심 플랫폼 통합 모바일/반응형 스튜디오", parts)
@@ -483,7 +474,6 @@ def assemble_html_files():
             <section id="view-hierarchy" role="tabpanel" aria-labelledby="tab-btn-hierarchy" class="view-section w-full hidden"></section>
             <section id="view-archive" role="tabpanel" aria-labelledby="tab-btn-archive" class="view-section w-full hidden"></section>
         </div>
-        {inspector_portal_html}
     </main>
 
     <footer class="no-print bg-white border-t border-slate-200 py-5 text-center text-[11px] text-slate-400">
@@ -499,33 +489,6 @@ def assemble_html_files():
 {hierarchy_ctrl_js}
 {archive_ctrl_js}
 {mobile_ctrl_js}
-        function syncInspectorAria() {{
-            const btn = document.getElementById('inspector-toggle-btn');
-            const content = document.getElementById('inspector-content');
-            if (btn && content) {{
-                btn.setAttribute('aria-expanded', String(!content.classList.contains('hidden')));
-            }}
-        }}
-        window.syncInspectorAria = syncInspectorAria;
-
-        const _origToggleInspector = window.toggleMobileInspector;
-        if (typeof _origToggleInspector === 'function') {{
-            window.toggleMobileInspector = function() {{
-                const res = _origToggleInspector.apply(this, arguments);
-                syncInspectorAria();
-                return res;
-            }};
-        }}
-
-        const _origInspectFacility = window.inspectFacilityDetail;
-        if (typeof _origInspectFacility === 'function') {{
-            window.inspectFacilityDetail = function() {{
-                const res = _origInspectFacility.apply(this, arguments);
-                syncInspectorAria();
-                return res;
-            }};
-        }}
-
         document.addEventListener('DOMContentLoaded', () => {{
             if (typeof renderFieldsTable === 'function') renderFieldsTable();
             if (typeof renderMobileCards === 'function') renderMobileCards();
@@ -556,7 +519,6 @@ def assemble_html_files():
             }}
 
             window.showView('fields', {{ preventScroll: true }});
-            syncInspectorAria();
         }});
     </script>
 </body>
@@ -771,45 +733,63 @@ async def prebake_and_verify():
             assert check["hierItems"] == 219, f"Expected 219 items, got {check['hierItems']}"
             assert check["arcCards"] == 70, f"Expected 70 archive cards, got {check['arcCards']}"
 
-            # 3. Interactive tabs, WAI-ARIA state transitions, bottom-sheet inspector, deep-links, ministry filter, viewport toggle
+            # 3. Interactive tabs, WAI-ARIA state transitions, bottom-sheet inspector, archive filter/modal, deep-links, viewport toggle
             portal_test = await eval_js(ws, mid, """
             (() => {
                 const attr = (id, name) => {
                     const el = document.getElementById(id);
                     return el ? el.getAttribute(name) : null;
                 };
+                const rectH = (id) => {
+                    const el = document.getElementById(id);
+                    return el ? el.getBoundingClientRect().height : -1;
+                };
 
-                // Initial ARIA check
+                // Initial ARIA & inspector hidden on fields tab
                 const initFieldsAria = attr('tab-btn-fields', 'aria-selected');
                 const initHierAria = attr('tab-btn-hierarchy', 'aria-selected');
                 const initArcAria = attr('tab-btn-archive', 'aria-selected');
                 const initMobPressed = attr('btn-stitch-mobile', 'aria-pressed');
+                const inspHeightOnFields = rectH('mobile-hierarchy-inspector');
 
                 // Switch to hierarchy
                 window.showView('hierarchy');
                 const hVis = !document.getElementById('view-hierarchy').classList.contains('hidden');
-                const inspVis = !document.getElementById('mobile-hierarchy-inspector').classList.contains('stitch-inspector-hidden');
+                const inspHeightOnHier = rectH('mobile-hierarchy-inspector');
                 const hierAriaActive = attr('tab-btn-hierarchy', 'aria-selected');
                 const inspCollapsedInit = attr('inspector-toggle-btn', 'aria-expanded');
 
-                // Click first item -> opens inspector & syncs aria-expanded
+                // Click first item -> opens inspector & syncs aria-expanded + no inverted transform
                 const firstItem = document.querySelector('.mobile-hierarchy-item');
                 if (firstItem) firstItem.click();
                 const inspOpenAfterItem = attr('inspector-toggle-btn', 'aria-expanded');
                 const inspContentOpen = !document.getElementById('inspector-content').classList.contains('hidden');
+                const inspNoRotateOpen = ((document.getElementById('inspector-toggle-icon') || {}).style || {}).transform === '';
 
                 // Collapse inspector via toggleMobileInspector()
                 window.toggleMobileInspector();
                 const inspCollapsedAfterToggle = attr('inspector-toggle-btn', 'aria-expanded');
+                const inspNoRotateClosed = ((document.getElementById('inspector-toggle-icon') || {}).style || {}).transform === '';
 
-                // Deep-link to archive with facilityId filter & banner
+                // Deep-link to archive with facilityId filter & banner + ministry filter + modal Escape test
                 window.showView('archive', { facilityId: 'law-elderly', facilityName: '노인복지시설' });
                 const aVis = !document.getElementById('view-archive').classList.contains('hidden');
-                const inspHiddenInArchive = document.getElementById('mobile-hierarchy-inspector').classList.contains('stitch-inspector-hidden');
+                const inspHeightInArchive = rectH('mobile-hierarchy-inspector');
                 const arcAriaActive = attr('tab-btn-archive', 'aria-selected');
                 const arcBannerText = (document.getElementById('mobileArchiveFacilityBannerContainer') || {}).textContent || '';
                 const hasArcBanner = arcBannerText.includes('노인복지시설');
                 window.clearArchiveFacilityFilter();
+
+                window.setArchiveMinistryFilter('보건복지부');
+                const mohwArcCards = document.querySelectorAll('#mobile-archive-cards-feed > div').length;
+                window.setArchiveMinistryFilter('전체');
+                const restoredArcCards = document.querySelectorAll('#mobile-archive-cards-feed > div').length;
+
+                window.viewGuidelineModal('doc-001');
+                const gModal = document.getElementById('guideline-detail-modal');
+                const modalIsDialog = !!gModal && gModal.getAttribute('role') === 'dialog' && gModal.getAttribute('aria-modal') === 'true';
+                document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+                const modalRemovedOnEsc = !document.getElementById('guideline-detail-modal');
 
                 // Deep-link back via jumpToFacility('law-elderly')
                 window.jumpToFacility('law-elderly');
@@ -836,17 +816,24 @@ async def prebake_and_verify():
                     initHierAria,
                     initArcAria,
                     initMobPressed,
+                    inspHeightOnFields,
                     hVis,
-                    inspVis,
+                    inspHeightOnHier,
                     hierAriaActive,
                     inspCollapsedInit,
                     inspOpenAfterItem,
                     inspContentOpen,
+                    inspNoRotateOpen,
                     inspCollapsedAfterToggle,
+                    inspNoRotateClosed,
                     aVis,
-                    inspHiddenInArchive,
+                    inspHeightInArchive,
                     arcAriaActive,
                     hasArcBanner,
+                    mohwArcCards,
+                    restoredArcCards,
+                    modalIsDialog,
+                    modalRemovedOnEsc,
                     backToFieldsVis,
                     backFieldsAria,
                     mohwCards,
@@ -865,17 +852,24 @@ async def prebake_and_verify():
             assert portal_test["initHierAria"] == "false"
             assert portal_test["initArcAria"] == "false"
             assert portal_test["initMobPressed"] == "true"
+            assert portal_test["inspHeightOnFields"] == 0
             assert portal_test["hVis"] is True
-            assert portal_test["inspVis"] is True
+            assert portal_test["inspHeightOnHier"] > 0
             assert portal_test["hierAriaActive"] == "true"
             assert portal_test["inspCollapsedInit"] == "false"
             assert portal_test["inspOpenAfterItem"] == "true"
             assert portal_test["inspContentOpen"] is True
+            assert portal_test["inspNoRotateOpen"] is True
             assert portal_test["inspCollapsedAfterToggle"] == "false"
+            assert portal_test["inspNoRotateClosed"] is True
             assert portal_test["aVis"] is True
-            assert portal_test["inspHiddenInArchive"] is True
+            assert portal_test["inspHeightInArchive"] == 0
             assert portal_test["arcAriaActive"] == "true"
             assert portal_test["hasArcBanner"] is True
+            assert 0 < portal_test["mohwArcCards"] < 70
+            assert portal_test["restoredArcCards"] == 70
+            assert portal_test["modalIsDialog"] is True
+            assert portal_test["modalRemovedOnEsc"] is True
             assert portal_test["backToFieldsVis"] is True
             assert portal_test["backFieldsAria"] == "true"
             assert portal_test["mohwCards"] == 12

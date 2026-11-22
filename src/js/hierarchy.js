@@ -10,6 +10,7 @@
     let currentFacilityFilter = null;
     let currentParentCategory = null;
     let currentFilteredHierarchyNodes = [];
+    let hierarchySearchDebounceTimer = null;
 
     const FACILITY_MAPPING_RULES = {
     "노인주거복지시설": {
@@ -4464,6 +4465,22 @@
             .replace(/'/g, '&#39;');
     }
 
+    function escHJs(str) {
+        if (str === null || str === undefined) return '';
+        return localEscHtml(String(str)
+            .replace(/\\/g, '\\\\')
+            .replace(/'/g, "\\'")
+            .replace(/\r/g, '')
+            .replace(/\n/g, ' '));
+    }
+
+    function getHierScrollBehavior() {
+        if (typeof window.getPreferredScrollBehavior === 'function') {
+            return window.getPreferredScrollBehavior();
+        }
+        return (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) ? 'auto' : 'smooth';
+    }
+
     function safeResolveLineage(agency) {
         if (typeof window !== 'undefined' && typeof window.resolveOrgLineage === 'function') {
             return window.resolveOrgLineage(agency);
@@ -4718,17 +4735,22 @@
         currentDomainFilter = 'all';
         currentMinistryGroup = '전체';
         currentSearchKeyword = '';
+        if (typeof window.resetMobileHierarchyState === 'function') {
+            window.resetMobileHierarchyState();
+        }
 
         container.innerHTML = buildHierarchyHTML();
         bindEvents();
 
         if (options.ministry) {
-            const pill = document.querySelector(`.hierarchy-ministry-pill[data-ministry="${options.ministry}"]`);
+            const safeMin = (window.CSS && CSS.escape) ? CSS.escape(options.ministry) : options.ministry;
+            const pill = document.querySelector(`.hierarchy-ministry-pill[data-ministry="${safeMin}"]`);
             window.setHierarchyMinistryFilter(options.ministry, pill);
         }
 
         if (options.domainKey) {
-            const btn = document.querySelector(`.domain-tab-btn[onclick*="'${options.domainKey}'"]`);
+            const safeDom = (window.CSS && CSS.escape) ? CSS.escape(options.domainKey) : options.domainKey;
+            const btn = document.querySelector(`.domain-tab-btn[data-domain-key="${safeDom}"]`);
             if (btn && typeof window.selectDomainFilter === 'function') {
                 window.selectDomainFilter(options.domainKey, btn);
             }
@@ -4747,14 +4769,15 @@
                 const matchedTrs = document.querySelectorAll('#hierarchicalMatrixTable tbody tr.domain-row, #hierarchyCivilTable tbody tr.domain-row');
                 const matchedCards = document.querySelectorAll('#mobile-hierarchy-cards-feed .mobile-domain-card');
                 const allTargets = (window.innerWidth >= 768) ? matchedTrs : matchedCards;
+                const behavior = getHierScrollBehavior();
                 if (allTargets && allTargets.length > 0) {
                     if (typeof window.triggerMatchHighlight === 'function') {
                         window.triggerMatchHighlight(allTargets[0]);
                     }
-                    allTargets[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    allTargets[0].scrollIntoView({ behavior, block: 'center' });
                 } else {
                     const banner = document.getElementById('facilityFilterBannerContainer');
-                    if (banner) banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    if (banner) banner.scrollIntoView({ behavior, block: 'start' });
                 }
             }, 180);
         }
@@ -4776,7 +4799,7 @@
                         if (typeof window.triggerMatchHighlight === 'function') {
                             window.triggerMatchHighlight(allTargets[0]);
                         }
-                        allTargets[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        allTargets[0].scrollIntoView({ behavior: getHierScrollBehavior(), block: 'center' });
                     }
                 }, 180);
             }
@@ -4847,12 +4870,12 @@
 
         const domainChipsHtml = domainChips.map(c => {
             if (c.active) {
-                return `<button type="button" class="domain-tab-btn px-3 py-1 rounded-full text-xs font-bold bg-primary text-on-primary shadow-sm transition cursor-pointer" onclick="window.selectDomainFilter('${c.key}', this)">${c.label}</button>`;
+                return `<button type="button" data-domain-key="${localEscHtml(c.key)}" class="domain-tab-btn px-3 py-1 rounded-full text-xs font-bold bg-primary text-on-primary shadow-sm transition cursor-pointer" onclick="window.selectDomainFilter('${escHJs(c.key)}', this)">${localEscHtml(c.label)}</button>`;
             }
             const cls = c.isCivil
                 ? 'domain-tab-btn px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-900 border border-amber-200 hover:bg-amber-100 transition cursor-pointer'
                 : 'domain-tab-btn px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer';
-            return `<button type="button" class="${cls}" onclick="window.selectDomainFilter('${c.key}', this)">${c.label}</button>`;
+            return `<button type="button" data-domain-key="${localEscHtml(c.key)}" class="${cls}" onclick="window.selectDomainFilter('${escHJs(c.key)}', this)">${localEscHtml(c.label)}</button>`;
         }).join('');
 
         return `
@@ -4873,14 +4896,14 @@
                             </div>
                         </div>
                         <div class="flex flex-wrap items-center gap-space-sm font-legal-code text-legal-code">
-                            <a class="inline-flex items-center gap-space-xs px-space-sm py-0.5 rounded-full bg-surface-container text-primary font-bold border border-primary/20 hover:bg-primary hover:text-on-primary transition-colors cursor-pointer" onclick="showView('fields'); return false;">
+                            <button type="button" class="inline-flex items-center gap-space-xs px-space-sm py-0.5 rounded-full bg-surface-container text-primary font-bold border border-primary/20 hover:bg-primary hover:text-on-primary transition-colors cursor-pointer" onclick="showView('fields')">
                                 <span>🏛️ 18대 분야·시설 도감 (45)</span>
-                            </a>
-                            <a class="inline-flex items-center gap-space-xs px-space-sm py-0.5 rounded-full bg-surface-container text-primary font-bold border border-primary/20 hover:bg-primary hover:text-on-primary transition-colors cursor-pointer" onclick="showView('archive'); return false;">
+                            </button>
+                            <button type="button" class="inline-flex items-center gap-space-xs px-space-sm py-0.5 rounded-full bg-surface-container text-primary font-bold border border-primary/20 hover:bg-primary hover:text-on-primary transition-colors cursor-pointer" onclick="showView('archive')">
                                 <span class="material-symbols-outlined text-[14px] text-secondary">auto_stories</span>
                                 <span>공식 지침서 70종</span>
                                 <span class="material-symbols-outlined text-[12px]">arrow_forward</span>
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </section>
@@ -4912,11 +4935,11 @@
                                     <span class="material-symbols-outlined text-[18px]">print</span>
                                     <span>표 인쇄 / PDF</span>
                                 </button>
-                                <a class="inline-flex items-center gap-space-xs h-[38px] px-space-md rounded-lg bg-primary text-on-primary hover:bg-primary-container transition-all font-label-md text-label-md font-semibold shadow-sm cursor-pointer" onclick="showView('archive'); return false;">
+                                <button type="button" class="inline-flex items-center gap-space-xs h-[38px] px-space-md rounded-lg bg-primary text-on-primary hover:bg-primary-container transition-all font-label-md text-label-md font-semibold shadow-sm cursor-pointer" onclick="showView('archive')">
                                     <span class="material-symbols-outlined text-[18px]">menu_book</span>
                                     <span>지침서 70종 아카이브</span>
                                     <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-                                </a>
+                                </button>
                             </div>
                         </div>
 
@@ -4951,10 +4974,10 @@
                                     <span class="font-headline-lg text-headline-lg font-extrabold text-primary">70</span>
                                     <span class="font-label-md text-label-md text-on-surface-variant font-semibold">종 순수 PDF 정본</span>
                                 </div>
-                                <a class="font-legal-code text-legal-code text-primary hover:underline font-semibold flex items-center gap-0.5 cursor-pointer" onclick="window.exportHierarchyCSV()">
+                                <button type="button" class="font-legal-code text-legal-code text-primary hover:underline font-semibold flex items-center gap-0.5 cursor-pointer self-start" onclick="window.exportHierarchyCSV()">
                                     <span class="material-symbols-outlined text-[14px]">download</span>
                                     <span>원클릭 CSV 내려받기</span>
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -5035,19 +5058,81 @@
                           <div class="space-y-2">
                             <div class="relative">
                               <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
-                              <input type="text" id="mobile-hierarchy-search" oninput="handleMobileHierarchySearch(this.value)" placeholder="단위 서비스명, 법정시설명 검색..."
+                              <input type="text" id="mobile-hierarchy-search" aria-label="단위 서비스명, 법정시설명 검색" oninput="handleMobileHierarchySearch(this.value)" placeholder="단위 서비스명, 법정시설명 검색..."
                                      class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-white text-xs focus:ring-2 focus:ring-emerald-500 shadow-xs">
                             </div>
-                            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="mobile-hierarchy-domain-pills">
-                              <button type="button" onclick="filterMobileHierarchyByDomain('all', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-extrabold bg-emerald-600 text-white flex-shrink-0 cursor-pointer shadow-2xs">전체 ${totalCount}</button>
+                            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="mobile-hierarchy-domain-pills" role="group" aria-label="18대 실천분야 모바일 필터">
+                              <button type="button" aria-pressed="true" onclick="filterMobileHierarchyByDomain('all', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-extrabold bg-emerald-600 text-white flex-shrink-0 cursor-pointer shadow-2xs">전체 ${totalCount}</button>
                               ${Object.keys(DOMAIN_MAP).map((k, idx) => {
                                   const m = DOMAIN_MAP[k];
-                                  return `<button type="button" onclick="filterMobileHierarchyByDomain('${k}', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">${String(idx+1).padStart(2,'0')}. ${localEscHtml(m.short)} (${domainCounts[k] || 0})</button>`;
+                                  return `<button type="button" aria-pressed="false" onclick="filterMobileHierarchyByDomain('${escHJs(k)}', this)" class="mobile-hierarchy-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 cursor-pointer">${String(idx+1).padStart(2,'0')}. ${localEscHtml(m.short)} (${domainCounts[k] || 0})</button>`;
                               }).join('')}
                             </div>
                           </div>
                           <div id="mobile-hierarchy-cards-feed" class="space-y-3">
                             ${renderMobileCards(nodes)}
+                          </div>
+
+                          <!-- 4. 하단 모바일 바텀시트 인스펙터 (hierarchy.js 동적 렌더링 일체화) -->
+                          <div id="mobile-hierarchy-inspector" style="padding-bottom: env(safe-area-inset-bottom, 0px);" class="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto bg-white/95 backdrop-blur-xl border-t-2 border-slate-200 shadow-2xl z-40 rounded-t-2xl transition-all duration-300">
+                            <div id="inspector-toggle-btn" role="button" tabindex="0" aria-expanded="false" aria-controls="inspector-content" onclick="toggleMobileInspector()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleMobileInspector();}" class="pt-2.5 pb-2 px-4 flex flex-col items-center cursor-pointer select-none border-b border-slate-100">
+                              <div class="w-10 h-1 rounded-full bg-slate-300 mb-2"></div>
+                              <div class="w-full flex items-center justify-between text-xs font-extrabold text-slate-900">
+                                <div class="flex items-center gap-2">
+                                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                  <span>실시간 세부 도감 인스펙터</span>
+                                  <span class="px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">LIVE</span>
+                                </div>
+                                <div class="flex items-center gap-1 text-slate-500 font-medium text-[11px]" id="inspector-toggle-label">
+                                  <span>펼치기</span>
+                                  <span id="inspector-toggle-icon">▲</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div id="inspector-content" class="hidden p-4 space-y-3 max-h-80 overflow-y-auto overscroll-contain">
+                              <div>
+                                <div class="flex items-center gap-2">
+                                  <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-700 text-[10px] font-bold">이용시설 (통원형)</span>
+                                  <span class="text-[11px] text-slate-500">보건복지부 노인정책과</span>
+                                </div>
+                                <h4 class="text-base font-black text-slate-900 mt-1">노인복지관 (Senior Welfare Center)</h4>
+                                <div class="text-[11px] text-emerald-700 font-semibold mt-0.5">✔ 근거: 노인복지법 제36조 제1항 제1호</div>
+                              </div>
+
+                              <div class="bg-amber-50 rounded-xl p-3 border border-amber-200/80 text-xs">
+                                <div class="font-extrabold text-amber-950 flex items-center gap-1.5 mb-1">
+                                  <span>⚡</span><span>사회복지사업법 시행규칙 제11조 법정 인력배치</span>
+                                </div>
+                                <p class="text-[11px] text-amber-900 leading-relaxed">
+                                  관장 1인, 사회복지사 정규직 6인 이상 필수 (일반 이용인원 및 사업 규모에 따른 가산 규정 적용)
+                                </p>
+                              </div>
+
+                              <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-2 min-w-0">
+                                  <span class="text-lg flex-shrink-0">📖</span>
+                                  <div class="min-w-0">
+                                    <div class="text-[10px] text-slate-500 font-medium">보건복지부 발간 공식 지침서 매칭</div>
+                                    <div class="text-xs font-extrabold text-slate-900 truncate">2026 노인보건복지사업안내 (1권)</div>
+                                  </div>
+                                </div>
+                                <button type="button" onclick="showView('archive', {search: '노인보건복지사업안내'})" class="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1 transition flex-shrink-0 shadow-2xs cursor-pointer">
+                                  <span>원문</span>
+                                </button>
+                              </div>
+
+                              <div class="grid grid-cols-2 gap-2 pt-1">
+                                <button type="button" onclick="showView('archive', {search: '노인'})" class="p-2.5 rounded-xl bg-blue-50 border border-blue-200 text-center hover:bg-blue-100 transition cursor-pointer">
+                                  <div class="text-[10px] text-blue-600 font-bold">공식 지침서 70종</div>
+                                  <div class="text-[11px] text-blue-900 font-extrabold">지침서 아카이브 열람 ➔</div>
+                                </button>
+                                <button type="button" onclick="showView('fields', {search: '노인복지'})" class="p-2.5 rounded-xl bg-indigo-50 border border-indigo-200 text-center hover:bg-indigo-100 transition cursor-pointer">
+                                  <div class="text-[10px] text-indigo-600 font-bold">45개 법정·민간 체계</div>
+                                  <div class="text-[11px] text-indigo-900 font-extrabold">18대 분야도감 대조 ➔</div>
+                                </button>
+                              </div>
+                            </div>
                           </div>
                         </div>
                     </div>
@@ -5257,7 +5342,7 @@
                                         </div>
                                         <div class="text-xs font-black text-slate-900 leading-snug">${localEscHtml(domainMeta.short)}</div>
                                         <div class="text-[10px] text-slate-500 font-medium">${g2.count}개 단위</div>
-                                        <button type="button" onclick="window.jumpToFacility('${localEscHtml(orgInfo.facilityId || domainMeta.facilityId || 'law-welfare-center')}')"
+                                        <button type="button" onclick="window.jumpToFacility('${escHJs(orgInfo.facilityId || domainMeta.facilityId || 'law-welfare-center')}')"
                                             class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-700 text-[10px] font-bold transition cursor-pointer">
                                             <span>🏛️ 시설도감 대조</span><span>➔</span>
                                         </button>
@@ -5280,7 +5365,7 @@
                                         <div class="font-bold text-slate-800 text-xs leading-snug">${localEscHtml(g4.level2)}</div>
                                         ${node.facilityType ? `
                                             <div>
-                                                <button type="button" onclick="window.jumpToFacilityByTerm('${localEscHtml(node.facilityType)}'); return false;"
+                                                <button type="button" onclick="window.jumpToFacilityByTerm('${escHJs(node.facilityType)}'); return false;"
                                                     class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-800 border border-emerald-200 text-[10px] font-bold transition cursor-pointer text-left"
                                                     title="클릭 시 탭 1 시설도감의 '${localEscHtml(node.facilityType)}' 항목으로 이동">
                                                     <span>🏢 ${localEscHtml(node.facilityType)}</span>
@@ -5298,7 +5383,7 @@
                                     ${detailsHtml ? `<ul class="mt-1.5 space-y-0.5">${detailsHtml}</ul>` : ''}
                                 </td>
                                 <td class="align-top p-3 bg-slate-50/40">
-                                    <button type="button" onclick="window.jumpToArchive('${localEscHtml(gRef.archiveId || 'doc-004')}')"
+                                    <button type="button" onclick="window.jumpToArchive('${escHJs(gRef.archiveId || 'doc-004')}')"
                                         class="w-full text-left p-2 rounded-lg bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-400 transition group/doc cursor-pointer shadow-2xs space-y-1">
                                         <div class="flex items-center justify-between gap-1">
                                             <span class="px-1.5 py-0.2 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-bold">${localEscHtml(gRef.archiveCode || 'PDF')}</span>
@@ -5364,8 +5449,10 @@
                                 </div>
                                 <div class="space-y-1.5">
                                     ${g.nodes.map(node => `
-                                        <div onclick="window.selectMobileHierarchyNode('${node.id}')"
-                                             id="mobile-hierarchy-item-${node.id}"
+                                        <div role="button" tabindex="0"
+                                             onclick="window.selectMobileHierarchyNode('${escHJs(node.id)}')"
+                                             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.selectMobileHierarchyNode('${escHJs(node.id)}');}"
+                                             id="mobile-hierarchy-item-${localEscHtml(node.id)}"
                                              class="mobile-hierarchy-item p-2.5 rounded-lg bg-white border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/40 flex items-center justify-between cursor-pointer transition select-none">
                                             <div class="min-w-0 flex-1 pr-2">
                                                 <div class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
@@ -5415,7 +5502,7 @@
             isLiving,
             department: `${orgInfo.lineageLabel} ▸ ${orgInfo.agency}`,
             legalBasis: (node.guidelineRef && node.guidelineRef.chapter) ? node.guidelineRef.chapter : '사회복지사업법 제34조의5 및 각 개별법령',
-            staffCriteria: (node.details && node.details.length > 0) ? node.details.map(d => '• ' + d).join('<br>') : (node.summary || '공식 실천 기준을 준용합니다.'),
+            staffCriteriaLines: (node.details && node.details.length > 0) ? node.details.map(d => '• ' + d) : [node.summary || '공식 실천 기준을 준용합니다.'],
             matchedGuideline: node.guidelineRef ? `${node.guidelineRef.file} [${node.guidelineRef.page || '전문'}]` : '2026 사회복지시설 관리안내'
         };
         if (typeof window.inspectFacilityDetail === 'function') {
@@ -5426,8 +5513,14 @@
     function bindEvents() {
         const input = document.getElementById('matrixSearchInput');
         if (input) {
-            input.addEventListener('input', filterMatrixTable);
-            input.addEventListener('keyup', filterMatrixTable);
+            input.addEventListener('input', () => {
+                if (hierarchySearchDebounceTimer) clearTimeout(hierarchySearchDebounceTimer);
+                if (!input.value.trim()) {
+                    filterMatrixTable();
+                } else {
+                    hierarchySearchDebounceTimer = setTimeout(filterMatrixTable, 120);
+                }
+            });
         }
         const tables = document.querySelectorAll('#hierarchicalMatrixTable, #hierarchyCivilTable');
         tables.forEach(table => {
@@ -5620,7 +5713,7 @@
             const mobileCard = document.getElementById(`mobile-hierarchy-item-${nodeId}`);
             const targetEl = (window.innerWidth >= 768) ? (desktopTr || mobileCard) : (mobileCard || desktopTr);
             if (targetEl) {
-                targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                targetEl.scrollIntoView({ behavior: getHierScrollBehavior(), block: 'center' });
                 if (typeof window.triggerMatchHighlight === 'function') {
                     window.triggerMatchHighlight(targetEl);
                 }
@@ -5632,12 +5725,17 @@
         }, 180);
     }
 
+    function notifyHierMessage(msg) {
+        if (typeof window.showToast === 'function') window.showToast(msg);
+        else alert(msg);
+    }
+
     window.copyHierarchyTSV = function () {
         const nodes = (currentFilteredHierarchyNodes && currentFilteredHierarchyNodes.length > 0)
             ? currentFilteredHierarchyNodes
             : getDB().nodes;
         if (!nodes.length) {
-            alert('복사할 위계 데이터가 없습니다.');
+            notifyHierMessage('복사할 위계 데이터가 없습니다.');
             return;
         }
         const header = ['구분', '1열_소속계통', '2열_소관기관', '실천분야', '3열_대분류_법정기능', '4열_중분류_사업분야', '시설유형', '5열_소분류_단위서비스', '세부실천내용', '6열_공식지침서', '지침서페이지'];
@@ -5661,11 +5759,15 @@
                 gRef.page
             ].map(clean).join('\t'));
         });
-        navigator.clipboard.writeText(lines.join('\n')).then(() => {
-            alert(`📋 3단계 위계도감 ${nodes.length}개 단위서비스가 엑셀·스프레드시트 붙여넣기용(TSV)으로 복사되었습니다!`);
-        }).catch(() => {
-            alert('클립보드 복사 권한을 허용해 주세요.');
-        });
+        const tsvText = lines.join('\n');
+        const copyPromise = (typeof window.copyTextSafely === 'function')
+            ? window.copyTextSafely(tsvText)
+            : (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext
+                ? navigator.clipboard.writeText(tsvText)
+                : Promise.reject(new Error('Clipboard unavailable')));
+        copyPromise
+            .then(() => notifyHierMessage(`📋 3단계 위계도감 ${nodes.length}개 단위서비스가 엑셀·스프레드시트 붙여넣기용(TSV)으로 복사되었습니다!`))
+            .catch(() => notifyHierMessage('클립보드 복사 권한을 허용해 주세요.'));
     };
 
     window.exportHierarchyCSV = function () {
@@ -5701,6 +5803,6 @@
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
     };
 })();
