@@ -525,8 +525,10 @@
     const map = window.FACILITY_ARCHIVE_MAP || {};
     const mappedIds = map[fac.id];
     if (Array.isArray(mappedIds) && mappedIds.length > 0) {
-      const hit = docs.find(d => mappedIds.includes(d.id));
-      if (hit) return hit;
+      for (let i = 0; i < mappedIds.length; i++) {
+        const hit = docs.find(d => d.id === mappedIds[i]);
+        if (hit) return hit;
+      }
     }
     const byTarget = docs.find(d => d.facilityTargetId === fac.id);
     if (byTarget) return byTarget;
@@ -1116,6 +1118,7 @@
     let visibleItemsTotal = 0;
 
     cards.forEach(card => {
+      const tocType = (card.getAttribute('data-toc-type') || '').toLowerCase();
       const clauseButtons = card.querySelectorAll('.toc-part-body button, button[onclick*="selectStitchTocClause"]');
       const body = card.querySelector('.toc-part-body');
       const cardText = (card.textContent || '').toLowerCase();
@@ -1126,7 +1129,10 @@
           if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('toggleStitchTocPart')) return;
           const txt = (btn.textContent || '').toLowerCase();
           const isFormAttr = btn.getAttribute('data-toc-form') === 'true' || /서식|별표|양식|점검표|운영계획|부록|사례관리/.test(txt);
-          const isBookmarkAttr = btn.getAttribute('data-toc-bookmark') === 'true' || btn.classList.contains('bg-blue-subtle') || (idx < 2 && /§|제\d+편|핵심/.test(txt));
+          const isBookmarkAttr = btn.getAttribute('data-toc-bookmark') === 'true'
+            || btn.classList.contains('bg-blue-subtle')
+            || /§\s*[1345]|01\.\s*총칙|인력배치|노인복지관|맞춤형|사례관리|핵심/.test(txt)
+            || (tocType.includes('bookmark') && idx === 0);
 
           const matchTab = (currentTocTab === 'all')
             || (currentTocTab === 'forms' && isFormAttr)
@@ -1140,6 +1146,21 @@
             visibleItemsTotal++;
           }
         });
+
+        const activeCard = body.querySelector('#toc-active-clause-card');
+        if (activeCard) {
+          const activeText = (activeCard.textContent || '').toLowerCase();
+          const showActive = ((currentTocTab === 'all')
+            || (currentTocTab === 'bookmarks')
+            || (currentTocTab === 'forms' && /서식|별표/.test(activeText)))
+            && (!q || activeText.includes(q));
+          activeCard.classList.toggle('hidden', !showActive);
+          if (showActive) {
+            matchedInPart++;
+            visibleItemsTotal++;
+          }
+        }
+
         card.classList.toggle('hidden', matchedInPart === 0);
         if ((q || currentTocTab !== 'all') && matchedInPart > 0) {
           body.classList.remove('hidden');
@@ -1147,8 +1168,8 @@
           if (chev) chev.classList.add('rotate-180');
         }
       } else {
-        const isFormCard = /서식|별표|부록/.test(cardText);
-        const isBookmarkCard = cardText.includes('노인복지관') || cardText.includes('맞춤형');
+        const isFormCard = tocType.includes('forms') || /서식|별표|부록/.test(cardText);
+        const isBookmarkCard = tocType.includes('bookmark') || cardText.includes('노인복지관') || cardText.includes('맞춤형');
         const matchTab = (currentTocTab === 'all')
           || (currentTocTab === 'forms' && isFormCard)
           || (currentTocTab === 'bookmarks' && isBookmarkCard);

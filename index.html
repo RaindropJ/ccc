@@ -672,23 +672,20 @@
 
     <!-- ==================== GNB: 스티치 원본 상단 헤더 & 네비게이션 ==================== -->
         <!-- ==================== GNB: 공통 2단 상단 헤더 & 서브 탭 ==================== -->
-    <header class="w-full bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs font-sans">
-        <!-- 1단: 메인 브랜딩 & 전역 액션 바 -->
-        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-            <!-- 좌측: 로고 + 타이틀 + 실시간 동기화 뱃지 -->
-            <div class="flex items-center gap-3 sm:gap-4">
-                <button type="button" onclick="showView('fields')" class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-sm hover:bg-blue-700 transition flex-shrink-0 cursor-pointer" title="현장 나침반 홈 (18대 분야·45개 시설체계)" aria-label="현장 나침반 홈으로 이동">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
-                    </svg>
+    <header class="w-full bg-white/95 backdrop-blur-md border-b border-slate-100 md:border-slate-200 sticky top-0 z-50 shadow-sm md:shadow-xs font-sans">
+        <!-- 1단: 메인 브랜딩 & 전역 액션 바 (모바일은 Stitch SCREEN_8 미니멀 규격) -->
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 py-3 md:py-0 md:h-16 flex items-center justify-between gap-2.5 md:gap-4">
+            <!-- 좌측: 나침반 심볼 + 서비스명 -->
+            <div class="flex items-center gap-2.5 sm:gap-4 min-w-0">
+                <button type="button" onclick="showView('fields')" class="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-blue-700 md:bg-blue-600 flex items-center justify-center text-white shadow-sm shadow-blue-700/20 hover:bg-blue-800 transition flex-shrink-0 cursor-pointer" title="현장 나침반 홈 (18대 분야·45개 시설체계)" aria-label="현장 나침반 홈으로 이동">
+                    <span class="material-symbols-outlined text-[20px]">explore</span>
                 </button>
-                <div>
+                <div class="min-w-0">
                     <div class="flex items-center gap-2">
-                        <span class="font-extrabold text-slate-900 text-sm sm:text-base tracking-tight cursor-pointer" onclick="showView('fields')">사회복지 현장 나침반</span>
+                        <span class="font-bold md:font-extrabold text-slate-900 text-base tracking-tight whitespace-nowrap cursor-pointer" onclick="showView('fields')">사회복지 현장 나침반</span>
                         <span class="hidden md:inline-block px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-semibold border border-slate-200">v2.4 국가법정기준</span>
                     </div>
-                    <div class="text-[11px] text-slate-500 font-medium hidden sm:block">공식 실무 통합 포털 · 보건복지부 및 6개 중앙부처 공공데이터 연계</div>
+                    <div class="text-[11px] text-slate-500 font-medium hidden md:block">공식 실무 통합 포털 · 보건복지부 및 6개 중앙부처 공공데이터 연계</div>
                 </div>
                 <!-- 실시간 동기화 인디케이터 -->
                 <div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 text-[11px] font-bold border border-emerald-200/80 ml-2" title="매일 06:00 전수 수집 및 자동 갱신">
@@ -697,10 +694,10 @@
                 </div>
             </div>
 
-            <!-- 우측: 드롭다운 퀵 메뉴 + 내 준비함 + 모바일 햄버거 -->
-            <div class="flex items-center gap-2">
-                <!-- 분야·법령 가이드 드롭다운 퀵 메뉴 -->
-                <div class="relative group" id="nav-dropdown-quick">
+            <!-- 우측: 데스크톱 퀵 메뉴 + 모바일 미니멀 아이콘(내 준비함·전체 메뉴) -->
+            <div class="flex items-center gap-1 md:gap-2 shrink-0">
+                <!-- 분야·법령 가이드 드롭다운 퀵 메뉴 (데스크톱 전용) -->
+                <div class="relative group hidden md:block" id="nav-dropdown-quick">
                     <button type="button" aria-haspopup="true" class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold transition flex items-center gap-1 cursor-pointer">
                         <span>분야·법령 가이드</span>
                         <svg class="w-3.5 h-3.5 text-slate-400 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" viewBox="0 0 20 20" fill="currentColor">
@@ -725,8 +722,8 @@
                     </div>
                 </div>
 
-                <!-- 내 준비함 퀵 버튼 -->
-                <button type="button" onclick="if(typeof toggleWorkspaceDrawer === 'function') toggleWorkspaceDrawer();" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-2xs cursor-pointer">
+                <!-- 내 준비함 퀵 버튼 (데스크톱 전용) -->
+                <button type="button" onclick="if(typeof toggleWorkspaceDrawer === 'function') toggleWorkspaceDrawer();" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-2xs cursor-pointer">
                     <svg class="text-blue-600 fill-blue-600 w-3.5 h-3.5" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                     </svg>
@@ -734,15 +731,21 @@
                     <span class="w-4 h-4 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold flex items-center justify-center font-num" id="nav-bookmark-count">6</span>
                 </button>
 
-                <!-- 모바일 햄버거 토글 -->
-                <button type="button" id="mobile-menu-toggle-btn" aria-label="모바일 메뉴 열기" aria-controls="mobile-subnav-menu" aria-expanded="false" onclick="const m=document.getElementById('mobile-subnav-menu'); if(m){ const open=m.classList.toggle('hidden'); this.setAttribute('aria-expanded', String(!open)); }" class="md:hidden p-1.5 text-slate-700 hover:bg-slate-100 rounded-lg text-lg cursor-pointer" title="메뉴 열기">
-                    ☰
+                <!-- 내 준비함 미니멀 아이콘 버튼 (모바일 전용) -->
+                <button type="button" onclick="if(typeof toggleWorkspaceDrawer === 'function') toggleWorkspaceDrawer();" aria-label="내 준비함 열기" title="내 준비함" class="md:hidden relative w-9 h-9 flex items-center justify-center rounded-lg text-slate-700 hover:bg-slate-100 active:bg-slate-200 transition-colors cursor-pointer">
+                    <span class="material-symbols-outlined text-[20px] text-blue-700" style="font-variation-settings: 'FILL' 1;">star</span>
+                    <span id="mobile-nav-bookmark-count" class="absolute top-1 right-1 min-w-[14px] h-[14px] px-0.5 rounded-full bg-blue-700 text-white text-[9px] font-bold flex items-center justify-center font-num">6</span>
+                </button>
+
+                <!-- 모바일 햄버거 토글 (Stitch SCREEN_8 규격) -->
+                <button type="button" id="mobile-menu-toggle-btn" aria-label="전체 메뉴 열기" aria-controls="mobile-subnav-menu" aria-expanded="false" onclick="const m=document.getElementById('mobile-subnav-menu'); if(m){ const open=m.classList.toggle('hidden'); this.setAttribute('aria-expanded', String(!open)); }" class="md:hidden w-9 h-9 flex items-center justify-center rounded-lg text-slate-700 hover:bg-slate-100 active:bg-slate-200 transition-colors cursor-pointer" title="전체 메뉴 열기">
+                    <span class="material-symbols-outlined text-[24px]">menu</span>
                 </button>
             </div>
         </div>
 
-        <!-- 2단: 서브 네비게이션 가로 탭 바 (글자 세로 꺾임 방지 whitespace-nowrap) -->
-        <div class="border-t border-slate-100 bg-slate-50/70">
+        <!-- 2단: 서브 네비게이션 가로 탭 바 (데스크톱 전용 — 모바일 중복 탭 제거) -->
+        <div class="hidden md:block border-t border-slate-100 bg-slate-50/70">
             <div class="max-w-[1600px] mx-auto px-4 sm:px-6 flex items-center gap-1.5 overflow-x-auto flex-nowrap no-scrollbar py-1" id="sub-nav-tabs">
                 <button type="button" onclick="showView('fields')" data-view="fields" class="subnav-tab flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold text-slate-900 bg-white border border-slate-200/90 flex items-center gap-1.5 whitespace-nowrap shadow-2xs cursor-pointer transition">
                     <span>18대 분야·시설 도감</span>
@@ -782,6 +785,10 @@
 
         <!-- 모바일 드롭다운 메뉴 -->
         <div id="mobile-subnav-menu" class="hidden md:hidden bg-white border-t border-slate-200 p-3 space-y-1.5 text-xs font-semibold shadow-lg">
+            <button type="button" onclick="if(typeof toggleWorkspaceDrawer==='function') toggleWorkspaceDrawer(); document.getElementById('mobile-subnav-menu').classList.add('hidden');" class="w-full text-left py-2 px-3 rounded-lg bg-blue-50/70 hover:bg-blue-100/80 text-blue-900 flex items-center justify-between font-bold">
+                <span>⭐ 내 준비함 열기</span>
+                <span class="px-2 py-0.5 rounded-full bg-blue-700 text-white text-[10px] font-bold">저장함</span>
+            </button>
             <button type="button" onclick="showView('fields'); document.getElementById('mobile-subnav-menu').classList.add('hidden');" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-800 flex items-center justify-between">
                 <span>🏛️ 18대 분야·시설 도감</span>
                 <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-800 font-bold font-num">45건</span>
@@ -801,7 +808,7 @@
     </header>
 
     <!-- 모바일 전용 가로 스크롤 탭 바 (Sticky Horizontal Tabs) -->
-    <div class="md:hidden sticky top-16 z-30 px-3 py-2 bg-slate-50/95 backdrop-blur-md border-b border-slate-200/80">
+    <div class="md:hidden sticky top-[57px] z-30 px-3 py-2 bg-slate-50/95 backdrop-blur-md border-b border-slate-200/80">
         <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="mobile-sticky-tabs">
             <button type="button" data-view="fields" onclick="showView('fields')" class="nav-tab-btn flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-blue-600 shadow-sm shadow-blue-200 flex items-center gap-1 transition cursor-pointer">
                 <span>18대 분야·시설 (45)</span>
@@ -842,7 +849,7 @@
     </div>
 
     <!-- 메인 컨테이너 -->
-    <main class="flex-grow pt-8 pb-16">
+    <main class="flex-grow pt-3 md:pt-8 pb-16">
         
         <!-- ==================== VIEW 1: 18대 분야·시설 및 사회안전망 도감 (45) ==================== -->
         <section id="view-fields" class="view-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -960,17 +967,17 @@
 
                         <!-- 퀵 메트릭 지표 칩스 (3열) -->
                         <div class="grid grid-cols-3 gap-2 pt-1">
-                            <div class="bg-surface-container-low rounded-lg p-2.5 flex flex-col">
+                            <div class="bg-surface-container-low rounded-lg p-2 flex flex-col">
                                 <span class="text-on-surface-variant font-label-sm text-label-sm">근거 법령</span>
-                                <span id="stitch-metric-law" class="text-on-surface font-label-md text-label-md font-bold truncate">노인복지법 §36</span>
+                                <span id="stitch-metric-law" class="text-on-surface font-label-md text-[12px] leading-snug font-bold break-keep">노인복지법 §36</span>
                             </div>
-                            <div class="bg-surface-container-low rounded-lg p-2.5 flex flex-col">
+                            <div class="bg-surface-container-low rounded-lg p-2 flex flex-col">
                                 <span class="text-on-surface-variant font-label-sm text-label-sm">주요 대상</span>
-                                <span id="stitch-metric-target" class="text-on-surface font-label-md text-label-md font-bold truncate">60세 이상 어르신</span>
+                                <span id="stitch-metric-target" class="text-on-surface font-label-md text-[12px] leading-snug font-bold break-keep">60세 이상 어르신</span>
                             </div>
-                            <div class="bg-surface-container-low rounded-lg p-2.5 flex flex-col">
+                            <div class="bg-surface-container-low rounded-lg p-2 flex flex-col">
                                 <span class="text-on-surface-variant font-label-sm text-label-sm">필수 인력</span>
-                                <span id="stitch-metric-staff" class="text-on-surface font-label-md text-label-md font-bold truncate">관장·사회복지사 등</span>
+                                <span id="stitch-metric-staff" class="text-on-surface font-label-md text-[12px] leading-snug font-bold break-keep">관장·사회복지사 등</span>
                             </div>
                         </div>
                     </section>

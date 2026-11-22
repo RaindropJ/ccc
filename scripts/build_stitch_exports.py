@@ -824,16 +824,21 @@ async def prebake_and_verify():
 
                 window.selectMobileStitchFacility('law-welfare-center');
                 const stitchSwitchedTitle = (document.getElementById('stitch-fac-title') || {}).textContent || '';
+                const stitchWelfareGuide = (document.getElementById('stitch-guide-title') || {}).textContent || '';
                 window.selectMobileStitchFacility('law-disability');
                 const stitchDisGuide = (document.getElementById('stitch-guide-title') || {}).textContent || '';
                 window.selectMobileStitchFacility('law-elderly');
                 const stitchRestoredTitle = (document.getElementById('stitch-fac-title') || {}).textContent || '';
 
-                // Stitch 1 TOC drawer checks (open, forms tab, Escape close)
+                // Stitch 1 TOC drawer checks (open, forms tab, bookmarks tab, Escape close)
                 window.openStitchTocDrawer('doc-005');
                 const tocOpenedAria = attr('toc-drawer', 'aria-hidden');
                 window.setStitchTocTab('forms');
                 const tocFormsPressed = attr('toc-tab-forms', 'aria-pressed');
+                window.setStitchTocTab('bookmarks');
+                const tocBookmarksPressed = attr('toc-tab-bookmarks', 'aria-pressed');
+                const tocEmptyEl = document.getElementById('toc-filter-empty-state');
+                const tocBookmarksEmpty = !!tocEmptyEl && !tocEmptyEl.classList.contains('hidden');
                 document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
                 const tocClosedOnEscAria = attr('toc-drawer', 'aria-hidden');
 
@@ -879,10 +884,13 @@ async def prebake_and_verify():
                     facDetailClosedAgain,
                     serv2Opened,
                     stitchSwitchedTitle,
+                    stitchWelfareGuide,
                     stitchDisGuide,
                     stitchRestoredTitle,
                     tocOpenedAria,
                     tocFormsPressed,
+                    tocBookmarksPressed,
+                    tocBookmarksEmpty,
                     tocClosedOnEscAria,
                     deskMode,
                     deskPressed,
@@ -926,10 +934,13 @@ async def prebake_and_verify():
             assert portal_test["facDetailClosedAgain"] is True
             assert portal_test["serv2Opened"] is True
             assert "사회복지관" in portal_test["stitchSwitchedTitle"], f"Unexpected switched hero title: {portal_test['stitchSwitchedTitle']}"
+            assert "사회복지관" in portal_test["stitchWelfareGuide"], f"Unexpected welfare center guide title: {portal_test['stitchWelfareGuide']}"
             assert "장애인" in portal_test["stitchDisGuide"], f"Unexpected disability guide title: {portal_test['stitchDisGuide']}"
             assert "노인복지관" in portal_test["stitchRestoredTitle"], f"Unexpected restored hero title: {portal_test['stitchRestoredTitle']}"
             assert portal_test["tocOpenedAria"] == "false"
             assert portal_test["tocFormsPressed"] == "true"
+            assert portal_test["tocBookmarksPressed"] == "true"
+            assert portal_test["tocBookmarksEmpty"] is False, "Bookmarks tab in default TOC drawer showed empty state"
             assert portal_test["tocClosedOnEscAria"] == "true"
             assert portal_test["deskMode"] is True
             assert portal_test["deskPressed"] == "true"

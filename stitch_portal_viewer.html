@@ -516,17 +516,17 @@
 
                         <!-- 퀵 메트릭 지표 칩스 (3열) -->
                         <div class="grid grid-cols-3 gap-2 pt-1">
-                            <div class="bg-surface-container-low rounded-lg p-2.5 flex flex-col">
+                            <div class="bg-surface-container-low rounded-lg p-2 flex flex-col">
                                 <span class="text-on-surface-variant font-label-sm text-label-sm">근거 법령</span>
-                                <span id="stitch-metric-law" class="text-on-surface font-label-md text-label-md font-bold truncate">노인복지법 §36</span>
+                                <span id="stitch-metric-law" class="text-on-surface font-label-md text-[12px] leading-snug font-bold break-keep">노인복지법 §36</span>
                             </div>
-                            <div class="bg-surface-container-low rounded-lg p-2.5 flex flex-col">
+                            <div class="bg-surface-container-low rounded-lg p-2 flex flex-col">
                                 <span class="text-on-surface-variant font-label-sm text-label-sm">주요 대상</span>
-                                <span id="stitch-metric-target" class="text-on-surface font-label-md text-label-md font-bold truncate">60세 이상 어르신</span>
+                                <span id="stitch-metric-target" class="text-on-surface font-label-md text-[12px] leading-snug font-bold break-keep">60세 이상 어르신</span>
                             </div>
-                            <div class="bg-surface-container-low rounded-lg p-2.5 flex flex-col">
+                            <div class="bg-surface-container-low rounded-lg p-2 flex flex-col">
                                 <span class="text-on-surface-variant font-label-sm text-label-sm">필수 인력</span>
-                                <span id="stitch-metric-staff" class="text-on-surface font-label-md text-label-md font-bold truncate">관장·사회복지사 등</span>
+                                <span id="stitch-metric-staff" class="text-on-surface font-label-md text-[12px] leading-snug font-bold break-keep">관장·사회복지사 등</span>
                             </div>
                         </div>
                     </section>
@@ -41581,8 +41581,10 @@ if (typeof module !== 'undefined' && module.exports) {
     const map = window.FACILITY_ARCHIVE_MAP || {};
     const mappedIds = map[fac.id];
     if (Array.isArray(mappedIds) && mappedIds.length > 0) {
-      const hit = docs.find(d => mappedIds.includes(d.id));
-      if (hit) return hit;
+      for (let i = 0; i < mappedIds.length; i++) {
+        const hit = docs.find(d => d.id === mappedIds[i]);
+        if (hit) return hit;
+      }
     }
     const byTarget = docs.find(d => d.facilityTargetId === fac.id);
     if (byTarget) return byTarget;
@@ -42172,6 +42174,7 @@ if (typeof module !== 'undefined' && module.exports) {
     let visibleItemsTotal = 0;
 
     cards.forEach(card => {
+      const tocType = (card.getAttribute('data-toc-type') || '').toLowerCase();
       const clauseButtons = card.querySelectorAll('.toc-part-body button, button[onclick*="selectStitchTocClause"]');
       const body = card.querySelector('.toc-part-body');
       const cardText = (card.textContent || '').toLowerCase();
@@ -42182,7 +42185,10 @@ if (typeof module !== 'undefined' && module.exports) {
           if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('toggleStitchTocPart')) return;
           const txt = (btn.textContent || '').toLowerCase();
           const isFormAttr = btn.getAttribute('data-toc-form') === 'true' || /서식|별표|양식|점검표|운영계획|부록|사례관리/.test(txt);
-          const isBookmarkAttr = btn.getAttribute('data-toc-bookmark') === 'true' || btn.classList.contains('bg-blue-subtle') || (idx < 2 && /§|제\d+편|핵심/.test(txt));
+          const isBookmarkAttr = btn.getAttribute('data-toc-bookmark') === 'true'
+            || btn.classList.contains('bg-blue-subtle')
+            || /§\s*[1345]|01\.\s*총칙|인력배치|노인복지관|맞춤형|사례관리|핵심/.test(txt)
+            || (tocType.includes('bookmark') && idx === 0);
 
           const matchTab = (currentTocTab === 'all')
             || (currentTocTab === 'forms' && isFormAttr)
@@ -42196,6 +42202,21 @@ if (typeof module !== 'undefined' && module.exports) {
             visibleItemsTotal++;
           }
         });
+
+        const activeCard = body.querySelector('#toc-active-clause-card');
+        if (activeCard) {
+          const activeText = (activeCard.textContent || '').toLowerCase();
+          const showActive = ((currentTocTab === 'all')
+            || (currentTocTab === 'bookmarks')
+            || (currentTocTab === 'forms' && /서식|별표/.test(activeText)))
+            && (!q || activeText.includes(q));
+          activeCard.classList.toggle('hidden', !showActive);
+          if (showActive) {
+            matchedInPart++;
+            visibleItemsTotal++;
+          }
+        }
+
         card.classList.toggle('hidden', matchedInPart === 0);
         if ((q || currentTocTab !== 'all') && matchedInPart > 0) {
           body.classList.remove('hidden');
@@ -42203,8 +42224,8 @@ if (typeof module !== 'undefined' && module.exports) {
           if (chev) chev.classList.add('rotate-180');
         }
       } else {
-        const isFormCard = /서식|별표|부록/.test(cardText);
-        const isBookmarkCard = cardText.includes('노인복지관') || cardText.includes('맞춤형');
+        const isFormCard = tocType.includes('forms') || /서식|별표|부록/.test(cardText);
+        const isBookmarkCard = tocType.includes('bookmark') || cardText.includes('노인복지관') || cardText.includes('맞춤형');
         const matchTab = (currentTocTab === 'all')
           || (currentTocTab === 'forms' && isFormCard)
           || (currentTocTab === 'bookmarks' && isBookmarkCard);
