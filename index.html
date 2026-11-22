@@ -118,6 +118,12 @@
                 return;
             }
 
+            const tocDrawer = document.getElementById('toc-drawer');
+            if (tocDrawer && tocDrawer.getAttribute('aria-hidden') === 'false') {
+                if (typeof window.closeStitchTocDrawer === 'function') window.closeStitchTocDrawer();
+                return;
+            }
+
             const drawer = document.getElementById('workspace-drawer');
             if (drawer && !drawer.classList.contains('hidden')) {
                 if (typeof toggleWorkspaceDrawer === 'function') toggleWorkspaceDrawer();
@@ -351,6 +357,9 @@
             if (facilityId === 'law-rural-elderly') facilityId = 'law-elderly';
             if (window.FACILITY_ROW_ID_ALIASES && window.FACILITY_ROW_ID_ALIASES[facilityId]) facilityId = window.FACILITY_ROW_ID_ALIASES[facilityId];
             window.showView('fields', { facilityId: facilityId, preventScroll: true });
+            if (typeof window.selectMobileStitchFacility === 'function') {
+                window.selectMobileStitchFacility(facilityId, { scrollToTop: false });
+            }
 
             const searchInput = document.getElementById('fields-search-input');
             if (searchInput && searchInput.value) {
@@ -387,6 +396,7 @@
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', '"Noto Sans KR"', 'sans-serif'],
                         "label-md": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"],
+                        "label-lg": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"],
                         "legal-code": ["Noto Sans KR", "Noto Sans", "sans-serif"],
                         "body-md": ["Noto Sans KR", "Noto Sans", "sans-serif"],
                         "label-sm": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"],
@@ -394,12 +404,14 @@
                         "headline-md": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"],
                         "body-sm": ["Noto Sans KR", "Noto Sans", "sans-serif"],
                         "headline-lg": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"],
                         "body-lg": ["Noto Sans KR", "Noto Sans", "sans-serif"],
                         "display": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"],
                         "display-mobile": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"]
                     },
                     fontSize: {
                         "label-md": ["0.875rem", { "lineHeight": "1.25rem", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
                         "legal-code": ["0.75rem", { "lineHeight": "1rem", "letterSpacing": "0.015em", "fontWeight": "500" }],
                         "body-md": ["0.875rem", { "lineHeight": "1.5rem", "fontWeight": "400" }],
                         "label-sm": ["0.75rem", { "lineHeight": "1rem", "letterSpacing": "0.02em", "fontWeight": "600" }],
@@ -407,12 +419,13 @@
                         "headline-md": ["1.25rem", { "lineHeight": "1.75rem", "letterSpacing": "-0.015em", "fontWeight": "600" }],
                         "body-sm": ["0.8125rem", { "lineHeight": "1.25rem", "fontWeight": "400" }],
                         "headline-lg": ["1.5rem", { "lineHeight": "2rem", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
                         "body-lg": ["1rem", { "lineHeight": "1.625rem", "fontWeight": "400" }],
                         "display": ["2.25rem", { "lineHeight": "2.75rem", "letterSpacing": "-0.03em", "fontWeight": "700" }],
                         "display-mobile": ["1.75rem", { "lineHeight": "2.25rem", "letterSpacing": "-0.02em", "fontWeight": "700" }]
                     },colors: {
                         // Stitch Material Design 3 Color Tokens
-                        "on-error":"#ffffff","surface-container-high":"#dce9ff","surface-container-lowest":"#ffffff","error-container":"#ffdad6","on-surface":"#0d1c2e","on-primary-fixed":"#00164e","on-primary":"#ffffff","surface":"#f8f9ff","outline-variant":"#c5c5d3","on-secondary":"#ffffff","tertiary":"#002d48","background":"#f8f9ff","secondary-fixed":"#85f8c4","surface-container-low":"#eff4ff","on-primary-container":"#90a8ff","primary-fixed":"#dce1ff","error":"#ba1a1a","on-error-container":"#93000a","inverse-primary":"#b6c4ff","primary":"#00236f","inverse-on-surface":"#eaf1ff","on-background":"#0d1c2e","on-tertiary-fixed":"#001d31","on-primary-fixed-variant":"#264191","tertiary-fixed-dim":"#93ccff","secondary-fixed-dim":"#68dba9","primary-fixed-dim":"#b6c4ff","tertiary-fixed":"#cce5ff","surface-variant":"#d5e3fc","on-tertiary":"#ffffff","tertiary-container":"#004469","on-secondary-container":"#00714e","on-secondary-fixed":"#002114","surface-bright":"#f8f9ff","surface-tint":"#4059aa","primary-container":"#1e3a8a","on-surface-variant":"#444651","surface-container-highest":"#d5e3fc","on-tertiary-container":"#56b3f9","on-tertiary-fixed-variant":"#004b73","secondary":"#006c4a","outline":"#757682","surface-dim":"#ccdbf3","on-secondary-fixed-variant":"#005137","inverse-surface":"#233144","surface-container":"#e6eeff","secondary-container":"#82f5c1",
+                        "on-error":"#ffffff","surface-container-high":"#dce9ff","surface-container-lowest":"#ffffff","error-container":"#ffdad6","on-surface":"#0d1c2e","on-primary-fixed":"#00164e","on-primary":"#ffffff","surface":"#faf8ff","surface-white":"#FFFFFF","surface-bg":"#F8FAFC","outline-variant":"#c5c5d3","on-secondary":"#ffffff","tertiary":"#003d28","background":"#faf8ff","secondary-fixed":"#85f8c4","surface-container-low":"#f2f3ff","on-primary-container":"#90a8ff","primary-fixed":"#dce1ff","error":"#ba1a1a","on-error-container":"#93000a","inverse-primary":"#b6c4ff","primary":"#00236f","inverse-on-surface":"#eaf1ff","on-background":"#0d1c2e","on-tertiary-fixed":"#002114","on-primary-fixed-variant":"#264191","tertiary-fixed-dim":"#68dba9","secondary-fixed-dim":"#68dba9","primary-fixed-dim":"#b6c4ff","tertiary-fixed":"#85f8c4","surface-variant":"#d5e3fc","on-tertiary":"#ffffff","tertiary-container":"#004469","on-secondary-container":"#00714e","on-secondary-fixed":"#002114","surface-bright":"#faf8ff","surface-tint":"#3755c3","primary-container":"#1e3a8a","on-surface-variant":"#444651","surface-container-highest":"#d5e3fc","on-tertiary-container":"#56b3f9","on-tertiary-fixed-variant":"#005137","secondary":"#006c4a","outline":"#757682","surface-dim":"#ccdbf3","on-secondary-fixed-variant":"#005137","inverse-surface":"#283044","surface-container":"#eaedff","secondary-container":"#82f5c1",
                         brand: {
                             50: '#eff6ff',
                             100: '#dbeafe',
@@ -423,16 +436,17 @@
                             800: '#1e40af',
                         },
                         'canvas': '#F8FAFC',
-                        'surface': '#FFFFFF',
                         'text-primary': '#0F172A',
                         'text-secondary': '#475569',
                         'text-muted': '#94A3B8',
                         'primary-blue': '#2563EB',
                         'primary-hover': '#1D4ED8',
                         'blue-surface': '#EFF6FF',
+                        'blue-subtle': '#EFF6FF',
+                        'emerald-subtle': '#ECFDF5',
                         'accent-amber': '#D97706',
-                        'amber-subtle': '#FFFBEB',
-                        'border-subtle': 'rgba(226, 232, 240, 0.8)',
+                        'amber-subtle': '#FEF3C7',
+                        'border-subtle': '#E2E8F0',
                         camping: {
                             bg: '#F8FAFC',
                             card: '#FFFFFF',
@@ -638,9 +652,12 @@
         }
         #inspector-content,
         #workspace-items-list,
-        #pdf-binder-preview {
+        #pdf-binder-preview,
+        #toc-tree-container {
             overscroll-behavior: contain;
         }
+        .pt-safe { padding-top: max(env(safe-area-inset-top, 0px), 0px); }
+        .pb-safe { padding-bottom: max(env(safe-area-inset-bottom, 0px), 1.5rem); }
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
@@ -829,9 +846,9 @@
         
         <!-- ==================== VIEW 1: 18대 분야·시설 및 사회안전망 도감 (45) ==================== -->
         <section id="view-fields" class="view-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- [모바일 뷰 (block md:hidden)] -->
-            <div id="mobile-fields-view" class="no-print block md:hidden space-y-4 pt-1 font-sans text-slate-800">
-                <!-- 1. 퀵 네비게이션 탭 버튼 -->
+            <!-- [모바일 뷰 (block md:hidden)] : Google Stitch 시설 법정 도감 + 지침서 목차(TOC) 드로어 -->
+            <div id="mobile-fields-view" class="no-print block md:hidden space-y-4 pt-1 font-sans text-on-surface bg-surface pb-safe">
+                <!-- 0. 퀵 플랫폼 전환 탭 -->
                 <div class="grid grid-cols-2 gap-2">
                     <button type="button" onclick="showView('hierarchy')" class="p-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition cursor-pointer">
                         <span>🌳 3단계 위계 도감 (219)</span>
@@ -841,36 +858,44 @@
                     </button>
                 </div>
 
-                <!-- 2. 히어로 정보 요약 배너 -->
-                <div class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-2xl p-4 text-white shadow-md relative overflow-hidden">
-                    <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
-                    <div class="relative z-10 space-y-1.5">
-                        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/15 text-[11px] font-bold text-blue-100">
-                            <span>🏛️</span><span>2026 현행 정부부처 법정 체계</span>
-                        </div>
-                        <h2 class="text-lg font-black tracking-tight leading-snug">
-                            법령별 · 18대 분야별 기관 도감 (45개 체계)
-                        </h2>
-                        <p class="text-xs text-blue-100/90 leading-relaxed">
-                            거주형 <strong>생활시설</strong>과 통원형 <strong>이용시설</strong>의 법적 구분 및 근거법령을 카드별로 손쉽게 확인하세요.
-                        </p>
-                        <div class="flex items-center gap-2 pt-1 text-[11px] font-semibold text-blue-200">
-                            <span>• 39개 중앙부처 법정분야</span>
-                            <span>• 민간 제3섹터·사회적경제·종교(6)</span>
-                        </div>
+                <!-- 토스트 알림 플로팅 (Stitch 2) -->
+                <div id="toast" role="status" aria-live="polite" class="fixed top-16 left-1/2 -translate-x-1/2 z-[60] pointer-events-none transition-all duration-300 opacity-0 -translate-y-2 bg-inverse-surface text-inverse-on-surface px-4 py-2.5 rounded-full shadow-lg flex items-center gap-2 w-max max-w-[90vw]">
+                    <span class="material-symbols-outlined text-tertiary-fixed text-[18px] shrink-0">check_circle</span>
+                    <span id="toast-msg" class="text-xs font-medium tracking-tight">준비함에 추가되었습니다.</span>
+                </div>
+
+                <!-- 1. [스티치 2] 시설 법정 도감 상단 헤더 바 -->
+                <div id="stitch-facility-topbar" class="sticky top-0 z-20 -mx-1 px-3 py-2.5 rounded-2xl bg-surface/95 backdrop-blur-md border border-surface-container shadow-2xs flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-1.5 min-w-0">
+                        <button type="button" aria-label="45개 전체 시설 목록으로 이동" onclick="const el=document.getElementById('mobile-all-facilities-section'); if(el) el.scrollIntoView({behavior: (typeof window.getPreferredScrollBehavior==='function'?window.getPreferredScrollBehavior():'smooth')});" class="w-9 h-9 flex items-center justify-center rounded-full text-on-surface hover:bg-surface-container active:scale-95 transition-all shrink-0 cursor-pointer">
+                            <span class="material-symbols-outlined text-[22px]">arrow_back</span>
+                        </button>
+                        <h1 class="text-base font-bold text-on-surface tracking-tight whitespace-nowrap">시설 법정 도감</h1>
+                        <span id="stitch-active-fac-pill" class="px-2 py-0.5 rounded-full bg-blue-subtle text-[#0051d5] text-[11px] font-bold truncate">노인복지관</span>
+                    </div>
+                    <div class="flex items-center gap-1 shrink-0">
+                        <button type="button" aria-label="지침서 목차 열기" onclick="if(typeof window.openStitchTocDrawer==='function') window.openStitchTocDrawer()" class="h-9 px-2.5 flex items-center justify-center gap-1 rounded-full bg-blue-subtle text-primary hover:bg-surface-container font-bold text-[11px] transition-colors cursor-pointer" title="지침서 목차(TOC) 열기">
+                            <span class="material-symbols-outlined text-[18px]">menu_book</span>
+                            <span>목차</span>
+                        </button>
+                        <button type="button" aria-label="공유하기" onclick="if(typeof window.copyCurrentLink==='function') window.copyCurrentLink()" class="w-9 h-9 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer">
+                            <span class="material-symbols-outlined text-[20px]">share</span>
+                        </button>
+                        <button type="button" aria-label="준비함 담기" onclick="if(typeof window.togglePrepBox==='function') window.togglePrepBox()" class="w-9 h-9 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer">
+                            <span id="prep-icon" class="material-symbols-outlined text-[20px] text-accent-amber">bookmark</span>
+                        </button>
                     </div>
                 </div>
 
-                                <!-- 3. 검색창 및 1행 횡스크롤 부처/영역 필터 알약 -->
-                <div class="space-y-2.5">
+                <!-- 2. 검색창 + 9대 부처 필터 알약 + 대표 시설 빠른 전환 -->
+                <div class="space-y-2">
                     <div class="relative">
                         <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
                         <input id="mobile-field-search" oninput="if(typeof handleMobileSearch==='function') handleMobileSearch(this.value)" type="text" placeholder="분야명, 시설명, 법령(예: 노인, 장애인, 서민금융)..." 
                                class="w-full pl-9 pr-8 py-2.5 rounded-xl border border-slate-200 bg-white text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-xs">
-                        <button type="button" onclick="clearMobileSearch()" id="search-clear-btn" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold hover:text-slate-600">✕</button>
+                        <button type="button" onclick="clearMobileSearch()" id="search-clear-btn" aria-label="검색어 초기화" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold hover:text-slate-600 cursor-pointer">✕</button>
                     </div>
 
-                                        <!-- 통합 소관부처 가로 스크롤 필터 알약 -->
                     <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="mobile-ministry-pills">
                         <button type="button" onclick="filterByMinistry('전체')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-extrabold bg-slate-900 text-white flex-shrink-0 transition shadow-2xs cursor-pointer">전체 (39)</button>
                         <button type="button" onclick="filterByMinistry('보건복지부')" class="ministry-pill px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 flex-shrink-0 transition cursor-pointer">🏥 복지부 (12)</button>
@@ -884,50 +909,573 @@
                             <span>🤝</span><span>민간·사회적경제·종교 (6)</span>
                         </button>
                     </div>
-                </div>
 
-                <!-- 4. 실무 팁 박스 -->
-                <div class="bg-blue-50/80 border border-blue-200/70 rounded-xl p-3 flex items-start gap-2.5">
-                    <span class="text-blue-600 text-base">💡</span>
-                    <div id="mobile-fields-tip-text" class="text-[11px] text-blue-900 leading-relaxed">
-                        <strong>사회복지사 실무 Tip:</strong> 시설 카드를 탭하면 생활시설(거주형 24h)과 이용시설(주간·방문)의 법정 배치 인력과 2026 지침서를 즉시 대조할 수 있습니다.
+                    <!-- 주요 시설 1-클릭 도감 전환 바 -->
+                    <div id="stitch-facility-quick-chips" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" role="group" aria-label="시설 법정 도감 빠른 전환">
+                        <button type="button" data-stitch-fac="law-elderly" onclick="if(typeof window.selectMobileStitchFacility==='function') window.selectMobileStitchFacility('law-elderly')" class="stitch-fac-chip px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary text-on-primary shrink-0 shadow-2xs cursor-pointer">🏥 노인복지관</button>
+                        <button type="button" data-stitch-fac="law-welfare-center" onclick="if(typeof window.selectMobileStitchFacility==='function') window.selectMobileStitchFacility('law-welfare-center')" class="stitch-fac-chip px-2.5 py-1 rounded-full text-[11px] font-semibold bg-surface-container-low text-on-surface-variant border border-outline-variant/40 shrink-0 cursor-pointer">🏘️ 종합사회복지관</button>
+                        <button type="button" data-stitch-fac="law-disability" onclick="if(typeof window.selectMobileStitchFacility==='function') window.selectMobileStitchFacility('law-disability')" class="stitch-fac-chip px-2.5 py-1 rounded-full text-[11px] font-semibold bg-surface-container-low text-on-surface-variant border border-outline-variant/40 shrink-0 cursor-pointer">♿ 장애인복지관</button>
+                        <button type="button" data-stitch-fac="law-child" onclick="if(typeof window.selectMobileStitchFacility==='function') window.selectMobileStitchFacility('law-child')" class="stitch-fac-chip px-2.5 py-1 rounded-full text-[11px] font-semibold bg-surface-container-low text-on-surface-variant border border-outline-variant/40 shrink-0 cursor-pointer">🧸 아동복지·지역아동</button>
+                        <button type="button" data-stitch-fac="law-childcare" onclick="if(typeof window.selectMobileStitchFacility==='function') window.selectMobileStitchFacility('law-childcare')" class="stitch-fac-chip px-2.5 py-1 rounded-full text-[11px] font-semibold bg-surface-container-low text-on-surface-variant border border-outline-variant/40 shrink-0 cursor-pointer">🍼 어린이집·보육</button>
+                        <button type="button" data-stitch-fac="law-family-center" onclick="if(typeof window.selectMobileStitchFacility==='function') window.selectMobileStitchFacility('law-family-center')" class="stitch-fac-chip px-2.5 py-1 rounded-full text-[11px] font-semibold bg-surface-container-low text-on-surface-variant border border-outline-variant/40 shrink-0 cursor-pointer">👨‍👩‍👧 가족센터</button>
+                        <button type="button" data-stitch-fac="law-youth" onclick="if(typeof window.selectMobileStitchFacility==='function') window.selectMobileStitchFacility('law-youth')" class="stitch-fac-chip px-2.5 py-1 rounded-full text-[11px] font-semibold bg-surface-container-low text-on-surface-variant border border-outline-variant/40 shrink-0 cursor-pointer">🎒 청소년복지</button>
+                        <button type="button" data-stitch-fac="law-mental" onclick="if(typeof window.selectMobileStitchFacility==='function') window.selectMobileStitchFacility('law-mental')" class="stitch-fac-chip px-2.5 py-1 rounded-full text-[11px] font-semibold bg-surface-container-low text-on-surface-variant border border-outline-variant/40 shrink-0 cursor-pointer">🧠 정신건강복지</button>
+                        <button type="button" data-stitch-fac="law-selfreliance" onclick="if(typeof window.selectMobileStitchFacility==='function') window.selectMobileStitchFacility('law-selfreliance')" class="stitch-fac-chip px-2.5 py-1 rounded-full text-[11px] font-semibold bg-surface-container-low text-on-surface-variant border border-outline-variant/40 shrink-0 cursor-pointer">🔨 지역자활센터</button>
+                        <button type="button" data-stitch-fac="law-school" onclick="if(typeof window.selectMobileStitchFacility==='function') window.selectMobileStitchFacility('law-school')" class="stitch-fac-chip px-2.5 py-1 rounded-full text-[11px] font-semibold bg-surface-container-low text-on-surface-variant border border-outline-variant/40 shrink-0 cursor-pointer">🎓 학교사회복지</button>
+                        <button type="button" data-stitch-fac="law-integrated-care" onclick="if(typeof window.selectMobileStitchFacility==='function') window.selectMobileStitchFacility('law-integrated-care')" class="stitch-fac-chip px-2.5 py-1 rounded-full text-[11px] font-semibold bg-surface-container-low text-on-surface-variant border border-outline-variant/40 shrink-0 cursor-pointer">🏡 지역통합돌봄</button>
+                        <button type="button" data-stitch-fac="ext-sec-social-enterprise" onclick="if(typeof window.selectMobileStitchFacility==='function') window.selectMobileStitchFacility('ext-sec-social-enterprise')" class="stitch-fac-chip px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-subtle text-amber-900 border border-amber-300 shrink-0 cursor-pointer">🤝 사회적기업·공익</button>
                     </div>
                 </div>
 
-                <!-- 5. 검색 결과 및 전체 펼치기/접기 컨트롤 -->
-                <div class="flex items-center justify-between text-xs px-1 text-slate-500">
-                    <div>
-                        검색 결과: <strong id="mobile-match-count" class="text-blue-600 font-extrabold">39</strong>개 법정분야
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button type="button" onclick="toggleAllCards(true)" class="text-[11px] font-semibold text-slate-600 hover:text-blue-600 transition cursor-pointer">전체 펼치기</button>
-                        <span class="text-slate-300">|</span>
-                        <button type="button" onclick="toggleAllCards(false)" class="text-[11px] font-semibold text-slate-600 hover:text-blue-600 transition cursor-pointer">전체 접기</button>
-                    </div>
-                </div>
+                <!-- 3. [스티치 2] 시설 법정 도감 메인 쇼케이스 -->
+                <div id="stitch-facility-showcase" class="flex flex-col w-full gap-5">
+                    <!-- 3-1. 시설 식별 히어로 카드 -->
+                    <section id="stitch-facility-hero" class="bg-surface-container-lowest rounded-xl shadow-sm p-4 flex flex-col gap-3 relative overflow-hidden">
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <span id="stitch-fac-badge-1" class="inline-flex items-center px-2 py-0.5 rounded-full bg-blue-subtle text-[#0051d5] font-label-sm text-label-sm">주간 통원형</span>
+                                <span id="stitch-fac-badge-2" class="inline-flex items-center px-2 py-0.5 rounded-full bg-emerald-subtle text-[#00563a] font-label-sm text-label-sm">1:1 직결연계</span>
+                                <span id="stitch-fac-badge-3" class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">여가복지시설</span>
+                            </div>
+                            <span class="text-[#0051d5] font-label-md text-label-md flex items-center gap-0.5 shrink-0">
+                                <span class="material-symbols-outlined text-[16px]">verified</span>
+                                <span>법정 도감 공인</span>
+                            </span>
+                        </div>
 
-                <!-- 6. 분야별 대표 카드 피드 -->
-                <div id="mobile-cards-feed" class="space-y-3">
-                    <!-- Dynamically populated by renderMobileCards() -->
-                </div>
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="flex flex-col gap-1 min-w-0">
+                                <div class="flex items-baseline gap-2 flex-wrap">
+                                    <h2 id="stitch-fac-title" class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight">노인복지관</h2>
+                                    <span id="stitch-fac-en" class="text-on-surface-variant font-body-sm text-body-sm">(Senior Welfare Center)</span>
+                                </div>
+                                <p id="stitch-fac-desc" class="text-on-surface-variant font-body-sm text-body-sm line-clamp-2">
+                                    지역사회 어르신들의 건강 증진, 사회참여 지원, 자립 생활 유지를 위한 종합 복지 허브 시설
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-blue-subtle flex items-center justify-center shrink-0 text-primary">
+                                <span id="stitch-fac-icon" class="material-symbols-outlined text-[28px]">apartment</span>
+                            </div>
+                        </div>
 
-                                <!-- 7. 🤝 민간 제3섹터 · 사회적경제 · 종교공익 생태계 모바일 전용 카드 (6대 영역) -->
-                <div id="mobile-ngo-section" class="bg-gradient-to-br from-amber-50/70 via-white to-teal-50/40 rounded-2xl border-2 border-amber-200 p-4 shadow-subtle space-y-3">
-                    <div class="flex items-center justify-between flex-wrap gap-1">
-                        <span class="px-2 py-0.5 rounded-md bg-amber-600 text-white font-extrabold text-[10px]">
-                            🤝 정부부처 외 별도 정보분야 (6대 영역)
-                        </span>
-                        <span class="text-[10px] font-bold text-amber-900 bg-amber-100 px-2 py-0.5 rounded border border-amber-300">
-                            근거: 「민법」 제32조 · 사회적경제 특별법
-                        </span>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-black text-slate-900">민간 제3섹터 · 사회적경제 · 종교공익 생태계</h3>
-                        <p class="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
-                            비영리 공익법인·국제구호 NGO·종교공익(민법 제32조) 및 사회적기업·협동조합·사회적농장(사회적경제 특별법) 통합 안내
+                        <!-- 퀵 메트릭 지표 칩스 (3열) -->
+                        <div class="grid grid-cols-3 gap-2 pt-1">
+                            <div class="bg-surface-container-low rounded-lg p-2.5 flex flex-col">
+                                <span class="text-on-surface-variant font-label-sm text-label-sm">근거 법령</span>
+                                <span id="stitch-metric-law" class="text-on-surface font-label-md text-label-md font-bold truncate">노인복지법 §36</span>
+                            </div>
+                            <div class="bg-surface-container-low rounded-lg p-2.5 flex flex-col">
+                                <span class="text-on-surface-variant font-label-sm text-label-sm">주요 대상</span>
+                                <span id="stitch-metric-target" class="text-on-surface font-label-md text-label-md font-bold truncate">60세 이상 어르신</span>
+                            </div>
+                            <div class="bg-surface-container-low rounded-lg p-2.5 flex flex-col">
+                                <span class="text-on-surface-variant font-label-sm text-label-sm">필수 인력</span>
+                                <span id="stitch-metric-staff" class="text-on-surface font-label-md text-label-md font-bold truncate">관장·사회복지사 등</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 3-2. 앵커 스크롤 탭 바 -->
+                    <nav id="stitch-anchor-nav" aria-label="섹션 바로가기" class="bg-surface-container-high rounded-xl p-1 grid grid-cols-3 gap-1">
+                        <button type="button" class="tab-btn py-2 px-1 text-center rounded-lg text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all whitespace-nowrap cursor-pointer" onclick="switchTab(this, 'sec-legal')">법적근거·배치</button>
+                        <button type="button" class="tab-btn py-2 px-1 text-center rounded-lg bg-surface-container-lowest text-primary font-bold font-label-md text-label-md shadow-sm transition-all whitespace-nowrap cursor-pointer" onclick="switchTab(this, 'sec-hierarchy')">3단계 위계도</button>
+                        <button type="button" class="tab-btn py-2 px-1 text-center rounded-lg text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all whitespace-nowrap cursor-pointer" onclick="switchTab(this, 'sec-guidelines')">정부 공인지침</button>
+                    </nav>
+
+                    <!-- 3-3. 법적 근거 요약 카드 (#sec-legal) -->
+                    <section id="sec-legal" class="bg-surface-container-lowest rounded-xl shadow-sm p-4 flex flex-col gap-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-primary"></span>
+                                <h3 class="font-headline-sm text-headline-sm text-on-surface">설치 근거 및 법정 기준</h3>
+                            </div>
+                            <button type="button" onclick="if(typeof window.copyLegalText==='function') window.copyLegalText()" class="text-[#0051d5] font-label-sm text-label-sm flex items-center gap-1 active:opacity-75 cursor-pointer">
+                                <span class="material-symbols-outlined text-[15px]">content_copy</span>
+                                <span>조문 복사</span>
+                            </button>
+                        </div>
+                        <div class="bg-surface-container-low rounded-lg p-3 text-on-surface-variant font-body-sm text-body-sm flex flex-col gap-1.5">
+                            <div class="flex items-center gap-1 text-primary font-label-sm text-label-sm font-semibold">
+                                <span class="material-symbols-outlined text-[16px]">gavel</span>
+                                <span id="stitch-legal-clause">노인복지법 제36조(노인여가복지시설) 제1항 제1호</span>
+                            </div>
+                            <p id="stitch-legal-body" class="leading-relaxed">
+                                무료 또는 저렴한 요금으로 교양·취미생활 및 사회참여활동 등에 대한 정보와 서비스를 제공하고, 건강증진·질병예방과 소득보장·재가복지 등 종합적인 노인복지서비스를 제공함을 목적으로 하는 시설.
+                            </p>
+                        </div>
+                        <div class="pt-1">
+                            <button type="button" id="fac-detail-toggle-btn" aria-expanded="false" aria-controls="facility-detail-body" onclick="if(typeof window.toggleFacilityDetail==='function') window.toggleFacilityDetail()" class="w-full flex items-center justify-between py-2 px-3 rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors cursor-pointer">
+                                <div class="flex items-center gap-2 text-on-surface font-label-md text-label-md min-w-0 text-left">
+                                    <span class="material-symbols-outlined text-[18px] text-primary shrink-0">domain</span>
+                                    <span id="stitch-equip-summary" class="truncate">필수 설비 기준 (사무실, 강당, 상담실, 물리치료실 등)</span>
+                                </div>
+                                <span id="fac-chevron" class="material-symbols-outlined text-on-surface-variant text-[18px] transition-transform duration-200 shrink-0">expand_more</span>
+                            </button>
+                            <div id="facility-detail-body" class="hidden mt-2 p-3 bg-surface-container-low rounded-lg flex flex-col gap-1.5 font-body-sm text-body-sm text-on-surface-variant">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span>• 연면적 요건: 실용 면적 500㎡ 이상 권장</span>
+                                    <span class="text-[#00563a] font-label-sm text-label-sm shrink-0">시·군·구 조례 준용</span>
+                                </div>
+                                <div>• 필수 설치: 상담실, 프로그램실, 건강증진(물리치료)실, 경로식당</div>
+                                <div>• 편의시설: 장애인·노인 편의증진법에 따른 경사로 및 승강기 완비 의무</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 3-4. 3단계 법정 위계도감 섹션 (#sec-hierarchy) -->
+                    <section id="sec-hierarchy" class="flex flex-col gap-3">
+                        <div class="flex items-center justify-between px-1">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-[#0051d5]"></span>
+                                <h3 class="font-headline-sm text-headline-sm text-on-surface">3단계 법정 위계도감</h3>
+                            </div>
+                            <span id="stitch-hier-badge" class="inline-flex items-center px-2 py-0.5 rounded-full bg-blue-subtle text-primary font-label-sm text-label-sm font-semibold">표준 대·중·소 5분과</span>
+                        </div>
+                        <p id="stitch-hier-desc" class="text-on-surface-variant font-body-sm text-body-sm px-1 -mt-1">
+                            보건복지부 노인보건복지사업안내에 규정된 직무체계 중 01분과가 활성화되어 있습니다.
+                        </p>
+
+                        <div id="stitch-hierarchy-accordion" class="flex flex-col gap-3">
+                            <!-- CARD 01 : EXPANDED -->
+                            <article data-serv-card="1" class="bg-surface-container-lowest rounded-xl shadow-md overflow-hidden transition-all duration-300">
+                                <div id="serv-bar-1" class="h-1.5 w-full bg-[#0051d5]"></div>
+                                <div class="p-4 flex flex-col gap-3.5 bg-blue-subtle/30">
+                                    <div role="button" tabindex="0" aria-expanded="true" aria-controls="serv-detail-1" onclick="toggleServiceDetail(1)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleServiceDetail(1);}" class="w-full flex items-start justify-between gap-3 text-left cursor-pointer">
+                                        <div class="flex items-start gap-3 min-w-0">
+                                            <span class="w-7 h-7 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-bold flex items-center justify-center shrink-0">01</span>
+                                            <div class="flex flex-col min-w-0">
+                                                <div class="flex items-center gap-2 flex-wrap">
+                                                    <span class="font-label-lg text-label-lg text-primary font-bold">맞춤형 통합 사례관리</span>
+                                                    <span class="inline-flex items-center px-1.5 py-0.5 rounded bg-amber-subtle text-accent-amber font-label-sm text-label-sm font-semibold">필수 배치 의무</span>
+                                                </div>
+                                                <span class="text-on-surface-variant font-body-sm text-body-sm mt-0.5">위기 어르신 발굴부터 심층 사정, 자원 연계 및 사후 안전 모니터링</span>
+                                            </div>
+                                        </div>
+                                        <span aria-hidden="true" class="w-8 h-8 rounded-full bg-surface-container-low flex items-center justify-center text-primary shrink-0">
+                                            <span id="serv-chevron-1" style="transform: rotate(180deg);" class="material-symbols-outlined text-[20px] transition-transform duration-200">expand_more</span>
+                                        </span>
+                                    </div>
+
+                                    <div id="serv-detail-1" class="flex flex-col gap-3 pt-2">
+                                        <div class="bg-surface-container-lowest rounded-xl p-3.5 shadow-sm flex flex-col gap-2.5">
+                                            <div class="flex items-center gap-2">
+                                                <span class="material-symbols-outlined text-[#0051d5] text-[18px]">assignment_turned_in</span>
+                                                <h4 class="font-label-lg text-label-lg text-on-surface font-bold">법정 주요 실무 과업 (Core Practical Tasks)</h4>
+                                            </div>
+                                            <ul class="flex flex-col gap-2 font-body-sm text-body-sm text-on-surface">
+                                                <li class="flex items-start gap-2 bg-surface-container-low/70 p-2 rounded-lg">
+                                                    <span class="text-[#0051d5] font-bold shrink-0 mt-0.5">•</span>
+                                                    <div class="flex flex-col">
+                                                        <strong class="text-on-surface font-semibold">위기·취약 어르신 발굴 및 욕구사정</strong>
+                                                        <span class="text-on-surface-variant text-[12px]">초기상담 및 복지부 표준사정도구(생애·신체·인지 영역) 활용한 정밀 진단</span>
+                                                    </div>
+                                                </li>
+                                                <li class="flex items-start gap-2 bg-surface-container-low/70 p-2 rounded-lg">
+                                                    <span class="text-[#0051d5] font-bold shrink-0 mt-0.5">•</span>
+                                                    <div class="flex flex-col">
+                                                        <strong class="text-on-surface font-semibold">통합사례회의 운영 및 민·관 협력 자원 연계</strong>
+                                                        <span class="text-on-surface-variant text-[12px]">읍면동 찾아가는 보건복지팀, 보건소, 정신건강복지센터 협의체 가동</span>
+                                                    </div>
+                                                </li>
+                                                <li class="flex items-start gap-2 bg-surface-container-low/70 p-2 rounded-lg">
+                                                    <span class="text-[#0051d5] font-bold shrink-0 mt-0.5">•</span>
+                                                    <div class="flex flex-col">
+                                                        <strong class="text-on-surface font-semibold">모니터링 및 종결, 사후관리</strong>
+                                                        <span class="text-on-surface-variant text-[12px]">분기별 1회 이상 직접 유선·방문 안전 확인 및 재사정 체계 가동</span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="bg-surface-container-lowest rounded-xl p-3.5 shadow-sm flex flex-col gap-2.5">
+                                            <div class="flex items-center gap-2">
+                                                <span class="material-symbols-outlined text-[#00563a] text-[18px]">folder_special</span>
+                                                <h4 class="font-label-lg text-label-lg text-on-surface font-bold">필수 서식 및 시스템 연계 (Required Records)</h4>
+                                            </div>
+                                            <div class="flex flex-col gap-1.5 font-body-sm text-body-sm text-on-surface-variant">
+                                                <div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container-low">
+                                                    <span class="material-symbols-outlined text-[#0051d5] text-[16px] shrink-0">data_object</span>
+                                                    <span>사회복지시설정보시스템(W4C) 사례관리 표준서식 연동 승인</span>
+                                                </div>
+                                                <div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container-low">
+                                                    <span class="material-symbols-outlined text-[#0051d5] text-[16px] shrink-0">description</span>
+                                                    <span>위기노인 사정기록지 &amp; 개인별 맞춤형 서비스 지원계획서(ISP) 보관 의무</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="bg-surface-container-high/60 rounded-xl p-3 flex items-start gap-2.5">
+                                            <span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5">menu_book</span>
+                                            <div class="flex flex-col gap-0.5">
+                                                <span class="font-label-sm text-label-sm text-primary font-bold">관련 법정 지침 기준 (Statutory Guideline Ref)</span>
+                                                <p class="font-body-sm text-body-sm text-on-surface">2026 노인보건복지사업안내 <span class="text-[#0051d5] font-bold">제2편 제3장 제4절 (맞춤형 통합 사례관리 기준)</span></p>
+                                                <span class="font-body-sm text-[12px] text-on-surface-variant">사례관리 전담인력 필수 1인 이상 배치 및 보수교육(연 16시간) 이수 권고</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="grid grid-cols-2 gap-2 pt-1">
+                                            <button type="button" onclick="if(typeof window.openStitchTocDrawer==='function') window.openStitchTocDrawer('doc-005', '§ 4. 맞춤형 통합 사례관리 운영 및 실무 기준', 'forms')" class="h-10 px-3 rounded-lg bg-surface-container hover:bg-surface-container-highest text-primary font-label-md text-label-md flex items-center justify-center gap-1.5 font-semibold transition-colors cursor-pointer">
+                                                <span class="material-symbols-outlined text-[16px]">file_open</span>
+                                                <span>표준 서식 열기</span>
+                                            </button>
+                                            <button type="button" onclick="if(typeof window.openStitchTocDrawer==='function') window.openStitchTocDrawer('doc-005', '§ 4. 맞춤형 통합 사례관리 운영 및 실무 기준', 'all')" class="h-10 px-3 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md flex items-center justify-center gap-1.5 font-semibold transition-colors cursor-pointer">
+                                                <span class="material-symbols-outlined text-[16px]">import_contacts</span>
+                                                <span>지침 원문 읽기</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <!-- CARD 02 ~ 05 : COLLAPSED -->
+                            <article data-serv-card="2" class="bg-surface-container-lowest rounded-xl shadow-xs p-4 flex flex-col gap-2 transition-all">
+                                <div role="button" tabindex="0" aria-expanded="false" aria-controls="serv-detail-2" onclick="toggleServiceDetail(2)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleServiceDetail(2);}" class="w-full flex items-center justify-between gap-3 text-left cursor-pointer">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <span class="w-7 h-7 rounded-lg bg-surface-container text-on-surface-variant font-label-md text-label-md font-bold flex items-center justify-center shrink-0">02</span>
+                                        <div class="flex flex-col min-w-0">
+                                            <div class="flex items-center gap-2 flex-wrap">
+                                                <span class="font-label-lg text-label-lg text-on-surface font-bold">평생교육 및 건강·여가문화</span>
+                                                <span class="inline-flex items-center px-1.5 py-0.5 rounded bg-blue-subtle text-[#0051d5] font-label-sm text-label-sm">보편 서비스</span>
+                                            </div>
+                                            <span class="text-on-surface-variant font-body-sm text-body-sm truncate">정보화·교양강좌, 체육 활동, 치매예방 및 물리치료 지원</span>
+                                        </div>
+                                    </div>
+                                    <span aria-hidden="true" class="w-8 h-8 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant shrink-0">
+                                        <span id="serv-chevron-2" class="material-symbols-outlined text-[20px] transition-transform duration-200">expand_more</span>
+                                    </span>
+                                </div>
+                                <div id="serv-detail-2" class="hidden pt-2 flex flex-col gap-2 text-on-surface-variant font-body-sm text-body-sm">
+                                    <div class="p-2.5 bg-surface-container-low rounded-lg">노인 평생학습 프로그램 인가 규정 및 체육시설·물리치료실 안전관리 가이드라인 수록</div>
+                                    <button type="button" onclick="if(typeof window.openStitchTocDrawer==='function') window.openStitchTocDrawer('doc-005', '§ 3. 평생교육 및 여가문화 프로그램', 'all')" class="h-9 px-3 rounded-lg bg-surface-container text-primary text-xs font-bold flex items-center justify-center gap-1 cursor-pointer">
+                                        <span class="material-symbols-outlined text-[15px]">import_contacts</span><span>지침 목차 해당 조문 열람</span>
+                                    </button>
+                                </div>
+                            </article>
+
+                            <article data-serv-card="3" class="bg-surface-container-lowest rounded-xl shadow-xs p-4 flex flex-col gap-2 transition-all">
+                                <div role="button" tabindex="0" aria-expanded="false" aria-controls="serv-detail-3" onclick="toggleServiceDetail(3)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleServiceDetail(3);}" class="w-full flex items-center justify-between gap-3 text-left cursor-pointer">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <span class="w-7 h-7 rounded-lg bg-surface-container text-on-surface-variant font-label-md text-label-md font-bold flex items-center justify-center shrink-0">03</span>
+                                        <div class="flex flex-col min-w-0">
+                                            <span class="font-label-lg text-label-lg text-on-surface font-bold">지역사회 돌봄 및 재가복지 연계</span>
+                                            <span class="text-on-surface-variant font-body-sm text-body-sm truncate">식사 배달, 가사간병 간접지원 및 긴급안심망 운영</span>
+                                        </div>
+                                    </div>
+                                    <span aria-hidden="true" class="w-8 h-8 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant shrink-0">
+                                        <span id="serv-chevron-3" class="material-symbols-outlined text-[20px] transition-transform duration-200">expand_more</span>
+                                    </span>
+                                </div>
+                                <div id="serv-detail-3" class="hidden pt-2 flex flex-col gap-2 text-on-surface-variant font-body-sm text-body-sm">
+                                    <div class="p-2.5 bg-surface-container-low rounded-lg">취약계층 경로식당·식사배달 및 일상생활 자립 지원 프로토콜 포함</div>
+                                    <button type="button" onclick="if(typeof window.openStitchTocDrawer==='function') window.openStitchTocDrawer('doc-005', '§ 5. 경로식당 및 결식노인 급식지원', 'all')" class="h-9 px-3 rounded-lg bg-surface-container text-primary text-xs font-bold flex items-center justify-center gap-1 cursor-pointer">
+                                        <span class="material-symbols-outlined text-[15px]">import_contacts</span><span>지침 목차 해당 조문 열람</span>
+                                    </button>
+                                </div>
+                            </article>
+
+                            <article data-serv-card="4" class="bg-surface-container-lowest rounded-xl shadow-xs p-4 flex flex-col gap-2 transition-all">
+                                <div role="button" tabindex="0" aria-expanded="false" aria-controls="serv-detail-4" onclick="toggleServiceDetail(4)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleServiceDetail(4);}" class="w-full flex items-center justify-between gap-3 text-left cursor-pointer">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <span class="w-7 h-7 rounded-lg bg-surface-container text-on-surface-variant font-label-md text-label-md font-bold flex items-center justify-center shrink-0">04</span>
+                                        <div class="flex flex-col min-w-0">
+                                            <span class="font-label-lg text-label-lg text-on-surface font-bold">노인사회활동 및 일자리 지원사업</span>
+                                            <span class="text-on-surface-variant font-body-sm text-body-sm truncate">공익활동형, 사회서비스형, 시장형 사업단 운영</span>
+                                        </div>
+                                    </div>
+                                    <span aria-hidden="true" class="w-8 h-8 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant shrink-0">
+                                        <span id="serv-chevron-4" class="material-symbols-outlined text-[20px] transition-transform duration-200">expand_more</span>
+                                    </span>
+                                </div>
+                                <div id="serv-detail-4" class="hidden pt-2 flex flex-col gap-2 text-on-surface-variant font-body-sm text-body-sm">
+                                    <div class="p-2.5 bg-surface-container-low rounded-lg">일자리 활동비 지급 및 상해보험 의무가입·안전교육 행정 절차 안내</div>
+                                    <button type="button" onclick="if(typeof window.openStitchTocDrawer==='function') window.openStitchTocDrawer('doc-008', '제4편 노인일자리 및 사회활동 지원', 'all')" class="h-9 px-3 rounded-lg bg-surface-container text-primary text-xs font-bold flex items-center justify-center gap-1 cursor-pointer">
+                                        <span class="material-symbols-outlined text-[15px]">import_contacts</span><span>일자리 안내 지침 열람</span>
+                                    </button>
+                                </div>
+                            </article>
+
+                            <article data-serv-card="5" class="bg-surface-container-lowest rounded-xl shadow-xs p-4 flex flex-col gap-2 transition-all">
+                                <div role="button" tabindex="0" aria-expanded="false" aria-controls="serv-detail-5" onclick="toggleServiceDetail(5)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleServiceDetail(5);}" class="w-full flex items-center justify-between gap-3 text-left cursor-pointer">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <span class="w-7 h-7 rounded-lg bg-surface-container text-on-surface-variant font-label-md text-label-md font-bold flex items-center justify-center shrink-0">05</span>
+                                        <div class="flex flex-col min-w-0">
+                                            <span class="font-label-lg text-label-lg text-on-surface font-bold">지역 네트워크 및 권익증진</span>
+                                            <span class="text-on-surface-variant font-body-sm text-body-sm truncate">노인학대 예방 및 인권교육, 세대통합 자원봉사 육성</span>
+                                        </div>
+                                    </div>
+                                    <span aria-hidden="true" class="w-8 h-8 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant shrink-0">
+                                        <span id="serv-chevron-5" class="material-symbols-outlined text-[20px] transition-transform duration-200">expand_more</span>
+                                    </span>
+                                </div>
+                                <div id="serv-detail-5" class="hidden pt-2 flex flex-col gap-2 text-on-surface-variant font-body-sm text-body-sm">
+                                    <div class="p-2.5 bg-surface-container-low rounded-lg">노인인권옴부즈맨·노인보호전문기관 연계 및 시설 운영위원회 구성 지침</div>
+                                    <button type="button" onclick="if(typeof window.openStitchTocDrawer==='function') window.openStitchTocDrawer('doc-005', '§ 6. 안전관리 및 감염병 예방 지침', 'all')" class="h-9 px-3 rounded-lg bg-surface-container text-primary text-xs font-bold flex items-center justify-center gap-1 cursor-pointer">
+                                        <span class="material-symbols-outlined text-[15px]">import_contacts</span><span>권익·안전 지침 열람</span>
+                                    </button>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+
+                    <!-- 3-5. 2026 정부 공인 지침서 원문 다운로드 카드 (#sec-guidelines) -->
+                    <section id="sec-guidelines" class="bg-surface-container-lowest rounded-xl shadow-sm p-4 flex flex-col gap-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-[#0051d5] text-[22px]">policy</span>
+                                <h3 class="font-headline-sm text-headline-sm text-on-surface">2026 정부 공인 지침서 원문</h3>
+                            </div>
+                            <span id="stitch-guide-version" class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-container text-primary font-label-sm text-label-sm font-semibold">최신판 v26.1</span>
+                        </div>
+                        <div class="bg-surface-container-low rounded-xl p-3.5 flex items-start gap-3">
+                            <div class="w-12 h-14 rounded-lg bg-surface-container-lowest shadow-xs flex flex-col items-center justify-center shrink-0 border-t-2 border-primary">
+                                <span class="text-primary font-headline-sm text-headline-sm font-bold">PDF</span>
+                                <span class="text-on-surface-variant font-label-sm text-[10px]">권장</span>
+                            </div>
+                            <div class="flex flex-col gap-0.5 min-w-0">
+                                <h4 id="stitch-guide-title" class="font-label-lg text-label-lg text-on-surface font-bold truncate">2026 노인보건복지사업안내 (1권)</h4>
+                                <p id="stitch-guide-publisher" class="font-body-sm text-body-sm text-on-surface-variant">발행처: 보건복지부 노인정책과</p>
+                                <div id="stitch-guide-info" class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm mt-1">
+                                    <span>2026년판 · 순수 PDF 정본</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 pt-1">
+                            <button type="button" onclick="if(typeof window.triggerPdfPreview==='function') window.triggerPdfPreview()" class="flex-1 h-11 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-label-lg text-label-lg font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer">
+                                <span class="material-symbols-outlined text-[18px]">visibility</span>
+                                <span>웹 뷰어로 읽기</span>
+                            </button>
+                            <button type="button" onclick="if(typeof window.triggerPdfDownload==='function') window.triggerPdfDownload()" class="flex-1 h-11 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg font-bold flex items-center justify-center gap-1.5 transition-colors shadow-xs cursor-pointer">
+                                <span class="material-symbols-outlined text-[18px]">download</span>
+                                <span>원문 다운로드</span>
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- 3-6. 하단 참고 각주 -->
+                    <div class="pt-1 pb-2 flex flex-col gap-2 text-center px-2">
+                        <div class="flex items-center justify-center gap-3 text-on-surface-variant font-label-sm text-label-sm">
+                            <span class="flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[14px]">sync</span>
+                                <span>최근 법령 개정 반영일: 2026. 11. 22</span>
+                            </span>
+                            <span>•</span>
+                            <button type="button" class="underline hover:text-primary cursor-pointer" onclick="if(typeof window.showStitchMobileToast==='function') window.showStitchMobileToast('공식 지침 정정·업데이트는 GitHub 저장소를 통해 상시 반영됩니다.')">지침 정정 문의</button>
+                        </div>
+                        <p class="font-body-sm text-body-sm text-outline text-[11px]">
+                            아래 전체 목록에서 다른 법정·민간 분야를 선택하면 상단 시설 법정 도감이 즉시 전환됩니다.
                         </p>
                     </div>
-                    <div id="mobile-civil-impact-grid" class="space-y-2.5 pt-1"></div>
+                </div>
+
+                <!-- 4. 전체 45개 분야·시설 디렉토리 아코디언 피드 -->
+                <div id="mobile-all-facilities-section" class="space-y-3 pt-2 border-t border-outline-variant/40">
+                    <div class="flex items-center justify-between text-xs px-1 text-slate-500">
+                        <div>
+                            전체 45개 체계 검색 결과: <strong id="mobile-match-count" class="text-blue-600 font-extrabold">39</strong>개 법정분야
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="toggleAllCards(true)" class="text-[11px] font-semibold text-slate-600 hover:text-blue-600 transition cursor-pointer">전체 펼치기</button>
+                            <span class="text-slate-300">|</span>
+                            <button type="button" onclick="toggleAllCards(false)" class="text-[11px] font-semibold text-slate-600 hover:text-blue-600 transition cursor-pointer">전체 접기</button>
+                        </div>
+                    </div>
+
+                    <!-- 39개 중앙부처 법정분야 카드 피드 -->
+                    <div id="mobile-cards-feed" class="space-y-3">
+                        <!-- Dynamically populated by renderMobileCards() -->
+                    </div>
+
+                    <!-- 6대 민간 제3섹터 · 사회적경제 · 종교공익 생태계 모바일 전용 카드 -->
+                    <div id="mobile-ngo-section" class="bg-gradient-to-br from-amber-50/70 via-white to-teal-50/40 rounded-2xl border-2 border-amber-200 p-4 shadow-subtle space-y-3">
+                        <div class="flex items-center justify-between flex-wrap gap-1">
+                            <span class="px-2 py-0.5 rounded-md bg-amber-600 text-white font-extrabold text-[10px]">
+                                🤝 정부부처 외 별도 정보분야 (6대 영역)
+                            </span>
+                            <span class="text-[10px] font-bold text-amber-900 bg-amber-100 px-2 py-0.5 rounded border border-amber-300">
+                                근거: 「민법」 제32조 · 사회적경제 특별법
+                            </span>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-black text-slate-900">민간 제3섹터 · 사회적경제 · 종교공익 생태계</h3>
+                            <p class="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
+                                비영리 공익법인·국제구호 NGO·종교공익(민법 제32조) 및 사회적기업·협동조합·사회적농장(사회적경제 특별법) 통합 안내
+                            </p>
+                        </div>
+                        <div id="mobile-civil-impact-grid" class="space-y-2.5 pt-1"></div>
+                    </div>
+                </div>
+
+                <!-- 5. [스티치 1] 좌측 슬라이드 인 지침서 목차(TOC) 드로어 -->
+                <div id="stitch-toc-drawer-wrapper">
+                    <div id="drawer-backdrop" onclick="if(typeof window.closeStitchTocDrawer==='function') window.closeStitchTocDrawer()" class="fixed inset-0 z-[70] bg-inverse-surface/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none"></div>
+                    <aside id="toc-drawer" role="dialog" aria-modal="true" aria-hidden="true" aria-label="지침서 목차 네비게이션" class="fixed top-0 bottom-0 left-0 z-[80] w-[86%] max-w-[340px] flex flex-col bg-surface shadow-2xl transition-transform duration-300 ease-out -translate-x-full">
+                        <!-- Drawer Header -->
+                        <div class="pt-safe bg-surface-white flex flex-col shadow-sm">
+                            <div class="px-4 pt-3.5 pb-2 flex items-start justify-between gap-2">
+                                <div class="flex flex-col min-w-0">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;">menu_book</span>
+                                        <h2 id="toc-drawer-doc-title" class="font-headline-sm text-headline-sm text-on-surface truncate">지침서 목차 (TOC)</h2>
+                                    </div>
+                                    <p id="toc-drawer-doc-subtitle" class="font-label-sm text-label-sm text-on-surface-variant mt-0.5 truncate">2026 노인보건복지사업안내 v26.1 공식지침</p>
+                                </div>
+                                <button id="close-drawer-btn" type="button" aria-label="목차 닫기" onclick="if(typeof window.closeStitchTocDrawer==='function') window.closeStitchTocDrawer()" class="w-9 h-9 -mr-1 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors shrink-0 cursor-pointer">
+                                    <span class="material-symbols-outlined text-[20px]">close</span>
+                                </button>
+                            </div>
+
+                            <!-- Quick Search Bar inside Drawer -->
+                            <div class="px-4 py-2">
+                                <div class="relative flex items-center w-full bg-surface-container-low rounded-full px-3 h-10 shadow-inner">
+                                    <span class="material-symbols-outlined text-[#0051d5] text-[18px] mr-2 shrink-0">search</span>
+                                    <input id="toc-search-input" type="search" oninput="if(typeof window.filterStitchTocDrawer==='function') window.filterStitchTocDrawer(this.value)" placeholder="목차, 조문, 서식명 검색..." class="w-full bg-transparent font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none">
+                                    <button type="button" aria-label="검색어 지우기" onclick="if(typeof window.clearStitchTocSearch==='function') window.clearStitchTocSearch()" class="w-6 h-6 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer">
+                                        <span class="material-symbols-outlined text-[16px]">cancel</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Quick View Filter Tabs -->
+                            <div class="px-4 pb-2.5 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+                                <button id="toc-tab-all" data-toc-tab="all" type="button" aria-pressed="true" onclick="if(typeof window.setStitchTocTab==='function') window.setStitchTocTab('all', this)" class="toc-filter-tab px-3 py-1.5 rounded-full bg-primary text-on-primary font-label-md text-label-md shrink-0 shadow-sm cursor-pointer">전체 목차</button>
+                                <button id="toc-tab-forms" data-toc-tab="forms" type="button" aria-pressed="false" onclick="if(typeof window.setStitchTocTab==='function') window.setStitchTocTab('forms', this)" class="toc-filter-tab px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md shrink-0 transition-colors cursor-pointer">주요 서식/별표</button>
+                                <button id="toc-tab-bookmarks" data-toc-tab="bookmarks" type="button" aria-pressed="false" onclick="if(typeof window.setStitchTocTab==='function') window.setStitchTocTab('bookmarks', this)" class="toc-filter-tab px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md shrink-0 flex items-center gap-1 transition-colors cursor-pointer">
+                                    <span class="material-symbols-outlined text-[14px]">bookmark</span>
+                                    <span>책갈피 (4)</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Drawer Body: Hierarchical Accordion TOC Tree -->
+                        <div id="toc-tree-container" class="flex-1 overflow-y-auto px-2 py-2 space-y-1.5">
+                            <div class="toc-part-card bg-surface-white rounded-lg shadow-sm overflow-hidden" data-toc-type="chapter">
+                                <button type="button" onclick="if(typeof window.toggleStitchTocPart==='function') window.toggleStitchTocPart(this)" class="w-full px-3.5 py-3 flex items-center justify-between gap-2 hover:bg-surface-container-low transition-colors text-left cursor-pointer">
+                                    <div class="flex items-center gap-2 min-w-0">
+                                        <span class="material-symbols-outlined text-on-surface-variant text-[18px]">folder</span>
+                                        <span class="font-label-lg text-label-lg text-on-surface truncate">제1편 노인보건복지 기본방침</span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5 shrink-0">
+                                        <span class="font-label-sm text-label-sm text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full">총 4개 장</span>
+                                        <span class="toc-part-chevron material-symbols-outlined text-outline text-[18px]">chevron_right</span>
+                                    </div>
+                                </button>
+                            </div>
+
+                            <div class="toc-part-card bg-surface-white rounded-lg shadow-sm overflow-hidden" data-toc-type="active bookmark">
+                                <button type="button" onclick="if(typeof window.toggleStitchTocPart==='function') window.toggleStitchTocPart(this)" class="w-full px-3.5 py-3 flex items-center justify-between gap-2 bg-surface-container text-left cursor-pointer">
+                                    <div class="flex items-center gap-2 min-w-0">
+                                        <span class="material-symbols-outlined text-[#0051d5] text-[18px]" style="font-variation-settings: 'FILL' 1;">folder_open</span>
+                                        <span class="font-label-lg text-label-lg text-primary truncate font-bold">제2편 노인여가복지시설 운영기준</span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5 shrink-0">
+                                        <span class="font-label-sm text-label-sm text-primary font-bold bg-primary-fixed px-2 py-0.5 rounded-full">열람 중</span>
+                                        <span class="toc-part-chevron material-symbols-outlined text-primary text-[18px]">expand_more</span>
+                                    </div>
+                                </button>
+                                <div class="toc-part-body pl-3.5 pr-1.5 py-1.5 space-y-1 bg-surface-white">
+                                    <button type="button" onclick="if(typeof window.selectStitchTocClause==='function') window.selectStitchTocClause('01. 총칙 및 설치기준', '제1장')" class="toc-leaf-item w-full flex items-center justify-between py-2 px-2 rounded-md hover:bg-surface-container-low text-left cursor-pointer transition-colors">
+                                        <span class="flex items-center gap-2 min-w-0"><span class="w-1.5 h-1.5 rounded-full bg-outline-variant shrink-0"></span><span class="font-body-sm text-body-sm text-on-surface-variant truncate">01. 총칙 및 설치기준</span></span>
+                                    </button>
+                                    <button type="button" onclick="if(typeof window.selectStitchTocClause==='function') window.selectStitchTocClause('02. 경로당 운영지원 가이드', '제2장')" class="toc-leaf-item w-full flex items-center justify-between py-2 px-2 rounded-md hover:bg-surface-container-low text-left cursor-pointer transition-colors">
+                                        <span class="flex items-center gap-2 min-w-0"><span class="w-1.5 h-1.5 rounded-full bg-outline-variant shrink-0"></span><span class="font-body-sm text-body-sm text-on-surface-variant truncate">02. 경로당 운영지원 가이드</span></span>
+                                    </button>
+                                    <div class="rounded-lg bg-surface-container-low p-1.5 space-y-1 shadow-sm">
+                                        <div class="flex items-center justify-between px-1.5 py-1 text-left">
+                                            <div class="flex items-center gap-1.5 min-w-0">
+                                                <span class="material-symbols-outlined text-[#0051d5] text-[16px]">folder_special</span>
+                                                <span class="font-label-md text-label-md text-primary font-bold truncate">03. 노인복지관 운영 및 실무</span>
+                                            </div>
+                                        </div>
+                                        <div class="space-y-0.5 pt-0.5">
+                                            <button type="button" onclick="if(typeof window.selectStitchTocClause==='function') window.selectStitchTocClause('§ 1. 기본시설 및 인력배치기준', '제1절')" class="toc-leaf-item w-full flex items-center justify-between py-1.5 px-2 rounded text-left hover:bg-surface-container transition-colors cursor-pointer"><span class="font-body-sm text-body-sm text-on-surface-variant truncate">§ 1. 기본시설 및 인력배치기준</span></button>
+                                            <button type="button" onclick="if(typeof window.selectStitchTocClause==='function') window.selectStitchTocClause('§ 2. 재무회계 및 예산집행 규칙', '제2절')" class="toc-leaf-item w-full flex items-center justify-between py-1.5 px-2 rounded text-left hover:bg-surface-container transition-colors cursor-pointer"><span class="font-body-sm text-body-sm text-on-surface-variant truncate">§ 2. 재무회계 및 예산집행 규칙</span></button>
+                                            <button type="button" onclick="if(typeof window.selectStitchTocClause==='function') window.selectStitchTocClause('§ 3. 평생교육 및 여가문화 프로그램', '제3절')" class="toc-leaf-item w-full flex items-center justify-between py-1.5 px-2 rounded text-left hover:bg-surface-container transition-colors cursor-pointer"><span class="font-body-sm text-body-sm text-on-surface-variant truncate">§ 3. 평생교육 및 여가문화 프로그램</span></button>
+                                            <div id="toc-active-clause-card" class="relative bg-primary text-on-primary rounded-lg p-2.5 shadow-md flex flex-col gap-1.5">
+                                                <div class="flex items-center justify-between gap-1">
+                                                    <div class="flex items-center gap-1.5 min-w-0">
+                                                        <span class="material-symbols-outlined text-tertiary-fixed text-[16px] animate-pulse" style="font-variation-settings: 'FILL' 1;">auto_stories</span>
+                                                        <span class="font-label-sm text-label-sm text-tertiary-fixed uppercase font-bold tracking-wider">현재 열람 중</span>
+                                                    </div>
+                                                    <span id="toc-active-section-badge" class="font-label-sm text-label-sm text-on-primary font-bold bg-white/20 px-2 py-0.5 rounded-full">제4절</span>
+                                                </div>
+                                                <h4 id="toc-active-clause-title" class="font-label-lg text-label-lg text-on-primary leading-snug">§ 4. 맞춤형 통합 사례관리 운영 및 실무 기준</h4>
+                                                <div class="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                                                    <span class="inline-flex items-center gap-0.5 bg-blue-subtle text-[#0051d5] px-2 py-0.5 rounded font-label-sm text-label-sm font-semibold"><span class="material-symbols-outlined text-[13px]">verified</span>도감 연계 조문 01</span>
+                                                    <span class="inline-flex items-center gap-0.5 bg-emerald-subtle text-tertiary px-2 py-0.5 rounded font-label-sm text-label-sm font-semibold">서식 12호</span>
+                                                </div>
+                                            </div>
+                                            <button type="button" onclick="if(typeof window.selectStitchTocClause==='function') window.selectStitchTocClause('§ 5. 경로식당 및 결식노인 급식지원', '제5절')" class="toc-leaf-item w-full flex items-center justify-between py-1.5 px-2 rounded text-left hover:bg-surface-container transition-colors cursor-pointer"><span class="font-body-sm text-body-sm text-on-surface-variant truncate">§ 5. 경로식당 및 결식노인 급식지원</span></button>
+                                            <button type="button" onclick="if(typeof window.selectStitchTocClause==='function') window.selectStitchTocClause('§ 6. 안전관리 및 감염병 예방 지침', '제6절')" class="toc-leaf-item w-full flex items-center justify-between py-1.5 px-2 rounded text-left hover:bg-surface-container transition-colors cursor-pointer"><span class="font-body-sm text-body-sm text-on-surface-variant truncate">§ 6. 안전관리 및 감염병 예방 지침</span></button>
+                                        </div>
+                                    </div>
+                                    <button type="button" onclick="if(typeof window.selectStitchTocClause==='function') window.selectStitchTocClause('04. 노인교실 운영기준', '제4장')" class="toc-leaf-item w-full flex items-center justify-between py-2 px-2 rounded-md hover:bg-surface-container-low text-left cursor-pointer transition-colors">
+                                        <span class="flex items-center gap-2 min-w-0"><span class="w-1.5 h-1.5 rounded-full bg-outline-variant shrink-0"></span><span class="font-body-sm text-body-sm text-on-surface-variant truncate">04. 노인교실 운영기준</span></span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="toc-part-card bg-surface-white rounded-lg shadow-sm overflow-hidden" data-toc-type="chapter bookmark">
+                                <button type="button" onclick="if(typeof window.selectStitchTocClause==='function') window.selectStitchTocClause('제3편 노인맞춤돌봄 및 재가복지', '제3편')" class="w-full px-3.5 py-3 flex items-center justify-between gap-2 hover:bg-surface-container-low transition-colors text-left cursor-pointer">
+                                    <div class="flex items-center gap-2 min-w-0">
+                                        <span class="material-symbols-outlined text-on-surface-variant text-[18px]">folder</span>
+                                        <span class="font-label-lg text-label-lg text-on-surface truncate">제3편 노인맞춤돌봄 및 재가복지</span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5 shrink-0">
+                                        <span class="font-label-sm text-label-sm text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full">총 6개 장</span>
+                                        <span class="material-symbols-outlined text-outline text-[18px]">chevron_right</span>
+                                    </div>
+                                </button>
+                            </div>
+
+                            <div class="toc-part-card bg-surface-white rounded-lg shadow-sm overflow-hidden" data-toc-type="chapter">
+                                <button type="button" onclick="if(typeof window.selectStitchTocClause==='function') window.selectStitchTocClause('제4편 노인일자리 및 사회활동 지원', '제4편')" class="w-full px-3.5 py-3 flex items-center justify-between gap-2 hover:bg-surface-container-low transition-colors text-left cursor-pointer">
+                                    <div class="flex items-center gap-2 min-w-0">
+                                        <span class="material-symbols-outlined text-on-surface-variant text-[18px]">folder</span>
+                                        <span class="font-label-lg text-label-lg text-on-surface truncate">제4편 노인일자리 및 사회활동 지원</span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5 shrink-0">
+                                        <span class="font-label-sm text-label-sm text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full">총 5개 장</span>
+                                        <span class="material-symbols-outlined text-outline text-[18px]">chevron_right</span>
+                                    </div>
+                                </button>
+                            </div>
+
+                            <div class="toc-part-card bg-surface-white rounded-lg shadow-sm overflow-hidden" data-toc-type="forms bookmark">
+                                <button type="button" onclick="if(typeof window.selectStitchTocClause==='function') window.selectStitchTocClause('[별표 및 서식] 표준 서식 34종 모음', '서식집')" class="w-full px-3.5 py-3 flex items-center justify-between gap-2 hover:bg-surface-container-low transition-colors text-left cursor-pointer">
+                                    <div class="flex items-center gap-2 min-w-0">
+                                        <span class="material-symbols-outlined text-accent-amber text-[18px]" style="font-variation-settings: 'FILL' 1;">description</span>
+                                        <span class="font-label-lg text-label-lg text-on-surface truncate">[별표 및 서식] 표준 서식 34종 모음</span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5 shrink-0">
+                                        <span class="font-label-sm text-label-sm text-accent-amber font-semibold bg-amber-subtle px-2 py-0.5 rounded-full">서식집</span>
+                                        <span class="material-symbols-outlined text-outline text-[18px]">chevron_right</span>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Drawer Footer: Direct Clause Jump & Quick Return -->
+                        <div class="p-2.5 bg-surface-white shadow-[0_-2px_8px_rgba(0,0,0,0.05)] pb-safe flex flex-col gap-2">
+                            <div class="flex items-center gap-2">
+                                <div class="relative flex-1 bg-surface-container-low rounded-lg px-2.5 h-10 flex items-center">
+                                    <span class="material-symbols-outlined text-[#0051d5] text-[18px] mr-1.5 shrink-0">search</span>
+                                    <span class="font-label-md text-label-md text-on-surface-variant shrink-0 mr-1.5">조문 선택</span>
+                                    <input id="toc-jump-input" type="text" value="§ 4. 맞춤형 통합 사례관리" placeholder="예: 제4절 또는 조문명" class="w-full bg-transparent font-headline-sm text-sm text-primary font-bold focus:outline-none">
+                                </div>
+                                <button type="button" onclick="if(typeof window.jumpStitchTocClause==='function') window.jumpStitchTocClause()" class="h-10 px-4 bg-primary text-on-primary rounded-lg font-label-lg text-label-lg flex items-center justify-center hover:bg-primary-container active:scale-[0.98] transition-all shadow-sm shrink-0 cursor-pointer">이동</button>
+                            </div>
+                            <div class="flex items-center justify-between px-1 text-on-surface-variant font-label-sm text-label-sm gap-2">
+                                <button type="button" onclick="if(typeof window.triggerPdfDownload==='function') window.triggerPdfDownload()" class="flex items-center gap-1 text-primary font-bold hover:underline cursor-pointer">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-subtle border border-tertiary"></span>
+                                    <span>원문 PDF 열기</span>
+                                </button>
+                                <button type="button" onclick="if(typeof window.resetStitchTocClause==='function') window.resetStitchTocClause()" class="text-[#0051d5] hover:underline flex items-center gap-0.5 cursor-pointer">
+                                    <span class="material-symbols-outlined text-[14px]">history</span>
+                                    <span>기본 조문으로 복귀</span>
+                                </button>
+                            </div>
+                        </div>
+                    </aside>
                 </div>
             </div>
 
@@ -9580,6 +10128,10 @@
                                         class="w-full py-1.5 px-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 font-bold text-[11px] transition cursor-pointer">
                                     <span>⭐ 찜하기</span>
                                 </button>
+                                <button type="button" onclick="window.selectMobileStitchFacility && window.selectMobileStitchFacility('${escapeJsArg(item.id)}', { scrollToTop: true })" 
+                                        class="w-full py-1.5 px-3 rounded-xl bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-800 border border-indigo-200 font-bold text-[11px] flex items-center justify-center gap-1 transition cursor-pointer">
+                                    <span>📱 상단 법정도감 상세뷰로 보기</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -9596,8 +10148,12 @@
             }
         }
         function toggleCard(id) {
-            openCardMap[id] = !openCardMap[id];
+            const willOpen = !openCardMap[id];
+            openCardMap[id] = willOpen;
             renderMobileCards(currentFilteredMobileData);
+            if (willOpen && typeof window.selectMobileStitchFacility === 'function') {
+                window.selectMobileStitchFacility(id, { scrollToTop: false });
+            }
         }
 
         function toggleAllCards(open) {
@@ -10085,9 +10641,12 @@
                                 ${allOrgs.map(f => `<div class="flex items-start gap-1"><span class="text-slate-400">•</span><div>${renderFacilityInteractiveText(f)}</div></div>`).join('')}
                             </div>
                             ${r.articles ? `<div class="text-[10px] text-slate-600 bg-slate-50 px-2 py-1 rounded border border-slate-200/80"><strong>📌 근거조문:</strong> ${escapeHtml(r.articles)}</div>` : ''}
-                            <div class="pt-1 flex items-center gap-1.5">
-                                <button type="button" onclick="jumpToFacilityHierarchy('${escapeJsArg(hierarchyTarget)}', '${escapeJsArg(r.facilityCategory)}')" class="flex-1 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-[11px] cursor-pointer">🌳 위계도감 보기</button>
-                                <button type="button" onclick="showView('archive', { facilityId: '${escapeJsArg(r.id)}', facilityName: '${escapeJsArg(r.facilityCategory)}' })" class="flex-1 py-1.5 rounded-lg bg-blue-600 text-white font-bold text-[11px] cursor-pointer">📖 지침서 열람</button>
+                            <div class="pt-1 space-y-1.5">
+                                <div class="flex items-center gap-1.5">
+                                    <button type="button" onclick="jumpToFacilityHierarchy('${escapeJsArg(hierarchyTarget)}', '${escapeJsArg(r.facilityCategory)}')" class="flex-1 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-[11px] cursor-pointer">🌳 위계도감 보기</button>
+                                    <button type="button" onclick="showView('archive', { facilityId: '${escapeJsArg(r.id)}', facilityName: '${escapeJsArg(r.facilityCategory)}' })" class="flex-1 py-1.5 rounded-lg bg-blue-600 text-white font-bold text-[11px] cursor-pointer">📖 지침서 열람</button>
+                                </div>
+                                <button type="button" onclick="window.selectMobileStitchFacility && window.selectMobileStitchFacility('${escapeJsArg(r.id)}', { scrollToTop: true })" class="w-full py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-800 border border-indigo-200 font-bold text-[11px] transition cursor-pointer">📱 상단 법정도감 상세뷰로 보기</button>
                             </div>
                         </div>
                     `;
@@ -10145,6 +10704,10 @@
                 if (countBadge) countBadge.innerText = '민간 제3섹터 · 사회적경제 · 종교공익 6대 생태계 (민법 제32조 · 사회적경제 특별법)';
                 const countEl = document.getElementById('mobile-match-count');
                 if (countEl) countEl.innerText = String(CIVIL_IMPACT_ECOSYSTEM.length);
+                const civList = currentFieldsQuery ? filteredCivil : CIVIL_IMPACT_ECOSYSTEM;
+                if (typeof window.selectMobileStitchFacility === 'function' && civList.length > 0 && !civList.some(r => r.id === window.currentStitchFacilityId)) {
+                    window.selectMobileStitchFacility(civList[0].id, { scrollToTop: false });
+                }
                 return;
             }
 
@@ -10170,6 +10733,11 @@
             const showNgo = (cleanMin === '전체' && !currentFieldsQuery) || (currentFieldsQuery && filteredCivil.length > 0);
             if (ngoSection) ngoSection.classList.toggle('hidden', !showNgo);
             if (mobNgoSection) mobNgoSection.classList.toggle('hidden', !showNgo);
+
+            const activePool = showNgo ? [...filtered, ...filteredCivil] : filtered;
+            if (typeof window.selectMobileStitchFacility === 'function' && activePool.length > 0 && !activePool.some(r => r.id === window.currentStitchFacilityId)) {
+                window.selectMobileStitchFacility(activePool[0].id, { scrollToTop: false });
+            }
         }
 
         function filterFieldsTable(query) {
@@ -12542,7 +13110,10 @@
         window.ALL_RESIDENCY_CENTERS = RESIDENCY_POSTINGS;
         window.ALL_CERTIFIED_PRACTICUM_INSTITUTIONS = window.ALL_PRACTICUM_INSTITUTIONS;
         window.showView = showView;
-        window.switchTab = showView;
+        window.switchTab = function(arg1, arg2) {
+            if (typeof arg1 === 'string') return showView(arg1, arg2);
+            if (typeof window.switchStitchFacilityTab === 'function') return window.switchStitchFacilityTab(arg1, arg2);
+        };
         window.toggleWorkspaceDrawer = toggleWorkspaceDrawer;
         window.setDrawerCategory = setDrawerCategory;
         window.toggleChecklistItem = toggleChecklistItem;
@@ -12721,6 +13292,9 @@
             renderUsefulSitesCards();
             renderNewsCards();
             updateWorkspaceBadge();
+            if (typeof window.initMobileStitchShowcase === 'function') {
+                window.initMobileStitchShowcase();
+            }
         });
     </script>
 </body>

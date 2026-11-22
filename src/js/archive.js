@@ -81,6 +81,7 @@
         'ext-rel-welfare': ['doc-069', 'doc-026', 'doc-029'],
         'ext-rel-heritage': ['doc-070']
     };
+    window.FACILITY_ARCHIVE_MAP = FACILITY_ARCHIVE_MAP;
 
     const FACILITY_PATTERNS = [
         { pattern: /통합돌봄|통합지원/, id: 'law-integrated-care', name: '지역 통합돌봄' },
@@ -895,10 +896,11 @@
                     </div>
                     <h4 class="text-sm font-black text-slate-900 leading-snug">${escA(f.title)}</h4>
                     <p class="text-[11px] text-slate-500 line-clamp-2">${escA(f.legalTarget || '')}</p>
-                    <div class="grid grid-cols-3 gap-1.5 pt-1">
-                        <button type="button" onclick="window.downloadGuidelineDirect('${escJsArg(f.id)}')" class="py-1.5 rounded-xl bg-blue-600 text-white text-[11px] font-bold cursor-pointer">⬇️ PDF</button>
-                        <button type="button" onclick="window.viewGuidelineModal('${escJsArg(f.id)}')" class="py-1.5 rounded-xl bg-slate-100 text-slate-800 text-[11px] font-bold cursor-pointer">👁️ 요약</button>
-                        <button type="button" onclick="showView('hierarchy', { targetNodeId: '${escJsArg(hLink.targetId)}' })" class="py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-bold cursor-pointer">🌳 위계</button>
+                    <div class="grid grid-cols-4 gap-1.5 pt-1">
+                        <button type="button" onclick="window.downloadGuidelineDirect('${escJsArg(f.id)}')" class="py-1.5 rounded-xl bg-blue-600 text-white text-[10px] font-bold cursor-pointer">⬇️ PDF</button>
+                        <button type="button" onclick="window.viewGuidelineModal('${escJsArg(f.id)}')" class="py-1.5 rounded-xl bg-slate-100 text-slate-800 text-[10px] font-bold cursor-pointer">👁️ 요약</button>
+                        <button type="button" onclick="window.openStitchTocDrawer && window.openStitchTocDrawer('${escJsArg(f.id)}')" class="py-1.5 rounded-xl bg-indigo-50 text-indigo-800 border border-indigo-200 text-[10px] font-bold cursor-pointer">📑 목차</button>
+                        <button type="button" onclick="showView('hierarchy', { targetNodeId: '${escJsArg(hLink.targetId)}' })" class="py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold cursor-pointer">🌳 위계</button>
                     </div>
                 </div>
             `;

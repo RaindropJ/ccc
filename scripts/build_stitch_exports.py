@@ -382,6 +382,9 @@ def build_shared_runtime_js():
                 facilityId = window.FACILITY_ROW_ID_ALIASES[facilityId];
             }
             window.showView('fields', { facilityId: facilityId, preventScroll: true });
+            if (typeof window.selectMobileStitchFacility === 'function') {
+                window.selectMobileStitchFacility(facilityId, { scrollToTop: false });
+            }
             setTimeout(() => {
                 const isMob = document.body.classList.contains('stitch-mobile-mode') || window.innerWidth < 768;
                 const row = document.getElementById('facility-row-' + facilityId);
@@ -407,6 +410,11 @@ def build_shared_runtime_js():
             });
             if (hit) window.jumpToFacility(hit.id);
             else window.showView('fields', { search: clean });
+        };
+
+        window.switchTab = function(arg1, arg2) {
+            if (typeof arg1 === 'string') return window.showView(arg1, arg2);
+            if (typeof window.switchStitchFacilityTab === 'function') return window.switchStitchFacilityTab(arg1, arg2);
         };
     """
 
@@ -495,6 +503,7 @@ def assemble_html_files():
             if (typeof renderCivilImpactCards === 'function') renderCivilImpactCards();
             if (typeof window.renderHierarchyView === 'function') window.renderHierarchyView();
             if (typeof window.renderArchiveView === 'function') window.renderArchiveView();
+            if (typeof window.initMobileStitchShowcase === 'function') window.initMobileStitchShowcase();
 
             const tablist = document.getElementById('stitch-tablist');
             if (tablist) {{
@@ -801,6 +810,33 @@ async def prebake_and_verify():
                 const mohwCards = document.querySelectorAll('#mobile-cards-feed > div[id^="facility-card-"]').length;
                 window.filterByMinistry('전체');
 
+                // Stitch 2 showcase checks (default 노인복지관, facility detail toggle, service accordion, facility switch & restore)
+                const stitchDefaultTitle = (document.getElementById('stitch-fac-title') || {}).textContent || '';
+                window.toggleFacilityDetail();
+                const facDetailOpened = !document.getElementById('facility-detail-body').classList.contains('hidden');
+                const facDetailExpandedAttr = attr('fac-detail-toggle-btn', 'aria-expanded');
+                window.toggleFacilityDetail();
+                const facDetailClosedAgain = document.getElementById('facility-detail-body').classList.contains('hidden');
+
+                window.toggleServiceDetail(2);
+                const serv2Opened = !document.getElementById('serv-detail-2').classList.contains('hidden');
+                window.toggleServiceDetail(2);
+
+                window.selectMobileStitchFacility('law-welfare-center');
+                const stitchSwitchedTitle = (document.getElementById('stitch-fac-title') || {}).textContent || '';
+                window.selectMobileStitchFacility('law-disability');
+                const stitchDisGuide = (document.getElementById('stitch-guide-title') || {}).textContent || '';
+                window.selectMobileStitchFacility('law-elderly');
+                const stitchRestoredTitle = (document.getElementById('stitch-fac-title') || {}).textContent || '';
+
+                // Stitch 1 TOC drawer checks (open, forms tab, Escape close)
+                window.openStitchTocDrawer('doc-005');
+                const tocOpenedAria = attr('toc-drawer', 'aria-hidden');
+                window.setStitchTocTab('forms');
+                const tocFormsPressed = attr('toc-tab-forms', 'aria-pressed');
+                document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+                const tocClosedOnEscAria = attr('toc-drawer', 'aria-hidden');
+
                 // Viewport toggle check
                 window.setStitchViewportMode('desktop');
                 const deskMode = !document.body.classList.contains('stitch-mobile-mode');
@@ -837,6 +873,17 @@ async def prebake_and_verify():
                     backToFieldsVis,
                     backFieldsAria,
                     mohwCards,
+                    stitchDefaultTitle,
+                    facDetailOpened,
+                    facDetailExpandedAttr,
+                    facDetailClosedAgain,
+                    serv2Opened,
+                    stitchSwitchedTitle,
+                    stitchDisGuide,
+                    stitchRestoredTitle,
+                    tocOpenedAria,
+                    tocFormsPressed,
+                    tocClosedOnEscAria,
                     deskMode,
                     deskPressed,
                     mobPressedInDesk,
@@ -873,6 +920,17 @@ async def prebake_and_verify():
             assert portal_test["backToFieldsVis"] is True
             assert portal_test["backFieldsAria"] == "true"
             assert portal_test["mohwCards"] == 12
+            assert "노인복지관" in portal_test["stitchDefaultTitle"], f"Unexpected default hero title: {portal_test['stitchDefaultTitle']}"
+            assert portal_test["facDetailOpened"] is True
+            assert portal_test["facDetailExpandedAttr"] == "true"
+            assert portal_test["facDetailClosedAgain"] is True
+            assert portal_test["serv2Opened"] is True
+            assert "사회복지관" in portal_test["stitchSwitchedTitle"], f"Unexpected switched hero title: {portal_test['stitchSwitchedTitle']}"
+            assert "장애인" in portal_test["stitchDisGuide"], f"Unexpected disability guide title: {portal_test['stitchDisGuide']}"
+            assert "노인복지관" in portal_test["stitchRestoredTitle"], f"Unexpected restored hero title: {portal_test['stitchRestoredTitle']}"
+            assert portal_test["tocOpenedAria"] == "false"
+            assert portal_test["tocFormsPressed"] == "true"
+            assert portal_test["tocClosedOnEscAria"] == "true"
             assert portal_test["deskMode"] is True
             assert portal_test["deskPressed"] == "true"
             assert portal_test["mobPressedInDesk"] == "false"
