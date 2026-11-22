@@ -1,331 +1,906 @@
 # -*- coding: utf-8 -*-
 """
-Google Stitch 디자인 연동 전용 독립형 단독 HTML 파일 생성기
-1. stitch_welfare_hierarchy.html  : 3단계 위계 도감 단독 파일
-2. stitch_guidelines_archive.html : 지침서 아카이브 단독 파일
-3. stitch_portal_viewer.html      : 2대 기능을 통합 전환하여 디자인할 수 있는 쉘 파일
-모든 데이터와 스타일을 100% 인라인 임베딩하여 CORS/서버 없이 어떤 브라우저나 구글 스티치에서도 즉시 렌더링.
+Google Stitch 디자인 연동 전용 단일 통합 HTML 생성기 (모바일 UI 우선 + 반응형 토글 + Pre-baked DOM + Modern Web UX/ARIA)
+- 출력 파일: stitch_portal_viewer.html (단일 통합 파일)
+  1) 18대 분야·시설 및 사회안전망 도감 (중앙정부 법정분야 39 + 민간·사회적경제·종교 6 = 45개 체계)
+  2) 3단계 위계 도감 & 바텀시트 인스펙터 (18대 분야 · 219개 단위서비스)
+  3) 공식 지침서 마스터 아카이브 (70종 순수 PDF 정본 · 18,556면)
+
+모든 데이터·컨트롤러·사전 렌더링(Pre-baked) DOM을 100% 인라인 임베딩하여
+Google Stitch 업로드 시 정적 파싱 및 실시간 브라우저 인터랙션에서 모두 즉시 모바일 화면이 렌더링됩니다.
 """
 
-import os
+import asyncio
+import functools
+import http.server
 import json
+import os
+import re
+import shutil
+import socketserver
+import subprocess
+import tempfile
+import threading
+import urllib.request
 
-def load_text(path):
-    with open(path, "r", encoding="utf-8") as f:
+WORKSPACE = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+EDGE_EXE = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+
+OUTPUT_FILE = "stitch_portal_viewer.html"
+OBSOLETE_FILES = [
+    "stitch_fields_encyclopedia.html",
+    "stitch_welfare_hierarchy.html",
+    "stitch_guidelines_archive.html",
+]
+
+
+def load_text(rel_path):
+    with open(os.path.join(WORKSPACE, rel_path), "r", encoding="utf-8") as f:
         return f.read()
 
-def build_exports():
-    print("Building Google Stitch Standalone HTML files...")
 
-    # Load DB contents
-    hierarchy_js = load_text("src/data/welfare-hierarchy-db.js")
-    archive_js = load_text("src/data/guidelines-archive-db.js")
-    hierarchy_ctrl = load_text("src/js/hierarchy.js")
-    archive_ctrl = load_text("src/js/archive.js")
+def save_text(rel_path, content):
+    with open(os.path.join(WORKSPACE, rel_path), "w", encoding="utf-8") as f:
+        f.write(content)
 
-    common_head = """<!DOCTYPE html>
+
+def cleanup_obsolete_files():
+    removed = []
+    for fname in OBSOLETE_FILES:
+        fpath = os.path.join(WORKSPACE, fname)
+        if os.path.exists(fpath):
+            os.remove(fpath)
+            removed.append(fname)
+    if removed:
+        print(f"✓ Removed obsolete split Stitch files: {', '.join(removed)}")
+    else:
+        print("✓ No obsolete split Stitch files present.")
+
+
+def extract_index_parts(idx_html):
+    # 1. Tailwind config script block
+    m_tw = re.search(r"(<script>\s*tailwind\.config\s*=\s*\{.*?</script>)", idx_html, re.S)
+    assert m_tw, "tailwind.config block not found in index.html"
+    tailwind_cfg = m_tw.group(1)
+
+    # 2. Custom CSS <style>...</style> block right after tailwind.config
+    m_style = re.search(r"(<style>\s*\.font-num\s*\{.*?</style>)", idx_html, re.S)
+    assert m_style, "main custom <style> block not found in index.html"
+    custom_style = m_style.group(1)
+
+    # 3. <section id="view-fields" ...>...</section>
+    m_vf = re.search(
+        r'(<section id="view-fields"[^>]*>.*?</section>)\s*\n\s*<!-- ==================== VIEW: 공식 지침서 마스터 아카이브',
+        idx_html,
+        re.S,
+    )
+    assert m_vf, "<section id='view-fields'> not found in index.html"
+    view_fields_html = m_vf.group(1)
+
+    # 4. Mobile hierarchy inspector HTML (#mobile-hierarchy-inspector)
+    m_insp = re.search(
+        r'(<div id="mobile-hierarchy-inspector".*?</div>\s*\n\s*</div>\s*\n\s*</div>\s*</section>\s*\n\s*<!-- ==================== VIEW 2: 실습처)',
+        idx_html,
+        re.S,
+    )
+    assert m_insp, "#mobile-hierarchy-inspector not found in index.html"
+    raw_insp = m_insp.group(1)
+    idx_close = raw_insp.rfind("</section>")
+    raw_insp = raw_insp[:idx_close].rstrip()
+    for _ in range(2):
+        pos = raw_insp.rfind("</div>")
+        raw_insp = raw_insp[:pos].rstrip()
+
+    # Start mobile inspector collapsed so domain tree cards are visible immediately in Stitch mobile preview
+    raw_insp = raw_insp.replace("<span>접기</span>", "<span>펼치기</span>", 1)
+    raw_insp = raw_insp.replace('<span id="inspector-toggle-icon">▼</span>', '<span id="inspector-toggle-icon">▲</span>', 1)
+    raw_insp = raw_insp.replace(
+        '<div id="inspector-content" class="p-4 space-y-3 max-h-80 overflow-y-auto">',
+        '<div id="inspector-content" class="hidden p-4 space-y-3 max-h-80 overflow-y-auto">',
+        1,
+    )
+    assert 'class="hidden p-4 space-y-3 max-h-80 overflow-y-auto"' in raw_insp, "Failed to collapse #inspector-content"
+
+    # Upgrade bottom-sheet handle into an accessible button with aria-expanded & Enter/Space support
+    old_handle = '<div onclick="toggleMobileInspector()" class="pt-2.5 pb-2 px-4 flex flex-col items-center cursor-pointer select-none border-b border-slate-100">'
+    new_handle = (
+        '<div id="inspector-toggle-btn" role="button" tabindex="0" aria-expanded="false" aria-controls="inspector-content" '
+        'onclick="toggleMobileInspector()" '
+        'onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();toggleMobileInspector();}" '
+        'class="pt-2.5 pb-2 px-4 flex flex-col items-center cursor-pointer select-none border-b border-slate-100">'
+    )
+    raw_insp = raw_insp.replace(old_handle, new_handle, 1)
+    assert 'id="inspector-toggle-btn"' in raw_insp, "Failed to add #inspector-toggle-btn accessibility attributes"
+    inspector_html = raw_insp
+
+    # 5. Embedded datasets: STATUTORY_MATRIX + resolveOrgLineage + FACILITY_ROW_ID_ALIASES + CIVIL_IMPACT_ECOSYSTEM
+    m_data = re.search(
+        r"(const STATUTORY_MATRIX = \[.*?window\.EXTENDED_STATUTORY_MATRIX = EXTENDED_STATUTORY_MATRIX;)",
+        idx_html,
+        re.S,
+    )
+    assert m_data, "STATUTORY_MATRIX..EXTENDED_STATUTORY_MATRIX block not found in index.html"
+    view1_datasets_js = m_data.group(1)
+
+    # 6. View 1 logic: // 4. View 1: ... up to right before // 5. View 2:
+    m_v1 = re.search(
+        r"(// 4\. View 1:.*?)(?=\s*// 5\. View 2:)",
+        idx_html,
+        re.S,
+    )
+    assert m_v1, "View 1 JS logic block not found in index.html"
+    view1_logic_js = m_v1.group(1)
+
+    return {
+        "tailwind_cfg": tailwind_cfg,
+        "custom_style": custom_style,
+        "view_fields_html": view_fields_html,
+        "inspector_html": inspector_html,
+        "view1_datasets_js": view1_datasets_js,
+        "view1_logic_js": view1_logic_js,
+    }
+
+
+def build_common_head(title, parts):
+    return f"""<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{TITLE}</title>
-    <!-- Tailwind CSS (Google Stitch 최적화 CDN) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>{title}</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', '"Noto Sans KR"', 'sans-serif'],
-                        num: ['"Plus Jakarta Sans"', 'sans-serif']
-                    },
-                    colors: {
-                        brand: {
-                            50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe',
-                            500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8'
-                        }
-                    }
-                }
-            }
-        };
-    </script>
+    {parts["tailwind_cfg"]}
+    {parts["custom_style"]}
     <style>
-        body { font-family: 'Plus Jakarta Sans', 'Noto Sans KR', sans-serif; }
-        .font-num { font-feature-settings: "tnum"; font-variant-numeric: tabular-nums; }
-        .tap-bounce { transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
-        .tap-bounce:active { transform: scale(0.97); }
-        /* 스크롤바 숨김 */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        /* 3대 영역 1:1 인터랙티브 매칭 초록 테두리 강조 애니메이션 */
-        @keyframes matchIndicatorPulse {
-            0% {
-                outline: 3px solid #10b981;
-                outline-offset: -2px;
-                box-shadow: 0 0 14px rgba(16, 185, 129, 0.75), 0 0 28px rgba(16, 185, 129, 0.45);
-                background-color: transparent !important;
-            }
-            45% {
-                outline: 3.5px solid #059669;
-                outline-offset: -2px;
-                box-shadow: 0 0 20px rgba(16, 185, 129, 0.9), 0 0 38px rgba(16, 185, 129, 0.6);
-                background-color: transparent !important;
-            }
-            100% {
-                outline: 2px solid transparent;
-                outline-offset: -2px;
-                box-shadow: none;
-                background-color: transparent !important;
-            }
-        }
-        .interactive-match-highlight {
-            animation: matchIndicatorPulse 2.8s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
-            position: relative;
-            z-index: 25;
-            background-color: transparent !important;
-        }
+        body {{ font-family: 'Plus Jakarta Sans', 'Noto Sans KR', sans-serif; }}
+        /* Google Stitch Mobile-First Preview Mode (defaults to active for immediate 390~430px mobile UI inspection) */
+        body.stitch-mobile-mode {{
+            background-color: #eef2f7 !important;
+        }}
+        body.stitch-mobile-mode main {{
+            padding-top: 1rem !important;
+            padding-bottom: 5rem !important;
+        }}
+        body.stitch-mobile-mode #mobile-fields-view,
+        body.stitch-mobile-mode #mobileHierarchyView,
+        body.stitch-mobile-mode #mobileArchiveView {{
+            display: block !important;
+            max-width: 430px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 1.5rem;
+            padding: 0.75rem 0.625rem 2.25rem;
+            box-shadow: 0 18px 42px -15px rgba(15, 23, 42, 0.14);
+        }}
+        body.stitch-mobile-mode #mobileHierarchyView {{
+            padding-bottom: 10.5rem !important;
+        }}
+        body.stitch-mobile-mode #view-fields .hidden.md\\:block,
+        body.stitch-mobile-mode #view-hierarchy .hidden.md\\:block,
+        body.stitch-mobile-mode #view-archive .hidden.md\\:block,
+        body.stitch-mobile-mode #view-archive .hidden.md\\:flex {{
+            display: none !important;
+        }}
+        body:not(.stitch-mobile-mode) #mobile-hierarchy-inspector {{
+            display: none !important;
+        }}
+        @media (max-width: 767px) {{
+            body:not(.stitch-mobile-mode) #mobile-hierarchy-inspector:not(.stitch-inspector-hidden) {{
+                display: block !important;
+            }}
+        }}
+        body.stitch-mobile-mode #mobile-hierarchy-inspector:not(.stitch-inspector-hidden) {{
+            display: block !important;
+            max-width: 430px !important;
+        }}
+        .stitch-inspector-hidden {{
+            display: none !important;
+        }}
+
+        /* Baseline Widely Available: Rendering performance for large unified single-file DOM */
+        #mobile-cards-feed > div,
+        #mobile-civil-impact-grid > div,
+        #mobile-hierarchy-cards-feed > .mobile-domain-card,
+        #mobile-archive-cards-feed > div {{
+            content-visibility: auto;
+            contain-intrinsic-size: auto 180px;
+        }}
+
+        /* Baseline Widely Available: Modern touch, scroll containment, safe-area & focus accessibility */
+        button, a, [role="tab"], [role="button"] {{
+            touch-action: manipulation;
+        }}
+        :is(button, a, input, select, [tabindex]):focus-visible {{
+            outline: 2px solid #2563eb;
+            outline-offset: 2px;
+        }}
+        #inspector-content {{
+            overscroll-behavior: contain;
+        }}
+        #mobile-hierarchy-inspector {{
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+        }}
+        @media (prefers-reduced-motion: reduce) {{
+            *, *::before, *::after {{
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }}
+        }}
     </style>
-    <script>
+</head>
+<body class="bg-[#F8FAFC] text-[#0F172A] min-h-screen flex flex-col font-sans stitch-mobile-mode">
+"""
+
+
+def build_viewport_toggle_bar():
+    return """
+            <div role="group" aria-label="뷰포트 미리보기 전환" class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/80 shrink-0">
+                <button type="button" id="btn-stitch-mobile" aria-pressed="true" onclick="setStitchViewportMode('mobile')" class="px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold bg-slate-900 text-white shadow-2xs transition cursor-pointer whitespace-nowrap">📱 모바일 (430px)</button>
+                <button type="button" id="btn-stitch-desktop" aria-pressed="false" onclick="setStitchViewportMode('desktop')" class="px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-slate-600 hover:text-slate-900 transition cursor-pointer whitespace-nowrap">🖥️ 데스크톱</button>
+            </div>
+    """
+
+
+def build_shared_runtime_js():
+    return r"""
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+        window.escapeHtml = escapeHtml;
+
+        function showToast(msg) {
+            const old = document.getElementById('stitch-toast');
+            if (old) old.remove();
+            const div = document.createElement('div');
+            div.id = 'stitch-toast';
+            div.setAttribute('role', 'status');
+            div.setAttribute('aria-live', 'polite');
+            div.className = 'fixed bottom-5 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-xl bg-slate-900/95 text-white text-xs font-bold shadow-xl border border-slate-700 max-w-sm text-center';
+            div.textContent = msg;
+            document.body.appendChild(div);
+            setTimeout(() => div.remove(), 2600);
+        }
+
         window.triggerMatchHighlight = function(element) {
             if (!element) return;
             element.classList.remove('interactive-match-highlight');
             void element.offsetWidth;
             element.classList.add('interactive-match-highlight');
-            setTimeout(() => {
-                element.classList.remove('interactive-match-highlight');
-            }, 2900);
+            setTimeout(() => element.classList.remove('interactive-match-highlight'), 2900);
         };
         window.triggerMatchHighlightAll = function(elements) {
-            if (!elements || elements.length === 0) return;
-            elements.forEach(el => window.triggerMatchHighlight(el));
+            if (elements && elements.length) elements.forEach(el => window.triggerMatchHighlight(el));
         };
-    </script>
-</head>
-<body class="bg-[#F8FAFC] text-[#0F172A] min-h-screen flex flex-col font-sans">
-"""
 
-    # =========================================================================
-    # 1. stitch_welfare_hierarchy.html
-    # =========================================================================
-    h_html = common_head.replace("{TITLE}", "Google Stitch - 사회복지 3단계 위계 도감 (숲에서 나무로)")
-    h_html += """
-    <!-- 상단 스티치 전용 헤더 바 -->
-    <header class="w-full bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <span class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white text-xl shadow-sm">🌳</span>
-                <div>
-                    <div class="font-extrabold text-slate-900 text-sm sm:text-base flex items-center gap-2">
-                        <span>사회복지 3단계 위계 도감</span>
-                        <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">Google Stitch Design Mode</span>
-                    </div>
-                    <div class="text-[11px] text-slate-500 font-medium">숲(법정 기능)에서 나무(단위 프로그램)로 탐색하는 지식 맵</div>
-                </div>
-            </div>
-            <div class="flex items-center gap-2">
-                <span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-bold border border-slate-200">90개 단위서비스</span>
-                <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200">38종 지침서 매칭</span>
-            </div>
-        </div>
-    </header>
-
-    <!-- 메인 컨텐츠 영역 -->
-    <main class="flex-grow py-8">
-        <div id="view-hierarchy" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6"></div>
-    </main>
-
-    <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
-        Google Stitch Prototyping Template · 12대 분야 3단계 위계 도감 · 2026/2027 정부 공식 지침서 원문 매칭
-    </footer>
-
-    <!-- 임베디드 데이터셋 & 컨트롤러 -->
-    <script>
-"""
-    h_html += hierarchy_js + "\n\n"
-    h_html += hierarchy_ctrl + "\n\n"
-    h_html += """
-        // 초기 구동
-        document.addEventListener('DOMContentLoaded', () => {
-            if (typeof window.renderHierarchyView === 'function') {
-                window.renderHierarchyView();
+        const stitchSavedIds = new Set();
+        function saveToWorkspace(type, id, institution, title, dday) {
+            const key = id || (institution + '|' + title);
+            if (stitchSavedIds.has(key)) {
+                showToast("⭐ '" + institution + "' 항목이 이미 준비함에 보관되어 있습니다.");
+                return;
             }
-        });
-    </script>
-</body>
-</html>
-"""
-    with open("stitch_welfare_hierarchy.html", "w", encoding="utf-8") as f:
-        f.write(h_html)
-    print("✓ Created stitch_welfare_hierarchy.html")
+            stitchSavedIds.add(key);
+            showToast("⭐ '" + institution + "' 항목이 준비함에 저장되었습니다.");
+        }
+        window.saveToWorkspace = saveToWorkspace;
 
-    # =========================================================================
-    # 2. stitch_guidelines_archive.html
-    # =========================================================================
-    a_html = common_head.replace("{TITLE}", "Google Stitch - 공식 지침서 마스터 아카이브 (53종 풀패키지)")
-    a_html += """
-    <!-- 상단 스티치 전용 헤더 바 -->
-    <header class="w-full bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <span class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white text-xl shadow-sm">📁</span>
-                <div>
-                    <div class="font-extrabold text-slate-900 text-sm sm:text-base flex items-center gap-2">
-                        <span>공식 지침서 마스터 아카이브</span>
-                        <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 border border-blue-200">Google Stitch Design Mode</span>
-                    </div>
-                    <div class="text-[11px] text-slate-500 font-medium">8대 정부부처 및 공공기관 53개 정본 지침서 탐색기</div>
-                </div>
-            </div>
-            <div class="flex items-center gap-2">
-                <span class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 text-xs font-bold border border-blue-200">53개 정본 (450 MB)</span>
-                <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200">구글 드라이브 일괄 다운</span>
-            </div>
-        </div>
-    </header>
-
-    <!-- 메인 컨텐츠 영역 -->
-    <main class="flex-grow py-8">
-        <div id="view-archive" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6"></div>
-    </main>
-
-    <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
-        Google Stitch Prototyping Template · 공식 지침서 마스터 아카이브 · 8대 부처 최신 정본 단일화
-    </footer>
-
-    <!-- 임베디드 데이터셋 & 컨트롤러 -->
-    <script>
-"""
-    a_html += archive_js + "\n\n"
-    a_html += archive_ctrl + "\n\n"
-    a_html += """
-        // 초기 구동
-        document.addEventListener('DOMContentLoaded', () => {
-            if (typeof window.renderArchiveView === 'function') {
-                window.renderArchiveView();
+        function setStitchViewportMode(mode) {
+            const body = document.body;
+            const mBtn = document.getElementById('btn-stitch-mobile');
+            const dBtn = document.getElementById('btn-stitch-desktop');
+            const isMobile = (mode !== 'desktop');
+            body.classList.toggle('stitch-mobile-mode', isMobile);
+            if (mBtn) {
+                mBtn.setAttribute('aria-pressed', String(isMobile));
+                mBtn.className = isMobile
+                    ? 'px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold bg-slate-900 text-white shadow-2xs transition cursor-pointer whitespace-nowrap'
+                    : 'px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-slate-600 hover:text-slate-900 transition cursor-pointer whitespace-nowrap';
             }
-        });
-    </script>
-</body>
-</html>
-"""
-    with open("stitch_guidelines_archive.html", "w", encoding="utf-8") as f:
-        f.write(a_html)
-    print("✓ Created stitch_guidelines_archive.html")
-
-    # =========================================================================
-    # 3. stitch_portal_viewer.html (2대 기능 통합 스티치 뷰어)
-    # =========================================================================
-    c_html = common_head.replace("{TITLE}", "Google Stitch - 사회복지 위계도감 & 지침서 아카이브 통합 뷰어")
-    c_html += """
-    <!-- 상단 스티치 전용 헤더 바 & 기능 탭 전환기 -->
-    <header class="w-full bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <span class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-blue-600 flex items-center justify-center text-white text-xl shadow-sm">✨</span>
-                <div>
-                    <div class="font-extrabold text-slate-900 text-sm sm:text-base flex items-center gap-2">
-                        <span>사회복지 현장의 이해 · 구글 스티치 디자인 스튜디오</span>
-                    </div>
-                    <div class="text-[11px] text-slate-500 font-medium">3단계 위계 도감 & 공식 지침서 아카이브 통합 디자인 템플릿</div>
-                </div>
-            </div>
-
-            <!-- 스티치 기능 전환 탭 -->
-            <div class="flex items-center gap-1.5 bg-slate-100 p-1.5 rounded-2xl border border-slate-200/80">
-                <button 
-                    type="button" 
-                    id="tab-btn-hierarchy"
-                    onclick="switchStitchTab('hierarchy')" 
-                    class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center gap-1.5 cursor-pointer bg-white text-emerald-700 shadow-xs border border-slate-200/60"
-                >
-                    <span>🌳 3단계 위계 도감</span>
-                    <span class="px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-num">90</span>
-                </button>
-                <button 
-                    type="button" 
-                    id="tab-btn-archive"
-                    onclick="switchStitchTab('archive')" 
-                    class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 cursor-pointer text-slate-600 hover:text-slate-900"
-                >
-                    <span>📁 지침서 아카이브</span>
-                    <span class="px-1.5 py-0.2 rounded-full bg-slate-200 text-slate-700 text-[10px] font-num">53</span>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- 메인 컨텐츠 영역 -->
-    <main class="flex-grow py-8">
-        <section id="view-hierarchy" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6"></section>
-        <section id="view-archive" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 hidden"></section>
-    </main>
-
-    <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
-        Google Stitch Prototyping Template · 대한민국 사회복지 현장 나침반 포털
-    </footer>
-
-    <!-- 임베디드 데이터셋 & 컨트롤러 -->
-    <script>
-"""
-    c_html += hierarchy_js + "\n\n"
-    c_html += archive_js + "\n\n"
-    c_html += hierarchy_ctrl + "\n\n"
-    c_html += archive_ctrl + "\n\n"
-    c_html += """
-        // 탭 전환 라우팅 함수
-        function switchStitchTab(tab) {
-            const hSec = document.getElementById('view-hierarchy');
-            const aSec = document.getElementById('view-archive');
-            const hBtn = document.getElementById('tab-btn-hierarchy');
-            const aBtn = document.getElementById('tab-btn-archive');
-
-            if (tab === 'hierarchy') {
-                hSec.classList.remove('hidden');
-                aSec.classList.add('hidden');
-                hBtn.className = 'px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center gap-1.5 cursor-pointer bg-white text-emerald-700 shadow-xs border border-slate-200/60';
-                aBtn.className = 'px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 cursor-pointer text-slate-600 hover:text-slate-900';
-                if (typeof window.renderHierarchyView === 'function') {
-                    window.renderHierarchyView();
-                }
-            } else {
-                aSec.classList.remove('hidden');
-                hSec.classList.add('hidden');
-                aBtn.className = 'px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center gap-1.5 cursor-pointer bg-white text-blue-700 shadow-xs border border-slate-200/60';
-                hBtn.className = 'px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 cursor-pointer text-slate-600 hover:text-slate-900';
-                if (typeof window.renderArchiveView === 'function') {
-                    window.renderArchiveView();
-                }
+            if (dBtn) {
+                dBtn.setAttribute('aria-pressed', String(!isMobile));
+                dBtn.className = !isMobile
+                    ? 'px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold bg-slate-900 text-white shadow-2xs transition cursor-pointer whitespace-nowrap'
+                    : 'px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-slate-600 hover:text-slate-900 transition cursor-pointer whitespace-nowrap';
             }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        window.setStitchViewportMode = setStitchViewportMode;
+
+        function updateStitchTabButtons(viewId) {
+            const btns = {
+                fields: document.getElementById('tab-btn-fields'),
+                hierarchy: document.getElementById('tab-btn-hierarchy'),
+                archive: document.getElementById('tab-btn-archive')
+            };
+            const styles = {
+                fields: 'px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-extrabold transition flex items-center gap-1 cursor-pointer bg-white text-blue-700 shadow-xs border border-slate-200/80 whitespace-nowrap',
+                hierarchy: 'px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-extrabold transition flex items-center gap-1 cursor-pointer bg-white text-emerald-700 shadow-xs border border-slate-200/80 whitespace-nowrap',
+                archive: 'px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-extrabold transition flex items-center gap-1 cursor-pointer bg-white text-indigo-700 shadow-xs border border-slate-200/80 whitespace-nowrap',
+                idle: 'px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-semibold transition flex items-center gap-1 cursor-pointer text-slate-600 hover:text-slate-900 whitespace-nowrap'
+            };
+            Object.keys(btns).forEach(k => {
+                const btn = btns[k];
+                if (!btn) return;
+                const isActive = (k === viewId);
+                btn.className = isActive ? styles[k] : styles.idle;
+                btn.setAttribute('aria-selected', String(isActive));
+                btn.setAttribute('tabindex', isActive ? '0' : '-1');
+            });
         }
 
-        // 글로벌 바로가기 연동 (위계도감 -> 아카이브 점프)
-        window.goToArchiveSearch = function(filename) {
-            switchStitchTab('archive');
-            setTimeout(() => {
-                const input = document.getElementById('archive-search-input');
-                if (input && typeof window.handleArchiveSearch === 'function') {
-                    input.value = filename;
-                    window.handleArchiveSearch(filename);
+        window.showView = function(viewId, options = {}) {
+            const valid = ['fields', 'hierarchy', 'archive'];
+            if (!valid.includes(viewId)) viewId = 'fields';
+            valid.forEach(id => {
+                const el = document.getElementById('view-' + id);
+                if (el) el.classList.toggle('hidden', id !== viewId);
+            });
+            const insp = document.getElementById('mobile-hierarchy-inspector');
+            if (insp) insp.classList.toggle('stitch-inspector-hidden', viewId !== 'hierarchy');
+            updateStitchTabButtons(viewId);
+
+            if (viewId === 'fields') {
+                if (typeof applyFieldsFilter === 'function') applyFieldsFilter();
+                if (options.search) {
+                    const inp = document.getElementById('mobile-field-search') || document.getElementById('fields-search-input');
+                    if (inp) { inp.value = options.search; }
+                    if (typeof handleMobileSearch === 'function') handleMobileSearch(options.search);
                 }
-            }, 100);
+            } else if (viewId === 'hierarchy') {
+                if (typeof window.renderHierarchyView === 'function') window.renderHierarchyView(options);
+            } else if (viewId === 'archive') {
+                if (typeof window.renderArchiveView === 'function') window.renderArchiveView(options);
+            }
+            if (!options.preventScroll && !options.facilityId && !options.highlightId && !options.facility && !options.targetNodeId) {
+                const scrollBehavior = (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) ? 'auto' : 'smooth';
+                window.scrollTo({ top: 0, behavior: scrollBehavior });
+            }
         };
 
-        // 초기 구동
-        document.addEventListener('DOMContentLoaded', () => {
-            switchStitchTab('hierarchy');
-        });
+        window.jumpToFacilityHierarchy = function(facilityName, parentCategory) {
+            if (!facilityName) return;
+            window.showView('hierarchy', { facility: facilityName, parentCategory: parentCategory });
+        };
+
+        window.jumpToFacility = function(facilityId) {
+            if (!facilityId) return;
+            if (facilityId === 'law-justice') facilityId = 'ext-jus-probation';
+            if (facilityId === 'law-rural-elderly') facilityId = 'law-elderly';
+            if (window.FACILITY_ROW_ID_ALIASES && window.FACILITY_ROW_ID_ALIASES[facilityId]) {
+                facilityId = window.FACILITY_ROW_ID_ALIASES[facilityId];
+            }
+            window.showView('fields', { facilityId: facilityId, preventScroll: true });
+            setTimeout(() => {
+                const isMob = document.body.classList.contains('stitch-mobile-mode') || window.innerWidth < 768;
+                const row = document.getElementById('facility-row-' + facilityId);
+                const card = document.getElementById('facility-card-' + facilityId);
+                const target = isMob ? (card || row) : (row || card);
+                if (target) {
+                    const scrollBehavior = (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) ? 'auto' : 'smooth';
+                    target.scrollIntoView({ behavior: scrollBehavior, block: 'center' });
+                    window.triggerMatchHighlight(target);
+                }
+            }, 180);
+        };
+
+        window.jumpToFacilityByTerm = function(term) {
+            if (!term) return;
+            const rawTerm = String(term).trim();
+            const compactRaw = rawTerm.replace(/[·\s()]+/g, '');
+            const clean = rawTerm.replace(/\s*\(.*?\)\s*/g, '').trim();
+            const pool = [...(window.STATUTORY_MATRIX || []), ...(window.CIVIL_IMPACT_ECOSYSTEM || [])];
+            const hit = pool.find(r => {
+                const hay = (r.facilityCategory || '') + ' ' + (r.hierarchyFacility || '') + ' ' + (r.livingFacilities || []).join(' ') + ' ' + (r.usingFacilities || []).join(' ');
+                return hay.includes(rawTerm) || hay.includes(clean) || hay.replace(/[·\s()]+/g, '').includes(compactRaw);
+            });
+            if (hit) window.jumpToFacility(hit.id);
+            else window.showView('fields', { search: clean });
+        };
+    """
+
+
+def assemble_html_files():
+    cleanup_obsolete_files()
+
+    idx_html = load_text("index.html")
+    parts = extract_index_parts(idx_html)
+
+    hierarchy_db_js = load_text("src/data/welfare-hierarchy-db.js")
+    archive_db_js = load_text("src/data/guidelines-archive-db.js")
+    hierarchy_ctrl_js = load_text("src/js/hierarchy.js")
+    archive_ctrl_js = load_text("src/js/archive.js")
+    mobile_ctrl_js = load_text("src/js/mobile-stitch-controller.js")
+
+    vf_html = parts["view_fields_html"]
+    vf_html = vf_html.replace('class="view-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"', 'class="view-section w-full"')
+    vf_html = vf_html.replace(
+        '<section id="view-fields"',
+        '<section id="view-fields" role="tabpanel" aria-labelledby="tab-btn-fields"',
+        1,
+    )
+    assert 'role="tabpanel" aria-labelledby="tab-btn-fields"' in vf_html, "Failed to add ARIA attributes to #view-fields"
+
+    inspector_portal_html = parts["inspector_html"].replace(
+        "z-40 rounded-t-2xl",
+        "z-40 rounded-t-2xl stitch-inspector-hidden",
+        1,
+    )
+    assert "stitch-inspector-hidden" in inspector_portal_html, "Failed to apply initial .stitch-inspector-hidden"
+
+    toggle_bar = build_viewport_toggle_bar()
+
+    p_html = build_common_head("Google Stitch - 3대 핵심 플랫폼 통합 모바일/반응형 스튜디오", parts)
+    p_html += f"""
+    <header class="no-print w-full bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+                <span class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 via-emerald-600 to-indigo-600 flex items-center justify-center text-white text-lg shadow-sm shrink-0">🧭</span>
+                <div>
+                    <div class="font-extrabold text-slate-900 text-xs sm:text-sm flex items-center gap-1.5">
+                        <span>사회복지 현장 나침반</span>
+                        <span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">Stitch Studio v4.0</span>
+                    </div>
+                    <div class="text-[10px] text-slate-500 font-medium">3대 핵심 플랫폼 모바일 UI 편집용 단일 통합 파일</div>
+                </div>
+            </div>
+
+            <div id="stitch-tablist" role="tablist" aria-label="3대 핵심 플랫폼 전환" class="flex flex-wrap items-center gap-1 bg-slate-100 p-1 rounded-2xl border border-slate-200/80">
+                <button type="button" id="tab-btn-fields" role="tab" aria-selected="true" aria-controls="view-fields" tabindex="0" onclick="window.showView('fields')" class="px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-extrabold transition flex items-center gap-1 cursor-pointer bg-white text-blue-700 shadow-xs border border-slate-200/80 whitespace-nowrap">
+                    <span>🏛️ 분야·시설</span>
+                    <span class="px-1.5 py-0.2 rounded-full bg-blue-100 text-blue-800 text-[10px] font-num">45</span>
+                </button>
+                <button type="button" id="tab-btn-hierarchy" role="tab" aria-selected="false" aria-controls="view-hierarchy" tabindex="-1" onclick="window.showView('hierarchy')" class="px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-semibold transition flex items-center gap-1 cursor-pointer text-slate-600 hover:text-slate-900 whitespace-nowrap">
+                    <span>🌳 위계도감</span>
+                    <span class="px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-num">219</span>
+                </button>
+                <button type="button" id="tab-btn-archive" role="tab" aria-selected="false" aria-controls="view-archive" tabindex="-1" onclick="window.showView('archive')" class="px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-semibold transition flex items-center gap-1 cursor-pointer text-slate-600 hover:text-slate-900 whitespace-nowrap">
+                    <span>📁 아카이브</span>
+                    <span class="px-1.5 py-0.2 rounded-full bg-indigo-100 text-indigo-800 text-[10px] font-num">70</span>
+                </button>
+            </div>
+
+            {toggle_bar}
+        </div>
+    </header>
+
+    <main class="flex-grow py-4">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 space-y-6">
+            {vf_html}
+            <section id="view-hierarchy" role="tabpanel" aria-labelledby="tab-btn-hierarchy" class="view-section w-full hidden"></section>
+            <section id="view-archive" role="tabpanel" aria-labelledby="tab-btn-archive" class="view-section w-full hidden"></section>
+        </div>
+        {inspector_portal_html}
+    </main>
+
+    <footer class="no-print bg-white border-t border-slate-200 py-5 text-center text-[11px] text-slate-400">
+        Google Stitch Design Template · 18대 분야·시설(45) ⇄ 3단계 위계(219) ⇄ 공식 지침서 아카이브(70종)
+    </footer>
+
+    <script>
+{parts["view1_datasets_js"]}
+{hierarchy_db_js}
+{archive_db_js}
+{build_shared_runtime_js()}
+{parts["view1_logic_js"]}
+{hierarchy_ctrl_js}
+{archive_ctrl_js}
+{mobile_ctrl_js}
+        function syncInspectorAria() {{
+            const btn = document.getElementById('inspector-toggle-btn');
+            const content = document.getElementById('inspector-content');
+            if (btn && content) {{
+                btn.setAttribute('aria-expanded', String(!content.classList.contains('hidden')));
+            }}
+        }}
+        window.syncInspectorAria = syncInspectorAria;
+
+        const _origToggleInspector = window.toggleMobileInspector;
+        if (typeof _origToggleInspector === 'function') {{
+            window.toggleMobileInspector = function() {{
+                const res = _origToggleInspector.apply(this, arguments);
+                syncInspectorAria();
+                return res;
+            }};
+        }}
+
+        const _origInspectFacility = window.inspectFacilityDetail;
+        if (typeof _origInspectFacility === 'function') {{
+            window.inspectFacilityDetail = function() {{
+                const res = _origInspectFacility.apply(this, arguments);
+                syncInspectorAria();
+                return res;
+            }};
+        }}
+
+        document.addEventListener('DOMContentLoaded', () => {{
+            if (typeof renderFieldsTable === 'function') renderFieldsTable();
+            if (typeof renderMobileCards === 'function') renderMobileCards();
+            if (typeof renderCivilImpactCards === 'function') renderCivilImpactCards();
+            if (typeof window.renderHierarchyView === 'function') window.renderHierarchyView();
+            if (typeof window.renderArchiveView === 'function') window.renderArchiveView();
+
+            const tablist = document.getElementById('stitch-tablist');
+            if (tablist) {{
+                tablist.addEventListener('keydown', (e) => {{
+                    const order = ['fields', 'hierarchy', 'archive'];
+                    const active = document.activeElement;
+                    const currentIdx = order.findIndex(id => ('tab-btn-' + id) === (active && active.id));
+                    if (currentIdx === -1) return;
+                    let nextIdx = null;
+                    if (e.key === 'ArrowRight') nextIdx = (currentIdx + 1) % order.length;
+                    else if (e.key === 'ArrowLeft') nextIdx = (currentIdx - 1 + order.length) % order.length;
+                    else if (e.key === 'Home') nextIdx = 0;
+                    else if (e.key === 'End') nextIdx = order.length - 1;
+                    if (nextIdx !== null) {{
+                        e.preventDefault();
+                        const nextView = order[nextIdx];
+                        window.showView(nextView);
+                        const nextBtn = document.getElementById('tab-btn-' + nextView);
+                        if (nextBtn) nextBtn.focus();
+                    }}
+                }});
+            }}
+
+            window.showView('fields', {{ preventScroll: true }});
+            syncInspectorAria();
+        }});
     </script>
 </body>
 </html>
 """
-    with open("stitch_portal_viewer.html", "w", encoding="utf-8") as f:
-        f.write(c_html)
-    print("✓ Created stitch_portal_viewer.html")
+    save_text(OUTPUT_FILE, p_html)
+    print(f"✓ Initial unified {OUTPUT_FILE} assembled.")
 
-    print("\nAll 3 Stitch templates built successfully!")
+
+# =============================================================================
+# Pre-bake Rendered DOM + Full Verification via Headless Edge CDP
+# =============================================================================
+class QuietHandler(http.server.SimpleHTTPRequestHandler):
+    def log_message(self, format, *args):
+        pass
+
+
+def start_server():
+    handler = functools.partial(QuietHandler, directory=WORKSPACE)
+    httpd = socketserver.TCPServer(("127.0.0.1", 0), handler)
+    port = httpd.server_address[1]
+    t = threading.Thread(target=httpd.serve_forever, daemon=True)
+    t.start()
+    return httpd, port
+
+
+async def cdp_send(ws, mid, method, params=None):
+    await ws.send(json.dumps({"id": mid, "method": method, "params": params or {}}))
+    while True:
+        raw = await asyncio.wait_for(ws.recv(), timeout=20)
+        msg = json.loads(raw)
+        if msg.get("id") == mid:
+            if "error" in msg:
+                raise RuntimeError(f"CDP error {method}: {msg['error']}")
+            return msg.get("result", {})
+
+
+async def eval_js(ws, mid, expr):
+    res = await cdp_send(
+        ws,
+        mid,
+        "Runtime.evaluate",
+        {"expression": expr, "returnByValue": True, "awaitPromise": True},
+    )
+    if "exceptionDetails" in res:
+        raise RuntimeError(f"JS Exception: {json.dumps(res['exceptionDetails'], ensure_ascii=False)}")
+    return res.get("result", {}).get("value")
+
+
+async def prebake_and_verify():
+    import websockets
+
+    httpd, port = start_server()
+    user_data = tempfile.mkdtemp(prefix="edge_stitch_bake_")
+    dbg_port = 9255
+
+    proc = subprocess.Popen(
+        [
+            EDGE_EXE,
+            "--headless=new",
+            "--disable-gpu",
+            f"--remote-debugging-port={dbg_port}",
+            f"--user-data-dir={user_data}",
+            "--window-size=430,900",
+            "--no-first-run",
+            "--no-default-browser-check",
+            f"http://127.0.0.1:{port}/{OUTPUT_FILE}",
+        ],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+
+    try:
+        ws_url = None
+        for _ in range(40):
+            try:
+                with urllib.request.urlopen(f"http://127.0.0.1:{dbg_port}/json", timeout=1) as resp:
+                    targets = json.loads(resp.read().decode("utf-8"))
+                pages = [t for t in targets if t.get("type") == "page"]
+                if pages:
+                    ws_url = pages[0]["webSocketDebuggerUrl"]
+                    break
+            except Exception:
+                await asyncio.sleep(0.25)
+        if not ws_url:
+            raise RuntimeError("Could not connect to Edge CDP target")
+
+        mid = 1
+        async with websockets.connect(ws_url, max_size=50 * 1024 * 1024) as ws:
+            await cdp_send(ws, mid, "Runtime.enable"); mid += 1
+            await cdp_send(ws, mid, "Page.enable"); mid += 1
+
+            # 1. Navigate to unbaked unified file and snapshot rendered DOM
+            await cdp_send(ws, mid, "Page.navigate", {"url": f"http://127.0.0.1:{port}/{OUTPUT_FILE}"}); mid += 1
+            await asyncio.sleep(1.3)
+
+            snap = await eval_js(ws, mid, """
+            (() => {
+                window.__stitchErrors = [];
+                window.addEventListener('error', e => window.__stitchErrors.push(e.message || String(e)));
+                const getHtml = (id) => {
+                    const el = document.getElementById(id);
+                    return el ? el.innerHTML : null;
+                };
+                const cnt = (sel) => document.querySelectorAll(sel).length;
+                return {
+                    fieldsTable: getHtml('fields-table-body'),
+                    fieldsMobile: getHtml('mobile-cards-feed'),
+                    civilTable: getHtml('civil-impact-table-body'),
+                    civilMobile: getHtml('mobile-civil-impact-grid'),
+                    viewHierarchy: getHtml('view-hierarchy'),
+                    viewArchive: getHtml('view-archive'),
+                    counts: {
+                        fieldsRows: cnt('#fields-table-body tr[id^="facility-row-"]'),
+                        fieldsMobCards: cnt('#mobile-cards-feed > div[id^="facility-card-"]'),
+                        civilMobCards: cnt('#mobile-civil-impact-grid > div[id^="facility-card-"]'),
+                        hierMobCards: cnt('#mobile-hierarchy-cards-feed .mobile-domain-card'),
+                        hierItems: cnt('.mobile-hierarchy-item'),
+                        arcMobCards: cnt('#mobile-archive-cards-feed > div'),
+                    },
+                    errors: window.__stitchErrors
+                };
+            })()
+            """); mid += 1
+            assert len(snap["errors"]) == 0, f"{OUTPUT_FILE} initial errors: {snap['errors']}"
+
+            html_src = load_text(OUTPUT_FILE)
+
+            # Assert & replace View 1 placeholders
+            ph_fields_table = "<!-- Injected dynamically by renderFieldsTable() -->"
+            ph_fields_mobile = "<!-- Dynamically populated by renderMobileCards() -->"
+            ph_civil_table = "<!-- Populated dynamically by renderCivilImpactCards() -->"
+            ph_civil_mobile = '<div id="mobile-civil-impact-grid" class="space-y-2.5 pt-1"></div>'
+
+            assert ph_fields_table in html_src and snap["fieldsTable"], "Missing fieldsTable placeholder or DOM"
+            assert ph_fields_mobile in html_src and snap["fieldsMobile"], "Missing fieldsMobile placeholder or DOM"
+            assert ph_civil_table in html_src and snap["civilTable"], "Missing civilTable placeholder or DOM"
+            assert ph_civil_mobile in html_src and snap["civilMobile"], "Missing civilMobile placeholder or DOM"
+
+            html_src = html_src.replace(ph_fields_table, snap["fieldsTable"], 1)
+            html_src = html_src.replace(ph_fields_mobile, snap["fieldsMobile"], 1)
+            html_src = html_src.replace(ph_civil_table, snap["civilTable"], 1)
+            html_src = html_src.replace(
+                ph_civil_mobile,
+                f'<div id="mobile-civil-impact-grid" class="space-y-2.5 pt-1">{snap["civilMobile"]}</div>',
+                1,
+            )
+
+            # Regex replacement preserving <section ...> attributes (role="tabpanel", aria-labelledby, class)
+            assert snap["viewHierarchy"], "Missing rendered viewHierarchy DOM"
+            assert snap["viewArchive"], "Missing rendered viewArchive DOM"
+            html_src, n_hier = re.subn(
+                r'(<section id="view-hierarchy"[^>]*>)(</section>)',
+                lambda m: m.group(1) + snap["viewHierarchy"] + m.group(2),
+                html_src,
+                count=1,
+            )
+            assert n_hier == 1, "Failed to inject pre-baked #view-hierarchy HTML"
+
+            html_src, n_arc = re.subn(
+                r'(<section id="view-archive"[^>]*>)(</section>)',
+                lambda m: m.group(1) + snap["viewArchive"] + m.group(2),
+                html_src,
+                count=1,
+            )
+            assert n_arc == 1, "Failed to inject pre-baked #view-archive HTML"
+
+            save_text(OUTPUT_FILE, html_src)
+            print(f"✓ Pre-baked & saved {OUTPUT_FILE}: {snap['counts']} (size={len(html_src):,} B)")
+
+            # 2. Verify pre-baked file at 1440x960 desktop canvas (confirming stitch-mobile-mode keeps mobile cards visible)
+            await cdp_send(ws, mid, "Emulation.setDeviceMetricsOverride", {
+                "width": 1440, "height": 960, "deviceScaleFactor": 1, "mobile": False
+            }); mid += 1
+
+            await cdp_send(ws, mid, "Page.navigate", {"url": f"http://127.0.0.1:{port}/{OUTPUT_FILE}?verify=1"}); mid += 1
+            await asyncio.sleep(1.3)
+
+            check = await eval_js(ws, mid, """
+            (() => {
+                window.__stitchErrors = [];
+                window.addEventListener('error', e => window.__stitchErrors.push(e.message || String(e)));
+                const isMobMode = document.body.classList.contains('stitch-mobile-mode');
+                const vis = (id) => {
+                    const el = document.getElementById(id);
+                    if (!el) return null;
+                    return getComputedStyle(el).display !== 'none';
+                };
+                return {
+                    isMobMode,
+                    mobFieldsVis: vis('mobile-fields-view'),
+                    mobHierVis: vis('mobileHierarchyView'),
+                    mobArcVis: vis('mobileArchiveView'),
+                    fieldsCards: document.querySelectorAll('#mobile-cards-feed > div[id^="facility-card-"]').length,
+                    civilCards: document.querySelectorAll('#mobile-civil-impact-grid > div[id^="facility-card-"]').length,
+                    hierDomains: document.querySelectorAll('#mobile-hierarchy-cards-feed .mobile-domain-card').length,
+                    hierItems: document.querySelectorAll('.mobile-hierarchy-item').length,
+                    arcCards: document.querySelectorAll('#mobile-archive-cards-feed > div').length,
+                    errors: window.__stitchErrors,
+                };
+            })()
+            """); mid += 1
+            print(f"  Verify {OUTPUT_FILE} @1440px stitch-mobile-mode: {check}")
+            assert check["errors"] == [], f"Runtime errors after load: {check['errors']}"
+            assert check["isMobMode"] is True
+            assert check["mobFieldsVis"] is True
+            assert check["mobHierVis"] is True
+            assert check["mobArcVis"] is True
+            assert check["fieldsCards"] == 39, f"Expected 39 fields cards, got {check['fieldsCards']}"
+            assert check["civilCards"] == 6, f"Expected 6 civil cards, got {check['civilCards']}"
+            assert check["hierDomains"] == 18, f"Expected 18 domain cards, got {check['hierDomains']}"
+            assert check["hierItems"] == 219, f"Expected 219 items, got {check['hierItems']}"
+            assert check["arcCards"] == 70, f"Expected 70 archive cards, got {check['arcCards']}"
+
+            # 3. Interactive tabs, WAI-ARIA state transitions, bottom-sheet inspector, deep-links, ministry filter, viewport toggle
+            portal_test = await eval_js(ws, mid, """
+            (() => {
+                const attr = (id, name) => {
+                    const el = document.getElementById(id);
+                    return el ? el.getAttribute(name) : null;
+                };
+
+                // Initial ARIA check
+                const initFieldsAria = attr('tab-btn-fields', 'aria-selected');
+                const initHierAria = attr('tab-btn-hierarchy', 'aria-selected');
+                const initArcAria = attr('tab-btn-archive', 'aria-selected');
+                const initMobPressed = attr('btn-stitch-mobile', 'aria-pressed');
+
+                // Switch to hierarchy
+                window.showView('hierarchy');
+                const hVis = !document.getElementById('view-hierarchy').classList.contains('hidden');
+                const inspVis = !document.getElementById('mobile-hierarchy-inspector').classList.contains('stitch-inspector-hidden');
+                const hierAriaActive = attr('tab-btn-hierarchy', 'aria-selected');
+                const inspCollapsedInit = attr('inspector-toggle-btn', 'aria-expanded');
+
+                // Click first item -> opens inspector & syncs aria-expanded
+                const firstItem = document.querySelector('.mobile-hierarchy-item');
+                if (firstItem) firstItem.click();
+                const inspOpenAfterItem = attr('inspector-toggle-btn', 'aria-expanded');
+                const inspContentOpen = !document.getElementById('inspector-content').classList.contains('hidden');
+
+                // Collapse inspector via toggleMobileInspector()
+                window.toggleMobileInspector();
+                const inspCollapsedAfterToggle = attr('inspector-toggle-btn', 'aria-expanded');
+
+                // Deep-link to archive with facilityId filter & banner
+                window.showView('archive', { facilityId: 'law-elderly', facilityName: '노인복지시설' });
+                const aVis = !document.getElementById('view-archive').classList.contains('hidden');
+                const inspHiddenInArchive = document.getElementById('mobile-hierarchy-inspector').classList.contains('stitch-inspector-hidden');
+                const arcAriaActive = attr('tab-btn-archive', 'aria-selected');
+                const arcBannerText = (document.getElementById('mobileArchiveFacilityBannerContainer') || {}).textContent || '';
+                const hasArcBanner = arcBannerText.includes('노인복지시설');
+                window.clearArchiveFacilityFilter();
+
+                // Deep-link back via jumpToFacility('law-elderly')
+                window.jumpToFacility('law-elderly');
+                const backToFieldsVis = !document.getElementById('view-fields').classList.contains('hidden');
+                const backFieldsAria = attr('tab-btn-fields', 'aria-selected');
+
+                // Ministry filter check
+                window.filterByMinistry('보건복지부');
+                const mohwCards = document.querySelectorAll('#mobile-cards-feed > div[id^="facility-card-"]').length;
+                window.filterByMinistry('전체');
+
+                // Viewport toggle check
+                window.setStitchViewportMode('desktop');
+                const deskMode = !document.body.classList.contains('stitch-mobile-mode');
+                const deskPressed = attr('btn-stitch-desktop', 'aria-pressed');
+                const mobPressedInDesk = attr('btn-stitch-mobile', 'aria-pressed');
+
+                window.setStitchViewportMode('mobile');
+                const mobPressedRestored = attr('btn-stitch-mobile', 'aria-pressed');
+                const deskPressedRestored = attr('btn-stitch-desktop', 'aria-pressed');
+
+                return {
+                    initFieldsAria,
+                    initHierAria,
+                    initArcAria,
+                    initMobPressed,
+                    hVis,
+                    inspVis,
+                    hierAriaActive,
+                    inspCollapsedInit,
+                    inspOpenAfterItem,
+                    inspContentOpen,
+                    inspCollapsedAfterToggle,
+                    aVis,
+                    inspHiddenInArchive,
+                    arcAriaActive,
+                    hasArcBanner,
+                    backToFieldsVis,
+                    backFieldsAria,
+                    mohwCards,
+                    deskMode,
+                    deskPressed,
+                    mobPressedInDesk,
+                    mobPressedRestored,
+                    deskPressedRestored,
+                    errors: window.__stitchErrors
+                };
+            })()
+            """); mid += 1
+            print(f"  Interactive & ARIA verification: {portal_test}")
+            assert portal_test["errors"] == [], f"Runtime errors during interaction: {portal_test['errors']}"
+            assert portal_test["initFieldsAria"] == "true"
+            assert portal_test["initHierAria"] == "false"
+            assert portal_test["initArcAria"] == "false"
+            assert portal_test["initMobPressed"] == "true"
+            assert portal_test["hVis"] is True
+            assert portal_test["inspVis"] is True
+            assert portal_test["hierAriaActive"] == "true"
+            assert portal_test["inspCollapsedInit"] == "false"
+            assert portal_test["inspOpenAfterItem"] == "true"
+            assert portal_test["inspContentOpen"] is True
+            assert portal_test["inspCollapsedAfterToggle"] == "false"
+            assert portal_test["aVis"] is True
+            assert portal_test["inspHiddenInArchive"] is True
+            assert portal_test["arcAriaActive"] == "true"
+            assert portal_test["hasArcBanner"] is True
+            assert portal_test["backToFieldsVis"] is True
+            assert portal_test["backFieldsAria"] == "true"
+            assert portal_test["mohwCards"] == 12
+            assert portal_test["deskMode"] is True
+            assert portal_test["deskPressed"] == "true"
+            assert portal_test["mobPressedInDesk"] == "false"
+            assert portal_test["mobPressedRestored"] == "true"
+            assert portal_test["deskPressedRestored"] == "false"
+
+            print(f"\nUNIFIED STITCH FILE ({OUTPUT_FILE}) PRE-BAKED & V8 VERIFIED 100%!")
+    finally:
+        proc.terminate()
+        try:
+            proc.wait(timeout=3)
+        except Exception:
+            proc.kill()
+        httpd.shutdown()
+        shutil.rmtree(user_data, ignore_errors=True)
+
+
+def build_exports():
+    print("Building unified Phase 3 Google Stitch HTML file (Mobile-First + Pre-baked DOM + Modern Web UX/ARIA)...")
+    assemble_html_files()
+    asyncio.run(prebake_and_verify())
+
 
 if __name__ == "__main__":
     build_exports()
