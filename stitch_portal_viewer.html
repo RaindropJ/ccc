@@ -279,6 +279,16 @@
         #toc-tree-container {
             overscroll-behavior: contain;
         }
+        /* Pre-ligature fixed bounding box prevents FOUT horizontal overflow & CLS */
+        .material-symbols-outlined {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            line-height: 1;
+            overflow: hidden;
+            vertical-align: middle;
+            flex-shrink: 0;
+        }
         .pt-safe { padding-top: max(env(safe-area-inset-top, 0px), 0px); }
         .pb-safe { padding-bottom: max(env(safe-area-inset-bottom, 0px), 1.5rem); }
         @media (prefers-reduced-motion: reduce) {
