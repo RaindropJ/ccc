@@ -1,19 +1,19 @@
 window.SYNC_META = {
   "status": "success",
-  "timestamp": "2026.11.25 06:00",
-  "last_sync": "2026-11-25 21:49:06",
+  "timestamp": "2026.11.26 06:00",
+  "last_sync": "2026-11-26 21:44:00",
   "counts": {
-    "practicum": 203,
+    "practicum": 298,
     "residency": 284,
     "hospital_jobs": 35,
     "youth_internships": 13,
     "internships": 13,
     "ngo_csr": 35,
-    "work24_jobs": 150,
-    "total_jobs": 395,
-    "regular_jobs": 312,
-    "contract_jobs": 82,
+    "work24_jobs": 3500,
+    "total_jobs": 3727,
+    "regular_jobs": 3417,
+    "contract_jobs": 307,
     "duplicates_removed": 0,
-    "expired_purged": 225
+    "expired_purged": 243
   }
 };
